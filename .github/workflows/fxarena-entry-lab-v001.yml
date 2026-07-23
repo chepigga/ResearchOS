@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/entry-lab-v001
+  pull_request:
+    branches:
+      - research
   workflow_dispatch:
 
 permissions:
@@ -24,22 +27,18 @@ jobs:
           mkdir -p entry_lab_inventory
           gh api repos/${GITHUB_REPOSITORY}/releases --paginate > entry_lab_inventory/releases.json
           python - <<'PY'
-          import json, pathlib, re
+          import json, pathlib
           rs=json.load(open('entry_lab_inventory/releases.json'))
           rows=[]
           for r in rs:
               for a in r.get('assets',[]):
-                  rows.append({
-                      'tag':r.get('tag_name'), 'release':r.get('name'),
-                      'asset':a.get('name'), 'bytes':a.get('size'),
-                      'updated_at':a.get('updated_at'), 'url':a.get('browser_download_url')})
+                  rows.append({'tag':r.get('tag_name'),'release':r.get('name'),'asset':a.get('name'),'bytes':a.get('size'),'updated_at':a.get('updated_at'),'url':a.get('browser_download_url')})
           pathlib.Path('entry_lab_inventory/release_assets.json').write_text(json.dumps(rows,indent=2))
           keys=('m1','tick','spread','bidask','levelbattle','round','episode','p4b','v1.1','complete','entry')
           cand=[x for x in rows if any(k in (x['asset'] or '').lower() for k in keys)]
           pathlib.Path('entry_lab_inventory/candidate_assets.json').write_text(json.dumps(cand,indent=2))
           with open('entry_lab_inventory/candidate_assets.txt','w') as f:
-              for x in cand:
-                  f.write(f"{x['tag']}\t{x['asset']}\t{x['bytes']}\t{x['url']}\n")
+              for x in cand:f.write(f"{x['tag']}\t{x['asset']}\t{x['bytes']}\t{x['url']}\n")
           print('\n'.join(f"{x['tag']} {x['asset']} {x['bytes']}" for x in cand))
           PY
           find Projects/FXArena -type f | sort > entry_lab_inventory/repo_fxarena_files.txt
