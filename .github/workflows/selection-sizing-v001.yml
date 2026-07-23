@@ -16,7 +16,9 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,8 +26,32 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --upgrade pandas numpy scipy pyarrow
+      - name: Download frozen v1.1 release
+        shell: bash
+        run: |
+          mkdir -p _release_assets
+          gh release view v1.1 --json name,tagName,assets > _release_assets/release_view.json
+          gh release download v1.1 --dir _release_assets
       - name: Inspect frozen inputs
         run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_inputs.py
+      - name: Add release inventory
+        shell: bash
+        run: |
+          find _release_assets -maxdepth 3 -type f -printf '%p\t%s bytes\n' | sort > selection_sizing_artifact/release_files.txt
+          python - <<'PY'
+          import json, zipfile
+          from pathlib import Path
+          root=Path('_release_assets')
+          out={}
+          for p in root.rglob('*'):
+              if p.is_file() and p.suffix.lower()=='.zip':
+                  try:
+                      with zipfile.ZipFile(p) as z:
+                          out[str(p)] = [{'name':x.filename,'bytes':x.file_size} for x in z.infolist()]
+                  except Exception as e:
+                      out[str(p)] = {'error':repr(e)}
+          Path('selection_sizing_artifact/release_zip_inventory.json').write_text(json.dumps(out,indent=2))
+          PY
       - name: Upload inventory
         uses: actions/upload-artifact@v4
         with:
