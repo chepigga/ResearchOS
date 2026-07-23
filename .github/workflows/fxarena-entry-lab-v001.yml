@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  inspect-schemas:
+  inspect-replay-sources:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -23,50 +23,43 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install dependencies
-        run: python -m pip install --upgrade pandas
-      - name: Download exact frozen inputs
+      - name: Download Release v1.1
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p _entry_inputs entry_lab_schema
-          gh release download v1.0 --dir _entry_inputs --pattern 'EURUSD_M1_202301020005_202607172354.csv'
-          gh release download v1.0 --dir _entry_inputs --pattern 'FXArena_LevelBattleLevels_v003_EVENT_STREAM_EURUSD_M5.csv'
-          gh release download v1.0 --dir _entry_inputs --pattern 'FXArena_LevelBattleRounds_v003_EVENT_STREAM_EURUSD_M5.csv'
+          mkdir -p _entry_inputs replay_sources
           gh release download v.1.1 --dir _entry_inputs --pattern 'FXArena_Release_v1.1_COMPLETE.zip'
-      - name: Inspect schemas and coverage
+      - name: Extract small frozen source files
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,zipfile,hashlib
+          import zipfile,io,json
           from pathlib import Path
-          import pandas as pd
-          root=Path('_entry_inputs'); out=Path('entry_lab_schema')
-          files={p.name:p for p in root.iterdir() if p.is_file()}
-          report={}
-          for name,p in files.items():
-              h=hashlib.sha256()
-              with open(p,'rb') as f:
-                  for chunk in iter(lambda:f.read(1<<20),b''):h.update(chunk)
-              report[name]={'bytes':p.stat().st_size,'sha256':h.hexdigest()}
-          for name in ['EURUSD_M1_202301020005_202607172354.csv','FXArena_LevelBattleLevels_v003_EVENT_STREAM_EURUSD_M5.csv','FXArena_LevelBattleRounds_v003_EVENT_STREAM_EURUSD_M5.csv']:
-              p=files[name]
-              df=pd.read_csv(p,nrows=5,sep=None,engine='python')
-              report[name]['columns']=list(df.columns)
-              report[name]['head']=df.to_dict('records')
-              with open(p,'rb') as f:report[name]['header_raw']=f.readline().decode('utf-8','replace').strip()
-          z=files['FXArena_Release_v1.1_COMPLETE.zip']
-          with zipfile.ZipFile(z) as zz:report[z.name]['members']=[{'name':x.filename,'bytes':x.file_size} for x in zz.infolist()]
-          out.mkdir(exist_ok=True)
-          (out/'schema_report.json').write_text(json.dumps(report,indent=2,default=str))
-          with open(out/'headers.txt','w') as f:
-              for n,r in report.items():
-                  f.write(f'## {n}\nbytes={r.get("bytes")}\nsha256={r.get("sha256")}\n')
-                  if 'header_raw' in r:f.write(r['header_raw']+'\n')
+          src=Path('_entry_inputs/FXArena_Release_v1.1_COMPLETE.zip')
+          out=Path('replay_sources'); out.mkdir(exist_ok=True)
+          inv={}
+          with zipfile.ZipFile(src) as z:
+              for zi in z.infolist():
+                  name=zi.filename
+                  if name.endswith(('.py','.md','.json')) and zi.file_size<5_000_000:
+                      (out/Path(name).name).write_bytes(z.read(name))
+                  if name.endswith('.zip'):
+                      raw=z.read(name)
+                      try:
+                          with zipfile.ZipFile(io.BytesIO(raw)) as nz:
+                              inv[name]=[{'name':x.filename,'bytes':x.file_size} for x in nz.infolist()]
+                              for x in nz.infolist():
+                                  low=x.filename.lower()
+                                  if x.file_size<5_000_000 and low.endswith(('.py','.md','.json','.txt')):
+                                      dst=out/(Path(name).stem+'__'+Path(x.filename).name)
+                                      dst.write_bytes(nz.read(x.filename))
+                      except Exception as e:
+                          inv[name]={'error':repr(e)}
+          (out/'nested_inventory.json').write_text(json.dumps(inv,indent=2))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: FXArena-EntryLab-v001-schema
-          path: entry_lab_schema/
+          name: FXArena-EntryLab-v001-replay-sources
+          path: replay_sources/
           if-no-files-found: error
