@@ -1,53 +1,58 @@
 # FXArena Backlog
 
+## FXA-EXIT-003L — Exit Tournament v003-lite core closure
+
+- **Priority:** P0
+- **Status:** HOLD / TWO EXECUTION INPUTS MISSING
+- **Primary:** `tb_flag=true -> P4`, `tb_flag=false -> P5`
+- **Completed:** Gate0; RH1-RH3; RH4 economics diagnostic; RH5 permutation-200; RH8 dedup; commission and BE-slip components of RH7
+- **Result:** P4b +2256.51R, gross DD 12.436807R; RH5 p=0.00498
+- **Blocker RH6:** exact original release sampler/seeds and frozen absolute-versus-paired DD interpretation
+- **Blocker RH7:** raw M1 spread path for x1.25/x1.5/x2.0 replay
+- **Prohibited:** tuning P4b, freezing Entry Lab, or freezing Exit v004 before closure
+- **Done when:** RH6 and exact RH7 are committed with a final PASS/FAIL/F8 verdict
+
+## FXA-EXIT-P5 — P5 BE@60 secondary verdict
+
+- **Priority:** P0
+- **Status:** FALSIFIED BY RH7
+- **Finding:** at commission 9 points + 0.05R slip on 1324 changed exits, total falls to +1792.89R before any spread increase
+- **Verdict:** cannot become v003-lite winner
+- **Note:** remains a frozen component inside P4b on the non-TB branch, where 1077 exits change
+
 ## FXA-EXIT-002A — v002.1 DD Convention Audit Replay
 
 - **Priority:** P0
-- **Status:** READY / BLOCKING
-- **Finding:** pinned GEO* MaxDD 14.416R is gross DD; archived v002 used net DD 15.827R
-- **Gate 0:** reproduce P0 N, IDs, chronology, outcomes, exits, Total net and gross MaxDD 14.415969R
-- **Required:** recompute RH2 and RH6(i) with gross DD using the original sampler and frozen seeds
-- **Diagnostics:** always report both gross and net MaxDD
-- **Done when:** exact corrected P0–P7 verdict table and hashes are committed
-
-## FXA-EXIT-003 — P4b frozen confirmation tournament
-
-- **Priority:** P0
-- **Status:** DRAFT / BLOCKED BY FXA-EXIT-002A AND INCOMPLETE REVIEW ADDITIONS
-- **Primary candidate:** `tb_flag=true -> P4`, `tb_flag=false -> P5`
-- **Constraint:** one candidate; no threshold, session, direction, symbol or parameter tuning
-- **Required:** dual DD reporting, original RH gates, dedup/cluster sanity, +0.025R/+0.05R/+0.10R cost shocks, untouched replication
-- **Kill rule:** disable P5 fallback if realized incremental execution drag exceeds +0.10R per modified exit
+- **Status:** PARTIALLY COMPLETED / RH6 SOURCE DEBT
+- **Gate 0:** PASS; P0 gross MaxDD 14.415969R and net MaxDD 15.827253R
+- **Corrected P0-P7 table:** committed
+- **Remaining:** exact original-sampler gross RH6 for the historical P0-P7 verdict catalogue
 
 ## FXA-EXIT-002 — Exit Policy Tournament v002
 
 - **Priority:** P0
-- **Status:** COMPLETED OUTPUT / VERDICT INVALIDATED
-- **P0 trade parity:** 3535/3535; exact exits and gross outcomes
-- **Defect:** net DD compared with frozen gross-DD threshold
-- **Provisional corrected winner:** P5, pending exact gross RH6
-- **Full negative-result catalogue:** P1–P3 adaptive heads and P6/P7 simple alternatives retained
+- **Status:** COMPLETED OUTPUT / ORIGINAL VERDICT SUPERSEDED
+- **Defect:** net DD was compared with the frozen gross-DD threshold
+- **Registry debt:** full corrected P0-P7 economic table is preserved in v003-lite artifacts
 
 ## FXA-EXIT-002B — P4 TB deep dive / P4b Research v001
 
 - **Priority:** P0
 - **Status:** COMPLETED / POST-HOC CANDIDATE
-- **Finding:** P4 earns on TB continuation; non-TB branch creates the main DD; P5 protects that branch
-- **Observed result:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R; net MaxDD 13.283629R
-- **Verdict:** exploratory GO for v003 only; NO-GO for EA/production
+- **Finding:** P4 earns on TB continuation; P5 protects the non-TB branch
+- **Observed result:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R
+- **Verdict:** strong confirmation, but NO-GO for EA until RH6/RH7 closure
+
+## FXA-DEPLOY-EXIT — Deferred deploy tests
+
+- **Priority:** P1 / PRE-EA
+- **Status:** DEFERRED
+- **R1:** independent Dukascopy feed
+- **R2:** forward offline replay on live ContPrimary entries
+- **Activation:** only after v003-lite core PASS
 
 ## FXA-DATA-001 — Verify external release assets
 
 - **Priority:** P0
-- **Status:** READY
-- **Goal:** match large tick/bar/result assets against manifest hashes and source lineage
-
-## FXA-VALIDATE-002 — Validate TrendBirth and MarketGeometry
-
-- **Priority:** P1
-- **Status:** PLANNED
-
-## FXA-ARCH-001 — Operationalize FXArena OS layers
-
-- **Priority:** P1
-- **Status:** PLANNED
+- **Status:** ACTIVE
+- **Immediate need:** locate exact bootstrap implementation/seeds and raw M1 spread path used by Release v1.1
