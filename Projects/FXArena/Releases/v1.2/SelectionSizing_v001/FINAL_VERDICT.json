@@ -1,0 +1,126 @@
+{
+  "session": "Selection & Sizing Lab v001",
+  "status": "PARTIAL_STOP_B_CONTROL",
+  "verdict": "A_VERDICT_VALID__B_STOP_CONTROL_MISMATCH",
+  "control": {
+    "N": 3535,
+    "total_R": 1848.8748066288588,
+    "gross_MaxDD_R": 14.415969148278236,
+    "net_MaxDD_R": 15.827252835035324,
+    "p_parity_median": 0.0,
+    "p_parity_max": 1.1102230246251565e-16,
+    "gross_outcome_max_absdiff": 3.552713678800501e-15,
+    "net_outcome_max_absdiff": 4.440892098500626e-16,
+    "PASS": true
+  },
+  "part_A": {
+    "implementation_note": "Trailing terciles use selected trades in [t-90d,t], current known p included; no future p.",
+    "realized_mean_weight": 0.9971994342291371,
+    "monotonic_EV_by_tercile": true,
+    "metrics": {
+      "N": 3535,
+      "total_R": 1924.7304021114849,
+      "EV": 0.5444781901305473,
+      "WR": 0.6353606789250353,
+      "PF": 2.96526600762041,
+      "gross_MaxDD_R": 15.185150298475946,
+      "net_MaxDD_R": 16.471637135744118,
+      "negative_months": 0,
+      "months": 42,
+      "worst_month_R": 0.8322076290845881,
+      "all_years_positive": true,
+      "trades_per_day_mean": 4.41875,
+      "trades_per_day_p95": 6.0,
+      "max_trades_day": 6
+    },
+    "gates": {
+      "SA1_total": true,
+      "SA2_gross_DD": false,
+      "SA3_calendar": true,
+      "SA4_permutation": true,
+      "SA5_paired_bootstrap": false
+    },
+    "PASS": false,
+    "SA4": {
+      "seed": 2026072304,
+      "n_perm": 200,
+      "real_total_R": 1924.7304021114849,
+      "baseline_total_R": 1848.8748066288588,
+      "real_advantage_R": 75.85559548262609,
+      "null_total_median": 1857.3406191506106,
+      "null_total_p95": 1887.4523631194359,
+      "null_total_max": 1904.7522156313541,
+      "p_empirical": 0.004975124378109453,
+      "PASS": true
+    },
+    "SA5": {
+      "n_iter": 5000,
+      "block_size": 20,
+      "seed": 2026072305,
+      "n_paired_events": 3535,
+      "p_total_candidate_gt_baseline": 0.9958,
+      "p_gross_DD_candidate_gt_baseline_plus_0_5": 0.5618,
+      "mean_total_delta": 76.05424460385913,
+      "mean_gross_DD_delta": 0.6992662515713153,
+      "total_delta_p025": 18.617672236097317,
+      "total_delta_p975": 133.87194890377046,
+      "pass_total": true,
+      "pass_DD": false,
+      "PASS": false
+    }
+  },
+  "part_B": {
+    "control": {
+      "required": "trailing q0.96/90d signal-by-signal equals PINNED",
+      "N_trailing_q096": 3515,
+      "N_PINNED": 3535,
+      "ordered_episode_ids_equal": false,
+      "episode_id_sets_equal": false,
+      "intersection_N": 2893,
+      "trailing_total_R": 1889.613319589386,
+      "PINNED_total_R": 1848.8748066288588,
+      "trailing_gross_MaxDD_R": 14.415969148278236,
+      "PINNED_gross_MaxDD_R": 14.415969148278236,
+      "PASS": false,
+      "source_monthly_top4": {
+        "N": 3535,
+        "ordered_episode_ids_equal": true,
+        "total_R": 1848.8748066288588,
+        "gross_MaxDD_R": 14.415969148278236,
+        "raw_selected": 11583,
+        "accepted": 3535,
+        "rejected_day_cap": 5237,
+        "rejected_cooldown": 2811,
+        "day_cap_reject_share_raw": 0.4521281187947855,
+        "cooldown_reject_share_raw": 0.24268324268324268
+      }
+    },
+    "curve": [
+      {"q": 0.97, "top_pct": 3.0, "N": 3059, "total_R": 1684.851520397551, "EV": 0.5507850671453256, "gross_MaxDD_R": 13.16463366150856, "negative_months": 0, "day_cap_reject_share_raw": 0.3942656524283207},
+      {"q": 0.96, "top_pct": 4.0, "N": 3515, "total_R": 1889.613319589386, "EV": 0.537585581675501, "gross_MaxDD_R": 14.415969148278236, "negative_months": 0, "day_cap_reject_share_raw": 0.4499605988967691},
+      {"q": 0.95, "top_pct": 5.0, "N": 3795, "total_R": 1911.8438117325475, "EV": 0.5037796605355856, "gross_MaxDD_R": 14.700227797031403, "negative_months": 0, "day_cap_reject_share_raw": 0.499162712810494},
+      {"q": 0.94, "top_pct": 6.0, "N": 3951, "total_R": 1765.8312492941675, "EV": 0.4469327383685567, "gross_MaxDD_R": 15.123711213469505, "negative_months": 1, "day_cap_reject_share_raw": 0.5219188449671072}
+    ],
+    "candidates": {
+      "verdict": {
+        "status": "STOP_CONTROL_MISMATCH",
+        "reason": "Frozen trailing q0.96/90d did not reproduce PINNED; no candidate gates or composition."
+      }
+    },
+    "winner_q": null,
+    "PASS": false
+  },
+  "composition": {
+    "run": false,
+    "reason": "Both A and B must pass."
+  },
+  "sampler": {
+    "law": "paired non-circular moving-block, shared indices, chronological paired-event union",
+    "block_size": 20,
+    "n_iter": 5000,
+    "seeds": {"SA4": 2026072304, "SA5": 2026072305, "SB5_base": 2026072310},
+    "absolute_formulation": "REJECTED"
+  },
+  "contprimary_touched": false,
+  "exit_policy": "P0 TP2/TO120 unchanged"
+}
