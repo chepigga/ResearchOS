@@ -1,1 +1,0 @@
-Staging marker; removed by the consolidated v003-lite commit.
