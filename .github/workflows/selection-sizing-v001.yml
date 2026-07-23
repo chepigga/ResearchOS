@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  inspect:
+  inspect-universe:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -30,52 +30,21 @@ jobs:
         shell: bash
         run: |
           mkdir -p _release_assets selection_sizing_artifact
-          gh release list --limit 100 > selection_sizing_artifact/release_list.txt || true
-          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > selection_sizing_artifact/releases_api.json || true
+          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > selection_sizing_artifact/releases_api.json
           TAG=$(python - <<'PY'
           import json
-          from pathlib import Path
-          p=Path('selection_sizing_artifact/releases_api.json')
-          try:
-              rs=json.loads(p.read_text())
-          except Exception:
-              rs=[]
-          preferred=[]
-          for r in rs:
-              text=' '.join([str(r.get('tag_name','')),str(r.get('name',''))]).lower()
-              if '1.1' in text:
-                  preferred.append(r.get('tag_name'))
-          print((preferred or [rs[0].get('tag_name') if rs else ''])[0] or '')
+          rs=json.load(open('selection_sizing_artifact/releases_api.json'))
+          tags=[r.get('tag_name') for r in rs if '1.1' in (' '.join([str(r.get('tag_name','')),str(r.get('name',''))])).lower()]
+          print((tags or [rs[0]['tag_name']])[0])
           PY
           )
-          echo "selected_tag=$TAG" | tee selection_sizing_artifact/selected_release.txt
-          if [ -n "$TAG" ]; then
-            gh release view "$TAG" --json name,tagName,assets > _release_assets/release_view.json
-            gh release download "$TAG" --dir _release_assets
-          fi
-      - name: Inspect frozen inputs
-        run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_inputs.py
-      - name: Add release inventory
-        shell: bash
-        run: |
-          find _release_assets -maxdepth 4 -type f -printf '%p\t%s bytes\n' | sort > selection_sizing_artifact/release_files.txt
-          python - <<'PY'
-          import json, zipfile
-          from pathlib import Path
-          root=Path('_release_assets')
-          out={}
-          for p in root.rglob('*'):
-              if p.is_file() and p.suffix.lower()=='.zip':
-                  try:
-                      with zipfile.ZipFile(p) as z:
-                          out[str(p)] = [{'name':x.filename,'bytes':x.file_size} for x in z.infolist()]
-                  except Exception as e:
-                      out[str(p)] = {'error':repr(e)}
-          Path('selection_sizing_artifact/release_zip_inventory.json').write_text(json.dumps(out,indent=2))
-          PY
-      - name: Upload inventory
+          echo "selected_tag=$TAG" > selection_sizing_artifact/selected_release.txt
+          gh release download "$TAG" --dir _release_assets
+      - name: Inspect full universe
+        run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_universe.py
+      - name: Upload full-universe inventory
         uses: actions/upload-artifact@v4
         with:
-          name: selection-sizing-input-inventory
-          path: selection_sizing_artifact/
+          name: selection-sizing-universe-inventory
+          path: selection_sizing_universe_artifact/
           if-no-files-found: error
