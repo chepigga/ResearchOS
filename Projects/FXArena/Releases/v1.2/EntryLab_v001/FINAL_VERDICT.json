@@ -1,0 +1,54 @@
+{
+  "session": "Entry Lab v001",
+  "status": "RUN_COMPLETE",
+  "verdict": "F10_MARKET_D3_PLUS_60_OPTIMAL__ENTRY_LAYER_CLOSED",
+  "winner": "E0",
+  "winner_reason": "No candidate passed all gates",
+  "control": {
+    "sim_total_R": 2256.5118021428602,
+    "published_total_R": 2256.51180406579,
+    "sim_gross_DD_R": 12.436806878781454,
+    "published_gross_DD_R": 12.436806859999933,
+    "tb_true": 1274,
+    "total_diff_R": -1.922929641295923e-06,
+    "DD_diff_R": 1.8781520338961855e-08,
+    "PASS": true
+  },
+  "bootstrap": {
+    "law": "paired moving-block shared indices",
+    "block": 20,
+    "iterations": 5000,
+    "seed": 2026072404
+  },
+  "E6_D3_flag": {
+    "definition": "EFFICIENCY_5 OR BB_EXPANSION OR RANGE_EXPANSION_15 on completed M5 data available at D3",
+    "true_N": 1653,
+    "rate": 0.4676096181046676
+  },
+  "governance": {
+    "EV_metric": "per 3535 signals",
+    "stop_orders_tested": false,
+    "selection_changed": false,
+    "exits_changed": false,
+    "risk_changed": false
+  },
+  "best_failed_candidate_by_total": "E3",
+  "best_failed_candidate_delta_R": -408.79405437209334,
+  "baseline_TB_profit_share": 0.7087204220536829,
+  "row_parity": {
+    "N": 3535,
+    "ordered_episode_equal": true,
+    "entry_max_absdiff": 0.0,
+    "risk_max_absdiff": 0.0,
+    "gross_max_absdiff": 3.333334781530084e-07,
+    "net_max_absdiff": 1.2715672426111269e-07,
+    "exit_t_diff_N": 0,
+    "gross_total_diff_R": -3.626851139415521e-06,
+    "net_total_diff_R": -1.922929641295923e-06,
+    "reference_sha256": "4129ce0d3097b56aa35e6350c8b16630e70665269736529920dff12590ec5950"
+  },
+  "limitations": [
+    "M1 research replay; tick validation would have been required only for a non-E0 winner.",
+    "E6 uses the preregistered compact D3-available OR flag; it did not approach promotion."
+  ]
+}
