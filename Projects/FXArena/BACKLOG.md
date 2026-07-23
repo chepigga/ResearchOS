@@ -1,5 +1,34 @@
 # FXArena Backlog
 
+## FXA-SELECT-001 — Selection & Sizing Lab v001
+
+- **Priority:** P0
+- **Status:** COMPLETED / PART B CONTROL STOP
+- **Frozen input:** GEO* PINNED N=3535; P0 exits; full v1.1 universe and p_win
+- **Control:** PASS; total +1848.874807R; gross MaxDD 14.415969R
+- **Part A:** FAIL SA2 and SA5 despite +75.86R total improvement and monotonic p_win tercile EV
+- **Part B:** STOP; trailing q0.96/90d did not reproduce PINNED
+- **Composition:** NOT RUN
+- **Promotion:** none
+- **Artifacts:** report, sampler code, seeds, 200 permutation rows, 5000 paired-bootstrap rows, candidate trades and SHA256 manifest
+- **Result:** `Releases/v1.2/SelectionSizing_v001/`
+
+## FXA-SELECT-002 — Resolve threshold convention
+
+- **Priority:** P0
+- **Status:** DECISION REQUIRED BEFORE NEW LAB
+- **Conflict:** historical PINNED is reproduced by monthly top-4%; frozen v001 requested trailing q0.96/90d
+- **Allowed paths:** preregister monthly top-{3,4,5,6}% grid with 4% exact control; or explicitly create a new trailing-90d baseline and comparison universe
+- **Prohibited:** treating the v001 top-5% diagnostic cell as a winner; changing the v001 control after seeing results
+- **Done when:** a new frozen spec names one convention, reproduces its control signal-by-signal, and defines paired gates before execution
+
+## FXA-SIZING-002 — Sizing risk-shape research
+
+- **Priority:** P2 / NEW INFORMATION REQUIRED
+- **Status:** CLOSED FOR CURRENT 0.7/1.0/1.3 POLICY
+- **Finding:** p_win terciles are economically monotonic, but fixed weights increase gross-DD tail
+- **Reopen only if:** a genuinely new preregistered risk-shape mechanism targets correlation/cluster risk rather than tuning the three weights on the same sample
+
 ## FXA-EXIT-003L — Exit Tournament v003-lite core closure
 
 - **Priority:** P0
@@ -7,9 +36,9 @@
 - **Primary:** `tb_flag=true -> P4`, `tb_flag=false -> P5`
 - **Completed:** Gate0; RH1-RH3; RH4 economics diagnostic; RH5 permutation-200; RH8 dedup; commission and BE-slip components of RH7
 - **Result:** P4b +2256.51R, gross DD 12.436807R; RH5 p=0.00498
-- **Blocker RH6:** exact original release sampler/seeds and frozen absolute-versus-paired DD interpretation
+- **Blocker RH6:** exact formal paired replay under Registry v3 sampler law
 - **Blocker RH7:** raw M1 spread path for x1.25/x1.5/x2.0 replay
-- **Prohibited:** tuning P4b, freezing Entry Lab, or freezing Exit v004 before closure
+- **Prohibited:** tuning P4b or promoting it to EA before closure
 - **Done when:** RH6 and exact RH7 are committed with a final PASS/FAIL/F8 verdict
 
 ## FXA-EXIT-P5 — P5 BE@60 secondary verdict
@@ -23,17 +52,15 @@
 ## FXA-EXIT-002A — v002.1 DD Convention Audit Replay
 
 - **Priority:** P0
-- **Status:** PARTIALLY COMPLETED / RH6 SOURCE DEBT
+- **Status:** PARTIALLY COMPLETED / HISTORICAL RH6 SOURCE DEBT
 - **Gate 0:** PASS; P0 gross MaxDD 14.415969R and net MaxDD 15.827253R
 - **Corrected P0-P7 table:** committed
-- **Remaining:** exact original-sampler gross RH6 for the historical P0-P7 verdict catalogue
 
 ## FXA-EXIT-002 — Exit Policy Tournament v002
 
 - **Priority:** P0
 - **Status:** COMPLETED OUTPUT / ORIGINAL VERDICT SUPERSEDED
 - **Defect:** net DD was compared with the frozen gross-DD threshold
-- **Registry debt:** full corrected P0-P7 economic table is preserved in v003-lite artifacts
 
 ## FXA-EXIT-002B — P4 TB deep dive / P4b Research v001
 
@@ -41,7 +68,6 @@
 - **Status:** COMPLETED / POST-HOC CANDIDATE
 - **Finding:** P4 earns on TB continuation; P5 protects the non-TB branch
 - **Observed result:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R
-- **Verdict:** strong confirmation, but NO-GO for EA until RH6/RH7 closure
 
 ## FXA-DEPLOY-EXIT — Deferred deploy tests
 
@@ -49,10 +75,9 @@
 - **Status:** DEFERRED
 - **R1:** independent Dukascopy feed
 - **R2:** forward offline replay on live ContPrimary entries
-- **Activation:** only after v003-lite core PASS
 
 ## FXA-DATA-001 — Verify external release assets
 
 - **Priority:** P0
 - **Status:** ACTIVE
-- **Immediate need:** locate exact bootstrap implementation/seeds and raw M1 spread path used by Release v1.1
+- **Immediate needs:** raw M1 spread path and deploy-replay inputs
