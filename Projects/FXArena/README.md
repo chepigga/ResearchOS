@@ -11,7 +11,7 @@ FXArena має валідований checkpoint у GitHub Release `v.1.1`.
 - GEO** (`TP2/60`) не замінив канон через GS7 block-bootstrap FAIL
 - Поточний research-напрямок: **Regression Heads / Adaptive Exit Layer** поверх незмінних GEO* входів
 
-Актуальний оперативний стан завжди читати в [STATUS.md](STATUS.md). Чергу робіт — у [BACKLOG.md](BACKLOG.md). Підтверджені результати — у глобальному [RESEARCH_REGISTER.md](../../RESEARCH_REGISTER.md).
+Актуальний оперативний стан завжди читати в [STATUS.md](STATUS.md). Чергу робіт — у [BACKLOG.md](BACKLOG.md). Підтверджені результати — у глобальному [RESEARCH_REGISTER.md](../../RESEARCH_REGISTER.md). Постійні правила моєї роботи з проєктом — у [OPERATING_RULES.md](OPERATING_RULES.md).
 
 ## Architecture
 
@@ -34,5 +34,7 @@ FXArena розглядається як Market State / Decision Engine, а не 
 
 - GitHub is the single source of truth.
 - Chat conclusions are non-canonical until committed or included in a release.
+- Before answering about FXArena state, verify `STATUS.md` and `RESEARCH_REGISTER.md`.
+- After a significant laboratory, update the canonical GitHub records immediately.
 - A later validated report supersedes an older backlog snapshot.
 - Rejected candidates cannot be silently re-tuned on the same data.
