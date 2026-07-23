@@ -45,8 +45,13 @@ jobs:
           echo "Using release $TAG"
           gh release download "$TAG" --dir _release_assets
       - name: Run frozen laboratory
-        run: python Projects/FXArena/Labs/SelectionSizing_v001/run_selection_sizing_v001.py
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p FXArena_SelectionSizing_v001_output
+          python Projects/FXArena/Labs/SelectionSizing_v001/run_selection_sizing_v001.py 2>&1 | tee FXArena_SelectionSizing_v001_output/RUN_LOG.txt
       - name: Upload laboratory output
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: FXArena-SelectionSizing-v001-output
