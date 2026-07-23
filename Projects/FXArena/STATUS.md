@@ -2,18 +2,20 @@
 
 - **Project:** FXArena
 - **Updated:** 2026-07-23
-- **Lifecycle status:** ACTIVE_RESEARCH / CRITICAL_AUDIT
+- **Lifecycle status:** ACTIVE_RESEARCH / V003-LITE CORE HOLD
 - **Canonical live baseline:** C2 / ContPrimary unchanged
 - **Frozen research control:** GEO* `MICRO30 / TP 2.0R / timeout 120 min`
 - **Canonical GEO* metrics:** N=3535; Total net=+1848.87R; EV net=+0.523020R; gross MaxDD=14.415969R
-- **Current audit finding:** v002 used net MaxDD 15.827253R against a gross-DD gate of 14.916R
-- **v002 original verdict:** INVALIDATED due DD convention mismatch
-- **Corrected deterministic finding:** all P1–P7 pass RH2 under canonical gross DD
-- **Provisional corrected v002 winner:** P5 BE@60; exact gross-DD RH6 replay still required
-- **P5 observed:** +1984.15R; EV +0.5613R; gross MaxDD 13.571548R; PF 4.310; 0 negative months
-- **P4 observed:** +2134.36R; EV +0.6038R; gross MaxDD 14.415969R; estimated gross RH6 fail
+- **DD convention:** gross equity MaxDD is the gate metric; net MaxDD is diagnostic and must be labelled
+- **v002 original verdict:** INVALIDATED due net-DD versus gross-limit mismatch
+- **v003-lite Gate 0:** PASS; exact P0 gross DD 14.415969R and 3535/3535 parity
 - **P4b observed:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R; net MaxDD 13.283629R; 0 negative months
-- **P4b status:** POST-HOC / exploratory GO for confirmation only
-- **Production / EA status:** NO-GO
-- **Current blocker:** exact original bootstrap sampler/seeds and completion of all reviewer additions before v003 freeze
-- **Next action:** v002.1 DD Convention Audit Replay, then finalize v003 draft
+- **P4b computable gates:** RH1 PASS; RH2 PASS; RH3 PASS; RH4 diagnostic PASS; RH5 PASS; RH8 PASS
+- **P4b unresolved gates:** RH6 original-sampler replay and RH7 exact spread-path replay
+- **P4b status:** STRONG CORE CONFIRMATION / FORMAL HOLD; still NO-GO for EA
+- **P5 observed:** +1984.15R; gross MaxDD 13.571548R
+- **P5 v003-lite verdict:** FAIL RH7; commission 9pt + 0.05R slip reduces total to +1792.89R before spread stress
+- **RH5 finding:** observed P4b advantage over P4 +122.16R; permutation-200 p=0.00498
+- **Deploy tests:** R1 Dukascopy and R2 forward are DEFERRED until pre-EA
+- **Current blockers:** exact frozen bootstrap implementation/seeds; raw M1 spread path
+- **Next action:** close RH6/RH7 with exact inputs; do not freeze Entry Lab or Exit v004 before core closure
