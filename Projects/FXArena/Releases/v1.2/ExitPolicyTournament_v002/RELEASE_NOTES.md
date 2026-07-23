@@ -1,42 +1,58 @@
-# FXArena Research v1.2 — Exit Policy Tournament v002 / P4b Research v001
+# FXArena Research v1.2 — Exit Policy Tournament v002 / DD Audit / P4b Research v001
 
 **Date:** 2026-07-23  
 **Branch:** `research`  
-**Status:** `RESEARCH / FROZEN CONFIRMATION REQUIRED`  
+**Status:** `V002 VERDICT INVALIDATED — DD CONVENTION AUDIT REQUIRED`  
 **Live baseline:** unchanged  
 **EA / production status:** `NO-GO`
 
-## Scope
+## Critical erratum
 
-This checkpoint records the completed frozen `Exit Policy Tournament v002` and the post-tournament `P4 TB Deep Dive / P4b Research v001`.
+The v002 output calculated Total/EV from net R and MaxDD from net R, while the frozen pinned GEO* MaxDD `14.416R` and RH2 ceiling `14.916R` were defined by the gross-R equity curve.
 
-The tournament was executed once against the pinned GEO* fixture. No tournament policy passed every frozen gate. P4 produced the strongest economics but failed RH2 and RH6. The follow-up analysis isolated the structural source of P4 drawdown and registered one simple composite candidate for confirmation.
+Exact P0 replay on the same 3,535 trades:
 
-## P0 canonical replay
+- gross MaxDD: **14.415969R** — canonical parity;
+- net MaxDD: **15.827253R** — diagnostic used by the archived tournament report.
 
-- Episodes replayed: **3535 / 3535**.
-- Gross parity at `1e-6`: **100%**.
-- Exit-label parity: **100%**.
-- Median absolute net difference: **1.54e-08R**.
-- Fixture total: **+1848.8748066R**.
-- Recalculated total: **+1848.8748114R**.
+Therefore the archived RH2 verdicts and RH6(i) DD probabilities are not formally comparable with the frozen specification. The previous statement “no P1–P7 winner” is withdrawn pending v002.1 audit replay.
 
-## Frozen tournament result
+## Corrected deterministic RH2
 
-| Policy | Total R | EV | MaxDD | PF | Negative months | Formal verdict |
-|---|---:|---:|---:|---:|---:|---|
-| P0 | +1848.87 | +0.5230 | 15.827R | 2.861 | 1 | BASELINE |
-| P1 | +1996.79 | +0.5649 | 15.827R | 3.033 | 1 | FAIL |
-| P2 | +1829.52 | +0.5175 | 16.201R | 2.958 | 1 | FAIL |
-| P3 | +1988.10 | +0.5624 | 16.201R | 3.143 | 1 | FAIL |
-| **P4** | **+2134.36** | **+0.6038** | **15.827R** | **3.121** | **0** | **FAIL: RH2, RH6** |
-| P5 | +1984.15 | +0.5613 | 15.812R | 4.310 | 0 | FAIL: RH2 |
-| P6 | +1500.27 | +0.4244 | 14.085R | 2.772 | 1 | FAIL |
-| P7 | +1643.97 | +0.4651 | 15.961R | 4.082 | 0 | FAIL |
+Using canonical gross DD, all P1–P7 policies pass RH2. Most importantly:
 
-**Tournament verdict:** no P1-P7 policy is promoted.
+- P4 gross DD: **14.415969R** — RH2 PASS, not FAIL;
+- P5 gross DD: **13.571548R** — RH2 PASS, not FAIL;
+- P4b gross DD: **12.436807R**; net DD remains **13.283629R**.
 
-## P4b frozen confirmation candidate
+## Provisional corrected tournament result
+
+P5 already has:
+
+- Total: **+1984.15R**;
+- EV: **+0.5613R**;
+- PF: **4.310**;
+- 0 negative months;
+- worst month: **+4.54R**;
+- RH1 PASS;
+- corrected RH2 PASS;
+- RH3 PASS;
+- RH4 PASS;
+- RH5 N/A.
+
+A 5,000-iteration forensic gross-DD block-bootstrap estimate gives:
+
+- `p_total_good = 0.9996`;
+- `p_dd_bad = 0.0250`;
+- estimated RH6 PASS.
+
+Thus **P5 is the provisional corrected v002 winner**, subject to exact RH6 replay using the original sampler and frozen seeds.
+
+P1–P3 remain negative complexity results; P4 remains the strongest Total-R frozen policy but its estimated gross RH6 still fails. Full details are in `P0_P7_FALSIFICATION_CATALOG.md`.
+
+## P4b status
+
+P4b remains a strong post-tournament candidate:
 
 ```text
 P4b_PRIMARY:
@@ -44,36 +60,24 @@ P4b_PRIMARY:
     tb_flag == false -> frozen P5
 ```
 
-Observed full-sample result:
+Observed metrics:
 
-- N: **3535**.
-- Total: **+2256.51R**.
-- EV: **+0.6383R/trade**.
-- MaxDD: **13.284R**.
-- PF: **4.297**.
-- Negative months: **0 / 42**.
-- Worst month: **+4.59R**.
-- Improvement versus P4: **+122.16R** and **-16.1% MaxDD**.
-- Improvement versus P0: **+407.64R**.
+- Total net: **+2256.51R**;
+- EV net: **+0.6383R/trade**;
+- gross MaxDD: **12.436807R**;
+- net MaxDD: **13.283629R**;
+- PF: **4.297**;
+- negative months: **0 / 42**.
 
-## Structural finding
+It cannot retroactively replace the v002 winner because it was selected post hoc. It remains `EXPLORATORY GO FOR FROZEN CONFIRMATION` only.
 
-P4 changes only `tb_flag=True` trades. The main P4 drawdown cluster was driven predominantly by `tb_flag=False` trades, so further TB target tuning cannot directly repair RH2. P5 is the pre-existing frozen policy that improves the non-TB branch across all years, both chronological halves, all available six-month blocks and deduplicated subsets.
+## Required order of work
 
-## Robustness and execution sensitivity
+1. `Exit Policy Tournament v002.1 — DD Convention Audit Replay`.
+2. Gate 0: P0 exact parity including gross MaxDD `14.415969R`.
+3. Exact RH2/RH6 recomputation with original sampler and seeds.
+4. Register complete P0–P7 falsification catalogue.
+5. Finalize the remaining reviewer amendments to v003.
+6. Freeze and run one-candidate P4b v003 confirmation.
 
-- Estimated paired moving-block bootstrap, 5000 iterations: `p_total_good = 100%`, `p_dd_bad = 3.66%` versus P0.
-- Exact tournament RH6 is **not claimed**, because the original sampler/indices were not present in the supplied output archive.
-- P4b remains better than P4 under additional cost shocks up to approximately **+0.113R per modified P5 exit**.
-- Frozen forward kill threshold: disable the P5 fallback if realized incremental execution drag exceeds **0.10R per modified exit**.
-
-## Governance verdict
-
-- `Exit Policy Tournament v002`: **COMPLETED / FORMAL FAIL — NO WINNER**.
-- `P4b Research v001`: **EXPLORATORY GO FOR FROZEN CONFIRMATION**.
-- No EA implementation, production promotion or modification of the live ContPrimary baseline is authorized.
-- Next required lab: `Exit Policy Tournament v003 — P4b Confirmation`, one primary candidate, no post-registration tuning.
-
-## Supplied source archives
-
-The exact supplied archives are identified by SHA256 in `SOURCE_ARTIFACTS_SHA256.csv`. Extracted text reports and summary tables are committed in this directory. Large binary matrices, trade streams, model weights and bootstrap samples remain inside the source archives and must be preserved byte-for-byte for formal reproduction.
+The v003 document currently committed is a **draft**, not a preregistration, because the review message announced three additions but only two concrete amendments were included in the received text.
