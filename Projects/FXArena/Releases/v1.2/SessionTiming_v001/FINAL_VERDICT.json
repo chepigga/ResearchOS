@@ -1,0 +1,33 @@
+{
+  "session": "Session & Time-of-Day Lab v001",
+  "control": {
+    "N_P0": 3535,
+    "N_P4b": 3535,
+    "episode_id_ordered_parity": true,
+    "P0_total_net_R": 1848.8748114422258,
+    "P0_gross_MaxDD_R": 14.415969159999975,
+    "P4b_total_net_R": 2256.51180406579,
+    "P4b_gross_MaxDD_R": 12.436806859999933,
+    "PASS": true
+  },
+  "stage1_verdict": "NO_SESSION_EDGE_WORTH_FILTERING__F9",
+  "stage2_executed": false,
+  "stage2_reason": "No block passed all T1-T3. S3 was closest but trade share was 25.2051% (>25%) and DD overrepresentation sign was not stable in 4/4 years.",
+  "candidate_sessions": [],
+  "governance": {
+    "session_boundaries_changed": false,
+    "hour_level_filter_used": false,
+    "selection_changed": false,
+    "risk_layer_changed": false,
+    "P4b_exit_policy_changed": false
+  },
+  "reserved_sampler": {
+    "law": "paired moving-block, shared indices, block 20",
+    "n_bootstrap": 5000,
+    "bootstrap_seed": 2026072402,
+    "n_permutation": 200,
+    "permutation_seed": 2026072401,
+    "executed": false
+  },
+  "data_limit": "recorded_cost_r = gross-net from fixtures. Exact spread/commission decomposition is not present; this does not affect the verdict because no block passed T1/T2."
+}
