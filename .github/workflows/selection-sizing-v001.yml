@@ -1,0 +1,30 @@
+name: FXArena Selection Sizing v001
+
+on:
+  push:
+    branches:
+      - agent/selection-sizing-v001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pandas numpy scipy pyarrow
+      - name: Inspect frozen inputs
+        run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_inputs.py
+      - name: Upload inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-sizing-input-inventory
+          path: selection_sizing_artifact/
+          if-no-files-found: error
