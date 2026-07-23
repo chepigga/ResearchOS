@@ -1,0 +1,42 @@
+{
+  "session": "FXArena Exit Tournament v003-lite",
+  "date": "2026-07-23",
+  "core_verdict": "HOLD",
+  "gate0": "PASS",
+  "P4b_PRIMARY": {
+    "total_net_R": 2256.51180406579,
+    "EV": 0.6383343151529816,
+    "gross_MaxDD_R": 12.436806859999933,
+    "net_MaxDD_R": 13.283628828045494,
+    "RH1": "PASS",
+    "RH2": "PASS",
+    "RH3": "PASS",
+    "RH4": "PASS_DIAGNOSTIC",
+    "RH5": "PASS",
+    "RH6": "BLOCKED_ORIGINAL_SAMPLER",
+    "RH7": "BLOCKED_RAW_SPREAD_PATH",
+    "RH8": "PASS"
+  },
+  "P5_SOLO": {
+    "total_net_R": 1984.152227759484,
+    "gross_MaxDD_R": 13.571548069999835,
+    "RH7": "FAIL",
+    "central_cost_total_before_spread_R": 1792.8866342736067
+  },
+  "RH5": {
+    "observed_advantage_vs_P4_R": 122.15543833421543,
+    "null_p95_advantage_R": -60.235017728270044,
+    "empirical_p": 0.004975124378109453
+  },
+  "RH6_forensic": {
+    "P5_p_total_good": 0.9996,
+    "P5_p_dd_bad_absolute": 0.0504,
+    "P5_p_dd_bad_paired": 0.025,
+    "P4b_p_total_good": 1.0,
+    "P4b_p_dd_bad_absolute": 0.0732,
+    "P4b_p_dd_bad_paired": 0.0234,
+    "formal": false
+  },
+  "RH7_proxy_P4b_max_baseline_spread_points_central": 8.31212353209553,
+  "deploy_tests": "DEFERRED"
+}
