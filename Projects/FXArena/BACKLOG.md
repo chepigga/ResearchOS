@@ -8,44 +8,35 @@
 - **Rejected candidate:** GEO** = `MICRO30 + TP2.0 + TO60` after GS7 FAIL
 - **Rule:** no re-optimization of TP2/60 on the same data
 
-## P1 — Regression Targets Builder v001
+## P1 — Exit Policy Tournament v002
 
-- **Status:** PLANNED
-- **Goal:** build causal targets for adaptive exit research without changing GEO* entry selection
-- **Targets:** MFE, MAE, time-to-TP, time-to-MFE, giveback, outcomes at 30/45/60/90/120 minutes
-- **Universe:** pinned GEO* entries only
-- **Control:** canonical TP2/TO120 execution
-- **Required output:** versioned dataset, lineage, hashes, target sanity report
+- **Status:** PREREGISTERED / FROZEN BEFORE RUN
+- **Priority:** P0
+- **Supersedes:** Exit Policy Tournament v001, which was never run and must be ignored or removed if found
+- **Spec:** [ExitPolicyTournament_TZ_v002.md](Specs/ExitPolicyTournament_TZ_v002.md)
+- **Locked baseline:** Release `v.1.1`; GEO* `MICRO30 + TP2.0 + TO120`; N=3535; Total=+1848.87R; MaxDD=14.416R
+- **Question:** compare adaptive regression-head exits, TB rule-based exits and simple global BE/partial exits on identical pinned entries
+- **Policies:** P0–P7 exactly as frozen in the spec
+- **Primary gates:** RH1–RH6 plus the preregistered Occam rule
+- **Run discipline:** P0 control first; one tournament run; no tuning or overrides
+- **Required inputs:** `v.1.1 COMPLETE.zip`, `wf_toolkit`, M1 tradingticks data, full universe count 291659, pinned GEO* fixture
+- **Required outputs:** target cache, head weights, P1–P7 trades, GS5, GS6, >=5000 paired block bootstrap rows, report, manifest, Release v1.2
+- **Runtime state:** SPEC COMMITTED; execution pending verified access to the release asset and M1 inputs in the active runtime
 
-## P2 — Exit Regression Lab v001
+## P2 — Forward / Exam Governance
 
-- **Status:** PLANNED
-- **Dependencies:** P1
-- **Goal:** estimate TP2 probability, expected MFE/MAE, stagnation and giveback risk
-- **Method:** causal walk-forward; no entry reselection; no lookahead
-- **Pre-registered controls:** EFFICIENCY_5, BB_EXPANSION, RANGE_EXPANSION_15
-- **Required gates:** reverse chronology, permutation, split-half stability, economic comparison with GEO*
+- **Status:** IN_PROGRESS
+- **Scope:** ContPrimary v1.20 / C2 demo-forward monitoring
+- **Isolation rule:** Exit Policy Tournament v002 must not change forward model, weights, thresholds, execution or logs
+- **Rules:** no changes before the declared exam; preserve execution drag and trade logs
 
-## P3 — Adaptive Exit Simulator v001
+## Deferred until tournament verdict
 
-- **Status:** PLANNED
-- **Dependencies:** P2
-- **Policies:** canonical TP2/120; selective early timeout; partial + runner; selective break-even; stagnation exit
-- **Execution:** spread, commission and slippage included
-- **Primary gate:** EV not below GEO* while MaxDD improves by at least 15%
-- **Robustness gate:** P(DD_new < DD_GEO*) >=95%; both historical halves positive; worst month not degraded
-
-## P4 — Execution Entry Lab
+### Execution Entry Lab
 
 - **Status:** PLANNED
 - **Goal:** market vs limit vs confirmation vs retracement on the fixed GEO* universe
 - **Metric:** realized EV delta versus D3+60s market entry including fill probability
-
-## P5 — Forward / Exam Governance
-
-- **Status:** IN_PROGRESS
-- **Scope:** ContPrimary C2 forward monitoring
-- **Rules:** no changes to model, weights or threshold before the declared exam; preserve execution drag and trade logs
 
 ## Frozen / Rejected
 
@@ -54,3 +45,5 @@
 - H1 stop — REJECTED
 - timeout >=360 or no-timeout variants — REJECTED
 - repeated global timeout search on the same sample — PROHIBITED
+- Exit Policy Tournament v001 — SUPERSEDED / NEVER RUN
+- TP >3.0 or TO >120 inside v002 — OUT OF SCOPE / PROHIBITED
