@@ -14,37 +14,41 @@ permissions:
   contents: read
 
 jobs:
-  inspect-universe:
+  frozen-run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       GH_TOKEN: ${{ github.token }}
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: python -m pip install --upgrade pandas numpy scipy pyarrow
-      - name: Discover and download frozen release
+        run: python -m pip install --upgrade pandas numpy scipy scikit-learn matplotlib pyarrow
+      - name: Download frozen v1.1 release
         shell: bash
         run: |
-          mkdir -p _release_assets selection_sizing_artifact
-          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > selection_sizing_artifact/releases_api.json
+          mkdir -p _release_assets
+          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > releases_api.json
           TAG=$(python - <<'PY'
           import json
-          rs=json.load(open('selection_sizing_artifact/releases_api.json'))
+          rs=json.load(open('releases_api.json'))
           tags=[r.get('tag_name') for r in rs if '1.1' in (' '.join([str(r.get('tag_name','')),str(r.get('name',''))])).lower()]
           print((tags or [rs[0]['tag_name']])[0])
           PY
           )
-          echo "selected_tag=$TAG" > selection_sizing_artifact/selected_release.txt
+          echo "Using release $TAG"
           gh release download "$TAG" --dir _release_assets
-      - name: Inspect full universe
-        run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_universe.py
-      - name: Upload full-universe inventory
+      - name: Run frozen laboratory
+        run: python Projects/FXArena/Labs/SelectionSizing_v001/run_selection_sizing_v001.py
+      - name: Upload laboratory output
         uses: actions/upload-artifact@v4
         with:
-          name: selection-sizing-universe-inventory
-          path: selection_sizing_universe_artifact/
+          name: FXArena-SelectionSizing-v001-output
+          path: FXArena_SelectionSizing_v001_output/
           if-no-files-found: error
