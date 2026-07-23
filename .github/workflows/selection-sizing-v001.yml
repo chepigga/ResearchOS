@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - agent/selection-sizing-v001
+  pull_request:
+    branches:
+      - main
+      - research
   workflow_dispatch:
 
 permissions:
