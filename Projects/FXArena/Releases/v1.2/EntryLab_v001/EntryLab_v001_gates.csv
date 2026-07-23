@@ -1,0 +1,7 @@
+arm,EL1_total,EL2_DD,EL3_calendar,EL4_p_total,EL4_p_DD_bad,EL4,EL5,PASS
+E1,False,False,False,0.0,0.8708,False,False,False
+E2,False,False,False,0.0,0.88,False,False,False
+E3,False,False,True,0.0,0.655,False,True,False
+E4,False,False,False,0.0,0.825,False,True,False
+E5,False,False,True,0.0,0.6402,False,True,False
+E6,False,False,False,0.0,0.8812,False,True,False
