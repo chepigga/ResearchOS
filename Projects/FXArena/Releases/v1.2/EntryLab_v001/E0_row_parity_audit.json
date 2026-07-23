@@ -1,0 +1,12 @@
+{
+  "N": 3535,
+  "ordered_episode_equal": true,
+  "entry_max_absdiff": 0.0,
+  "risk_max_absdiff": 0.0,
+  "gross_max_absdiff": 3.333334781530084e-07,
+  "net_max_absdiff": 1.2715672426111269e-07,
+  "exit_t_diff_N": 0,
+  "gross_total_diff_R": -3.626851139415521e-06,
+  "net_total_diff_R": -1.922929641295923e-06,
+  "reference_sha256": "4129ce0d3097b56aa35e6350c8b16630e70665269736529920dff12590ec5950"
+}
