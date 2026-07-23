@@ -1,5 +1,18 @@
 # FXArena Changelog
 
+## 2026-07-24 — Entry Lab v001
+
+- Executed the frozen E0–E6 market/limit/hybrid tournament on 3535 exact GEO* signals with P4b exits.
+- Reproduced E0 signal-by-signal: entry/risk exact, zero exit-time differences, total difference -0.00000192R and gross DD difference +0.00000002R.
+- Retained E0 `market @ D3+60s`: +2256.51R, EV +0.63833R, gross MaxDD 12.436807R and zero negative months.
+- Found E1/E2 pure limits filled only 34.23%/31.63% and missed 64.05%/66.95% of the TB branch.
+- Found the TB branch contributed +1599.24R, or 70.9% of E0 total.
+- Recorded E3 +1847.72R, E4 +1551.17R, E5 +1829.93R and E6 +1648.59R; all were below E0 and had worse gross DD.
+- Ran paired moving-block bootstrap with shared indices, block 20, 5000 iterations and seed 2026072404; P(total candidate > E0)=0 for every candidate.
+- Closed EL1/EL2/EL4 as FAIL for every E1–E6 arm; E1/E2 also failed EL5.
+- Declared F10: market@D3+60 remains optimal, Entry layer closed, no v1.30 entry composition or tick-validation candidate.
+- Preserved all candidate trades, missed/TB analysis, bootstrap CSV, sampler source, replay runner and SHA256 manifests in the complete output artifact.
+
 ## 2026-07-24 — Session & Time-of-Day Lab v001
 
 - Executed the frozen four-block session diagnostic on exact P0/P4b 3535-trade fixtures.
@@ -25,7 +38,7 @@
 
 ## 2026-07-23 — Exit Tournament v003-lite
 
-- Reproduced canonical Gate 0: P0 gross MaxDD 14.415969R with 3535/3535 parity.
+- Reproduced canonical Gate 0: P0 gross DD 14.415969R with 3535/3535 parity.
 - Confirmed P4b RH1-RH3, RH5 permutation-200 and RH8 dedup robustness.
 - Recorded P4b: +2256.51R, EV +0.6383R, gross MaxDD 12.436807R.
 - Falsified P5 as standalone secondary under RH7.
