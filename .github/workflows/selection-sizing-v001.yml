@@ -44,6 +44,17 @@ jobs:
           )
           echo "Using release $TAG"
           gh release download "$TAG" --dir _release_assets
+      - name: Apply runtime compatibility patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Projects/FXArena/Labs/SelectionSizing_v001/run_selection_sizing_v001.py')
+          s=p.read_text()
+          s=s.replace('pd.to_datetime(meta.decision_3bar_time_unix, unit="s", utc=True).to_period("M")', 'pd.to_datetime(meta.decision_3bar_time_unix, unit="s", utc=True).dt.to_period("M")')
+          s=s.replace('pd.to_datetime(dec, unit="s", utc=True).to_period("M")', 'pd.to_datetime(pd.Series(dec), unit="s", utc=True).dt.to_period("M")')
+          p.write_text(s)
+          PY
       - name: Run frozen laboratory
         shell: bash
         run: |
