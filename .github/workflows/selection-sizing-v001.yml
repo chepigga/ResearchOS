@@ -26,18 +26,39 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --upgrade pandas numpy scipy pyarrow
-      - name: Download frozen v1.1 release
+      - name: Discover and download frozen release
         shell: bash
         run: |
-          mkdir -p _release_assets
-          gh release view v1.1 --json name,tagName,assets > _release_assets/release_view.json
-          gh release download v1.1 --dir _release_assets
+          mkdir -p _release_assets selection_sizing_artifact
+          gh release list --limit 100 > selection_sizing_artifact/release_list.txt || true
+          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > selection_sizing_artifact/releases_api.json || true
+          TAG=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('selection_sizing_artifact/releases_api.json')
+          try:
+              rs=json.loads(p.read_text())
+          except Exception:
+              rs=[]
+          preferred=[]
+          for r in rs:
+              text=' '.join([str(r.get('tag_name','')),str(r.get('name',''))]).lower()
+              if '1.1' in text:
+                  preferred.append(r.get('tag_name'))
+          print((preferred or [rs[0].get('tag_name') if rs else ''])[0] or '')
+          PY
+          )
+          echo "selected_tag=$TAG" | tee selection_sizing_artifact/selected_release.txt
+          if [ -n "$TAG" ]; then
+            gh release view "$TAG" --json name,tagName,assets > _release_assets/release_view.json
+            gh release download "$TAG" --dir _release_assets
+          fi
       - name: Inspect frozen inputs
         run: python Projects/FXArena/Labs/SelectionSizing_v001/inspect_inputs.py
       - name: Add release inventory
         shell: bash
         run: |
-          find _release_assets -maxdepth 3 -type f -printf '%p\t%s bytes\n' | sort > selection_sizing_artifact/release_files.txt
+          find _release_assets -maxdepth 4 -type f -printf '%p\t%s bytes\n' | sort > selection_sizing_artifact/release_files.txt
           python - <<'PY'
           import json, zipfile
           from pathlib import Path
