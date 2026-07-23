@@ -2,48 +2,47 @@
 
 - **Project:** FXArena
 - **Updated:** 2026-07-24
-- **Lifecycle status:** ACTIVE_RESEARCH / SESSION-TIMING v001 CLOSED F9
+- **Lifecycle status:** ACTIVE_RESEARCH / ENTRY LAB v001 CLOSED F10
 - **Canonical live baseline:** C2 / ContPrimary unchanged
 - **Frozen research control:** GEO* `MICRO30 / TP 2.0R / timeout 120 min`
 - **Canonical GEO* metrics:** N=3535; Total net=+1848.87R; EV net=+0.523020R; gross MaxDD=14.415969R
 - **DD convention:** gross equity MaxDD is the gate metric; net MaxDD is diagnostic and must be labelled
 
+## Entry Lab v001
+
+- **Control:** PASS with exact 3535/3535 signal order; entry/risk exact; 0 exit-time differences
+- **P4b E0:** +2256.511802R; EV +0.638334R; gross MaxDD 12.436807R; 0 negative months
+- **Tournament:** E1–E6 all FAIL; no arm passed EL1, EL2 or EL4
+- **Best failed total:** E3 confirmation at +1847.72R, still -408.79R versus E0 and gross DD 16.699R
+- **Pure limits:** E1/E2 fill 34.23%/31.63% and miss 64.05%/66.95% of TB signals
+- **TB economics:** 1274 TB signals contribute +1599.24R, 70.9% of E0 total
+- **Hybrids:** E4 +1551.17R; E5 +1829.93R; E6 +1648.59R; none passes paired bootstrap
+- **EL4 law:** paired moving-block, block 20, 5000 iterations, seed 2026072404; P(total>E0)=0 for every candidate
+- **Verdict:** F10 — `market @ D3+60s` remains optimal; Entry layer CLOSED
+- **Promotion:** none; no v1.30 entry composition and no candidate tick validation
+- **Result checkpoint:** `Releases/v1.2/EntryLab_v001/`
+
 ## Session & Time-of-Day Lab v001
 
-- **Control:** PASS; P0 N=3535, total +1848.874811R, gross MaxDD 14.415969R; P4b ordered episode parity exact
-- **Frozen blocks:** S1 Asia 00:00–08:59; S2 London 09:00–13:59; S3 NY overlap 14:00–17:59; S4 Late NY 18:00–23:59
-- **Stage 1:** completed on P0 and P4b, including yearly tables, top-5 DD attribution, October-2023 named cluster and diagnostic-only hourly curve
-- **Closest candidate:** S3 NY overlap contributed 42.48% of negative loss in P4b top-5 DD episodes, but trade share was 25.205% (> frozen 25% ceiling)
-- **Stability:** S3 DD overrepresentation sign was not stable in 4/4 years
-- **Stage 2:** NOT RUN; no block passed T1–T3
-- **Verdict:** F9 — session edge worth filtering not found
-- **Promotion:** no session veto; keep all four blocks; hour-level filters prohibited
-- **Result checkpoint:** `Releases/v1.2/SessionTiming_v001/`
+- **Control:** PASS; full S1–S4 diagnostic completed on P0/P4b
+- **Closest candidate:** S3 NY overlap contributed 42.48% of P4b top-5 DD losses at 25.205% trade share, but failed frozen T1 and 4/4-year T2 stability
+- **Stage 2:** NOT RUN
+- **Verdict:** F9 — no session edge worth filtering; keep all four blocks
 
 ## Selection & Sizing Lab v001
 
-- **Control:** PASS; exact N=3535, total +1848.874807R, gross MaxDD 14.415969R and p/outcome parity
-- **Part A sizing tiers:** economic signal confirmed but frozen candidate FAIL
-- **Part A result:** +1924.73R, EV +0.54448R, gross MaxDD 15.185R, 0 negative months
-- **Tercile diagnostic:** EV rises monotonically LOW +0.43369R -> MID +0.47725R -> HIGH +0.65763R
-- **SA4:** PASS; permutation-200 p=0.004975
-- **SA5:** FAIL; P(total improvement)=99.58%, but P(gross DD worse than P0 by >0.5R)=56.18%
-- **Part B:** STOP before candidate gates; frozen trailing q0.96/90d produced N=3515, not the PINNED N=3535
-- **Source audit:** original monthly top-4% selector reproduces PINNED exactly
-- **Threshold curve:** diagnostic only; top-5% produced +1911.84R / gross DD 14.700R but cannot be promoted under the failed control
-- **Composition:** not run
-- **Selection/sizing promotion:** none
+- **Part A:** fixed 0.7/1.0/1.3 sizing FAIL SA2/SA5 despite monotonic p_win economics
+- **Part B:** STOP; trailing q0.96/90d did not reproduce historical monthly-top-4% PINNED
+- **Promotion:** none; threshold convention remains unresolved
 
 ## Exit research
 
-- **v003-lite Gate 0:** PASS; exact P0 gross DD 14.415969R and 3535/3535 parity
-- **P4b observed:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R; net MaxDD 13.283629R; 0 negative months
-- **P4b computable gates:** RH1 PASS; RH2 PASS; RH3 PASS; RH4 diagnostic PASS; RH5 PASS; RH8 PASS
-- **P4b unresolved gates:** RH6 formal paired replay and RH7 exact spread-path replay
-- **P4b status:** STRONG CORE CONFIRMATION / FORMAL HOLD; still NO-GO for EA
-- **P5 v003-lite verdict:** FAIL RH7
-- **Deploy tests:** R1 Dukascopy and R2 forward are deferred until pre-EA
+- **P4b observed:** +2256.51R; EV +0.6383R; gross MaxDD 12.436807R; 0 negative months
+- **P4b computable gates:** RH1-RH3, RH5 and RH8 PASS
+- **P4b unresolved deploy gates:** formal paired RH6 and exact spread-path RH7
+- **P4b status:** STRONG CORE CONFIRMATION / FORMAL HOLD; NO-GO for EA
+- **P5 standalone:** FAIL RH7
 
 ## Next action
 
-Do not add session/time filters. Continue with a genuinely new information layer: Entry Lab or exact execution replay, while separately resolving the selection-threshold convention and P4b RH6/RH7 deploy debt.
+Do not reopen entry timing, session filters or fixed sizing weights without genuinely new information. Priority remains exact ExecutionReplay/deploy closure for P4b, resolution of the selection-threshold convention, and then Exit v004 only after tick replay.
