@@ -1,12 +1,24 @@
 # FXArena Status
 
 - **Project:** FXArena
-- **Updated:** 2026-07-23
-- **Lifecycle status:** ACTIVE_RESEARCH / SELECTION-SIZING v001 COMPLETED WITH B CONTROL STOP
+- **Updated:** 2026-07-24
+- **Lifecycle status:** ACTIVE_RESEARCH / SESSION-TIMING v001 CLOSED F9
 - **Canonical live baseline:** C2 / ContPrimary unchanged
 - **Frozen research control:** GEO* `MICRO30 / TP 2.0R / timeout 120 min`
 - **Canonical GEO* metrics:** N=3535; Total net=+1848.87R; EV net=+0.523020R; gross MaxDD=14.415969R
 - **DD convention:** gross equity MaxDD is the gate metric; net MaxDD is diagnostic and must be labelled
+
+## Session & Time-of-Day Lab v001
+
+- **Control:** PASS; P0 N=3535, total +1848.874811R, gross MaxDD 14.415969R; P4b ordered episode parity exact
+- **Frozen blocks:** S1 Asia 00:00–08:59; S2 London 09:00–13:59; S3 NY overlap 14:00–17:59; S4 Late NY 18:00–23:59
+- **Stage 1:** completed on P0 and P4b, including yearly tables, top-5 DD attribution, October-2023 named cluster and diagnostic-only hourly curve
+- **Closest candidate:** S3 NY overlap contributed 42.48% of negative loss in P4b top-5 DD episodes, but trade share was 25.205% (> frozen 25% ceiling)
+- **Stability:** S3 DD overrepresentation sign was not stable in 4/4 years
+- **Stage 2:** NOT RUN; no block passed T1–T3
+- **Verdict:** F9 — session edge worth filtering not found
+- **Promotion:** no session veto; keep all four blocks; hour-level filters prohibited
+- **Result checkpoint:** `Releases/v1.2/SessionTiming_v001/`
 
 ## Selection & Sizing Lab v001
 
@@ -21,8 +33,6 @@
 - **Threshold curve:** diagnostic only; top-5% produced +1911.84R / gross DD 14.700R but cannot be promoted under the failed control
 - **Composition:** not run
 - **Selection/sizing promotion:** none
-- **Important verdict boundary:** “1 bit sufficient” is not claimed because Part B was not validly adjudicated
-- **Result checkpoint:** `Releases/v1.2/SelectionSizing_v001/`
 
 ## Exit research
 
@@ -36,4 +46,4 @@
 
 ## Next action
 
-Decide and preregister the selection-threshold convention before another threshold lab: either reproduce the historical monthly top-4% selector or explicitly re-pin the system to trailing q0.96/90d. No post-hoc rescue of v001 is allowed.
+Do not add session/time filters. Continue with a genuinely new information layer: Entry Lab or exact execution replay, while separately resolving the selection-threshold convention and P4b RH6/RH7 deploy debt.
