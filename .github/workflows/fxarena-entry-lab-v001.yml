@@ -13,37 +13,55 @@ permissions:
   contents: read
 
 jobs:
-  inventory:
+  inspect-schemas:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-      - name: Inventory releases and candidate inputs
+      - name: Download exact frozen inputs
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p entry_lab_inventory
-          gh api repos/${GITHUB_REPOSITORY}/releases --paginate > entry_lab_inventory/releases.json
+          mkdir -p _entry_inputs entry_lab_schema
+          gh release download v1.0 --dir _entry_inputs --pattern 'EURUSD_M1_202301020005_202607172354.csv'
+          gh release download v1.0 --dir _entry_inputs --pattern 'FXArena_LevelBattleLevels_v003_EVENT_STREAM_EURUSD_M5.csv'
+          gh release download v1.0 --dir _entry_inputs --pattern 'FXArena_LevelBattleRounds_v003_EVENT_STREAM_EURUSD_M5.csv'
+          gh release download v.1.1 --dir _entry_inputs --pattern 'FXArena_Release_v1.1_COMPLETE.zip'
+      - name: Inspect schemas and coverage
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
-          import json, pathlib
-          rs=json.load(open('entry_lab_inventory/releases.json'))
-          rows=[]
-          for r in rs:
-              for a in r.get('assets',[]):
-                  rows.append({'tag':r.get('tag_name'),'release':r.get('name'),'asset':a.get('name'),'bytes':a.get('size'),'updated_at':a.get('updated_at'),'url':a.get('browser_download_url')})
-          pathlib.Path('entry_lab_inventory/release_assets.json').write_text(json.dumps(rows,indent=2))
-          keys=('m1','tick','spread','bidask','levelbattle','round','episode','p4b','v1.1','complete','entry')
-          cand=[x for x in rows if any(k in (x['asset'] or '').lower() for k in keys)]
-          pathlib.Path('entry_lab_inventory/candidate_assets.json').write_text(json.dumps(cand,indent=2))
-          with open('entry_lab_inventory/candidate_assets.txt','w') as f:
-              for x in cand:f.write(f"{x['tag']}\t{x['asset']}\t{x['bytes']}\t{x['url']}\n")
-          print('\n'.join(f"{x['tag']} {x['asset']} {x['bytes']}" for x in cand))
+          import json,zipfile,hashlib
+          from pathlib import Path
+          import pandas as pd
+          root=Path('_entry_inputs'); out=Path('entry_lab_schema')
+          files={p.name:p for p in root.iterdir() if p.is_file()}
+          report={}
+          for name,p in files.items():
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              report[name]={'bytes':p.stat().st_size,'sha256':h}
+          for name in ['EURUSD_M1_202301020005_202607172354.csv','FXArena_LevelBattleLevels_v003_EVENT_STREAM_EURUSD_M5.csv','FXArena_LevelBattleRounds_v003_EVENT_STREAM_EURUSD_M5.csv']:
+              p=files[name]
+              df=pd.read_csv(p,nrows=5,sep=None,engine='python')
+              report[name]['columns']=list(df.columns)
+              report[name]['head']=df.to_dict('records')
+              with open(p,'rb') as f:
+                  report[name]['header_raw']=f.readline().decode('utf-8','replace').strip()
+          z=files['FXArena_Release_v1.1_COMPLETE.zip']
+          with zipfile.ZipFile(z) as zz:
+              report[z.name]['members']=[{'name':x.filename,'bytes':x.file_size} for x in zz.infolist()]
+          out.mkdir(exist_ok=True)
+          (out/'schema_report.json').write_text(json.dumps(report,indent=2,default=str))
+          with open(out/'headers.txt','w') as f:
+              for n,r in report.items():
+                  f.write(f'## {n}\nbytes={r.get("bytes")}\nsha256={r.get("sha256")}\n')
+                  if 'header_raw' in r:f.write(r['header_raw']+'\n')
           PY
-          find Projects/FXArena -type f | sort > entry_lab_inventory/repo_fxarena_files.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: FXArena-EntryLab-v001-input-inventory
-          path: entry_lab_inventory/
+          name: FXArena-EntryLab-v001-schema
+          path: entry_lab_schema/
           if-no-files-found: error
