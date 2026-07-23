@@ -1,0 +1,20 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Large/raw local data
+*.tick
+*.hcc
+*.hc
+
+# Secrets
+.env
+.env.*
+!.env.example
