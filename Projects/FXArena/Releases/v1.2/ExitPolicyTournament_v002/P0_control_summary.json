@@ -1,0 +1,8 @@
+{
+  "N": 3535,
+  "gross_exact_1e-6": 1.0,
+  "exit_exact": 1.0,
+  "median_net_absdiff": 1.538774929699116e-08,
+  "sum_fixture": 1848.8748066288588,
+  "sum_calc": 1848.8748114422258
+}

@@ -2,14 +2,20 @@
 
 - **Project:** FXArena
 - **Updated:** 2026-07-23
-- **Lifecycle status:** HISTORICAL_IMPORT_COMPLETED
-- **Source checkpoint:** `Archive_Arena.zip`
-- **Verified artifacts:** 26 files indexed with SHA256
-- **Canonical baseline:** C2 remains the live baseline according to imported source reports; GEO* is the frozen research configuration `MICRO30 / TP 2.0R / timeout 120 min`
-- **Candidate results:** TrendBirth, MarketGeometry, OS Prototype, TimeoutSweep and BattleOutcome RiskFirst imported as historical research lines
-- **Execution assumptions:** available in imported reports/specifications; no unsupported assumptions added
-- **Data lineage:** checkpoint archive + GitHub Release `v1.0` for large CSV/tick/bar assets
-- **Import manifest:** `Archive/Imports/FXArena_v1_2/IMPORT_MANIFEST.csv`
-- **Integrity notes:** `FXArena_TrendBirthExecution_v001_report.md` is empty; the two C2 weight schedules are byte-identical
-- **Current blocker:** none for historical registration; further validation requires exact large assets from Release `v1.0`
-- **Next action:** continue from the registered backlog without reconstructing prior experiments from chat memory
+- **Lifecycle status:** ACTIVE_RESEARCH
+- **Historical import:** COMPLETED — 26 artifacts indexed with SHA256
+- **Canonical live baseline:** C2 / ContPrimary remains unchanged
+- **Frozen research control:** GEO* `MICRO30 / TP 2.0R / timeout 120 min`
+- **Current completed lab:** Exit Policy Tournament v002
+- **P0 parity:** 3535/3535, exact exit parity, gross parity at 1e-6
+- **Tournament verdict:** P1-P7 all formal FAIL; no policy promoted
+- **Best frozen policy economics:** P4 `+2134.36R`, EV `+0.6038R`, 0 negative months; failed RH2 and RH6
+- **Current research candidate:** P4b — P4 on TB, P5 on non-TB
+- **P4b observed result:** `+2256.51R`, EV `+0.6383R`, MaxDD `13.284R`, PF `4.297`, 0/42 negative months
+- **P4b status:** EXPLORATORY GO FOR FROZEN CONFIRMATION; not a formal tournament PASS
+- **Production / EA status:** NO-GO
+- **ContPrimary protection:** live/demo-forward baseline was not modified
+- **Data lineage:** pinned ResearchOS v1.1 fixtures + exact supplied tournament/P4b archives
+- **Release checkpoint:** `Releases/v1.2/ExitPolicyTournament_v002/`
+- **Current blocker:** exact RH5/RH6 recomputation requires the original tournament sampler/seeds and an untouched replication set
+- **Next action:** Exit Policy Tournament v003 — one frozen P4b primary candidate, no tuning
