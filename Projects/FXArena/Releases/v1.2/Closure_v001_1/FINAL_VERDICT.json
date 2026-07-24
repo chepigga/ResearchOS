@@ -1,0 +1,12 @@
+{
+  "session": "Closure v001.1",
+  "status": "PARTIAL_PASS_P4B_TRANSFER_STOP",
+  "control_A": "PASS",
+  "control_B": "PASS",
+  "official_live_reference": "trades_GEOstar_TRAILING_PINNED.csv.gz",
+  "official_research_reference": "GEO*-MONTHLY unchanged",
+  "P4b_transfer": "STOP_MISSING_FROZEN_TB_FLAG",
+  "P4b_missing_N": 622,
+  "C1_C4_executed": false,
+  "cont_primary_touched": false
+}
