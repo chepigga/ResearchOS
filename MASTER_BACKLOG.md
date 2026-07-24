@@ -24,14 +24,27 @@
 - **Required files:** none
 - **Next action:** create `research` after bootstrap verification
 
-## XAU-BH-OOS-001v2 — Validate frozen BH_SWEEP OOS
+## XAU-BH-OOS-002 — Validate frozen BH_SWEEP OOS
 
 - **Project:** Grok XAU
 - **Priority:** P0
-- **Status:** PREREGISTERED / BLOCKED_DATA_AND_ENGINE
-- **Dependencies:** exact frozen MorrisCandle V2 oracle/config; original in-sample fixture; same-feed XAUUSD M15 through 2026-07-23
-- **Goal:** reproduce the N=88, B52/S36, EV=+0.276R control and then validate BH_SWEEP on 2026-05-01..2026-07-23 without tuning
-- **Done when:** Step 0 passes the preregistered drift gate, OOS trades and monthly artifacts are stored, and PASS/FAIL/INCONCLUSIVE is recorded
-- **Risks:** pipeline drift; feed substitution; unavailable frozen engine; insufficient OOS trades; post-hoc near-miss reinterpretation
-- **Required files:** MorrisCandle V2 package, control fixture, `XAUUSD_M15_2024-12-01_2026-07-23.csv`
-- **Next action:** revoke the exposed xAI key, run the same-feed M15 exporter, and recover the exact frozen oracle package before Step 0
+- **Status:** VALIDATED / PASS
+- **Control:** N=88, B52/S36, legacy EV=+0.275780R; 88/88 entry-time/direction matches; exit mismatches 0
+- **OOS:** 2026-05-01..2026-07-23; N=14; EV_net=+0.235714R; Sum=+3.300R; May/June/July positive
+- **Decision:** `InpBH_Enable=true` permitted on demo only; live prohibited
+- **Canonical configuration:** AK47_FT v1.56 BH v1.55; EMA20; SL 0.25 ATR; TP2R; TO96; fixed cost -0.05R
+- **Risks:** modest N=14; SELL leg EV=-0.05R; bar-level cost model; execution drift
+- **Next action:** one complete controlled demo forward month at `InpBH_RiskPct=0.30` with full lifecycle logging
+- **Links:** `Projects/Grok_XAU/STATUS.md`, `Projects/Grok_XAU/Reports/BH_OOS_002_v002_Report.md`
+
+## XAU-BH-FWD-001 — Run BH_SWEEP demo forward
+
+- **Project:** Grok XAU
+- **Priority:** P0
+- **Status:** READY
+- **Dependencies:** validated OOS PASS
+- **Goal:** verify frozen signal parity and real demo execution for one complete month
+- **Configuration:** `InpBH_Enable=true`, `InpBH_RiskPct=0.30`, all v1.56 defaults unchanged
+- **Required logging:** signal, fill, spread, slippage, rejects, SL, TP, time-stop and portfolio gates
+- **Stop conditions:** missing/duplicate signals, material oracle drift, materially excessive costs, or unsafe drawdown behaviour
+- **Done when:** forward report and explicit live/no-live ADR are committed
