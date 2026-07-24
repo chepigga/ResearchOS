@@ -1,0 +1,5 @@
+gate,threshold_R,observed_R,PASS,P0_negative_months,P4b_negative_months,P4b_all_years_positive,p_total_P4b_gt_P0,threshold,p_DD_P4b_gt_P0_plus_0_5_diagnostic
+C1,2078.5746515483247,2277.306669898074,True,,,,,,
+C2,14.915969148278236,10.618161241655343,True,,,,,,
+C3,,,False,0.0,1.0,True,,,
+C4,,,True,,,,1.0,0.95,0.0072
