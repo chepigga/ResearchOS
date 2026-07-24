@@ -24,8 +24,11 @@ The result is economically interesting but insufficiently stable to replace GEO*
 | Project | Research line | Version | Status | Locked baseline | Objective | Discipline | Link |
 |---|---|---|---|---|---|---|---|
 | FXArena | Exit Policy Tournament | v002 | PREREGISTERED / FROZEN BEFORE RUN | Release v.1.1; GEO* `MICRO30 + TP2.0 + TO120`; N=3535 | paired tournament of ML, rule-based and simple global exit policies while entries, stop and risk remain frozen | P0 fixture diff first; one P1–P7 run; RH1–RH6; frozen Occam rule; no tuning | [Spec](Projects/FXArena/Specs/ExitPolicyTournament_TZ_v002.md) |
+| Grok XAU | BH_SWEEP OOS validation | TZ-BH-OOS-001v2 | PREREGISTERED / BLOCKED_DATA_AND_ENGINE | claimed IS control target N=88, B52/S36, EV=+0.276R; must be reproduced before OOS | validate frozen MorrisCandle V2 + EMA20 on XAUUSD M15, 2026-05-01..2026-07-23 | same broker feed; no tuning; control drift gate; net cost −0.05R/trade; PASS/FAIL/INCONCLUSIVE preregistered | [Spec](Projects/Grok_XAU/Specs/TZ-BH-OOS-001v2.md) |
 
 ## Pending execution requirements
+
+### FXArena Exit Policy Tournament v002
 
 The v002 specification is committed and frozen. Numerical results are not yet registered. Execution requires verified runtime access to:
 
@@ -35,6 +38,17 @@ The v002 specification is committed and frozen. Numerical results are not yet re
 - full universe count 291659;
 - pinned GEO* trade fixture with N=3535.
 
+### Grok XAU BH_OOS_001v2
+
+No OOS result is registered. Execution requires:
+
+- exact frozen MorrisCandle V2 oracle and config package;
+- original in-sample control fixture;
+- same-feed XAUUSD M15 export covering 2024-12-01..2026-07-23;
+- successful Step 0 reproduction within N≤2 and EV≤0.02R drift tolerances.
+
 ## Governance note
 
 GitHub Release `v.1.1` is the current FXArena checkpoint. `Projects/FXArena/STATUS.md` is the operational source of truth; this register is the factual ledger. The v002 laboratory may change the canonical exit only after complete artifacts, hashes, report and a new register decision are committed. ContPrimary v1.20 demo-forward is outside the tournament and must remain untouched.
+
+For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. `InpBH_Enable` remains false until the preregistered OOS laboratory returns PASS; even then, enablement is demo-only for one forward month.
