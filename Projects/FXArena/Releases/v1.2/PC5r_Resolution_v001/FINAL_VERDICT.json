@@ -1,0 +1,31 @@
+{
+  "session": "PC5-r Resolution v001",
+  "status": "P4C_CLOSED_FINAL__DEPLOY_EXIT_P0",
+  "gate0": {
+    "N": 3515,
+    "episode_order_equal": true,
+    "P0_gross_max_absdiff": 1.2715672426111269e-07,
+    "P0_net_max_absdiff": 8.900961816493691e-07,
+    "P0_exit_mismatch_N": 0,
+    "P4c_gross_max_absdiff": 3.3661962106634746e-13,
+    "P4c_net_max_absdiff": 3.277378368693462e-13,
+    "P4c_exit_mismatch_N": 0,
+    "P0_total_R": 1889.6133243679192,
+    "P4c_total_R": 2127.402776105499,
+    "PASS": true
+  },
+  "changed_BE_exit_N": 1070,
+  "central_cell": [7.5, 1.5, 0.05],
+  "fact_cell": [5.0, 1.0, 0.05],
+  "extreme_diagnostic_cell": [10.0, 1.5, 0.05],
+  "gates": {
+    "PR1": {"cell": "commission7.5_spread1.5_slip0.05", "requirement": "P4c total >= P0 total * 1.10", "P0_total_R": 1779.7924844152353, "threshold_R": 1957.771732856759, "P4c_total_R": 1965.8158936639752, "PASS": true},
+    "PR2": {"cell": "commission7.5_spread1.5_slip0.05", "requirement": "P4c gross DD <= P0 gross DD + 0.5R", "P0_gross_DD_R": 14.436103170741376, "threshold_R": 14.936103170741376, "P4c_gross_DD_R": 10.819815142135212, "PASS": true},
+    "PR3_DIAGNOSTIC": {"cell": "commission10_spread1.5_slip0.05", "PR1_holds": true, "PR2_holds": true, "P0_total_R": 1675.4487746308932, "P4c_total_R": 1861.472183879633, "P0_gross_DD_R": 14.436103170741376, "P4c_gross_DD_R": 10.819815142135212, "GATE": false},
+    "PR4": {"cell": "commission7.5_spread1.5_slip0.05", "requirement": "P(total P4c > P0) >= 0.95", "probability": 0.9998, "p_DD_P4c_gt_P0_plus_0_5_diagnostic": 0.015, "block": 20, "iterations": 5000, "seed": 2026072407, "PASS": true},
+    "PR5": {"cell": "commission5_spread1.0_slip0.05", "requirement": "PR1 and PR2 at measured fact costs", "PR1_holds": false, "PR2_holds": true, "P0_total_R": 1931.3508082816559, "P4c_total_R": 2115.6402600192355, "P0_gross_DD_R": 14.415969147956787, "P4c_gross_DD_R": 10.768161241655207, "PASS": false}
+  },
+  "all_required_gates_pass": false,
+  "bootstrap": {"law": "paired moving-block shared indices", "block": 20, "iterations": 5000, "seed": 2026072407},
+  "governance": {"third_PC5_retrial_allowed": false, "P4c_rules_changed": false, "P0_rules_changed": false, "grid_changed_after_run": false, "ContPrimary_touched": false, "F1_F10_active": true}
+}
