@@ -1,0 +1,39 @@
+name: Reconstruct FXArena ContPrimary v1.22
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/fxarena-contprimary-v122
+    paths:
+      - 'Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/source_parts/**'
+      - 'Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/reconstruct_source.sh'
+      - '.github/workflows/reconstruct-fxarena-contprimary-v122.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/fxarena-contprimary-v122
+
+      - name: Reconstruct and verify source
+        run: bash Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/reconstruct_source.sh
+
+      - name: Commit verified MQ5 source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Projects/FXArena/Code/MQL5/FXArena_ContPrimary_v122.mq5
+          if git diff --cached --quiet; then
+            echo "Verified source already committed."
+          else
+            git commit -m "Reconstruct FXArena ContPrimary v1.22 source"
+            git push
+          fi
