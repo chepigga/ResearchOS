@@ -1,4 +1,4 @@
-name: Reconstruct FXArena ContPrimary v1.22
+name: Finalize FXArena ContPrimary v1.22 source
 
 on:
   workflow_dispatch:
@@ -6,15 +6,13 @@ on:
     branches:
       - feature/fxarena-contprimary-v122
     paths:
-      - 'Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/source_parts/**'
-      - 'Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/reconstruct_source.sh'
       - '.github/workflows/reconstruct-fxarena-contprimary-v122.yml'
 
 permissions:
   contents: write
 
 jobs:
-  reconstruct:
+  finalize:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
@@ -26,14 +24,17 @@ jobs:
       - name: Reconstruct and verify source
         run: bash Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/reconstruct_source.sh
 
-      - name: Commit verified MQ5 source
+      - name: Verify exact source hash
+        run: |
+          echo "d9cabc9267d0bf8bff6d42d4f4faddcbf138cd87f2a7494e78d0f372550b781d  Projects/FXArena/Code/MQL5/FXArena_ContPrimary_v122.mq5" | sha256sum -c -
+
+      - name: Remove transport-only reconstruction files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Projects/FXArena/Code/MQL5/FXArena_ContPrimary_v122.mq5
-          if git diff --cached --quiet; then
-            echo "Verified source already committed."
-          else
-            git commit -m "Reconstruct FXArena ContPrimary v1.22 source"
-            git push
-          fi
+          git rm -r Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/source_parts
+          git rm Projects/FXArena/Releases/v1.2/ContPrimary_v1_22/reconstruct_source.sh
+          git rm .github/workflows/reconstruct-fxarena-contprimary-v122.yml
+          git commit -m "Finalize FXArena ContPrimary v1.22 release"
+          git push
