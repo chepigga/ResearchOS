@@ -1,0 +1,11 @@
+{
+  "N_pre30_TP2_when_tb_true": 193,
+  "N_policy_divergence": 193,
+  "P4b_total_R": 2256.5118021428602,
+  "P4c_total_R": 2110.8029946513716,
+  "delta_total_P4c_minus_P4b_R": -145.70880749148864,
+  "delta_EV_P4c_minus_P4b_R": -0.04121889886605057,
+  "P4b_gross_DD_R": 12.436806878781454,
+  "P4c_gross_DD_R": 12.436806878781454,
+  "delta_gross_DD_P4c_minus_P4b_R": 0.0
+}
