@@ -21,4 +21,4 @@ Anyone with access to the source/file history can use the credential until it is
 
 ## Repository action
 
-Only a redacted UTF-8 archival copy is stored. The original SHA256 is recorded for provenance; the secret-bearing bytes are not committed.
+The original SHA256 and classification are recorded for provenance. No secret-bearing source bytes were committed. A redacted UTF-8 copy was prepared locally only for inspection and hashing.
