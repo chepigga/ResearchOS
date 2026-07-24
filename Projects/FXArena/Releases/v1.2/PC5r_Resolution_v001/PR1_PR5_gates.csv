@@ -1,0 +1,6 @@
+gate,cell,requirement,P0_total_R,threshold_R,P4c_total_R,PASS,P0_gross_DD_R,P4c_gross_DD_R,PR1_holds,PR2_holds,GATE,probability,p_DD_P4c_gt_P0_plus_0_5_diagnostic,block,iterations,seed
+PR1,commission7.5_spread1.5_slip0.05,P4c total >= P0 total * 1.10,1779.7924844152353,1957.771732856759,1965.8158936639752,True,,,,,,,,,,
+PR2,commission7.5_spread1.5_slip0.05,P4c gross DD <= P0 gross DD + 0.5R,,14.936103170741376,,True,14.436103170741376,10.819815142135212,,,,,,,,
+PR3_DIAGNOSTIC,commission10_spread1.5_slip0.05,,1675.4487746308932,,1861.472183879633,,14.436103170741376,10.819815142135212,True,True,False,,,,,
+PR4,commission7.5_spread1.5_slip0.05,P(total P4c > P0) >= 0.95,,,,True,,,,,,0.9998,0.015,20.0,5000.0,2026072407.0
+PR5,commission5_spread1.0_slip0.05,PR1 and PR2 at measured fact costs,1931.3508082816559,,2115.6402600192355,False,14.415969147956787,10.768161241655207,False,True,,,,,,
