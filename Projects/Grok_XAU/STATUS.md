@@ -3,7 +3,7 @@
 **Updated:** 2026-07-24  
 **Project status:** ACTIVE / REANIMATED  
 **Active laboratory:** BH_OOS_001 v2  
-**Laboratory status:** PREREGISTERED / ENGINE_IDENTIFIED / BLOCKED_DATA_AND_PARITY
+**Laboratory status:** PREREGISTERED / ENGINE_IDENTIFIED / DATA_COVERAGE_FAIL
 
 ## Frozen hypothesis
 
@@ -34,11 +34,27 @@ See: `Reports/BH_SWEEP_EngineAudit_v001.md`.
 - INCONCLUSIVE: `N < 8`
 - Near-miss handling is forbidden except under a separate NM1-NM4 decision.
 
+## Uploaded data audit
+
+Received `XAUUSD_M15_202601020100_202607172345.csv`:
+
+- rows: `12,818`;
+- first bar: `2026-01-02 01:00`;
+- last bar: `2026-07-17 23:45`;
+- SHA256: `cf73c81110f2fc6451accee4b602750e4ab852ae2df656fde76dec4fa1915495`;
+- no duplicates or invalid OHLC rows.
+
+This file is structurally valid but fails the frozen coverage requirement. It omits December 2024 through December 2025 and also ends six calendar days before the registered OOS endpoint.
+
+Decision: Step 0 and Step 1 were **not run**. No partial OOS expectancy was opened or reported.
+
+See: `Reports/BH_OOS_001v2_DataAudit_2026-07-24.md`.
+
 ## Current blockers
 
-1. Fresh same-feed XAUUSD M15 export covering 2024-12-01..2026-07-23 is not available.
-2. Exact original in-sample boundary or original N=88 trade fixture is not available for deterministic parity comparison.
-3. Oracle execution conventions still require parity confirmation: EMA/ATR implementation, market-entry price convention, same-bar TP/SL collision rule, and time-stop price.
+1. Same-feed XAUUSD M15 export must cover `2024-12-01` through at least `2026-07-23 23:45`.
+2. Exact original in-sample boundary or original N=88 trade fixture is still desirable for deterministic parity comparison.
+3. Oracle execution conventions require Step 0 confirmation: EMA/ATR implementation, market-entry price convention, same-bar TP/SL collision rule, and time-stop price.
 4. `AK47_FT_EA_156` integrated execution contains non-oracle gates: daily stop, max trades/day, loss-streak cooldown, one-open-BH restriction, portfolio gates, USD 3 SL floor, spread/STOPLEVEL/FREEZELEVEL/margin gates.
 
 ## Legacy clarification
@@ -57,4 +73,4 @@ The unrelated legacy `Grok_Core_XAU.mq5` contained a plaintext xAI API key. The 
 
 ## Next executable action
 
-Run `XAUUSD_M15_Exporter_v001.mq5` inside the same MT5 broker terminal used for the in-sample work and upload the resulting CSV. Then build the isolated parity harness from the recovered BH module and execute Step 0 before opening the OOS window.
+In the same broker terminal, download/load XAUUSD M15 history back to December 2024, then rerun `XAUUSD_M15_Exporter_v001.mq5` for the full frozen interval. Only after the replacement CSV passes coverage validation may Step 0 be executed.
