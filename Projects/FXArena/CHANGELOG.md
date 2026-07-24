@@ -1,5 +1,20 @@
 # FXArena Changelog
 
+## 2026-07-24 — REV_Confirmation v001
+
+- Resumed the frozen REV confirmation session after receiving the missing `LevelBattleEvents v003 EVENT_STREAM` archive.
+- Verified the event provenance: 1,196,467 rows, 106,079 `ACCEPTANCE_CONFIRMED` events and coverage from 2023-01-02 through 2026-07-17; published source SHA256 values.
+- Classified 2023 as scenario (a), an out-of-dataset control, based on the documented artifact chronology.
+- Reconstructed `max_penetration_seen@D3` causally from M1 bars available before D3 rather than using the episode-final penetration field.
+- Identified the critical forensic defect in the exploratory candidate: `Rounds.max_penetration_atr` accumulates through episode end and excludes 23,467 episodes that were shallow at D3 but deepened beyond 1 ATR later.
+- Recorded the causal 2023 RC1 result: N=2109, EV -0.287213R, PF 0.6570, total -605.732668R, gross MaxDD 184R and net MaxDD 611.473R.
+- Recorded 12/12 negative months and negative results in both halves of 2023; only the N gate passed.
+- Confirmed that the non-production 0.75 threshold also fails: N=1738, EV -0.304R, PF 0.64 and 12/12 negative months.
+- Confirmed the same failure on the original 2024-2026H1 period using the true D3 snapshot: N=5830, EV -0.271R, PF 0.677, total -1579.954R and 29/30 negative months.
+- Declared `F11_SHALLOW_ACCEPTANCE_REV_FALSIFIED`.
+- Applied the frozen stop: RC2-RC6 were not executed, no portfolio claim was made and no REV EA code/module was produced.
+- Prohibited final-episode penetration as a live D3 selector or future confirmation proxy; kept ContPrimary untouched.
+
 ## 2026-07-24 — PC5-r Resolution v001
 
 - Executed the final permitted PC5 adjudication as a symmetric paired stress of P0 and P4c on the exact 3515 GEO*-TRAILING entries.
