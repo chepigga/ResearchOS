@@ -1,0 +1,16 @@
+{
+  "window": "2026-05-01..2026-07-23",
+  "N": 14,
+  "BUY": 8,
+  "SELL": 6,
+  "TP": 6,
+  "SL": 8,
+  "TIMESTOP": 0,
+  "EV_raw": 0.2857142857142857,
+  "EV_net": 0.23571428571428574,
+  "sumR_raw": 4.0,
+  "sumR_net": 3.3000000000000003,
+  "verdict": "PASS",
+  "deployment": "DEMO_ONLY",
+  "live": "PROHIBITED_PENDING_FORWARD"
+}
