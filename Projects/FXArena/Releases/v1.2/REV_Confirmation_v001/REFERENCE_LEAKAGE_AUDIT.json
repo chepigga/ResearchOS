@@ -1,0 +1,36 @@
+{
+  "finding": "The strong exploratory reference is aligned with Rounds.max_penetration_atr, which is accumulated through episode end, not frozen at D3.",
+  "counts": {
+    "acceptance_events_2024_2026H1": 78880,
+    "causal_d3_peak_le_1_raw": 31749,
+    "final_episode_max_pen_le_1_raw": 8299,
+    "shallow_at_d3_but_deepened_after_d3": 23467
+  },
+  "causal_2024_2026H1": {
+    "n": 5830,
+    "wr": 0.320926243567753,
+    "ev_r": -0.27100406255848,
+    "total_r": -1579.9536847159382,
+    "pf": 0.6765279679847344,
+    "gross_maxdd_r": 263.0,
+    "net_maxdd_r": 1586.0335140012066,
+    "negative_months": 29,
+    "first_half_r": -941.2546870240174,
+    "second_half_r": -638.6989976919208
+  },
+  "quoted_exploratory_reference": {
+    "n": 2801,
+    "ev_r": 0.418,
+    "pf": 1.75,
+    "total_r": 1171.6,
+    "maxdd_r": 15.44
+  },
+  "diagnostic_final_episode_filter_replay_approx": {
+    "n": 2719,
+    "ev_r": 0.40245441136582555,
+    "pf": 1.7345716876989932,
+    "total_r": 1094.2735445036797,
+    "net_maxdd_r": 19.228702890419413
+  },
+  "interpretation": "Final-episode penetration excludes episodes that were shallow at D3 but penetrated deeper later; this is post-D3 information and cannot be used by a live D3 funnel."
+}
