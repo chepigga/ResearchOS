@@ -1,0 +1,6 @@
+step,status,reason
+RC2,NOT_EXECUTED,RC1 FAIL -> F11 frozen stop
+RC3,NOT_EXECUTED,RC1 FAIL -> F11 frozen stop
+RC4,NOT_EXECUTED,RC1 FAIL -> F11 frozen stop
+RC5,NOT_EXECUTED,RC1 FAIL -> F11 frozen stop
+RC6,NOT_EXECUTED,RC1 FAIL -> F11 frozen stop
