@@ -1,5 +1,22 @@
 # FXArena Backlog
 
+## FXA-REV-CONF-001 — REV_Confirmation v001
+
+- **Priority:** P0
+- **Status:** COMPLETED / F11 / CLOSED
+- **Scenario 2023:** (a), out-of-dataset control under documented artifact chronology
+- **Engine:** `FXArena LevelBattleEngine v003 EVENT_STREAM`; 1,196,467 events; 106,079 acceptance confirmations
+- **Production causal funnel:** `ACCEPTANCE_CONFIRMED` plus M1-reconstructed `max_penetration_seen@D3 <= 1.0 ATR`
+- **RC1 2023:** N=2109; EV -0.287213R; PF 0.6570; total -605.733R; gross DD 184R; net DD 611.473R
+- **Stability:** 12/12 negative months; both half-years negative
+- **Gates:** only N passed; EV, PF, negative-month and half-year gates failed
+- **Verdict:** `F11_SHALLOW_ACCEPTANCE_REV_FALSIFIED`
+- **Frozen stop:** RC2-RC6 not executed; REV EA/module work prohibited
+- **Forensic diagnosis:** historical strong candidate used final-episode `max_penetration_atr`; 23,467 episodes shallow at D3 later deepened beyond 1 ATR, so the selector consumed post-D3 information
+- **Original reference-period causal diagnostic:** N=5830; EV -0.271R; PF 0.677; 29/30 negative months
+- **Result:** `Releases/v1.2/REV_Confirmation_v001/`
+- **Reopen:** prohibited for this funnel; any future REV hypothesis must use genuinely new causal information and a new frozen specification
+
 ## FXA-PC5R-001 — Final paired cost adjudication
 
 - **Priority:** P0
@@ -45,6 +62,13 @@
 - **P4c:** causal and economically strong, but final paired fact-cost gate PR5 failed
 - **Reopen:** prohibited through PC5; any genuinely new exit family requires new data and a new research program, not a third PC5 trial
 
+## FXA-REV-LINE — REV leg research closure
+
+- **Status:** CLOSED F11 FOR SHALLOW-ACCEPTANCE FUNNEL
+- **Deploy:** no REV leg and no magic 777003 module
+- **Cause:** causal D3 penetration selector is negative in 2023 and 2024-2026H1; old positive result used future episode penetration
+- **Reopen:** only a genuinely different causal REV mechanism under a new preregistered program
+
 ## FXA-ENTRY-001 — Entry Lab v001
 
 - **Status:** COMPLETED / CLOSED F10
@@ -64,9 +88,10 @@
 ## FXA-AUGUST-EXAM — Live benchmark execution
 
 - **Priority:** P0
-- **Status:** READY WITH P0 BASELINE
+- **Status:** READY WITH P0 BASELINE / CONT ONLY
 - **Reference:** `trades_GEOstar_TRAILING_PINNED.csv.gz`
 - **Exit policy:** P0 final; P4b/P4c excluded
+- **REV:** excluded under F11
 - **Measured cost basis:** 5pt RT; compare paired live results against P0 only
 
 ## FXA-DATA-001 — Execution provenance
