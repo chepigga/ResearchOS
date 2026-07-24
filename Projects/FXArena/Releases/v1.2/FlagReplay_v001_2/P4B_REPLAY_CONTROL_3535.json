@@ -1,0 +1,12 @@
+{
+  "N": 3535,
+  "episode_order_equal": true,
+  "gross_max_absdiff": 3.333334817057221e-07,
+  "net_max_absdiff": 1.2715672426111269e-07,
+  "exit_time_mismatch_N": 0,
+  "total_replay_R": 2256.5118021428602,
+  "total_fixture_R": 2256.51180406579,
+  "gross_DD_replay_R": 12.436806878781454,
+  "gross_DD_fixture_R": 12.436806859999933,
+  "PASS": true
+}
