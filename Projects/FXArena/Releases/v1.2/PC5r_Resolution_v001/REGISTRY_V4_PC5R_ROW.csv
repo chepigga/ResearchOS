@@ -1,0 +1,2 @@
+registry_key,N,central_P0_total_R,central_P4c_total_R,central_P0_gross_DD_R,central_P4c_gross_DD_R,PR1,PR2,PR4,PR5,status,deploy_default,third_PC5_retrial_allowed
+P4c-PC5r-TRAILING,3515,1779.7924844152353,1965.8158936639752,14.436103170741376,10.819815142135212,True,True,True,False,CLOSED_FINAL_RESEARCH_ONLY,P0 final on current data,False
