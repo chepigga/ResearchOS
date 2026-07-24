@@ -1,0 +1,6 @@
+gate,requirement,threshold_R,observed_R,PASS,negative_months,worst_month_R,all_years_positive,p_total_P4c_gt_P0,p_DD_P4c_gt_P0_plus_0_5_diagnostic,spread_multiplier,commission_points,slip_R,changed_BE_exit_N,spread_structure_exit_time_diff_N,stressed_total_R,PC1_threshold_R,stressed_gross_DD_R,PC2_threshold_R,PC1_holds,PC2_holds
+PC1,total >= P0*1.10,2078.5746515483247,2127.4027761054895,True,,,,,,,,,,,,,,,,
+PC2,gross DD <= P0+0.5,14.915969148278236,10.618161241655343,True,,,,,,,,,,,,,,,,
+PC3,neg months <=1; worst >=-3R; all years positive,,,True,1.0,-2.0402031652937107,True,,,,,,,,,,,,,
+PC4,P(total P4c>P0)>=0.95,,,True,,,,1.0,0.0102,,,,,,,,,,,
+PC5,spread x1.5 + commission9 + 0.05R slip on changed BE exits retains PC1-PC2,,,False,,,,,,1.5,9.0,0.05,1070.0,195.0,1903.2096677933632,2078.5746515483247,10.819815142135212,14.915969148278236,False,True
