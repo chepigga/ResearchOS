@@ -1,80 +1,81 @@
 # FXArena Backlog
 
+## FXA-TBFLAG-REPLAY-001 — Flag-Replay v001.2
+
+- **Priority:** P0
+- **Status:** COMPLETED / STOP-ALARM C3 / NOT PROMOTED
+- **Generator control:** PASS 3535/3535, 0 mismatches
+- **Archived P4b replay:** PASS, 0 exit-time mismatches
+- **Universe artifact:** 291659 episode flags; 57811 TB
+- **Trailing completion:** 3515/3515 flags; 1244 TB; 622 trailing-only resolved, 196 TB
+- **Economics:** P0 +1889.61R / DD 14.416R; P4b +2277.31R / DD 10.618R
+- **Gates:** C1 PASS; C2 PASS; C3 FAIL; C4 PASS at 100%
+- **C3 failure:** one negative month, 2023-02 = -2.040R, while P0 has zero negative months
+- **Pin:** `trades_P4b_TRAILING_PINNED` NOT CREATED
+- **Candidate:** preserved as `trades_P4b_TRAILING_CANDIDATE_NOT_PINNED.csv.gz`
+- **Result:** `Releases/v1.2/FlagReplay_v001_2/`
+- **Prohibited:** retroactively relax C3, tune flag thresholds, or promote candidate under the current session
+
+## FXA-P4C-CAUSAL — Strictly causal P4 exit policy
+
+- **Priority:** P0 / PRE-DEPLOY
+- **Status:** NEW FROZEN SPEC REQUIRED
+- **Reason:** archived P4b applies a flag observed after the first 30-minute window retrospectively from trade inception
+- **Required policy:** start with P0 TP2; only extend to TP3 if the trade remains open when the flag becomes observable
+- **Controls:** reproduce archived feature generator; compare causal P4c against GEO*-TRAILING under new preregistered gates
+- **Prohibited:** use the current Flag-Replay result as proof that causal P4c passes
+
+## FXA-C3-ADJUDICATION — Transfer-gate governance
+
+- **Priority:** P1 / DECISION
+- **Status:** OPTIONAL NEW SPEC
+- **Question:** whether a single isolated negative month can be accepted when total, gross DD, all years and paired bootstrap are materially better
+- **Boundary:** any revised calendar gate must be preregistered and applied symmetrically; it cannot amend Flag-Replay v001.2 post hoc
+
 ## FXA-CLOSURE-0011 — Monthly vs trailing canonicalization
 
 - **Priority:** P0
-- **Status:** COMPLETED / PARTIAL PASS / P4b TRANSFER STOP
-- **Control A:** monthly exact, N=3535, +1848.874807R, gross DD 14.415969R
-- **Control B:** trailing q0.96/90d exact, N=3515, +1889.613320R, gross DD 14.415969R
-- **Official live pin:** `trades_GEOstar_TRAILING_PINNED.csv.gz`
-- **Official research pin:** existing GEO*-MONTHLY fixture unchanged
-- **Intersection:** 2893; monthly-only 642; trailing-only 622
+- **Status:** COMPLETED / LIVE P0 PIN CREATED
+- **Monthly:** N=3535, +1848.874807R, gross DD 14.415969R
+- **Trailing:** N=3515, +1889.613320R, gross DD 14.415969R
 - **Rule:** live comparisons only against TRAILING; research comparisons only against MONTHLY
-- **P4b result:** C1-C4 NOT EXECUTED; 622 trailing-only episodes lack frozen causal `tb_flag`
-- **P4b trailing pin:** NOT CREATED
 - **Result:** `Releases/v1.2/Closure_v001_1/`
-
-## FXA-TBFLAG-REPLAY-001 — Full-universe causal P4 flag replay
-
-- **Priority:** P0 / BLOCKS LIVE P4b
-- **Status:** NEW FROZEN SPEC REQUIRED
-- **Goal:** reproduce the original P4 `EFFICIENCY_5 / BB_EXPANSION / RANGE_EXPANSION_15` 30-minute causal flag signal-by-signal on monthly 3535, then emit flags for the full selector universe including all 622 trailing-only episodes
-- **Control:** monthly `tb_flag` must equal the archived P4 fixture exactly; any mismatch = STOP
-- **Prohibited:** infer flags from MFE/outcomes, assign missing rows non-TB, fit a new classifier, or change the P4 rule
-- **Done when:** exact full-universe flag fixture exists and Closure C1-C4 can be rerun without assumptions
 
 ## FXA-ENTRY-001 — Entry Lab v001
 
-- **Priority:** P0
 - **Status:** COMPLETED / CLOSED F10
 - **Winner:** E0 `market @ D3+60s`
-- **Finding:** every E1-E6 candidate failed EL1, EL2 and paired EL4
-- **Result:** `Releases/v1.2/EntryLab_v001/`
 - **Reopen only if:** genuinely new causal entry information appears
 
 ## FXA-SESSION-001 — Session & Time-of-Day Lab v001
 
-- **Priority:** P0
 - **Status:** COMPLETED / CLOSED F9
 - **Verdict:** no session veto; hour-level filters prohibited
-- **Result:** `Releases/v1.2/SessionTiming_v001/`
 
 ## FXA-SELECT-001 — Selection & Sizing Lab v001
 
-- **Priority:** P0
 - **Status:** COMPLETED
-- **Part A:** FAIL SA2/SA5 despite monotonic p_win tercile EV
-- **Part B:** historical control mismatch resolved by Closure v001.1 through two separate canonical baselines
-- **Promotion:** none
-- **Result:** `Releases/v1.2/SelectionSizing_v001/`
+- **Part A:** FAIL SA2/SA5
+- **Part B:** monthly/trailing difference resolved through separate canonical baselines
 
 ## FXA-SIZING-002 — Sizing risk-shape research
 
-- **Priority:** P2 / NEW INFORMATION REQUIRED
 - **Status:** CLOSED FOR CURRENT 0.7/1.0/1.3 POLICY
 
-## FXA-EXIT-003L — Exit Tournament v003-lite core closure
+## FXA-EXIT-003L — Exit Tournament v003-lite
 
-- **Priority:** P0
-- **Status:** MONTHLY CONFIRMED / LIVE TRANSFER BLOCKED
-- **Primary:** `tb_flag=true -> P4`, `tb_flag=false -> P5`
-- **Monthly result:** P4b +2256.51R, gross DD 12.436807R
-- **Live blocker:** no frozen P4/TB flag for 622 trailing-only episodes
-- **Prohibited:** promote P4b to EA before trailing C1-C4 and exact execution closure
-
-## FXA-EXIT-P5 — P5 BE@60 secondary verdict
-
-- **Priority:** P0
-- **Status:** FALSIFIED BY RH7
+- **Status:** MONTHLY CONFIRMED / TRAILING CANDIDATE NOT PROMOTED
+- **Monthly:** P4b +2256.51R, gross DD 12.436807R
+- **Trailing:** P4b +2277.31R, gross DD 10.618R, but FAIL C3
+- **Prohibited:** promote P4b to EA before a valid transfer/deploy decision and exact execution closure
 
 ## FXA-DEPLOY-EXIT — Deferred deploy tests
 
 - **Priority:** P0 / PRE-EA
-- **Status:** BLOCKED BY TB-FLAG REPLAY, THEN EXECUTION REPLAY
-- **Tasks:** Closure C1-C4 on trailing, exact tick ExecutionReplay, RH7 spread replay, R1 Dukascopy, R2 forward A/B
+- **Status:** BLOCKED
+- **Tasks:** causal-policy decision, exact tick ExecutionReplay, spread stress, R1 Dukascopy and R2 forward A/B
 
 ## FXA-DATA-001 — Verify external release assets
 
-- **Priority:** P0
 - **Status:** ACTIVE
-- **Immediate needs:** original full-universe P4/TB flag generator and deploy-replay inputs
+- **Immediate needs:** deploy-replay inputs and exact execution convention
