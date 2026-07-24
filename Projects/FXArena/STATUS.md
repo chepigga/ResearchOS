@@ -7,6 +7,8 @@
 - **Canonical research baseline:** `GEO*-MONTHLY` top-4%, N=3535
 - **ContPrimary:** unchanged
 - **DD convention:** gross equity MaxDD is the gate metric; net MaxDD is diagnostic and must be labelled
+- **Continuation checkpoint:** `Checkpoints/Continuation_v1.2_2026-07-24/README_CONTINUE_HERE.md`
+- **Binary recovery:** `Checkpoints/Continuation_v1.2_2026-07-24/BINARY_BACKUP.md`
 
 ## REV_Confirmation v001 — causal shallow-acceptance court
 
