@@ -1,76 +1,96 @@
 # Grok XAU Status
 
 **Updated:** 2026-07-24  
-**Project status:** ACTIVE / REANIMATED  
-**Active laboratory:** BH_OOS_001 v2  
-**Laboratory status:** PREREGISTERED / ENGINE_IDENTIFIED / DATA_COVERAGE_FAIL
+**Project status:** ACTIVE / VALIDATED  
+**Validated laboratory:** BH_OOS_002 v2  
+**Formal verdict:** PASS — DEMO ONLY
 
-## Frozen hypothesis
+## Canonical module
 
-BH_SWEEP may retain non-negative net expectancy on unseen XAUUSD M15 data from 2026-05-01 through 2026-07-23 when evaluated by the exact same frozen MorrisCandle V2 oracle used for the in-sample result.
+The relevant source is `AK47_FT_EA_156.mq5`, which contains `BH_SWEEP v1.55`
+inside EA v1.56. `Grok_Core_XAU.mq5` is unrelated and must not be used for this
+research line.
 
-## Correct engine source
+Frozen configuration:
 
-The user confirmed that the relevant bot is `AK47_FT_EA_156`, not `Grok_Core_XAU`.
+- XAUUSD M15;
+- fractal depth 5;
+- swing age 96 bars;
+- BeltHold window 0..3;
+- body >= 0.60 range;
+- opposite shadow <= 0.05 range;
+- EMA20 reversal context;
+- next-M15-open entry;
+- SL extremum[sweep..signal] +/- 0.25 ATR14;
+- TP 2R;
+- 96 actual M15-bar time stop;
+- conservative same-bar SL priority;
+- OOS cost correction -0.05R/trade.
 
-`AK47_FT_EA_156.mq5` contains the independent BH_SWEEP v1.55 module and explicitly records the MorrisCandle V2 + EMA20 lineage and the control target `N=88 (B52/S36), EV=+0.276R`.
+## Step 0 reproduction control
 
-The BH signal code matches the preregistered strategy definition. However, the full EA also adds live/portfolio gates that are not part of the frozen oracle. Therefore the full EA Strategy Tester result is not accepted as Step 0 without an isolated oracle-parity harness.
+**PASS**
 
-See: `Reports/BH_SWEEP_EngineAudit_v001.md`.
+- Target: N=88, BUY=52, SELL=36, EV=+0.276R.
+- Reproduced: N=88, BUY=52, SELL=36, legacy EV=+0.275780R.
+- Entry-time and direction matches: 88/88.
+- Exit-reason mismatches: 0.
+- Canonical parent: `BeltHold_trades_regen_wide-2026-07-05.csv` plus EMA20 reversal context.
+- The `tight` file is EMA10 sensitivity N=56, not the canonical basket.
+- Fixed -0.05R cost produces +0.258370R, drift -0.017630R, inside the registered 0.02R tolerance and explained by the cost convention.
 
-## In-sample control target
+## Frozen OOS result
 
-- Expected trades: `N=88`
-- Direction split: `BUY=52`, `SELL=36`
-- Expected EV: `+0.276R`
-- Allowed reproduction drift: `|ΔN| <= 2` and `|ΔEV| <= 0.02R`
-- Larger drift: `CONTROL_FAIL`; OOS must not run before root-cause localisation.
+Window: `2026-05-01..2026-07-23`
 
-## OOS gate
+- N: `14`
+- BUY / SELL: `8 / 6`
+- TP / SL / TIMESTOP: `6 / 8 / 0`
+- WR: `42.86%`
+- EV raw: `+0.285714R`
+- EV net: `+0.235714R`
+- Sum net: `+3.300R`
+- PF net: `1.393`
+- Max DD: `3.300R`
+- Unresolved: `0`
 
-- PASS: `N >= 8` and `EV_net >= 0`
-- FAIL: `N >= 8` and `EV_net < 0`
-- INCONCLUSIVE: `N < 8`
-- Near-miss handling is forbidden except under a separate NM1-NM4 decision.
+Monthly:
 
-## Uploaded data audit
+- May: N=5, EV net +0.150R, sum +0.750R
+- June: N=4, EV net +0.450R, sum +1.800R
+- July: N=5, EV net +0.150R, sum +0.750R
 
-Received `XAUUSD_M15_202601020100_202607172345.csv`:
+Direction:
 
-- rows: `12,818`;
-- first bar: `2026-01-02 01:00`;
-- last bar: `2026-07-17 23:45`;
-- SHA256: `cf73c81110f2fc6451accee4b602750e4ab852ae2df656fde76dec4fa1915495`;
-- no duplicates or invalid OHLC rows.
+- BUY: N=8, EV net +0.450R, sum +3.600R
+- SELL: N=6, EV net -0.050R, sum -0.300R
 
-This file is structurally valid but fails the frozen coverage requirement. It omits December 2024 through December 2025 and also ends six calendar days before the registered OOS endpoint.
-
-Decision: Step 0 and Step 1 were **not run**. No partial OOS expectancy was opened or reported.
-
-See: `Reports/BH_OOS_001v2_DataAudit_2026-07-24.md`.
-
-## Current blockers
-
-1. Same-feed XAUUSD M15 export must cover `2024-12-01` through at least `2026-07-23 23:45`.
-2. Exact original in-sample boundary or original N=88 trade fixture is still desirable for deterministic parity comparison.
-3. Oracle execution conventions require Step 0 confirmation: EMA/ATR implementation, market-entry price convention, same-bar TP/SL collision rule, and time-stop price.
-4. `AK47_FT_EA_156` integrated execution contains non-oracle gates: daily stop, max trades/day, loss-streak cooldown, one-open-BH restriction, portfolio gates, USD 3 SL floor, spread/STOPLEVEL/FREEZELEVEL/margin gates.
-
-## Legacy clarification
-
-`Grok_Core_XAU.mq5` remains classified as an unrelated legacy AI-driven EA and is not the source of BH_SWEEP.
-
-## Security finding
-
-The unrelated legacy `Grok_Core_XAU.mq5` contained a plaintext xAI API key. The key must be revoked/rotated. `AK47_FT_EA_156.mq5` did not show an embedded API credential in the source scan.
+SELL remains enabled in the frozen configuration. Removing or tuning it after
+inspection is prohibited.
 
 ## Deployment state
 
-- Demo: BH disabled pending PASS.
-- Live: prohibited.
-- Canonical EA switch: `InpBH_Enable=false`.
+- `InpBH_Enable=true`: permitted on **demo only**.
+- `InpBH_RiskPct=0.30`: keep frozen; do not increase.
+- Live: **PROHIBITED** pending one complete forward month and review.
+- Preserve all integrated prop-firm portfolio and execution safety gates.
 
-## Next executable action
+## Next action
 
-In the same broker terminal, download/load XAUUSD M15 history back to December 2024, then rerun `XAUUSD_M15_Exporter_v001.mq5` for the full frozen interval. Only after the replacement CSV passes coverage validation may Step 0 be executed.
+Run one controlled demo forward month with lifecycle logging for signal, fill,
+spread, slippage, SL/TP and time-stop. Compare forward signals to the frozen
+oracle and reopen research if there is material signal or execution drift.
+
+## Primary records
+
+- [Specification](Specs/TZ-BH-OOS-002.md)
+- [Report](Reports/BH_OOS_002_v002_Report.md)
+- [Decision](Decisions/ADR-BH-OOS-002-PASS.md)
+- [Results](Results/BH_OOS_002/v002/README.md)
+- [Oracle](Code/Python/BH_OOS_Oracle_v002.py)
+
+## Security finding
+
+The unrelated legacy `Grok_Core_XAU.mq5` contained a plaintext xAI API key.
+The key still must be revoked/rotated. `AK47_FT_EA_156.mq5` did not contain an
+embedded API credential in the source scan.
