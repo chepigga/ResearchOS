@@ -1,0 +1,9 @@
+{
+  "trailing_N": 3515,
+  "p4b_tb_flag_covered_N": 2893,
+  "p4b_tb_flag_missing_N": 622,
+  "coverage_rate": 0.8230440967283073,
+  "missing_are_trailing_only_N": 622,
+  "monthly_p4b_fixture_N": 3535,
+  "status": "STOP_P4B_TB_FLAG_COVERAGE"
+}
