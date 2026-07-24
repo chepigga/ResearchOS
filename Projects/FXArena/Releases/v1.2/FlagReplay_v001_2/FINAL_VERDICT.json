@@ -1,0 +1,59 @@
+{
+  "session": "Flag-Replay v001.2",
+  "status": "STOP_ALARM_P4B_TRANSFER_GATE_FAIL",
+  "tb_flag_control": {
+    "N_expected": 3535,
+    "N_generated": 3535,
+    "ordered_episode_equal": true,
+    "expected_true_N": 1274,
+    "generated_true_N": 1274,
+    "mismatch_N": 0,
+    "PASS": true
+  },
+  "p4b_replay_control": {
+    "N": 3535,
+    "episode_order_equal": true,
+    "gross_max_absdiff": 3.333334817057221e-07,
+    "net_max_absdiff": 1.2715672426111269e-07,
+    "exit_time_mismatch_N": 0,
+    "total_replay_R": 2256.5118021428602,
+    "total_fixture_R": 2256.51180406579,
+    "gross_DD_replay_R": 12.436806878781454,
+    "gross_DD_fixture_R": 12.436806859999933,
+    "PASS": true
+  },
+  "P0_trailing": {
+    "N": 3515,
+    "total_R": 1889.613319589386,
+    "EV_R": 0.537585581675501,
+    "gross_MaxDD_R": 14.415969148278236,
+    "net_MaxDD_R": 15.827252835035324,
+    "negative_months": 0,
+    "worst_month_R": 1.266511743888259,
+    "all_years_positive": true
+  },
+  "P4b_trailing": {
+    "N": 3515,
+    "total_R": 2277.306669898074,
+    "EV_R": 0.6478824096438333,
+    "gross_MaxDD_R": 10.618161241655343,
+    "net_MaxDD_R": 11.903619864017628,
+    "negative_months": 1,
+    "worst_month_R": -2.0402031652937107,
+    "all_years_positive": true
+  },
+  "gates": {
+    "C1": {"PASS": true},
+    "C2": {"PASS": true},
+    "C3": {"PASS": false},
+    "C4": {"PASS": true, "p_total_P4b_gt_P0": 1.0}
+  },
+  "all_C1_C4_PASS": false,
+  "pinned_output": null,
+  "bootstrap": {
+    "law": "paired moving-block shared indices",
+    "block": 20,
+    "iterations": 5000,
+    "seed": 2026072405
+  }
+}
