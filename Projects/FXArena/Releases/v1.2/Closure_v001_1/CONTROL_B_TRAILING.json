@@ -1,0 +1,22 @@
+{
+  "N_calc": 3515,
+  "N_fixture": 3515,
+  "ordered_episode_ids_equal": true,
+  "total_calc": 1889.613319589386,
+  "total_fixture": 1889.613319589386,
+  "gross_DD_calc": 14.415969148278236,
+  "gross_DD_fixture": 14.415969148278236,
+  "max_absdiff": {
+    "p": 2.220446049250313e-16,
+    "gross": 3.552713678800501e-15,
+    "net": 4.440892098500626e-16,
+    "exit_t": 0.0
+  },
+  "PASS": true,
+  "risk_layer_audit": {
+    "raw_selected": 11421,
+    "accepted": 3515,
+    "rejected_day_cap": 5139,
+    "rejected_cooldown": 2767
+  }
+}
