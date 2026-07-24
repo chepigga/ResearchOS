@@ -1,0 +1,9 @@
+{
+  "monthly_N": 3535,
+  "trailing_N": 3515,
+  "intersection_N": 2893,
+  "monthly_only_N": 642,
+  "trailing_only_N": 622,
+  "jaccard": 0.6959345681982199,
+  "symmetric_difference_N": 1264
+}
