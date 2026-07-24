@@ -1,0 +1,24 @@
+{
+  "verdict": "F11_SHALLOW_ACCEPTANCE_REV_FALSIFIED",
+  "scenario_2023": "a",
+  "RC1_metrics": {
+    "n": 2109,
+    "wr": 0.3063063063063063,
+    "ev_r": -0.28721321366443764,
+    "total_r": -605.7326676182989,
+    "pf": 0.6570178893346148,
+    "gross_maxdd_r": 184.0,
+    "net_maxdd_r": 611.4732048745867,
+    "negative_months": 12,
+    "first_half_r": -280.52321180375066,
+    "second_half_r": -325.2094558145484
+  },
+  "RC1_gates": {
+    "EV_GE_0_15": false,
+    "PF_GE_1_30": false,
+    "N_GE_300": true,
+    "NEG_MONTHS_LE_2": false,
+    "BOTH_HALVES_POSITIVE": false
+  },
+  "RC2_RC6": "NOT_EXECUTED_BY_FROZEN_STOP"
+}
