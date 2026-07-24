@@ -2,6 +2,9 @@
 
 | Project | Laboratory | Version | Date | Status | Primary result | Verdict | Next step | Links |
 |---|---|---|---|---|---|---|---|---|
+| FXArena | Causal shallow-acceptance REV confirmation | REV_Confirmation v001 | 2026-07-24 | COMPLETED / F11 / CLOSED | 2023 N=2109; EV -0.287R; PF 0.657; total -605.73R; gross DD 184R; 12/12 negative months | `F11_SHALLOW_ACCEPTANCE_REV_FALSIFIED`; RC2-RC6 stopped; no REV EA module | Continue August exam with ContPrimary/P0 only; any future REV idea requires genuinely new causal information | [Report](Projects/FXArena/Releases/v1.2/REV_Confirmation_v001/FXArena_REV_Confirmation_v001_Report.md) |
+| FXArena | REV penetration provenance audit | REV_Confirmation v001 forensic | 2026-07-24 | PUBLISHED CAUSAL DEFECT | 23,467 episodes were shallow at D3 but deepened beyond 1 ATR later; old candidate aligned with episode-final penetration | Final-episode `max_penetration_atr` is post-D3 information and prohibited as a live D3 selector | Preserve audit and source SHA; do not quote the +1171.6R reference as causal | [Audit](Projects/FXArena/Releases/v1.2/REV_Confirmation_v001/REFERENCE_LEAKAGE_AUDIT.json) |
+| FXArena | Causal REV diagnostic on original reference period | REV_Confirmation v001 diagnostic | 2026-07-24 | FALSIFIED | 2024-2026H1 N=5830; EV -0.271R; PF 0.677; total -1579.95R; 29/30 negative months | Failure is not isolated to the 2023 control | Close shallow-acceptance REV research line | [Monthly](Projects/FXArena/Releases/v1.2/REV_Confirmation_v001/CAUSAL_2024_2026H1_monthly_diagnostic.csv) |
 | FXArena | Final paired P4c/P0 cost adjudication | PC5-r v001 | 2026-07-24 | COMPLETED / FINAL CLOSED | Central 7.5pt/x1.5/0.05: P4c/P0=1.1045x, DD 10.820R vs 14.436R; fact 5pt/x1/0.05=1.0954x | PR1 PASS, PR2 PASS, PR4 PASS, PR5 FAIL; P4c closed permanently; deploy exit P0 | Run August exam against GEO*-TRAILING P0; no third PC5 trial | [Report](Projects/FXArena/Releases/v1.2/PC5r_Resolution_v001/FXArena_PC5r_Resolution_v001_Report.md) |
 | FXArena | PC5-r full survivability map | 4x2x2 | 2026-07-24 | PUBLISHED | 16 paired cells across commission, spread and BE-slip; extreme 10pt/x1.5/0.05 still 1.1110x | Edge remains, but fact-cell +10% gate missed by 0.46 pp | Preserve as closed evidence | [Grid](Projects/FXArena/Releases/v1.2/PC5r_Resolution_v001/PC5r_cost_grid_4x2x2.csv) |
 | FXArena | P4c causal exit | P4c v001 | 2026-07-24 | RESEARCH FIXTURE ONLY | Base TRAILING +2127.40R vs P0 +1889.61R; gross DD 10.618R vs 14.416R | Causal/statistical edge confirmed, but final PC5-r PR5 failed | Excluded from forward A/B and deploy | [Report](Projects/FXArena/Releases/v1.2/P4c_Causal_v001/FXArena_P4c_Causal_v001_Report.md) |
@@ -29,6 +32,7 @@
 
 ## Closed research fronts
 
+- F11: shallow-acceptance REV funnel falsified after causal D3 reconstruction; final-episode penetration proxy prohibited.
 - Exit improvement under P4b/P4c/PC5-r: permanently closed on current data; deploy exit P0.
 - Third PC5 retrial: prohibited.
 - F9: session/time veto closed.
@@ -37,4 +41,4 @@
 
 ## Promotion boundary
 
-P4c retained a robust paired advantage and better drawdown, but the measured fact cell with mandatory 0.05R BE-slip delivered 1.0954x rather than the frozen 1.10x requirement. It is therefore not admitted to forward A/B. The official August/live exit is P0 on GEO*-TRAILING.
+The shallow-acceptance REV reference cannot be promoted because its positive economics depend on an episode-final penetration field unavailable at D3. The true causal funnel fails the clean 2023 control and the original 2024-2026H1 period. The official August/live system remains ContPrimary with P0 exits on GEO*-TRAILING; no REV module is admitted.
