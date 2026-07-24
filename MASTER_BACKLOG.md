@@ -23,3 +23,15 @@
 - **Risks:** branch divergence before the first import
 - **Required files:** none
 - **Next action:** create `research` after bootstrap verification
+
+## XAU-BH-OOS-001v2 — Validate frozen BH_SWEEP OOS
+
+- **Project:** Grok XAU
+- **Priority:** P0
+- **Status:** PREREGISTERED / BLOCKED_DATA_AND_ENGINE
+- **Dependencies:** exact frozen MorrisCandle V2 oracle/config; original in-sample fixture; same-feed XAUUSD M15 through 2026-07-23
+- **Goal:** reproduce the N=88, B52/S36, EV=+0.276R control and then validate BH_SWEEP on 2026-05-01..2026-07-23 without tuning
+- **Done when:** Step 0 passes the preregistered drift gate, OOS trades and monthly artifacts are stored, and PASS/FAIL/INCONCLUSIVE is recorded
+- **Risks:** pipeline drift; feed substitution; unavailable frozen engine; insufficient OOS trades; post-hoc near-miss reinterpretation
+- **Required files:** MorrisCandle V2 package, control fixture, `XAUUSD_M15_2024-12-01_2026-07-23.csv`
+- **Next action:** revoke the exposed xAI key, run the same-feed M15 exporter, and recover the exact frozen oracle package before Step 0
