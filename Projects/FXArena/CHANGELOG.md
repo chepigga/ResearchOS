@@ -1,25 +1,31 @@
 # FXArena Changelog
 
+## 2026-07-24 — PC5-r Resolution v001
+
+- Executed the final permitted PC5 adjudication as a symmetric paired stress of P0 and P4c on the exact 3515 GEO*-TRAILING entries.
+- Reproduced P0 and P4c at 6pt/x1.0 with zero exit-time mismatches.
+- Evaluated the frozen 4x2x2 grid: commission 5/6/7.5/10pt, spread x1/x1.5 and P4c BE slip 0/0.05R.
+- Preserved the frozen 1070 actual P4c BE exits as the slip population; P0 has no BE branch.
+- Central cell 7.5pt/x1.5/0.05R: P0 +1779.792484R, P4c +1965.815894R, ratio 1.1045x, gross DD 14.436R versus 10.820R.
+- Passed PR1, PR2 and PR4; paired moving-block block20/5000/seed2026072407 gave P(total P4c>P0)=99.98% and DD-bad diagnostic 1.50%.
+- Extreme diagnostic 10pt/x1.5/0.05R retained a 1.1110x advantage and passed the DD condition.
+- Failed PR5 in the measured fact cell 5pt/x1.0/0.05R: P4c +2115.640260R versus P0 +1931.350808R, ratio 1.0954x.
+- Recorded the final shortfall as 0.46 percentage points versus the preregistered +10% advantage gate.
+- Declared `P4C_CLOSED_FINAL__DEPLOY_EXIT_P0`; P4c is not admitted to forward A/B.
+- Permanently prohibited a third PC5 retrial on these data.
+- Preserved the complete paired grid, central/fact/extreme trade pairs, bootstrap output, runner/sampler source and SHA256 manifests.
+
 ## 2026-07-24 — P4c Causal Exit v001
 
-- Reproduced archived P4b exactly: 3535 trades, zero exit-time mismatches, +2256.511802R and gross DD 12.436807R.
-- Reproduced the frozen TB generator 3535/3535 with zero mismatches.
-- Implemented the preregistered causal P4c policy: TP2 from inception; TP3 activates only at entry+30m if the TB trade remains open; no re-entry after early TP2.
-- Quantified the archived lookahead price: 193 trades diverged; causal P4c loses 145.708807R versus P4b on MONTHLY, with unchanged gross DD.
-- Recorded P4c MONTHLY +2110.802995R and zero negative months.
-- Recorded P4c TRAILING +2127.402776R versus P0 +1889.613320R; gross DD 10.618161R versus 14.415969R.
-- Passed PC1, PC2, PC3 and PC4; paired moving-block probability P(total>P0)=100%, block20/5000/seed2026072406.
-- Recalculated the raw-spread path because P4c exit structure differs from P4b.
-- Failed PC5: spread x1.5 + commission 9 points + 0.05R slip on 1070 changed BE exits yields +1903.209668R, below PC1 threshold +2078.574652R.
-- Diagnosed commission sensitivity as primary: commission 9 points alone yields +2002.190324R and fails PC1, while spread x1.5 alone still passes.
-- Did not create `trades_P4c_TRAILING_PINNED`; deploy exit remains P0 GEO*-TRAILING.
-- Kept ContPrimary, activation time, TP levels, BE time and F1-F10 unchanged.
+- Reproduced archived P4b exactly and quantified its +145.708807R retrospective lookahead benefit.
+- Implemented causal P4c and recorded base TRAILING +2127.402776R / gross DD 10.618161R.
+- Passed PC1-PC4 before the final paired-cost adjudication.
+- Original absolute PC5 verdict is superseded only by PC5-r methodology; the final deploy decision remains P0 because PR5 failed.
 
 ## 2026-07-24 — Flag-Replay v001.2
 
 - Reconstructed the frozen TB generator and resolved all 622 trailing-only flags.
-- Recorded archived P4b trailing +2277.306670R / DD 10.618161R as research-only.
-- Preserved the retrospective-flag causality warning later adjudicated by P4c v001.
+- Preserved archived P4b as research-only because retrospective flag use is non-causal.
 
 ## 2026-07-24 — Closure v001.1 monthly vs trailing
 
@@ -37,10 +43,6 @@
 ## 2026-07-23 — Selection & Sizing Lab v001
 
 - Confirmed monotonic p_win economics but falsified fixed sizing under DD gates.
-
-## 2026-07-23 — Exit Tournament v003-lite
-
-- Recorded monthly P4b +2256.51R before causal and execution closure.
 
 ## 2026-07-23 — DD convention audit
 
