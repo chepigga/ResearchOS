@@ -1,0 +1,14 @@
+{
+  "primary": "CONFIRMS-REGIME",
+  "primary_min_N": 30,
+  "ACCEPT_2023_N": 22,
+  "ACCEPT_2023_EV": -0.4394168103028288,
+  "REJECT_2023_N": 268,
+  "REJECT_2023_EV": -0.03198324548826413,
+  "gate_loosen_candidates": [
+    "ALL/FAR_FROM_SWING_HIGH (N=245, EV=+0.164R)",
+    "ALL/SCORE_BLOCK (N=318, EV=+0.208R)",
+    "LONBUY/FAR_FROM_SWING_HIGH (N=91, EV=+0.308R)",
+    "NYBUY/SCORE_BLOCK (N=297, EV=+0.203R)"
+  ]
+}
