@@ -1,0 +1,35 @@
+# FT_REJECTED_001 — Formal results
+
+**Verdict:** `CONFIRMS-REGIME`
+
+## Core evidence
+
+- ACCEPT: N=161, EV `+1.324759R`, PF `3.481`.
+- REJECT: N=1127, EV `+0.044172R`, PF `1.056`.
+- ACCEPT 2023: N=22, EV `-0.439417R`.
+- REJECT 2023: N=268, EV `-0.031983R`.
+- REJECT EARLY: N=551, EV `-0.072206R`.
+- REJECT LATE: N=576, EV `+0.155498R`.
+
+## Frozen candidates
+
+- ALL/FAR_FROM_SWING_HIGH: N=245, EV `+0.164429R`.
+- ALL/SCORE_BLOCK: N=318, EV `+0.208001R`.
+- LONBUY/FAR_FROM_SWING_HIGH: N=91, EV `+0.307528R`.
+- NYBUY/SCORE_BLOCK: N=297, EV `+0.202525R`.
+
+These are research-only candidates. No filter change is authorized.
+
+## Keep evidence
+
+`SL_TOO_TIGHT_USD`: N=508, EV `-0.150530R`, PF `0.816`.
+
+## Provenance
+
+- M5: `40175d5d73fbbe01d26fd1813d1bc299854ef535c328fa1fdd1b883f90509ae4`
+- Signals: `a62a93a471cff3ce000bb237556125a9f54101c0b0ee33c5b0bca4605b0db7f2`
+- Debug: `f259dc513f4af46bdbff5d40b45101cd574e1587d2500e8beb50c736fe14a82e`
+- EA: `838b3e180a139008c69792c0f122f3da66a590ef5e6ee98056056f0938311b65`
+- Frozen TZ: `45e6bed26e0a0e5d795d45eeefa4d70cf7ff02c88755ed0f4425d1fe42b5d89d`
+
+See `Reports/FT_REJECTED_001_Formal_Report.md` and `Decisions/ADR-FT-REJECTED-001-CONFIRMS-REGIME.md`.

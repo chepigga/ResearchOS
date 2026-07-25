@@ -3,8 +3,8 @@
 **Updated:** 2026-07-25  
 **Project status:** ACTIVE  
 **Validated laboratory:** BH_OOS_002 v2 — PASS / DEMO ONLY  
-**Active laboratory:** FT_DEEP_001  
-**FT_DEEP status:** STEP 0 PASS / TESTER REGIME / FORMAL RAW-BAR ORACLE BLOCKED
+**Completed laboratory:** FT_REJECTED_001 — CONFIRMS-REGIME  
+**FT_DEEP status:** STEP 0 PASS / TESTER REGIME / FULL M5 RECOVERED / FORMAL RAW-BAR ORACLE READY
 
 ## BH_SWEEP deployment state
 
@@ -36,10 +36,14 @@ Frozen gates:
 
 - Source: `AK47_FT_EA_156.mq5`.
 - Source SHA256: `838b3e180a139008c69792c0f122f3da66a590ef5e6ee98056056f0938311b65`.
-- Specification SHA256: `8438dd2b8affeedb882cfd18e1ae9a0e17077337dbacd90c8de9df24afa5bd8c`.
+- FT_DEEP specification SHA256: `8438dd2b8affeedb882cfd18e1ae9a0e17077337dbacd90c8de9df24afa5bd8c`.
+- FT_REJECTED specification SHA256: `45e6bed26e0a0e5d795d45eeefa4d70cf7ff02c88755ed0f4425d1fe42b5d89d`.
 - Dry-run signal fixture SHA256: `a62a93a471cff3ce000bb237556125a9f54101c0b0ee33c5b0bca4605b0db7f2`.
 - Lifecycle fixture SHA256: `c9cfa9d8ee9e07c0f55706d0dfd8d581723646b0619a3d2366206e0ab9049a18`.
 - Debug log SHA256: `f259dc513f4af46bdbff5d40b45101cd574e1587d2500e8beb50c736fe14a82e`.
+- Tester-stream M5 SHA256: `40175d5d73fbbe01d26fd1813d1bc299854ef535c328fa1fdd1b883f90509ae4`.
+- Tester-stream M5 rows: `290,893`.
+- Tester-stream M5 coverage: `2022-06-01 01:05 .. 2026-07-23 23:40`.
 
 ## Step 0 parity
 
@@ -52,8 +56,6 @@ Frozen gates:
 
 `AK47_ea_dryrun_signals.csv` contains candidate ACCEPT events. The canonical tester count is taken from `AK47_ea_trade_lifecycle.csv`, because duplicate-position protection and live execution gates can block an accepted candidate before a position is opened.
 
-The supplied tester log ends on 2026-07-16. The oracle generated no additional FT entries during 2026-07-17..23, so the missing tail does not change Step 0 counts or overlap.
-
 ## 42-month direct tester evidence
 
 Window evaluated: `2023-01-01..2026-07-23`; actual last FT entry: `2026-05-11`.
@@ -64,60 +66,57 @@ Window evaluated: `2023-01-01..2026-07-23`; actual last FT entry: `2026-05-11`.
 - Early chronological half: N=54, EV `-0.007685R`, sum `-0.415R`.
 - Late chronological half: N=81, EV `+1.878012R`, sum `+152.119R`.
 - Top-three-month contribution: `46.51%`.
-- January–February 2026 contribution to the full result: `32.35%`, not 88%.
+- January–February 2026 contribution: `32.35%`.
 - Zero-entry months: `9/43`.
-
-Yearly:
-
-- 2023: N=19, EV `-0.520158R`, sum `-9.883R`.
-- 2024: N=42, EV `+0.698952R`, sum `+29.356R`.
-- 2025: N=50, EV `+1.540160R`, sum `+77.008R`.
-- 2026: N=24, EV `+2.300958R`, sum `+55.223R`.
 
 ### Tester classification: REGIME
 
 The long direct tester run passes the N and EV gates but fails stationarity because the early half is non-positive and the late half produces essentially all profit. FT must not be scaled or treated as an always-on stationary edge.
 
-This is execution-aware tester evidence, not the final raw-bar oracle decision, because the tester includes live/portfolio gates excluded by the frozen oracle convention.
+## FT_REJECTED_001 formal control
 
-## Reject and execution funnel
+**Primary verdict: CONFIRMS-REGIME**
 
-- NYBUY: 939 candidates, 121 accepts, 98 executed.
-- LONBUY: 352 candidates, 40 accepts, 37 executed.
-- Dominant rejects: `SL_TOO_TIGHT_USD`, `SCORE_BLOCK`, `FAR_FROM_SWING_HIGH`.
-- HTF blocks: NYBUY 22,203; LONBUY 26,016.
-- Accepted but not executed: 26, mainly duplicate-position protection and the live USD 3 SL floor.
+Formal independent replay after excluding `DAILY_STOP`:
 
-## Raw M5 blocker
+- candidates: `1,288`;
+- missing M5 timestamps: `0`;
+- ACCEPT: N=161, EV `+1.324759R`, PF `3.481`;
+- REJECT: N=1127, EV `+0.044172R`, PF `1.056`;
+- ACCEPT 2023: N=22, EV `-0.439417R`;
+- REJECT 2023: N=268, EV `-0.031983R`;
+- REJECT EARLY: N=551, EV `-0.072206R`;
+- REJECT LATE: N=576, EV `+0.155498R`.
 
-The file named `XAUUSD_M5_20220601_20260723_FULL.csv` is still incomplete:
+The broad rejected population is also weak in 2023/early and improves later. The regime break is therefore not primarily a narrow-sample or gate-calibration artifact.
 
-- rows: `100,971`;
-- first bar: `2025-02-13 14:15`;
-- last bar: `2026-07-23 23:45`;
-- SHA256: `1ba5f86a8d9f191e97e357875d6496e454630d95b5bf86e3052c2327b4a83f73`.
+### Gate findings
 
-It cannot support the formal 2023–2026 raw-bar oracle. Terminal chart-history limits persisted even with chunked `CopyRates`.
+Strong keep evidence:
+
+- `SL_TOO_TIGHT_USD`: N=508, EV `-0.150530R`, PF `0.816`; negative in 2023, 2024 and 2025.
+
+Research-only `GATE_LOOSEN_CANDIDATE`:
+
+- ALL/FAR_FROM_SWING_HIGH: N=245, EV `+0.164429R`.
+- ALL/SCORE_BLOCK: N=318, EV `+0.208001R`.
+- LONBUY/FAR_FROM_SWING_HIGH: N=91, EV `+0.307528R`.
+- NYBUY/SCORE_BLOCK: N=297, EV `+0.202525R`.
+
+No gate change, threshold tuning or risk increase is authorized.
+
+Primary FT_REJECTED records:
+
+- [Specification](Specs/TZ-FT-REJECTED-001.md)
+- [Formal report](Reports/FT_REJECTED_001_Formal_Report.md)
+- [Decision](Decisions/ADR-FT-REJECTED-001-CONFIRMS-REGIME.md)
+- [Results](Results/FT_REJECTED_001/formal_2026-07-25/README.md)
 
 ## Next action
 
-Run [Strategy Tester stream exporter v003](Code/Exporters/XAUUSD_M5_TesterStreamExporter_v003.mq5) inside Strategy Tester:
+The full tester-stream M5 input is now available. The next canonical action is the formal frozen raw-bar `FT_DEEP_001` run. Do not retune FT before that result.
 
-- XAUUSD M5;
-- tester start no later than `2022-06-01`;
-- tester end at least `2026-07-24` so the last requested closed bar is flushed;
-- output: `XAUUSD_M5_20220601_20260723_TESTER_FULL.csv`.
-
-Then execute the formal raw-bar oracle. No FT risk scaling or always-on deployment decision is permitted before that comparison.
-
-Primary FT_DEEP records:
-
-- [Specification](Specs/TZ-FT-DEEP-001.md)
-- [Partial oracle report](Reports/FT_DEEP_001_PartialRun_2026-07-25.md)
-- [42-month tester report](Reports/FT_DEEP_001_Tester42m_2026-07-25.md)
-- [Tester results](Results/FT_DEEP_001/tester_2023_2026/)
-- [Optimized oracle](Code/Python/FT_DEEP_Oracle_v002.py)
-- [Tester stream exporter](Code/Exporters/XAUUSD_M5_TesterStreamExporter_v003.mq5)
+If the formal FT_DEEP oracle confirms REGIME, open one separate preregistered OOS laboratory for either a regime classifier or one selected gate-loosening hypothesis. Do not run a multi-gate tournament and choose the best result on the same 2023–2026 data.
 
 ## Security finding
 
