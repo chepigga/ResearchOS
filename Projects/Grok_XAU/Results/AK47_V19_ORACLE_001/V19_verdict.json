@@ -1,0 +1,14 @@
+{
+  "laboratory": "AK47-V19-ORACLE-001",
+  "operational_verdict": "REGIME_NO_SCALE",
+  "formal_rule_label": "BLOCKED_BY_EXECUTION_PARITY",
+  "stable_finding": "POSITIVE_EDGE_NOT_PURE_HOT_STREAK_ARTIFACT",
+  "m15_pass_rate_range": [0.04306864064602961, 0.05518169582772544],
+  "h1_pass_rate_range": [0.0, 0.004029550033579583],
+  "required_for_exact_parity": [
+    "AK-47_V19_FILTER.mq5 exact source",
+    "original chart timeframe",
+    "approximate passed-challenge dates",
+    "tick-level tester fixture or direct EA tester lifecycle"
+  ]
+}
