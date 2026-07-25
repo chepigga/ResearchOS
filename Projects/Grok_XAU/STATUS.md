@@ -4,7 +4,7 @@
 **Project status:** ACTIVE  
 **Validated laboratory:** BH_OOS_002 v2 — PASS / DEMO ONLY  
 **Active laboratory:** FT_DEEP_001  
-**FT_DEEP status:** PREREGISTERED / BLOCKED_FULL_M5_AND_PARITY_FIXTURE
+**FT_DEEP status:** INCONCLUSIVE / PARTIAL REGIME SIGNAL / FULL DATA AND TIME-PARITY REQUIRED
 
 ## BH_SWEEP deployment state
 
@@ -23,8 +23,7 @@ Primary BH records:
 
 ## FT_DEEP_001 frozen objective
 
-Determine whether the FT core (`NYBUY + LONBUY`) has a persistent edge or is a
-regime bet concentrated in a few trend months.
+Determine whether the FT core (`NYBUY + LONBUY`) has a persistent edge or is a regime bet concentrated in a few trend months.
 
 Frozen gates:
 
@@ -43,35 +42,64 @@ Frozen gates:
 - Portfolio gates excluded from the oracle.
 - Fixed cost: `-0.05R/trade`.
 
-## Current FT_DEEP data state
+## Uploaded FT_DEEP data audit
 
-Available same-feed M5:
+Received `XAUUSD_M5_20220601_20260723.csv`:
 
-- coverage: `2025-01-01 23:00` through `2026-04-21 23:45`;
-- rows: `95,466`;
-- approximate depth: `15.61 months`;
-- SHA256: `cd2e3285c0e4660786a019999fb3e746257c2cbd4d400fe48092cdbbc7760a80`.
+- rows: `100,000`;
+- first bar: `2025-02-19 06:30`;
+- last bar: `2026-07-23 23:45`;
+- calendar depth: `17.05 months`;
+- SHA256: `43a00406241ccad5136c111e9f58f06494abd2883507bbbf350eaa172d8be4c4`;
+- duplicates: `0`;
+- invalid OHLC rows: `0`.
 
-This is below the frozen 24-month minimum and lacks the required 200-D1 warmup
-before 2023-01-01. A formal deep verdict is not open.
+The filename requests history from 2022-06-01, but the content begins in February 2025 and contains exactly 100,000 rows. The single-request exporter was truncated by terminal/history limits. D1 EMA50 parity becomes warmup-complete only from `2025-12-03 01:05`, leaving `7.62 months` of reliable diagnostic depth.
 
-## Step 0 blocker
+## Step 0 status
 
-The tester 156-1 target is NYBUY N=17 plus a small LONBUY sample, with N tolerance
-+/-2 per module and at least 80% entry-time matching within one M5 bar.
+- NYBUY: tester target `17`; oracle `18`; delta `+1` — count PASS.
+- LONBUY: diagnostic tester reference `7`; oracle `7`; delta `0` — count PASS.
+- Required `>=80%` entry-time overlap: BLOCKED because tester 156-1 entry-time fixture is missing.
 
-A historical v1.54b candidate diagnostic is available, but the exact tester
-156-1 entry fixture is not available. Trade-time parity is therefore not claimed.
+Step 0 is `COUNT_PASS / TIME_OVERLAP_BLOCKED`, not a formal parity PASS.
 
-## Next executable action
+## Warmup-complete partial diagnostic
 
-1. Run `Code/Exporters/XAUUSD_M5_DEEP_Exporter_v001.mq5` in the same broker terminal.
-2. Upload `XAUUSD_M5_20220601_20260723.csv`.
-3. Upload tester 156-1 deals/signals containing NYBUY and LONBUY entry times.
-4. Run Step 0. Do not open the 42-month result unless the registered parity gate passes.
+Window: `2025-12-03 01:05..2026-07-23 23:45`.
+
+- N: `27`;
+- EV_net: `+2.160244R`;
+- Sum: `+58.326586R`;
+- WR: `59.26%`;
+- PF: `6.050`;
+- NYBUY: N=20, EV `+2.850000R`, Sum `+57.000000R`;
+- LONBUY: N=7, EV `+0.189512R`, Sum `+1.326586R`.
+
+Regime diagnostics:
+
+- zero-entry months: `4/8`;
+- top-three months contribution: `93.31%` of total net R;
+- March, May, June and July 2026 had zero entries;
+- HTF rejects: NYBUY `5,087`; LONBUY `5,927`.
+
+The concentration exceeds the frozen REGIME trigger, but the formal verdict remains **INCONCLUSIVE** because depth is below 24 months, N is below 90, and Step 0 time parity is incomplete. This partial run is evidence, not permission to scale risk.
+
+## Required next action
+
+1. Run [chunked exporter v002](Code/Exporters/XAUUSD_M5_DEEP_Exporter_v002.mq5) in the same broker terminal.
+2. Verify the first bar is no later than `2022-06-01` and the last bar is `2026-07-23 23:45` or later.
+3. Upload tester 156-1 `AK47_ea_dryrun_signals.csv` or equivalent NYBUY/LONBUY entry-time fixture.
+4. Re-run Step 0; only after parity PASS open the 42-month verdict.
+
+Primary FT_DEEP records:
+
+- [Specification](Specs/TZ-FT-DEEP-001.md)
+- [Partial report](Reports/FT_DEEP_001_PartialRun_2026-07-25.md)
+- [Partial results](Results/FT_DEEP_001/partial_2026-07-25/README.md)
+- [Optimized oracle](Code/Python/FT_DEEP_Oracle_v002.py)
+- [Chunked exporter](Code/Exporters/XAUUSD_M5_DEEP_Exporter_v002.mq5)
 
 ## Security finding
 
-The unrelated legacy `Grok_Core_XAU.mq5` contained a plaintext xAI API key. The
-key still must be revoked/rotated. `AK47_FT_EA_156.mq5` did not contain an
-embedded API credential in the source scan.
+The unrelated legacy `Grok_Core_XAU.mq5` contained a plaintext xAI API key. The key still must be revoked/rotated. `AK47_FT_EA_156.mq5` did not contain an embedded API credential in the source scan.
