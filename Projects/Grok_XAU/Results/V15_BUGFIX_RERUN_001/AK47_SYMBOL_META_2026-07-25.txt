@@ -1,0 +1,1 @@
+2026.07.25 17:43:58.995	AK47_XAU_SymbolMeta_SCRIPT (XAUUSD,M5)	AK47_SYMBOL_META symbol=XAUUSD stops_level=0 freeze_level=0 max=0
