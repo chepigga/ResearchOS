@@ -1,14 +1,23 @@
 {
   "laboratory": "V15-BUGFIX-RERUN-001",
-  "status": "COMPLETED_WITH_MATERIAL_METADATA_BLOCKER",
-  "unconditional_verdict": "UNRESOLVED",
+  "status": "FORMAL_COMPLETED",
+  "unconditional_verdict": "CONFIRMED",
   "conditional_verdict": {
     "max_stop_or_freeze_points_le_3": "CONFIRMED",
     "max_stop_or_freeze_points_ge_4": "FAILS_CONFIRMED_OUT_OF_RULE_2_OF_4_NEGATIVE"
   },
   "hedge_fills_all_configs": 0,
-  "required_metadata": [
-    "SYMBOL_TRADE_STOPS_LEVEL",
-    "SYMBOL_TRADE_FREEZE_LEVEL"
-  ]
+  "measured_symbol_metadata": {
+    "timestamp": "2026-07-25 17:43:58.995",
+    "symbol": "XAUUSD",
+    "chart_timeframe": "M5",
+    "stops_level_points": 0,
+    "freeze_level_points": 0,
+    "max_points": 0,
+    "evidence_file": "AK47_SYMBOL_META_2026-07-25.txt"
+  },
+  "canonical_baseline": "AK47-UPD_V15_1_BUGFIX.mq5",
+  "live_deployment_authorized": false,
+  "risk_increase_authorized": false,
+  "next_gate": "EXACT_MT5_REAL_TICK_PARITY"
 }
