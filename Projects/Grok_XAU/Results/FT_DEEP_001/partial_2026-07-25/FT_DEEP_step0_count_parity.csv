@@ -1,0 +1,3 @@
+module,tester_reference_N,oracle_N,delta_N,count_gate,time_overlap_gate
+NYBUY,17,18,1,PASS,BLOCKED_NO_TESTER_156_1_FIXTURE
+LONBUY,7,7,0,PASS,BLOCKED_NO_TESTER_156_1_FIXTURE
