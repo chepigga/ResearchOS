@@ -1,0 +1,38 @@
+{
+  "laboratory": "AK47_BREAKOUT_RESEARCH_001",
+  "status": "FORMAL_COMPLETED",
+  "verdict": "NO-GO",
+  "base_oos": {
+    "N": 1667,
+    "EV_net_base_R": 0.0319064187162579,
+    "EV_net_actual_R": 0.03200876491368507,
+    "sum_R": 53.18800000000192,
+    "sum_usd": 26594.000000000924,
+    "PF": 1.1986168962827621,
+    "MaxDD_pct": 10.75866000000006,
+    "positive_test_splits": 4,
+    "negative_test_splits": 2,
+    "negative_months": 13,
+    "selected_configs_unique": 6
+  },
+  "permutation": {
+    "WF1": {
+      "real_max_calmar": 54.605099999999005,
+      "permutation_p95": 44.63383999999935,
+      "empirical_p": 0.0159362549800796,
+      "pass": true
+    },
+    "WF2": {
+      "real_max_calmar": 4.934817275747507,
+      "permutation_p95": 41.85556000000111,
+      "empirical_p": 0.9123505976095616,
+      "pass": false
+    }
+  },
+  "stopped_after": "WF2 family-wise permutation failure",
+  "manual_regime_stage_run": false,
+  "ml_addendum_run": false,
+  "tight_trailing_scope": "EXCLUDED",
+  "deployment_authorized": false,
+  "risk_increase_authorized": false
+}
