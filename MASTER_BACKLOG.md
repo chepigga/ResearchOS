@@ -28,23 +28,18 @@
 
 - **Project:** Grok XAU
 - **Priority:** P0
-- **Status:** VALIDATED / PASS
-- **Control:** N=88, B52/S36, legacy EV=+0.275780R; 88/88 entry-time/direction matches; exit mismatches 0
-- **OOS:** 2026-05-01..2026-07-23; N=14; EV_net=+0.235714R; Sum=+3.300R; May/June/July positive
-- **Decision:** `InpBH_Enable=true` permitted on demo only; live prohibited
-- **Canonical configuration:** AK47_FT v1.56 BH v1.55; EMA20; SL 0.25 ATR; TP2R; TO96; fixed cost -0.05R
-- **Risks:** modest N=14; SELL leg EV=-0.05R; bar-level cost model; execution drift
-- **Next action:** one complete controlled demo forward month at `InpBH_RiskPct=0.30` with full lifecycle logging
-- **Links:** `Projects/Grok_XAU/STATUS.md`, `Projects/Grok_XAU/Reports/BH_OOS_002_v002_Report.md`
+- **Status:** VALIDATED / PASS — DEMO ONLY
+- **Result:** Step 0 N=88 B52/S36; OOS N=14, EV_net=+0.235714R, sum +3.300R
+- **Next action:** one controlled demo forward month at frozen 0.30% risk; live prohibited
 
-## XAU-BH-FWD-001 — Run BH_SWEEP demo forward
+## XAU-FT-DEEP-001 — Validate FT core over 42 months
 
 - **Project:** Grok XAU
 - **Priority:** P0
-- **Status:** READY
-- **Dependencies:** validated OOS PASS
-- **Goal:** verify frozen signal parity and real demo execution for one complete month
-- **Configuration:** `InpBH_Enable=true`, `InpBH_RiskPct=0.30`, all v1.56 defaults unchanged
-- **Required logging:** signal, fill, spread, slippage, rejects, SL, TP, time-stop and portfolio gates
-- **Stop conditions:** missing/duplicate signals, material oracle drift, materially excessive costs, or unsafe drawdown behaviour
-- **Done when:** forward report and explicit live/no-live ADR are committed
+- **Status:** INCONCLUSIVE / PARTIAL REGIME SIGNAL / FULL DATA REQUIRED
+- **Dependencies:** full same-feed M5 2022-06..2026-07; tester 156-1 entry-time fixture
+- **Partial input:** exactly 100,000 rows, actual coverage 2025-02-19..2026-07-23; truncated despite filename
+- **Partial diagnostic:** warmup-safe N=27, EV_net=+2.160244R; top-three months 93.31%; zero-entry months 4/8
+- **Step 0:** NYBUY/LONBUY count gate PASS; required >=80% time-overlap BLOCKED
+- **Verdict:** formal GO/REGIME/NO-GO not open because depth<24 months and N<90
+- **Next action:** rerun chunked exporter v002 and supply `AK47_ea_dryrun_signals.csv`
