@@ -26,9 +26,10 @@ The result is economically interesting but insufficiently stable to replace GEO*
 |---|---|---|---|---|---|---|---|
 | FXArena | Exit Policy Tournament | v002 | PREREGISTERED / FROZEN BEFORE RUN | Release v.1.1; GEO* `MICRO30 + TP2.0 + TO120`; N=3535 | paired tournament of ML, rule-based and simple global exit policies while entries, stop and risk remain frozen | P0 fixture diff first; one P1–P7 run; RH1–RH6; frozen Occam rule; no tuning | [Spec](Projects/FXArena/Specs/ExitPolicyTournament_TZ_v002.md) |
 | Grok XAU | BH_SWEEP demo forward | v1.56 / BH v1.55 | READY | OOS PASS N=14, EV_net=+0.235714R | verify signal parity and execution costs for one complete demo month | no tuning; risk 0.30%; full lifecycle logging; live prohibited | [Status](Projects/Grok_XAU/STATUS.md) |
+| Grok XAU | FT core deep oracle | FT_DEEP_001 | PREREGISTERED / BLOCKED DATA AND PARITY FIXTURE | AK47_FT_EA_156 NYBUY + LONBUY defaults; source SHA256 `838b3e...8311b65` | determine persistent edge versus regime concentration over 2023-01..2026-07 | Step 0 before deep run; no tuning; -0.05R cost; GO/REGIME/NO-GO/INCONCLUSIVE frozen | [Spec](Projects/Grok_XAU/Specs/TZ-FT-DEEP-001.md) · [Audit](Projects/Grok_XAU/Reports/FT_DEEP_001_EngineInputAudit.md) |
 
 ## Governance note
 
 GitHub Release `v.1.1` is the current FXArena checkpoint. `Projects/FXArena/STATUS.md` is the operational source of truth; this register is the factual ledger.
 
-For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. OOS PASS permits `InpBH_Enable=true` only on demo at the frozen 0.30% risk. A separate decision after one full forward month is required before any live deployment.
+For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. BH OOS PASS permits `InpBH_Enable=true` only on demo at the frozen 0.30% risk. FT_DEEP has no verdict until Step 0 passes and the full-depth M5 input is available.
