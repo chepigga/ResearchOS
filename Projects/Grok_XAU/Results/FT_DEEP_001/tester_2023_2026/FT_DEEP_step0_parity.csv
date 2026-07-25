@@ -1,0 +1,3 @@
+module,oracle_N,tester_executed_N,delta_N,matched_within_1_M5_bar,overlap_vs_oracle_pct,overlap_vs_tester_pct,count_gate,time_overlap_gate
+NYBUY,18,17,1,15,83.33333333333333,88.23529411764706,True,True
+LONBUY,7,7,0,7,100.0,100.0,True,True

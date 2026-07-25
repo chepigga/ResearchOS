@@ -26,9 +26,10 @@ The result is economically interesting but insufficiently stable to replace GEO*
 |---|---|---|---|---|---|---|---|
 | FXArena | Exit Policy Tournament | v002 | PREREGISTERED / FROZEN BEFORE RUN | Release v.1.1; GEO* `MICRO30 + TP2.0 + TO120`; N=3535 | paired tournament of ML, rule-based and simple global exit policies while entries, stop and risk remain frozen | P0 fixture diff first; one P1–P7 run; RH1–RH6; frozen Occam rule; no tuning | [Spec](Projects/FXArena/Specs/ExitPolicyTournament_TZ_v002.md) |
 | Grok XAU | BH_SWEEP demo forward | v1.56 / BH v1.55 | READY | OOS PASS N=14, EV_net=+0.235714R | verify signal parity and execution costs for one complete demo month | no tuning; risk 0.30%; full lifecycle logging; live prohibited | [Status](Projects/Grok_XAU/STATUS.md) |
+| Grok XAU | FT core deep oracle | FT_DEEP_001 | STEP 0 PASS / TESTER REGIME / FORMAL ORACLE BLOCKED RAW M5 | AK47_FT_EA_156 NYBUY + LONBUY defaults; source SHA256 `838b3e...8311b65` | determine persistent edge versus regime concentration over 2023-01..2026-07 | Step 0: NYBUY 18/17 with 83.33% overlap, LONBUY 7/7 with 100%; direct tester N=135 EV=+1.123733R but early half -0.007685R and late half +1.878012R => frozen-rule REGIME; no always-on scaling; final raw-bar oracle awaits tester-stream M5 export | [Spec](Projects/Grok_XAU/Specs/TZ-FT-DEEP-001.md) · [Tester report](Projects/Grok_XAU/Reports/FT_DEEP_001_Tester42m_2026-07-25.md) |
 
 ## Governance note
 
 GitHub Release `v.1.1` is the current FXArena checkpoint. `Projects/FXArena/STATUS.md` is the operational source of truth; this register is the factual ledger.
 
-For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. OOS PASS permits `InpBH_Enable=true` only on demo at the frozen 0.30% risk. A separate decision after one full forward month is required before any live deployment.
+For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. BH OOS PASS permits `InpBH_Enable=true` only on demo at the frozen 0.30% risk. FT_DEEP Step 0 is now passed. Direct 42-month tester evidence classifies FT as REGIME and rejects always-on scaling, but the formal raw-bar oracle remains blocked until the Strategy Tester stream export supplies full 2022-06..2026-07 M5 history without terminal-cache truncation.
