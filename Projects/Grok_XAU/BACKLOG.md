@@ -1,70 +1,67 @@
 # Grok XAU Backlog
 
 ## XAU-BH-001 — Register frozen BH_SWEEP OOS protocol
-
 - **Priority:** P0
 - **Status:** DONE
 - **Record:** `Specs/TZ-BH-OOS-002.md`
 
 ## XAU-BH-002 — Revoke leaked xAI key
-
 - **Priority:** P0 SECURITY
 - **Status:** USER ACTION REQUIRED
 - **Reason:** plaintext key found in unrelated legacy `Grok_Core_XAU.mq5`.
-- **Done when:** old key is revoked and replacement is stored outside source code.
 
-## XAU-BH-003 — Recover frozen oracle source
-
+## XAU-BH-003 — Recover and validate BH oracle
 - **Priority:** P0
-- **Status:** DONE
-- **Source:** `AK47_FT_EA_156.mq5`, BH_SWEEP v1.55 inside EA v1.56.
-- **Evidence:** exact Step 0 reproduction N=88, B52/S36, EV=+0.275780R.
+- **Status:** DONE / PASS
+- **Result:** Step 0 N=88 B52/S36; OOS N=14, EV_net=+0.235714R.
 
-## XAU-BH-004 — Export and audit same-feed XAUUSD M15
-
-- **Priority:** P0
-- **Status:** DONE
-- **File:** `XAUUSD_M15_202412020100_202607232345.csv`
-- **Coverage:** 2024-12-02 01:00 through 2026-07-23 23:45.
-- **Rows:** 38,742; duplicates 0; invalid OHLC 0.
-- **SHA256:** `7a03c7eca6d333981cc9f30c783f83c31ec15bed46d6b44ae2164a756574f1f3`.
-
-## XAU-BH-005 — Build isolated BH oracle parity harness
-
-- **Priority:** P0
-- **Status:** DONE / FROZEN
-- **Code:** `Code/Python/BH_OOS_Oracle_v002.py`
-- **Excluded:** daily/portfolio/live broker gates.
-- **Included:** exact signal ordering, next-open entry, SL/TP, 96-bar time stop, conservative collision and fixed -0.05R cost.
-
-## XAU-BH-006 — Step 0 reproduction control
-
-- **Priority:** P0
-- **Status:** PASS
-- **Result:** N=88, B52/S36, legacy EV=+0.275780R.
-- **Diff:** 88/88 time+direction matches; exit mismatches 0; only reference rounding residuals.
-- **Canonical parent:** wide basket + EMA20 reversal context.
-
-## XAU-BH-007 — Step 1 frozen OOS run
-
-- **Priority:** P0
-- **Status:** PASS / VALIDATED
-- **Window:** 2026-05-01..2026-07-23.
-- **Result:** N=14, EV_net=+0.235714R, sum=+3.300R.
-- **Monthly:** May, June and July all positive.
-- **Decision:** demo-only enablement permitted; live prohibited.
-
-## XAU-BH-008 — Demo forward month
-
+## XAU-BH-004 — Demo forward month
 - **Priority:** P0
 - **Status:** READY / NEXT
-- **Configuration:** unchanged v1.56 defaults; `InpBH_Enable=true`; `InpBH_RiskPct=0.30`.
-- **Required logging:** signal, fill, spread, slippage, SL/TP, time-stop, rejects and portfolio gates.
-- **Stop conditions:** material oracle drift, duplicated/missing signals, execution cost materially above convention, or unsafe drawdown behaviour.
-- **Done when:** one complete forward month is reviewed and a live/no-live decision is recorded.
+- **Configuration:** unchanged v1.56 defaults; `InpBH_Enable=true`; risk 0.30%.
+- **Live:** prohibited until forward review.
 
-## XAU-BH-009 — Live decision
+## XAU-FTD-001 — Register frozen FT_DEEP specification
+- **Priority:** P0
+- **Status:** DONE
+- **Record:** `Specs/TZ-FT-DEEP-001.md`
+- **Rule:** no post-data parameter changes.
 
+## XAU-FTD-002 — Recover exact v1.56 parity contract
+- **Priority:** P0
+- **Status:** DONE / AUDITED
+- **Source:** `AK47_FT_EA_156.mq5`.
+- **SHA256:** `838b3e180a139008c69792c0f122f3da66a590ef5e6ee98056056f0938311b65`.
+- **Modules:** NYBUY + LONBUY only.
+- **Audit:** `Reports/FT_DEEP_001_EngineInputAudit.md`.
+
+## XAU-FTD-003 — Export full same-feed M5 history
+- **Priority:** P0
+- **Status:** BLOCKED / USER RUN REQUIRED
+- **Required coverage:** 2022-06-01 warmup through 2026-07-23.
+- **Tool:** `Code/Exporters/XAUUSD_M5_DEEP_Exporter_v001.mq5`.
+- **Current data:** 2025-01-01 23:00 through 2026-04-21 23:45, 95,466 rows, 15.61 months.
+- **Done when:** full CSV is uploaded and passes hash/coverage/OHLC audit.
+
+## XAU-FTD-004 — Recover tester 156-1 parity fixture
+- **Priority:** P0
+- **Status:** BLOCKED / INPUT MISSING
+- **Required:** NYBUY and LONBUY entry times for 2026-01-01..2026-07-23.
+- **Gate:** N +/-2 per module and >=80% entry-time overlap within one M5 bar.
+- **Note:** historical v1.54b candidate outcomes are diagnostic only.
+
+## XAU-FTD-005 — Step 0 parity run
+- **Priority:** P0
+- **Status:** BLOCKED BY XAU-FTD-003/004
+- **Stop rule:** no deep run after parity failure.
+
+## XAU-FTD-006 — 42-month frozen oracle run
+- **Priority:** P0
+- **Status:** BLOCKED BY XAU-FTD-005
+- **Window:** 2023-01-01..2026-07-23 with >=200 D1 warmup.
+- **Outputs:** trades, rejects, monthly/year/halves, zero-trade months, top-3 contribution and formal GO/REGIME/NO-GO/INCONCLUSIVE verdict.
+
+## XAU-FTD-007 — FT deployment decision
 - **Priority:** P1
-- **Status:** BLOCKED BY XAU-BH-008
-- **Rule:** OOS PASS alone is insufficient for live deployment.
+- **Status:** BLOCKED
+- **Rule:** current seven-month tester profitability is not sufficient evidence for scaling.
