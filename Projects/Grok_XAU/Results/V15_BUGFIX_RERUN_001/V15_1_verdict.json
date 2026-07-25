@@ -1,0 +1,14 @@
+{
+  "laboratory": "V15-BUGFIX-RERUN-001",
+  "status": "COMPLETED_WITH_MATERIAL_METADATA_BLOCKER",
+  "unconditional_verdict": "UNRESOLVED",
+  "conditional_verdict": {
+    "max_stop_or_freeze_points_le_3": "CONFIRMED",
+    "max_stop_or_freeze_points_ge_4": "FAILS_CONFIRMED_OUT_OF_RULE_2_OF_4_NEGATIVE"
+  },
+  "hedge_fills_all_configs": 0,
+  "required_metadata": [
+    "SYMBOL_TRADE_STOPS_LEVEL",
+    "SYMBOL_TRADE_FREEZE_LEVEL"
+  ]
+}
