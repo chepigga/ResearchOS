@@ -1,0 +1,4 @@
+file,version,engine,sha256,key_logic,critical_risk
+AK47-UPD.mq5,15.0,AK-47_SMART_MM,aaa5084cb27d427d6a8395d3fbb6c3c6849866e47aba15f4ae23b72a8b7c4fe8,OCO absent; 08-18; SL1500 TP3000; risk 1.0 x 0.5^streak; trail 8/3,Opposite pending survives first fill; hedging possible; no daily guard
+AK47-UPD4.mq5,19.0,AK-47_V19_FILTER,5fe5df71b7e70791a482a2d98576e234c4f7f77e20a168034f8a674f8ccf8b43,OCO; 10-14; candle 850-3700; SL1500 TP2700; survivor 1/0.1/0.01; daily $1000,Risk cash capped at $900; 5-point trailing depends on stop-level/tick execution
+AK-47 Scalper EA - MT5.mq5,1.00,AK-47 EA SELL-only scalper,f218d9526cde3b00babc690dee559e936358127466e67de641a5c30c43b1d3ea,Hard-coded SELL; spread <=5 points; SL3.5 TP7; lot = 3 x free-margin / 100000,Not true 3% risk; only 5 valid M5 bars passed spread filter on XAU history
