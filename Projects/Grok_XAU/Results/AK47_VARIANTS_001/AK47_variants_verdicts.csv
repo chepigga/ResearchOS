@@ -1,0 +1,6 @@
+variant,verdict,reason
+AK47-UPD V15 M15,PROMISING REGIME CANDIDATE / EXACT TICK PARITY REQUIRED,"EV actual-risk ~+0.08R, 14d pass ~62%, all years positive; but no OCO and 1495-1599 hedge fills"
+AK47-UPD V15 H1,REGIME CANDIDATE / EXACT TICK PARITY REQUIRED,"EV actual-risk ~+0.08R, 14d pass ~21%; actual pass exceeds permutation p95, indicating favorable clustering"
+AK47-UPD4 V19 M15,HOT-STREAK-ARTIFACT / NO SCALE UNDER FROZEN V19 RULES,"Actual-risk edge positive, but base-1% EV 0.086-0.089R < GO and pass 5.25-5.52% exceeds permutation p95"
+AK47-UPD4 V19 H1,NO-GO FOR 2-WEEK CHALLENGE,Base-1% EV 0.069-0.071R and zero 14d passes across 1489 windows
+AK-47 Scalper V1,NO-GO ON XAUUSD,Only 5 valid M5 bars had spread <=5; all 53-63 modeled trades occurred on one day; total +$276 to +$306
