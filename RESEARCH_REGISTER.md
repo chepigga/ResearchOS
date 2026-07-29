@@ -9,6 +9,7 @@
 | FXArena | GeoSweep / canonical geometry | v009 / Release v.1.1 | 2026-07-23 | VALIDATED | Pinned GEO* trades | N=3535; EV=+0.523020R; Total=+1848.87R; MaxDD=14.416R | Canonical geometry retained | `MICRO30 + TP2.0 + TO120` | prior C2 execution geometry | Exit Policy Tournament v002 over fixed entries | [Status](Projects/FXArena/STATUS.md) |
 | FXArena | TimeoutSweep near-miss | v009b | 2026-07-23 | COMPLETED / CANDIDATE | GEO** TP2/60 pinned trades | N=3698; EV=+0.528467R; Total=+1954.27R; MaxDD=14.998R | Promoted to additional validation, not canonical | `MICRO30 + TP2.0 + TO60` | — | Closed after validation | [Status](Projects/FXArena/STATUS.md) |
 | FXArena | GEO** Validation A+B | v001 / Release v.1.1 | 2026-07-23 | REJECTED | Paired pinned GEO* and GEO** sets | GS5 PASS; GS6 PASS; GS7 FAIL; Pillar B PASS | GEO** rejected as canonical replacement | GEO* remains canonical | GEO** provisional status | Do not re-optimize TP2/60 on same data | [Status](Projects/FXArena/STATUS.md) |
+| Grok XAU | BH_SWEEP OOS validation | BH_OOS_002 v2 | 2026-07-24 | VALIDATED / PASS | XAUUSD M15, frozen OOS 2026-05-01..2026-07-23 | Step 0 N=88 B52/S36 EV=+0.275780R; OOS N=14 EV_net=+0.235714R; Sum=+3.300R; 3/3 positive months | PASS — demo only | AK47_FT v1.56 BH v1.55; EMA20; TP2R; TO96; cost -0.05R | `InpBH_Enable=false` research blocker | One controlled demo forward month at 0.30% risk; live prohibited | [Status](Projects/Grok_XAU/STATUS.md) · [Report](Projects/Grok_XAU/Reports/BH_OOS_002_v002_Report.md) |
 
 ## GS7 decision record
 
@@ -24,17 +25,10 @@ The result is economically interesting but insufficiently stable to replace GEO*
 | Project | Research line | Version | Status | Locked baseline | Objective | Discipline | Link |
 |---|---|---|---|---|---|---|---|
 | FXArena | Exit Policy Tournament | v002 | PREREGISTERED / FROZEN BEFORE RUN | Release v.1.1; GEO* `MICRO30 + TP2.0 + TO120`; N=3535 | paired tournament of ML, rule-based and simple global exit policies while entries, stop and risk remain frozen | P0 fixture diff first; one P1–P7 run; RH1–RH6; frozen Occam rule; no tuning | [Spec](Projects/FXArena/Specs/ExitPolicyTournament_TZ_v002.md) |
-
-## Pending execution requirements
-
-The v002 specification is committed and frozen. Numerical results are not yet registered. Execution requires verified runtime access to:
-
-- ResearchOS `v.1.1 COMPLETE.zip`;
-- `wf_toolkit`;
-- M1 tradingticks data;
-- full universe count 291659;
-- pinned GEO* trade fixture with N=3535.
+| Grok XAU | BH_SWEEP demo forward | v1.56 / BH v1.55 | READY | OOS PASS N=14, EV_net=+0.235714R | verify signal parity and execution costs for one complete demo month | no tuning; risk 0.30%; full lifecycle logging; live prohibited | [Status](Projects/Grok_XAU/STATUS.md) |
 
 ## Governance note
 
-GitHub Release `v.1.1` is the current FXArena checkpoint. `Projects/FXArena/STATUS.md` is the operational source of truth; this register is the factual ledger. The v002 laboratory may change the canonical exit only after complete artifacts, hashes, report and a new register decision are committed. ContPrimary v1.20 demo-forward is outside the tournament and must remain untouched.
+GitHub Release `v.1.1` is the current FXArena checkpoint. `Projects/FXArena/STATUS.md` is the operational source of truth; this register is the factual ledger.
+
+For Grok XAU, `Projects/Grok_XAU/STATUS.md` is the operational source of truth. OOS PASS permits `InpBH_Enable=true` only on demo at the frozen 0.30% risk. A separate decision after one full forward month is required before any live deployment.

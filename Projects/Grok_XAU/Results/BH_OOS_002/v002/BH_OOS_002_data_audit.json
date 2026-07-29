@@ -1,0 +1,14 @@
+{
+  "file": "XAUUSD_M15_202412020100_202607232345.csv",
+  "sha256": "7a03c7eca6d333981cc9f30c783f83c31ec15bed46d6b44ae2164a756574f1f3",
+  "rows": 38742,
+  "first_bar": "2024-12-02 01:00:00",
+  "last_bar": "2026-07-23 23:45:00",
+  "duplicate_timestamps": 0,
+  "invalid_ohlc": 0,
+  "median_spread_points": 24.0,
+  "p95_spread_points": 55.0,
+  "warmup_bars_before_oos": 33264,
+  "oos_signals": 14,
+  "unresolved": 0
+}
