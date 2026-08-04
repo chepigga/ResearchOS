@@ -16,10 +16,22 @@
 
 - **Project:** ResearchOS
 - **Priority:** P1
-- **Status:** PLANNED
+- **Status:** COMPLETED
 - **Dependencies:** initialized `main`
 - **Goal:** isolate active research from stable governance
 - **Done when:** `research` exists from the verified bootstrap commit
 - **Risks:** branch divergence before the first import
 - **Required files:** none
-- **Next action:** create `research` after bootstrap verification
+- **Next action:** use feature/research branches for large new laboratories
+
+## ROS-003 — Complete XAU_Pool candidate evidence
+
+- **Project:** XAU_Pool
+- **Priority:** P0
+- **Status:** BLOCKED
+- **Dependencies:** raw data and original runtime outputs
+- **Goal:** turn LAB_001 from a report-backed candidate into an independently reproducible checkpoint
+- **Done when:** hashes, trade-level outputs, model/scaler artifacts, portable code, environment lock and rerun manifest are preserved
+- **Risks:** missing source artifacts; post-hoc reconstruction; data drift
+- **Required files:** listed in `Projects/XAU_Pool/BACKLOG.md`
+- **Next action:** obtain original output bundle and create LAB_002 spec
