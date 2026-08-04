@@ -24,13 +24,21 @@ Permutation: `z=23.4`; 0 of 37 completed shuffles reached the real result. The p
 
 ## Evidence gaps
 
-- Raw input `XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv` is not included; no SHA256 supplied.
-- Intermediate and primary parquet outputs are not included.
-- Fitted models/scalers and selected trade tables are not included.
-- The specification header remains `DRAFT`; an independently timestamped preregistration freeze is not evidenced in this package.
-- Scripts use absolute `/home/claude/` paths and lack a dependency lockfile.
-- `step8_oos2.py` and `step9_control.py` retain copied OOS-1 labels/date text in headers/output; selection ranges in code are distinct but labels require repair before rerun.
+- Raw input `XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv` is external in GitHub release `ak47`; its SHA256 is not supplied in this package.
+- Selected trade-level tables and complete execution logs are not included.
+- A dependency/environment lockfile is still absent.
+- `step8_oos2.py` and `step9_control.py` retain copied OOS-1 labels in several print statements; selection date ranges in code are distinct, but labels require a code-only repair.
+
+## Evidence added 2026-08-04
+
+- Specification status changed from `DRAFT` to `FROZEN 2026-08-03` in the supplied source.
+- `pool_excess.parquet` — 266,297 candidates with R/excess labels.
+- `baseline.parquet` — month × direction × timeframe drift baseline.
+- `permutation_37_shuffles.jsonl` — 37 raw permutation records.
+- `weights_schedule_XAU_POOL_v001.pkl` — 48 WF windows, 36 features, coefficients/intercept/mean/scale per window, according to the supplied package description.
+- All nine scripts now use `$XAU_DATA` rather than `/home/claude/`.
+- Permutation resume now uses deterministic seed `2026 + iteration`.
 
 ## Next action
 
-Create `XAU_POOL_PORTFOLIO_EXECUTION_LAB_002` with frozen inputs, portable paths, saved trade-level outputs, portfolio constraints, FTMO rules, and forward data after 2026-07-23.
+Add the raw-data SHA256 and dependency lock, repair OOS labels without logic changes, then create `XAU_POOL_PORTFOLIO_EXECUTION_LAB_002` with portfolio constraints, FTMO rules and forward data after 2026-07-23.

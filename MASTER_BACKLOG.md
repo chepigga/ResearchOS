@@ -28,10 +28,10 @@
 
 - **Project:** XAU_Pool
 - **Priority:** P0
-- **Status:** BLOCKED
+- **Status:** IN_PROGRESS
 - **Dependencies:** raw data and original runtime outputs
 - **Goal:** turn LAB_001 from a report-backed candidate into an independently reproducible checkpoint
-- **Done when:** hashes, trade-level outputs, model/scaler artifacts, portable code, environment lock and rerun manifest are preserved
+- **Done when:** raw-release hash, selected trade-level outputs, logs and environment lock complete the now-saved pool/baseline/permutation/model artifacts and portable path update
 - **Risks:** missing source artifacts; post-hoc reconstruction; data drift
-- **Required files:** listed in `Projects/XAU_Pool/BACKLOG.md`
-- **Next action:** obtain original output bundle and create LAB_002 spec
+- **Required files:** raw-data SHA256, selected trades, logs and dependency lock
+- **Next action:** complete remaining evidence, then create LAB_002 spec

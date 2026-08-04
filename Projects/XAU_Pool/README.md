@@ -15,6 +15,18 @@
 
 Це ще не canonical trading system: відсутні portfolio simulation, FTMO constraints, MQL5 parity і forward після 2026-07-23.
 
+## Reproduction checkpoint
+
+Оновлення 2026-08-04 додало:
+
+- `pool_excess.parquet` — 266,297 кандидатів;
+- `baseline.parquet` — matched drift baseline;
+- `permutation_37_shuffles.jsonl` — сирі GATE-4 результати;
+- `weights_schedule_XAU_POOL_v001.pkl` — 48 WF-вікон, 36 фіч;
+- portable `$XAU_DATA` paths і deterministic per-iteration permutation seeds.
+
+Raw M1 залишається зовнішнім release asset і не дублюється в Git.
+
 ## Навігація
 
 - [STATUS.md](STATUS.md) — operational source of truth.

@@ -17,11 +17,14 @@ XAU_POOL_SELECTION_LAB_001 | КРОК 2 — побудова пулу
   D6 AMBIGUOUS      SL і TP в одному M1-барі -> позначка, виключення з EV
 """
 import pandas as pd, numpy as np, importlib.util, time
-spec=importlib.util.spec_from_file_location("m","/home/claude/step1_mechanics.py")
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
+
+spec=importlib.util.spec_from_file_location("m",f"{DATA}/step1_mechanics.py")
 MECH=importlib.util.module_from_spec(spec); spec.loader.exec_module(MECH)
 
 t0=time.time()
-m1=pd.read_parquet('/home/claude/xau_m1.parquet').sort_values('time').reset_index(drop=True)
+m1=pd.read_parquet(f'{DATA}/xau_m1.parquet').sort_values('time').reset_index(drop=True)
 T=m1.time.values
 BH,BL,BC=m1.high.values,m1.low.values,m1.close.values
 AH,AL,AC=m1.ask_high.values,m1.ask_low.values,m1.ask_close.values
@@ -126,5 +129,5 @@ print(f"  BUY  {P[P.dir==1].R.mean():+.4f}R (N={(P.dir==1).sum():,})")
 print(f"  SELL {P[P.dir==-1].R.mean():+.4f}R (N={(P.dir==-1).sum():,})")
 print(f"\nEV по ТФ:"); print(P.groupby('tf').R.agg(['size','mean']).round(4).to_string())
 print(f"\nn_bots: {P.n_bots.value_counts().sort_index().head(10).to_dict()}")
-P.to_parquet('/home/claude/pool.parquet',index=False)
+P.to_parquet(f'{DATA}/pool.parquet',index=False)
 print(f"\n[OK] pool.parquet  [{time.time()-t0:.0f}s]")

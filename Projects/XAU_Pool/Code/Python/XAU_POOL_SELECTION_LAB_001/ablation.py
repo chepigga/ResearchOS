@@ -12,8 +12,11 @@
 """
 import pandas as pd, numpy as np
 from sklearn.linear_model import LogisticRegression
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
 
-P=pd.read_parquet('/home/claude/pool_excess.parquet')
+
+P=pd.read_parquet(f'{DATA}/pool_excess.parquet')
 MECHS=[c for c in P.columns if c.startswith('f_')]
 TREND=['f_T_PRICECHANNEL','f_T_LINREG','f_T_MACD_MOM','f_T_PSAR','f_T_ALLIGATOR',
        'f_T_ENVELOPE','f_C_PIVOT','f_T_SMA_STOCH']

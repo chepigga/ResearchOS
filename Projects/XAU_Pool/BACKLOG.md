@@ -3,24 +3,24 @@
 ## XPL-001 — Complete evidence package for LAB_001
 
 - **Priority:** P0
-- **Status:** BLOCKED
+- **Status:** IN_PROGRESS
 - **Dependencies:** raw dataset and original runtime outputs
 - **Goal:** make LAB_001 independently reproducible
-- **Done when:** raw-data hash, pool/baseline/scored outputs, selected trades, fitted models, environment lock and rerun manifest are committed or attached to a release
+- **Done when:** raw-data hash, selected trade-level outputs, execution logs and environment lock complete the now-saved pool/baseline/permutation/model artifacts
 - **Risks:** unavailable source bytes; changed external dataset; inability to prove preregistration freeze
-- **Required files:** raw CSV or immutable release URL+hash; parquet outputs; model/scaler files; logs
-- **Next action:** obtain the original outputs and calculate SHA256
+- **Required files:** raw release asset SHA256; selected trade table; logs; dependency lock
+- **Next action:** hash the `ak47` raw-data release asset and add the remaining outputs
 
 ## XPL-002 — Portable reproducibility repair
 
 - **Priority:** P0
-- **Status:** READY
+- **Status:** IN_PROGRESS
 - **Dependencies:** imported Python scripts
 - **Goal:** remove `/home/claude/` assumptions without changing research logic
-- **Done when:** CLI paths/config work in a clean environment; OOS-2/CONTROL labels are corrected; dependency versions are locked; smoke test passes
+- **Done when:** `$XAU_DATA` flow works in a clean environment; OOS-2/CONTROL print labels are corrected; dependency versions are locked; smoke test passes
 - **Risks:** accidental logic drift while refactoring
 - **Required files:** current scripts and a small non-sensitive fixture
-- **Next action:** preregister a code-only parity patch
+- **Next action:** make a code-only label/dependency patch; do not change selection logic
 
 ## XPL-003 — Portfolio and FTMO execution validation
 

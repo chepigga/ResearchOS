@@ -13,13 +13,19 @@
 - **Primary selected counts:** IS 3,436; OOS-1 2,260; OOS-2 2,437; CONTROL 1,506
 - **Causal cutoff:** features calculated at bar close before entry, according to the specification
 
-## Missing from package
+## Saved artifacts
 
-- raw input bytes and hash;
-- `pool.parquet`, `pool_excess.parquet`, `baseline.parquet`;
-- OOS/CONTROL scored tables;
-- selected trade-level result tables;
-- fitted models/scalers;
-- execution logs and runtime environment lock.
+| File | Role | SHA256 |
+|---|---|---|
+| `Artifacts/pool_excess.parquet` | candidate pool with R/excess labels | `107180b046476e627dcd9a304a5eff027d063fe29b9458cbfa2c14f983b6410e` |
+| `Artifacts/baseline.parquet` | matched drift baseline | `6b6c8bc62fa0c109ea3a34fe13bcb6fc7fe81596bef05da7386fbab098c50b51` |
+| `Artifacts/permutation_37_shuffles.jsonl` | raw GATE-4 records | `10dc21c667782bd3a87439df5348c31add462a8d353fcf8887cd2f8c5c26a5ce` |
+| `Artifacts/weights_schedule_XAU_POOL_v001.pkl` | 48-window WF model schedule | `fc5cacc24b2c3d344cf85405506cb99d965ede1e6c7a7e8ed4cf40d7ebf25ae2` |
 
-Therefore the numerical result is preserved as reported but has not been independently reproduced during import.
+## Still missing
+
+- raw input bytes/hash in this checkpoint (data remains an external release asset);
+- selected trade-level result tables and full execution logs;
+- runtime/dependency lock.
+
+The artifacts materially improve reproducibility, but the numerical result was not independently rerun during this GitHub update.

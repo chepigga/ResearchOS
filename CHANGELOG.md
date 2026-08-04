@@ -7,6 +7,7 @@
 - Registered the report-backed result as `CANDIDATE`, not canonical.
 - Added lineage gaps, backlog, lessons learned and ADR-001.
 - Excluded unrelated FXArena documents from the XAU_Pool import.
+- Added a second XAU_Pool package with pool/baseline parquet files, 37 permutation records, 48-window model schedule, frozen spec status and portable `$XAU_DATA` scripts.
 
 ## 2026-07-23 — ResearchOS bootstrap
 

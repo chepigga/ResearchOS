@@ -7,6 +7,9 @@ XAU_POOL_SELECTION_LAB_001 | КРОК 1
 Каузальність: жодна не звертається до i+1 і далі.
 """
 import numpy as np, pandas as pd
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
+
 
 # ---------- допоміжні ----------
 def sma(s, n): return s.rolling(n).mean()
@@ -175,7 +178,7 @@ def build_signals(df, tf):
 
 # ================= ВЕРИФІКАЦІЯ =================
 if __name__=='__main__':
-    m1=pd.read_parquet('/home/claude/xau_m1.parquet').sort_values('time').reset_index(drop=True)
+    m1=pd.read_parquet(f'{DATA}/xau_m1.parquet').sort_values('time').reset_index(drop=True)
     print(f"M1: {len(m1):,} | {m1.time.min()} -> {m1.time.max()}\n")
     TFS=[('M1',None),('M5','5min'),('M15','15min'),('H1','1h')]
     rows=[]

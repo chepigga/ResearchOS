@@ -11,8 +11,11 @@ OOS-2 і CONTROL не торкаємось.
 import pandas as pd, numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
 
-P=pd.read_parquet('/home/claude/pool_excess.parquet')
+
+P=pd.read_parquet(f'{DATA}/pool_excess.parquet')
 MECHS=[c for c in P.columns if c.startswith('f_')]
 TREND=['f_T_PRICECHANNEL','f_T_LINREG','f_T_MACD_MOM','f_T_PSAR','f_T_ALLIGATOR',
        'f_T_ENVELOPE','f_C_PIVOT','f_T_SMA_STOCH']
@@ -79,4 +82,4 @@ print(f"GATE-1  підйом >= +0.30R : {lift:+.4f}   {g1}")
 print(f"GATE-2  рівень >= +0.10R : {sel.excess.mean():+.4f}   {g2}")
 print(f"GATE-5  N >= 300         : {len(sel):,}   {g5}")
 print(f"\nдля порівняння IS: підйом +0.3591R, рівень +0.3294R")
-W.to_parquet('/home/claude/control_scored.parquet',index=False)
+W.to_parquet(f'{DATA}/control_scored.parquet',index=False)

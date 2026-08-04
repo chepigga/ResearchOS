@@ -10,9 +10,12 @@ XAU_POOL_SELECTION_LAB_001 | КРОК 3 — базова лінія
 пройшов би поріг +0.10R.
 """
 import pandas as pd, numpy as np, time
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
+
 
 t0=time.time()
-m1=pd.read_parquet('/home/claude/xau_m1.parquet').sort_values('time').reset_index(drop=True)
+m1=pd.read_parquet(f'{DATA}/xau_m1.parquet').sort_values('time').reset_index(drop=True)
 T=m1.time.values
 BH,BL,BC=m1.high.values,m1.low.values,m1.close.values
 AH,AL,AC=m1.ask_high.values,m1.ask_low.values,m1.ask_close.values
@@ -66,7 +69,7 @@ for tf,rule,mins in [('M5','5min',5),('M15','15min',15),('H1','1h',60)]:
     print(f"{tf}: готово  [{time.time()-t0:.0f}s]")
 
 B=pd.DataFrame(rows)
-B.to_parquet('/home/claude/baseline.parquet',index=False)
+B.to_parquet(f'{DATA}/baseline.parquet',index=False)
 print("\n"+"="*70); print("БАЗОВА ЛІНІЯ"); print("="*70)
 print(f"комбінацій (місяць x напрямок x ТФ): {len(B)}")
 print(f"семплів на комбінацію: медіана {B.n.median():.0f}, мін {B.n.min()}")
@@ -89,14 +92,14 @@ print(B.pivot_table(index='split',columns='dir',values='base',aggfunc='mean')
        .reindex(['IS','OOS-1','OOS-2','CONTROL']).round(4).to_string())
 
 # застосування до пулу
-P=pd.read_parquet('/home/claude/pool.parquet')
+P=pd.read_parquet(f'{DATA}/pool.parquet')
 P['month']=P.time.dt.to_period('M').astype(str)
 P=P.merge(B[['tf','month','dir','base']],on=['tf','month','dir'],how='left')
 miss=P.base.isna().sum()
 print(f"\nкандидатів без базової лінії: {miss} ({100*miss/len(P):.2f}%)")
 P=P[P.base.notna()].reset_index(drop=True)
 P['excess']=P.R-P.base
-P.to_parquet('/home/claude/pool_excess.parquet',index=False)
+P.to_parquet(f'{DATA}/pool_excess.parquet',index=False)
 
 print("\n"+"="*70); print("ПУЛ ПІСЛЯ ВІДНІМАННЯ ДРЕЙФУ"); print("="*70)
 print(f"N={len(P):,}")

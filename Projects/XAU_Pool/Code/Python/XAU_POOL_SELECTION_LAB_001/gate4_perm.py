@@ -16,7 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 t0=time.time()
-P=pd.read_parquet('/home/claude/pool_excess.parquet')
+P=pd.read_parquet(f'{DATA}/pool_excess.parquet')
 MECHS=[c for c in P.columns if c.startswith('f_')]
 TREND=['f_T_PRICECHANNEL','f_T_LINREG','f_T_MACD_MOM','f_T_PSAR','f_T_ALLIGATOR',
        'f_T_ENVELOPE','f_C_PIVOT','f_T_SMA_STOCH']
@@ -59,17 +59,22 @@ rng=np.random.default_rng(2026)
 ex=P.excess.to_numpy()
 gidx=[np.flatnonzero(ym==m) for m in sorted(P.ym.unique())]
 import os,json
-CK='/home/claude/perm_ck.jsonl'
+import os
+DATA=os.environ.get("XAU_DATA", os.path.dirname(os.path.abspath(__file__)))
+
+CK=f'{DATA}/perm_ck.jsonl'
 done=[]
 if os.path.exists(CK):
     done=[json.loads(l) for l in open(CK)]
     print(f"  відновлено {len(done)} шафлів")
-for _ in range(len(done)): rng.permutation(10)   # синхронізація стану
+# ВИПРАВЛЕНО: кожен шафл має власний детермінований seed,
+# тому відновлення з контрольної точки НЕ порушує відтворюваності
 TARGET=40
 with open(CK,'a') as fh:
     for it in range(len(done),TARGET):
+        r_it=np.random.default_rng(2026+it)   # seed на ітерацію
         sh=ex.copy()
-        for g in gidx: sh[g]=rng.permutation(sh[g])
+        for g in gidx: sh[g]=r_it.permutation(sh[g])
         a,b,_=run(sh)
         fh.write(json.dumps({'lv':float(a),'lf':float(b)})+'\n'); fh.flush()
         print(f"  {it+1}/{TARGET}  lv={a:+.4f}  [{time.time()-t0:.0f}s]",flush=True)
@@ -87,5 +92,5 @@ for nm,real,null in [("рівень",real_lvl,lv),("підйом",real_lift,lf)]
           f"p95 {p95:+.4f}  p99 {p99:+.4f}  max {null.max():+.4f}")
     print(f"  p-value       {pv:.4f}   ({int((null>=real).sum())}/{len(null)} шафлів >= реального)")
     print(f"  ВЕРДИКТ       {'PASS' if real>p95 else 'FAIL'}  (поріг p95)")
-np.savez('/home/claude/perm.npz',lv=lv,lf=lf,real_lvl=real_lvl,real_lift=real_lift)
+np.savez(f'{DATA}/perm.npz',lv=lv,lf=lf,real_lvl=real_lvl,real_lift=real_lift)
 print(f"\n[{time.time()-t0:.0f}s]")

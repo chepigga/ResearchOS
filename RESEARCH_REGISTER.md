@@ -14,7 +14,7 @@
 
 | Project | Laboratory | Version | Date | Status | Universe | Primary result | Verdict | Canonical configuration | Supersedes | Next step | Links |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| XAU_Pool | XAU_POOL_SELECTION | v001 | 2026-08-03 | CANDIDATE | XAUUSD M1 source; 266,297 candidates across M5/M15/H1; 2022-06-24—2026-07-23 | CONTROL: raw EV +0.2261R; excess +0.3363R; lift +0.3539R; N=1,506; 7/7 positive months; all periods 44/44 positive | Formal PASS per supplied report; not canonical due to missing portfolio/prop/forward validation and incomplete evidence package | LogisticRegression(C=0.5)+StandardScaler; monthly WF; top 4%; SL 1.5ATR; TP 3ATR; TO120 bars | — | Complete evidence package; portfolio/FTMO lab; forward after 2026-07-23 | [Status](Projects/XAU_Pool/STATUS.md) · [Report](Projects/XAU_Pool/Reports/XAU_POOL_SELECTION_LAB_001_Report.md) |
+| XAU_Pool | XAU_POOL_SELECTION | v001 | 2026-08-03 | CANDIDATE | XAUUSD M1 source; 266,297 candidates across M5/M15/H1; 2022-06-24—2026-07-23 | CONTROL: raw EV +0.2261R; excess +0.3363R; lift +0.3539R; N=1,506; 7/7 positive months; all periods 44/44 positive | Formal PASS per supplied report; pool/baseline/permutation/model artifacts saved; not canonical due to missing portfolio/prop/forward validation | LogisticRegression(C=0.5)+StandardScaler; monthly WF; top 4%; SL 1.5ATR; TP 3ATR; TO120 bars | — | Add raw-data hash and dependency lock; portfolio/FTMO lab; forward after 2026-07-23 | [Status](Projects/XAU_Pool/STATUS.md) · [Report](Projects/XAU_Pool/Reports/XAU_POOL_SELECTION_LAB_001_Report.md) |
 
 ## GS7 decision record
 
@@ -42,7 +42,7 @@ The FXArena v002 specification is committed and frozen. Numerical results are no
 - full universe count 291659;
 - pinned GEO* trade fixture with N=3535.
 
-XAU_Pool LAB_001 import requires completion of its evidence package: raw-data hash, primary/intermediate tables, models/scalers, logs and an environment lock.
+XAU_Pool LAB_001 now preserves pool/baseline tables, 37 permutation records and a 48-window model schedule. Remaining evidence requirements are the raw-release SHA256, selected trade-level outputs, complete logs and an environment lock.
 
 ## Governance note
 
