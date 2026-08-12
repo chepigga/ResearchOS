@@ -1,0 +1,1 @@
+Trigger U06 Oracle-to-Tier transfer after workflow registration.
