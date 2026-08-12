@@ -1,0 +1,51 @@
+name: BTC Last Week 2026 Validation
+
+on:
+  push:
+    branches: [lab-buy-b4-st-dir]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python -m pip install --quiet pandas numpy
+      - name: Validate last complete week
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o events.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          curl -L --fail --retry 3 -o sensitivity.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_SENSITIVITY.csv
+          test "$(sha256sum events.csv|awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          test "$(sha256sum sensitivity.csv|awk '{print $1}')" = "49e5078abd5e4030011c472cd658be9eecce241b464c1b52aea16b9440e9a3e4"
+          python - <<'PY'
+          import pandas as pd, numpy as np
+          ev=pd.read_csv('events.csv'); ev.entry_time=pd.to_datetime(ev.entry_time)
+          s=pd.read_csv('sensitivity.csv')
+          print('DATA_MAX_ENTRY',ev.entry_time.max())
+          print('DATA_MIN_ENTRY',ev.entry_time.min())
+          # frozen definitions
+          buy_b4=ev[(ev.side=='BUY')&(ev.H4_ST_AGE_BARS>58)].copy()
+          buy_b4['tier']=np.where(buy_b4.H4_ST_DIR.eq(-1),'BUY_A_OPPOSITE','BUY_B_ALIGNED')
+          sell=ev[ev.side=='SELL'].copy()
+          sell['tier']=np.where((sell.H4_ST_AGE_BARS>26)&(sell.H4_ST_AGE_BARS<=50),'SELL_B3_CANDIDATE','OTHER')
+          core=pd.concat([buy_b4[['entry_time','side','tier','H4_ST_AGE_BARS','H4_ST_DIR','NET48_SPREAD_PCT','NET48_STRESS_PCT']],sell[sell.tier!='OTHER'][['entry_time','side','tier','H4_ST_AGE_BARS','H4_ST_DIR','NET48_SPREAD_PCT','NET48_STRESS_PCT']]],ignore_index=True).sort_values('entry_time')
+          def pf(x):
+              x=pd.to_numeric(x,errors='coerce').dropna(); gp=x[x>0].sum(); gl=-x[x<0].sum(); return gp/gl if gl>0 else np.inf
+          def show(label,a,b):
+              z=core[(core.entry_time>=pd.Timestamp(a))&(core.entry_time<pd.Timestamp(b))].copy()
+              print('\n===',label,a,'to',b,'===')
+              print('N_TOTAL',len(z))
+              if len(z): print(z.to_string(index=False))
+              for tier in ['BUY_A_OPPOSITE','BUY_B_ALIGNED','SELL_B3_CANDIDATE']:
+                  x=z[z.tier==tier]
+                  print('SUMMARY',tier,'N',len(x),'EV',x.NET48_SPREAD_PCT.mean() if len(x) else np.nan,'PF',pf(x.NET48_SPREAD_PCT) if len(x) else np.nan,'stressEV',x.NET48_STRESS_PCT.mean() if len(x) else np.nan,'wins',int((x.NET48_SPREAD_PCT>0).sum()) if len(x) else 0,'losses',int((x.NET48_SPREAD_PCT<=0).sum()) if len(x) else 0)
+          # Last complete calendar week Mon-Sun
+          show('LAST_COMPLETE_WEEK','2026-08-03','2026-08-10')
+          # Prior complete week for immediate context
+          show('PRIOR_COMPLETE_WEEK','2026-07-27','2026-08-03')
+          # Current partial data day(s)
+          show('CURRENT_PARTIAL','2026-08-10','2026-08-11')
+          PY
