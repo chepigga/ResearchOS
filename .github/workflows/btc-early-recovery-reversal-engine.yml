@@ -1,0 +1,297 @@
+name: BTC Early Recovery Reversal Engine
+
+on:
+  push:
+    branches: [lab-btc-early-recovery-reversal]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install research deps
+        run: python -m pip install --quiet pandas numpy scikit-learn
+      - name: Run frozen early recovery/reversal study
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          cat > /tmp/lab.py <<'PY'
+          import zipfile, math
+          import numpy as np, pandas as pd
+          from sklearn.pipeline import Pipeline
+          from sklearn.preprocessing import StandardScaler
+          from sklearn.impute import SimpleImputer
+          from sklearn.linear_model import Ridge
+
+          SPREAD_USD=27.5
+          STRESS48_PP=20.0/365.0*2.0
+          STRESS72_PP=20.0/365.0*3.0
+          TRAIN_END=pd.Timestamp('2023-12-31 23:59:59')
+          OOS_START=pd.Timestamp('2024-01-01')
+
+          # Frozen hypothesis BEFORE historical outcome inspection:
+          # - first touch classical M15 FVG
+          # - young age 2..10 M15 bars
+          # - BUY: H1 6h directional displacement still opposite (<0 trade-coordinates)
+          # - SELL: H1 6h directional displacement already aligned (>0 trade-coordinates)
+          # - no hard extra filters; Ridge score is soft telemetry/ranking only
+
+          def pf(x):
+              x=pd.Series(x).dropna(); gp=x[x>0].sum(); gl=-x[x<0].sum()
+              return float(gp/gl) if gl>0 else float('inf')
+          def weeks(a,b): return max((b-a).total_seconds()/604800.0,1e-9)
+          def stat(g, col='net48'):
+              if len(g)==0: return dict(N=0,EV=np.nan,PF=np.nan,stressEV=np.nan,WR=np.nan)
+              return dict(N=len(g),EV=float(g[col].mean()),PF=pf(g[col]),stressEV=float(g['stress48'].mean()),WR=float((g[col]>0).mean()))
+          def line(label,g):
+              s=stat(g); freq=len(g)/weeks(g.event_time.min(),g.event_time.max()) if len(g)>1 else np.nan
+              print(f"STAT {label} N={s['N']} FREQ_W={freq:.3f} EV48={s['EV']:.6f} PF48={s['PF']:.4f} STRESS48={s['stressEV']:.6f} WR={s['WR']:.4f}")
+
+          # ---------- Load canonical Binance M5 ----------
+          frames=[]
+          with zipfile.ZipFile('btc_5m.zip') as z:
+              names=sorted(n for n in z.namelist() if n.lower().endswith('.csv'))
+              for n in names:
+                  with z.open(n) as f: frames.append(pd.read_csv(f))
+          b=pd.concat(frames,ignore_index=True)
+          b['time']=pd.to_datetime(b['time'],utc=True).dt.tz_localize(None)
+          for c in ['open','high','low','close','volume']:
+              if c in b: b[c]=pd.to_numeric(b[c],errors='coerce')
+          b=(b.dropna(subset=['time','open','high','low','close']).sort_values('time').drop_duplicates('time',keep='last').reset_index(drop=True))
+          print('DATA_RANGE',b.time.min(),b.time.max(),'M5_ROWS',len(b))
+
+          def resample(rule):
+              x=b.set_index('time')
+              o=x.resample(rule,label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
+              o['close_time']=o['time']+pd.Timedelta(rule)
+              return o
+          m15=resample('15min'); h1=resample('1h'); h4=resample('4h')
+
+          def wilder_atr(df,p=14):
+              pc=df.close.shift(1)
+              tr=pd.concat([df.high-df.low,(df.high-pc).abs(),(df.low-pc).abs()],axis=1).max(axis=1)
+              return tr.ewm(alpha=1/p,adjust=False,min_periods=p).mean()
+          def efficiency(close,n):
+              net=(close-close.shift(n)).abs(); den=close.diff().abs().rolling(n).sum()
+              return net/den.replace(0,np.nan)
+
+          m15['atr14']=wilder_atr(m15,14)
+          m15['eff4']=efficiency(m15.close,4); m15['eff8']=efficiency(m15.close,8)
+          m15['range_atr']=(m15.high-m15.low)/m15.atr14
+          m15['body_frac']=(m15.close-m15.open)/(m15.high-m15.low).replace(0,np.nan)
+
+          h1['atr14']=wilder_atr(h1,14)
+          for n in [3,6,12]: h1[f'disp{n}_atr']=(h1.close-h1.close.shift(n))/h1.atr14
+          h1['eff6']=efficiency(h1.close,6)
+
+          def st_dir(df,mult,period=10):
+              src=(df.open+df.high+df.low+df.close)/4; atr=wilder_atr(df,period)
+              bu=(src+mult*atr).to_numpy(float); bl=(src-mult*atr).to_numpy(float); cl=df.close.to_numpy(float)
+              fu=np.full(len(df),np.nan); fl=np.full(len(df),np.nan); d=np.zeros(len(df),dtype=np.int8)
+              for i in range(len(df)):
+                  if not np.isfinite(bu[i]) or not np.isfinite(bl[i]): continue
+                  if i==0 or not np.isfinite(fu[i-1]): fu[i]=bu[i]; fl[i]=bl[i]; d[i]=1; continue
+                  fu[i]=bu[i] if bu[i]<fu[i-1] or cl[i-1]>fu[i-1] else fu[i-1]
+                  fl[i]=bl[i] if bl[i]>fl[i-1] or cl[i-1]<fl[i-1] else fl[i-1]
+                  prev=d[i-1] if d[i-1]!=0 else 1
+                  if prev<0 and cl[i]>fu[i]: d[i]=1
+                  elif prev>0 and cl[i]<fl[i]: d[i]=-1
+                  else: d[i]=prev
+              return d
+          mat=np.vstack([st_dir(h4,m) for m in (1.3,1.8,2.5)]).T
+          vote=np.sign(mat.sum(axis=1)).astype(np.int8); age=np.zeros(len(h4),dtype=int)
+          for i in range(len(h4)):
+              age[i]=0 if i==0 or vote[i]==0 or vote[i]!=vote[i-1] else age[i-1]+1
+          h4s=h4[['close_time']].copy(); h4s['h4_dir']=vote; h4s['h4_age']=age
+
+          # ---------- Classical FVG first-touch event ledger ----------
+          bull=(m15.low>m15.high.shift(2)).to_numpy(); bear=(m15.high<m15.low.shift(2)).to_numpy()
+          raw=[]; n=len(m15)
+          for side,mask,nearcol,hitcol,cmp in [('BUY',bull,'low','low','le'),('SELL',bear,'high','high','ge')]:
+              for j in np.flatnonzero(mask):
+                  near=float(m15.loc[j,nearcol]); far=float(m15.loc[j-2,'high'] if side=='BUY' else m15.loc[j-2,'low'])
+                  k0=j+2; k1=min(j+200,n-1)
+                  if k0>k1: continue
+                  arr=m15.loc[k0:k1,hitcol].to_numpy(float)
+                  hit=np.flatnonzero(arr<=near) if cmp=='le' else np.flatnonzero(arr>=near)
+                  if hit.size:
+                      k=k0+int(hit[0]); raw.append((m15.loc[k,'time'],side,j,k,k-j,near,far))
+          ev=pd.DataFrame(raw,columns=['event_time','side','birth_idx','touch_idx','age_bars','entry','far_edge']).sort_values('event_time').reset_index(drop=True)
+          ev['direction']=np.where(ev.side.eq('BUY'),1.0,-1.0)
+
+          # attach H1 state using ONLY fully closed H1 bars
+          ev=pd.merge_asof(ev.sort_values('event_time'),h1[['close_time','atr14','disp3_atr','disp6_atr','disp12_atr','eff6']].sort_values('close_time'),left_on='event_time',right_on='close_time',direction='backward',allow_exact_matches=True)
+          ev['h1_dir6']=ev.direction*ev.disp6_atr
+          ev['h1_dir3']=ev.direction*ev.disp3_atr
+          ev['h1_dir12']=ev.direction*ev.disp12_atr
+          ev['h1_accel']=ev.h1_dir3-0.5*ev.h1_dir6
+          ev=pd.merge_asof(ev.sort_values('event_time'),h4s.sort_values('close_time'),left_on='event_time',right_on='close_time',direction='backward',allow_exact_matches=True)
+          ev['h4_trade_dir']=ev.direction*ev.h4_dir
+
+          # causal M15 sequence features: PREVIOUS CLOSED bars only
+          idx=ev.touch_idx.to_numpy(int)
+          def arrcol(col): return m15[col].to_numpy(float)
+          c=arrcol('close'); o=arrcol('open'); hi=arrcol('high'); lo=arrcol('low'); a15=arrcol('atr14'); e4=arrcol('eff4'); e8=arrcol('eff8'); rrat=arrcol('range_atr'); bf=arrcol('body_frac')
+          def safe_take(arr,ii):
+              out=np.full(len(ii),np.nan); ok=(ii>=0)&(ii<len(arr)); out[ok]=arr[ii[ok]]; return out
+          prev=idx-1
+          ev['m15_mom1_atr']=ev.direction*(safe_take(c,prev)-safe_take(c,prev-1))/ev.atr14
+          ev['m15_mom4_atr']=ev.direction*(safe_take(c,prev)-safe_take(c,prev-4))/ev.atr14
+          ev['m15_mom8_atr']=ev.direction*(safe_take(c,prev)-safe_take(c,prev-8))/ev.atr14
+          ev['m15_eff4']=safe_take(e4,prev); ev['m15_eff8']=safe_take(e8,prev)
+          ev['prev_body_trade']=ev.direction*safe_take(bf,prev)
+          ev['prev_range_atr15']=safe_take(rrat,prev)
+          ev['fvg_size_atr15']=(ev.entry-ev.far_edge).abs()/safe_take(a15,ev.birth_idx.to_numpy(int))
+
+          # ---------- 48h/72h stop+time outcomes ----------
+          H=m15.high.to_numpy(float); L=m15.low.to_numpy(float); C=m15.close.to_numpy(float)
+          net48=np.full(len(ev),np.nan); gross48=np.full(len(ev),np.nan); net72=np.full(len(ev),np.nan)
+          stopped48=np.zeros(len(ev),dtype=bool)
+          for q,r in enumerate(ev.itertuples(index=False)):
+              k=int(r.touch_idx); entry=float(r.entry); atr=float(r.atr14) if np.isfinite(r.atr14) else np.nan
+              if not np.isfinite(atr) or atr<=0: continue
+              d=1.0 if r.side=='BUY' else -1.0; stop=entry-d*1.5*atr
+              # 48h = 192 M15 bars from touch; 72h = 288
+              def outcome(hbars):
+                  end=k+hbars-1
+                  if end>=len(m15): return np.nan,False
+                  if d>0:
+                      hits=np.flatnonzero(L[k:end+1]<=stop)
+                  else:
+                      hits=np.flatnonzero(H[k:end+1]>=stop)
+                  if hits.size: exitp=stop; st=True
+                  else: exitp=C[end]; st=False
+                  return d*(exitp-entry)/entry*100.0,st
+              g48,st=outcome(192); g72,_=outcome(288)
+              if np.isfinite(g48):
+                  cost=SPREAD_USD/entry*100.0; gross48[q]=g48; net48[q]=g48-cost; stopped48[q]=st
+              if np.isfinite(g72): net72[q]=g72-SPREAD_USD/entry*100.0
+          ev['gross48']=gross48; ev['net48']=net48; ev['stress48']=ev.net48-STRESS48_PP; ev['net72']=net72; ev['stress72']=ev.net72-STRESS72_PP; ev['stopped48']=stopped48
+          ev=ev.dropna(subset=['net48','h1_dir6']).reset_index(drop=True)
+          ev['year']=ev.event_time.dt.year
+
+          # PARITY / sanity relative to LAB020 published broad characteristics
+          recent=ev[ev.event_time>=OOS_START]
+          print('\n=== PARITY_SANITY ===')
+          for side in ['BUY','SELL']:
+              line('RAW_RECENT_'+side,recent[recent.side.eq(side)])
+              parent=recent[(recent.side.eq(side))&(recent.age_bars.between(11,60))&(recent.h1_dir6>0)]
+              line('LAB020_PARENT_RECENT_'+side,parent)
+
+          # ---------- Frozen early shell ----------
+          young=ev[ev.age_bars.between(2,10)].copy()
+          shell=pd.concat([
+              young[(young.side=='BUY')&(young.h1_dir6<0)],
+              young[(young.side=='SELL')&(young.h1_dir6>0)]
+          ]).sort_values('event_time').reset_index(drop=True)
+          shell['branch']=np.where(shell.side.eq('BUY'),'BUY_EARLY_RECOVERY','SELL_EARLY_ACCEL')
+          print('\n=== EARLY_SHELL ===')
+          line('SHELL_FULL',shell)
+          line('SHELL_TRAIN_LE2023',shell[shell.event_time<=TRAIN_END])
+          line('SHELL_OOS_2024_26',shell[shell.event_time>=OOS_START])
+          for side in ['BUY','SELL']:
+              line('SHELL_FULL_'+side,shell[shell.side.eq(side)])
+              line('SHELL_OOS_'+side,shell[(shell.event_time>=OOS_START)&shell.side.eq(side)])
+          print('\nYEARLY_SHELL')
+          for (side,y),g in shell[shell.year>=2020].groupby(['side','year']):
+              s=stat(g); print(f'YEAR {side} {y} N={s["N"]} EV={s["EV"]:.6f} PF={s["PF"]:.4f} STRESS={s["stressEV"]:.6f} WR={s["WR"]:.4f}')
+
+          # Descriptive only: frozen age partitions from recall, no selection
+          print('\nAGE_DESCRIPTIVE_OOS')
+          oo=shell[shell.event_time>=OOS_START]
+          for side in ['BUY','SELL']:
+              for loage,hiage in [(2,4),(5,7),(8,10)]:
+                  line(f'{side}_AGE_{loage}_{hiage}',oo[(oo.side==side)&oo.age_bars.between(loage,hiage)])
+
+          # ---------- Soft causal Ridge router, trained <=2023 only ----------
+          features=['age_bars','fvg_size_atr15','h1_dir6','h1_dir3','h1_dir12','h1_accel','eff6','m15_mom1_atr','m15_mom4_atr','m15_mom8_atr','m15_eff4','m15_eff8','prev_body_trade','prev_range_atr15','h4_trade_dir','h4_age']
+          shell['score']=np.nan; shell['bucket']='NA'
+          print('\n=== RIDGE_SOFT_ROUTER ===')
+          models={}
+          for side in ['BUY','SELL']:
+              tr=shell[(shell.side==side)&(shell.event_time<=TRAIN_END)].copy(); te=shell[(shell.side==side)&(shell.event_time>=OOS_START)].copy()
+              pipe=Pipeline([('imp',SimpleImputer(strategy='median')),('sc',StandardScaler()),('ridge',Ridge(alpha=10.0))])
+              pipe.fit(tr[features],tr.net48)
+              trscore=pipe.predict(tr[features]); tescore=pipe.predict(te[features])
+              q33,q67=np.quantile(trscore,[1/3,2/3])
+              shell.loc[tr.index,'score']=trscore; shell.loc[te.index,'score']=tescore
+              shell.loc[tr.index,'bucket']=pd.cut(trscore,[-np.inf,q33,q67,np.inf],labels=['LOW','MID','HIGH']).astype(str)
+              shell.loc[te.index,'bucket']=pd.cut(tescore,[-np.inf,q33,q67,np.inf],labels=['LOW','MID','HIGH']).astype(str)
+              models[side]=(pipe,q33,q67)
+              print(f'MODEL {side} TRAIN_N={len(tr)} OOS_N={len(te)} Q33={q33:.6f} Q67={q67:.6f}')
+              co=pipe.named_steps['ridge'].coef_
+              for f,v in sorted(zip(features,co),key=lambda x:abs(x[1]),reverse=True)[:8]: print(f'COEF {side} {f} {v:.6f}')
+              for bkt in ['LOW','MID','HIGH']:
+                  line(f'{side}_OOS_{bkt}',shell[(shell.side==side)&(shell.event_time>=OOS_START)&(shell.bucket==bkt)])
+
+          print('\nCOMBINED_OOS_BUCKETS')
+          for bkt in ['LOW','MID','HIGH']:
+              line('COMBINED_OOS_'+bkt,shell[(shell.event_time>=OOS_START)&(shell.bucket==bkt)])
+          print('\nYEARLY_HIGH')
+          hi_oos=shell[(shell.event_time>=OOS_START)&(shell.bucket=='HIGH')]
+          for (side,y),g in hi_oos.groupby(['side','year']):
+              s=stat(g); print(f'HIGH_YEAR {side} {y} N={s["N"]} EV={s["EV"]:.6f} PF={s["PF"]:.4f} STRESS={s["stressEV"]:.6f} WR={s["WR"]:.4f}')
+
+          # tail dependence audit on combined OOS HIGH
+          print('\nTAIL_AUDIT_HIGH_OOS')
+          base=hi_oos.dropna(subset=['net48']).copy()
+          line('HIGH_ALL',base)
+          for p in [0.01,0.03,0.05]:
+              ncut=max(1,int(math.ceil(len(base)*p))); z=base.sort_values('net48').iloc[:-ncut] if len(base)>ncut else base.iloc[0:0]
+              line(f'HIGH_REMOVE_TOP_{int(p*100)}PCT',z)
+
+          # ---------- Manual sanity recall (not used in fitting/thresholding) ----------
+          manual=pd.DataFrame([
+              ('2026-08-06 17:11:08','BUY',64513.40,342.68,'BTC_AI_BUY_FIN150'),
+              ('2026-08-07 21:35:30','SELL',64755.65,401.14,'BTC_MARKET_SELL'),
+              ('2026-08-09 02:15:14','BUY',64911.36,-3.45,'BTC_AI_BUY_FIN150'),
+              ('2026-08-09 09:00:37','BUY',64778.35,43.76,'BTC_AI_BUY_FIN150'),
+              ('2026-08-09 10:55:14','BUY',64795.70,86.21,'BTC_AI_BUY_FIN150'),
+              ('2026-08-09 12:00:07','BUY',64793.03,127.60,'BTC_AI_BUY_FIN150'),
+              ('2026-08-09 18:04:02','SELL',65185.80,15.43,'BTC_MARKET_SELL'),
+              ('2026-08-10 17:08:08','SELL',64672.38,290.28,'BTC_MARKET_SELL'),
+              ('2026-08-10 19:54:15','SELL',63849.46,-79.16,'BTC_MARKET_SELL')],columns=['mt5_time','side','price','manual_profit','cluster'])
+          manual.mt5_time=pd.to_datetime(manual.mt5_time); manual['engine_time']=manual.mt5_time-pd.Timedelta(hours=3)
+          rows=[]
+          for r in manual.itertuples(index=False):
+              z=ev[ev.side.eq(r.side)].copy(); z['delta_min']=(z.event_time-r.engine_time).abs().dt.total_seconds()/60
+              q=z.loc[z.delta_min.idxmin()]
+              if q.delta_min<=90:
+                  is_shell=bool((2<=q.age_bars<=10) and ((r.side=='BUY' and q.h1_dir6<0) or (r.side=='SELL' and q.h1_dir6>0)))
+                  # nearest shell match separately
+                  zs=shell[shell.side.eq(r.side)].copy(); zs['delta_min']=(zs.event_time-r.engine_time).abs().dt.total_seconds()/60
+                  qs=zs.loc[zs.delta_min.idxmin()] if len(zs) else None
+                  shell90=bool(qs is not None and qs.delta_min<=90)
+                  rows.append((r.mt5_time,r.side,r.manual_profit,r.cluster,q.event_time,q.delta_min,int(q.age_bars),q.h1_dir6,is_shell,shell90,qs.event_time if shell90 else pd.NaT,float(qs.delta_min) if shell90 else np.nan))
+              else:
+                  rows.append((r.mt5_time,r.side,r.manual_profit,r.cluster,q.event_time,q.delta_min,int(q.age_bars),q.h1_dir6,False,False,pd.NaT,np.nan))
+          mr=pd.DataFrame(rows,columns=['mt5_time','side','profit','cluster','nearest_raw','raw_delta_min','raw_age','raw_h1_dir6','nearest_raw_is_shell','shell_within90','shell_time','shell_delta_min'])
+          print('\n=== MANUAL_SANITY ===')
+          print(mr.to_string(index=False))
+          print('MANUAL_RAW90_RECALL',float((mr.raw_delta_min<=90).mean()))
+          print('MANUAL_SHELL90_RECALL',float(mr.shell_within90.mean()))
+          for cl,g in mr.groupby('cluster'): print('MANUAL_CLUSTER',cl,'N',len(g),'SHELL90_RECALL',float(g.shell_within90.mean()))
+
+          # compact verdict gates
+          oos=shell[shell.event_time>=OOS_START]; high=hi_oos
+          shell_pos=float(oos.net48.mean())>0; shell_stress=float(oos.stress48.mean())>0
+          high_pos=len(high)>0 and float(high.net48.mean())>0; high_stress=len(high)>0 and float(high.stress48.mean())>0
+          high_years=(high.groupby('year').net48.mean()>0).sum(); high_year_n=high.year.nunique()
+          bmeans=shell[shell.event_time>=OOS_START].groupby('bucket').net48.mean().to_dict()
+          monotonic=(bmeans.get('LOW',np.nan)<bmeans.get('MID',np.nan)<bmeans.get('HIGH',np.nan))
+          print('\n=== VERDICT_GATES ===')
+          print('SHELL_OOS_POSITIVE',shell_pos,'SHELL_OOS_STRESS_POSITIVE',shell_stress)
+          print('HIGH_OOS_POSITIVE',high_pos,'HIGH_OOS_STRESS_POSITIVE',high_stress)
+          print('HIGH_POSITIVE_YEARS',int(high_years),'OF',int(high_year_n),'MONOTONIC_BUCKET_EV',bool(monotonic))
+          if shell_pos and high_pos and high_stress and high_years>=2:
+              print('VERDICT PARTIAL_PASS_OR_BETTER: early branch is historically real enough to continue; score robustness decides promotion.')
+          else:
+              print('VERDICT FAIL_OR_REDESIGN: manual recall mechanism does not transfer cleanly enough under frozen shell.')
+          PY
+          python /tmp/lab.py
