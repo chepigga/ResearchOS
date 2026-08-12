@@ -1,0 +1,1 @@
+Trigger BTC Early Recovery Structural Router V3 after workflow registration.
