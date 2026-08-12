@@ -1,0 +1,1 @@
+Trigger U02 BTC v283 exact outcome replay after workflow registration.
