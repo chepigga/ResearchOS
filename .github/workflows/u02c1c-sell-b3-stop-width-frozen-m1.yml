@@ -1,0 +1,127 @@
+name: U02C1C SELL B3 Stop Width Frozen M1
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen ledger and Binance M1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572043 -H 'Accept: application/octet-stream' > continuation.csv
+          test "$(sha256sum continuation.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+      - name: Run 176-event stop-width sweep
+        shell: bash
+        run: |
+          python - <<'PY'
+          import zipfile, numpy as np, pandas as pd
+          from pathlib import Path
+          COST=27.5
+          WIDTHS=[1.5,2.0,2.5,3.0,4.0,5.0,7.5]
+          OUT=Path('u02c1c'); OUT.mkdir(exist_ok=True)
+
+          c=pd.read_csv('continuation.csv'); c['entry_time']=pd.to_datetime(c.entry_time)
+          e=c[(c.side=='SELL')&(c.H4_ST_AGE_BARS>=27)&(c.H4_ST_AGE_BARS<=50)&(c.entry_time>=pd.Timestamp('2024-01-01'))].copy()
+          e=e[e.entry_time<pd.Timestamp('2027-01-01')].sort_values('entry_time').reset_index(drop=True)
+          assert len(e)==176, len(e)
+
+          with zipfile.ZipFile('btc_1m.zip') as z:
+              names=[n for n in z.namelist() if n.lower().endswith('.csv')]
+              print('ZIP_NAMES',names[:5], 'COUNT',len(names))
+              frames=[]
+              for n in names:
+                  q=pd.read_csv(z.open(n))
+                  frames.append(q)
+          m=pd.concat(frames,ignore_index=True)
+          print('RAW_COLUMNS',list(m.columns)); print(m.head(2).to_string())
+          low={str(x).lower().strip():x for x in m.columns}
+          def pick(opts):
+              for o in opts:
+                  if o in low:return low[o]
+              return None
+          tc=pick(['datetime','date','time','timestamp','open_time','open time'])
+          oc=pick(['open']); hc=pick(['high']); lc=pick(['low']); cc=pick(['close'])
+          if None in [tc,oc,hc,lc,cc]:
+              # fallback for headerless-ish exports where first 5 cols are time,open,high,low,close
+              raise RuntimeError(f'cannot map columns: {list(m.columns)}')
+          ts=m[tc]
+          if np.issubdtype(ts.dtype,np.number):
+              med=pd.to_numeric(ts,errors='coerce').median(); unit='us' if med>1e14 else ('ms' if med>1e11 else 's')
+              m['dt']=pd.to_datetime(pd.to_numeric(ts,errors='coerce'),unit=unit,utc=True).dt.tz_localize(None)
+          else:
+              m['dt']=pd.to_datetime(ts,errors='coerce',utc=True).dt.tz_localize(None)
+          for src,dst in [(oc,'open'),(hc,'high'),(lc,'low'),(cc,'close')]: m[dst]=pd.to_numeric(m[src],errors='coerce')
+          m=m[['dt','open','high','low','close']].dropna().drop_duplicates('dt').sort_values('dt').reset_index(drop=True)
+          print('M1_RANGE',m.dt.min(),m.dt.max(),'N',len(m))
+
+          # completed H1 Wilder ATR14 from the same frozen M1 source
+          h=m.set_index('dt').resample('1h',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index()
+          pc=h.close.shift(1); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1)
+          h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean(); h['close_time']=h.dt+pd.Timedelta(hours=1)
+          hct=h.close_time.to_numpy(dtype='datetime64[ns]'); ha=h.atr14.to_numpy(float)
+          def atr_at(t):
+              j=int(np.searchsorted(hct,np.datetime64(t),'right')-1); return ha[j] if j>=0 else np.nan
+
+          mt=m.dt.to_numpy(dtype='datetime64[ns]'); mo=m.open.to_numpy(float); mh=m.high.to_numpy(float); ml=m.low.to_numpy(float); mc=m.close.to_numpy(float)
+          rows=[]
+          for r in e.itertuples(index=False):
+              sig=pd.Timestamp(r.entry_time); j=int(np.searchsorted(mt,np.datetime64(sig),'left')); je=int(np.searchsorted(mt,np.datetime64(sig+pd.Timedelta(hours=48)),'left'))
+              if j>=len(m) or je<=j: continue
+              entry=float(mo[j]); a=float(atr_at(sig)); ph=mh[j:je]; pl=ml[j:je]
+              terminal=float(mo[je]) if je<len(m) else float(mc[je-1])
+              adv=float((ph.max()-entry)/a); fav=float((entry-pl.min())/a)
+              term_pct=(entry-terminal)/entry*100-COST/entry*100
+              row={'zone_id':r.zone_id,'signal_time':sig,'entry':entry,'atr_h1':a,'adverse_atr':adv,'favorable_atr':fav,'terminal_net_pct':term_pct,'year':int(r.year),'frozen_net48':float(r.NET48_SPREAD_PCT)}
+              for w in WIDTHS:
+                  hit=bool(ph.max()>=entry+w*a); costR=COST/(w*a)
+                  if hit:
+                      R=-1-costR; pct=-(w*a)/entry*100-COST/entry*100
+                  else:
+                      R=(entry-terminal)/(w*a)-costR; pct=term_pct
+                  row[f'hit_{w:g}']=hit; row[f'R_{w:g}']=R; row[f'pct_{w:g}']=pct
+              rows.append(row)
+          r=pd.DataFrame(rows); assert len(r)==176,len(r)
+          def pf(x):
+              s=pd.Series(x).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          aq=r.adverse_atr.quantile([.25,.5,.75,.9,.95,.99]).rename('adverse_atr').reset_index().rename(columns={'index':'quantile'})
+          fq=r.favorable_atr.quantile([.25,.5,.75,.9,.95,.99]).rename('favorable_atr').reset_index().rename(columns={'index':'quantile'})
+          sm=[]
+          for w in WIDTHS:
+              z=r[f'R_{w:g}']; p=r[f'pct_{w:g}']
+              sm.append({'stop_atr':w,'N':len(r),'stop_hit_rate':r[f'hit_{w:g}'].mean(),'EV_R':z.mean(),'PF_R':pf(z),'WR_R':(z>0).mean(),'EV_pct':p.mean(),'PF_pct':pf(p),'WR_pct':(p>0).mean()})
+          sm=pd.DataFrame(sm)
+          yr=[]
+          for y,g in r.groupby('year'):
+              for w in WIDTHS:
+                  z=g[f'R_{w:g}']; yr.append({'year':int(y),'stop_atr':w,'N':len(g),'stop_hit_rate':g[f'hit_{w:g}'].mean(),'EV_R':z.mean(),'PF_R':pf(z),'WR_R':(z>0).mean()})
+          yr=pd.DataFrame(yr)
+          r['parity_diff']=r.terminal_net_pct-r.frozen_net48
+          print('\nADVERSE'); print(aq.to_string(index=False))
+          print('\nFAVORABLE'); print(fq.to_string(index=False))
+          print('\nSUMMARY'); print(sm.to_string(index=False))
+          print('\nYEARLY'); print(yr.to_string(index=False))
+          print('\nNO_STOP terminal EV%',r.terminal_net_pct.mean(),'PF',pf(r.terminal_net_pct),'WR',(r.terminal_net_pct>0).mean())
+          print('FROZEN_TERMINAL_PARITY MAE%',r.parity_diff.abs().mean(),'MAX%',r.parity_diff.abs().max(),'corr',r[['terminal_net_pct','frozen_net48']].corr().iloc[0,1])
+          r.to_csv(OUT/'events.csv',index=False); aq.to_csv(OUT/'adverse_quantiles.csv',index=False); fq.to_csv(OUT/'favorable_quantiles.csv',index=False); sm.to_csv(OUT/'summary.csv',index=False); yr.to_csv(OUT/'yearly.csv',index=False)
+          rep=['# U02C1C SELL B3 Stop Width Sweep','',f'N={len(r)} SELL B3 events, 2024-2026. Frozen Binance M1 source SHA256 4339abbd...; stop-only/48h design means M1 high is sufficient for stop-hit classification.','', '## Adverse ATR quantiles','',aq.to_markdown(index=False),'','## Stop-width summary','',sm.to_markdown(index=False),'','## Yearly','',yr.to_markdown(index=False),'',f'No-stop terminal: EV {r.terminal_net_pct.mean():.6f}%, PF {pf(r.terminal_net_pct):.4f}, WR {(r.terminal_net_pct>0).mean():.3f}.',f'Frozen 48h parity: MAE {r.parity_diff.abs().mean():.6f} pp, corr {r[["terminal_net_pct","frozen_net48"]].corr().iloc[0,1]:.4f}.']
+          (OUT/'REPORT.md').write_text('\n'.join(rep))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02c1c-sell-b3-stop-width-frozen-m1
+          path: u02c1c/
