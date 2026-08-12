@@ -1,0 +1,210 @@
+name: U02B Unified Parallel BTC Tick Replay
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen continuation ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o continuation.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          test "$(sha256sum continuation.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+      - name: Download official Binance aggTrades path
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ticks
+          for d in 30 31; do
+            url="https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-07-${d}.zip"
+            curl -L --fail --retry 3 "$url" -o "ticks/BTCUSDT-aggTrades-2026-07-${d}.zip"
+            curl -L --fail --retry 3 "$url.CHECKSUM" -o "ticks/BTCUSDT-aggTrades-2026-07-${d}.zip.CHECKSUM"
+            (cd ticks && sha256sum -c "BTCUSDT-aggTrades-2026-07-${d}.zip.CHECKSUM")
+          done
+          for d in $(seq -w 1 11); do
+            url="https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$url" -o "ticks/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$url.CHECKSUM" -o "ticks/BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM"
+            (cd ticks && sha256sum -c "BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM")
+          done
+      - name: Run all branches on one Binance tick path
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import zipfile, os, math, json
+          import numpy as np, pandas as pd
+
+          COST_USD = 27.5  # frozen LAB020 round-turn proxy
+          START = pd.Timestamp('2026-08-01 00:00:00')
+          END_SIGNAL = pd.Timestamp('2026-08-09 12:00:00')
+          HORIZONS = [1,2,4,8,24,48]
+
+          def pf(x):
+              s=pd.Series(x).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum()
+              return float(gp/gl) if gl>0 else float('inf')
+
+          # ----- event ledger: Tier A / Tier B / SELL B3 -----
+          c=pd.read_csv('continuation.csv')
+          c['entry_time']=pd.to_datetime(c['entry_time'])
+          c=c[(c.entry_time>=START)&(c.entry_time<=END_SIGNAL)].copy()
+          events=[]
+          for r in c.itertuples(index=False):
+              side=str(r.side)
+              st_age=float(r.H4_ST_AGE_BARS)
+              st_dir=int(r.H4_ST_DIR)
+              branch=None
+              if side=='BUY' and st_age>58 and st_dir==-1: branch='TIER_A'
+              elif side=='BUY' and st_age>58 and st_dir==1: branch='TIER_B'
+              elif side=='SELL' and 27<=st_age<=50: branch='SELL_B3'
+              if branch:
+                  events.append(dict(signal_time=r.entry_time,branch=branch,side=side,source='LAB020_FROZEN',
+                                     ledger_entry=float(r.entry_price),h4_age=st_age,h4_dir=st_dir,
+                                     ledger_net48=float(r.NET48_SPREAD_PCT)))
+
+          # ----- exact v283 executions from MT5 journal, mapped -3h -----
+          e=pd.read_csv('research/unified_recent_v283_exec_events.csv')
+          e['binance_utc']=pd.to_datetime(e['binance_utc'])
+          for r in e.itertuples(index=False):
+              events.append(dict(signal_time=r.binance_utc,branch='EARLY_V283',side=r.side,source='MT5_EXACT_EXEC',
+                                 ledger_entry=float(r.mt5_entry),h4_age=np.nan,h4_dir=np.nan,
+                                 ledger_net48=np.nan,pre=int(r.pre),ai=int(r.ai),final=int(r.final)))
+          ev=pd.DataFrame(events).sort_values('signal_time').reset_index(drop=True)
+
+          # ----- load Binance aggTrades -----
+          frames=[]
+          for p in sorted(os.listdir('ticks')):
+              if not p.endswith('.zip'): continue
+              with zipfile.ZipFile(os.path.join('ticks',p)) as z:
+                  name=[n for n in z.namelist() if n.endswith('.csv')][0]
+                  with z.open(name) as f: df=pd.read_csv(f,header=None)
+              df=df.iloc[:,:8]
+              df.columns=['agg_id','price','qty','first_id','last_id','ts','buyer_maker','best_match']
+              df['price']=pd.to_numeric(df.price,errors='coerce')
+              df['ts']=pd.to_numeric(df.ts,errors='coerce')
+              df['time']=pd.to_datetime(df.ts,unit='us',utc=True).dt.tz_localize(None)
+              frames.append(df[['time','price']])
+          t=pd.concat(frames,ignore_index=True).dropna().sort_values('time').reset_index(drop=True)
+          print('TICK_PATH',t.time.min(),t.time.max(),'ROWS',len(t))
+
+          # H1 ATR14 from the same trade path, using completed bars only.
+          h=t.set_index('time').price.resample('1h',label='left',closed='left').agg(['first','max','min','last']).dropna().reset_index()
+          h.columns=['bar_time','open','high','low','close']
+          h['close_time']=h.bar_time+pd.Timedelta(hours=1)
+          pc=h.close.shift(1)
+          tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1)
+          h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+
+          times=t.time.to_numpy(dtype='datetime64[ns]'); prices=t.price.to_numpy(float)
+          hct=h.close_time.to_numpy(dtype='datetime64[ns]'); hatr=h.atr14.to_numpy(float)
+
+          def tick_idx_at_or_after(ts):
+              return int(np.searchsorted(times,np.datetime64(ts),'left'))
+          def atr_at(ts):
+              j=int(np.searchsorted(hct,np.datetime64(ts),'right')-1)
+              return float(hatr[j]) if j>=0 and np.isfinite(hatr[j]) else np.nan
+          def price_at_or_after(ts):
+              j=tick_idx_at_or_after(ts)
+              if j>=len(t): return np.nan,np.nan
+              return float(prices[j]),j
+
+          rows=[]
+          for r in ev.itertuples(index=False):
+              sig=pd.Timestamp(r.signal_time); d=1.0 if r.side=='BUY' else -1.0
+              entry, j0=price_at_or_after(sig); atr=atr_at(sig)
+              if not np.isfinite(entry) or not np.isfinite(atr): continue
+              stop_dist=1.5*atr; tp_dist=2.25*atr
+              sl=entry-d*stop_dist; tp=entry+d*tp_dist
+              end_ts=min(sig+pd.Timedelta(hours=48),t.time.max())
+              j1=int(np.searchsorted(times,np.datetime64(end_ts),'right'))
+              path=prices[j0:j1]
+              if len(path)==0: continue
+              if d>0:
+                  sl_hits=np.flatnonzero(path<=sl); tp_hits=np.flatnonzero(path>=tp)
+                  mfe=(np.max(path)-entry)/stop_dist; mae=(np.min(path)-entry)/stop_dist
+              else:
+                  sl_hits=np.flatnonzero(path>=sl); tp_hits=np.flatnonzero(path<=tp)
+                  mfe=(entry-np.min(path))/stop_dist; mae=(entry-np.max(path))/stop_dist
+              first_sl=int(sl_hits[0]) if sl_hits.size else 10**18
+              first_tp=int(tp_hits[0]) if tp_hits.size else 10**18
+              barrier='TP' if first_tp<first_sl else ('SL' if first_sl<first_tp else 'TIME')
+              out=dict(signal_time=sig,branch=r.branch,side=r.side,source=r.source,entry_tick=entry,atr_h1=atr,
+                       stop_dist=stop_dist,tp_dist=tp_dist,sl=sl,tp=tp,barrier48=barrier,mfe48_R=mfe,mae48_R=mae,
+                       h4_age=getattr(r,'h4_age',np.nan),h4_dir=getattr(r,'h4_dir',np.nan),
+                       ledger_entry=getattr(r,'ledger_entry',np.nan),ledger_net48=getattr(r,'ledger_net48',np.nan),
+                       pre=getattr(r,'pre',np.nan),ai=getattr(r,'ai',np.nan),final=getattr(r,'final',np.nan))
+              for hh in HORIZONS:
+                  target=sig+pd.Timedelta(hours=hh)
+                  if target>t.time.max():
+                      out[f'net{hh}h_pct']=np.nan; out[f'r{hh}h']=np.nan; continue
+                  px,_=price_at_or_after(target)
+                  gross=d*(px-entry)/entry*100.0
+                  net=gross-COST_USD/entry*100.0
+                  out[f'net{hh}h_pct']=net
+                  out[f'r{hh}h']=d*(px-entry)/stop_dist-COST_USD/stop_dist
+              rows.append(out)
+          res=pd.DataFrame(rows).sort_values('signal_time').reset_index(drop=True)
+
+          print('\n=== EVENTS ===')
+          showcols=['signal_time','branch','side','entry_tick','atr_h1','barrier48','mfe48_R','mae48_R','net2h_pct','net8h_pct','net48h_pct']
+          print(res[showcols].to_string(index=False))
+
+          print('\n=== BRANCH SUMMARY ===')
+          summary=[]
+          for br,g in res.groupby('branch'):
+              row={'branch':br,'N':len(g),'TP':int((g.barrier48=='TP').sum()),'SL':int((g.barrier48=='SL').sum()),'TIME':int((g.barrier48=='TIME').sum()),
+                   'TP_share':float((g.barrier48=='TP').mean()),'MFE_R_med':float(g.mfe48_R.median()),'MAE_R_med':float(g.mae48_R.median())}
+              for hh in HORIZONS:
+                  col=f'net{hh}h_pct'; z=g[col].dropna(); row[f'EV{hh}h']=float(z.mean()) if len(z) else np.nan; row[f'PF{hh}h']=pf(z) if len(z) else np.nan; row[f'WR{hh}h']=float((z>0).mean()) if len(z) else np.nan
+              summary.append(row)
+          sm=pd.DataFrame(summary)
+          print(sm.to_string(index=False))
+
+          # Cross-branch proximity / possible lifecycle overlap, no dedup yet.
+          pairs=[]
+          for i,a in res.iterrows():
+              for j,b in res.iterrows():
+                  if j<=i or a.branch==b.branch: continue
+                  dt=(b.signal_time-a.signal_time).total_seconds()/3600
+                  if abs(dt)<=48:
+                      pairs.append(dict(a_time=a.signal_time,a_branch=a.branch,a_side=a.side,b_time=b.signal_time,b_branch=b.branch,b_side=b.side,delta_h=dt,
+                                        same_side=a.side==b.side))
+          pr=pd.DataFrame(pairs)
+          print('\n=== CROSS_BRANCH_WITHIN_48H ===')
+          print(pr.to_string(index=False) if len(pr) else 'NONE')
+
+          # Compare frozen ledger 48h return to fresh Binance tick return for continuation rows as a parity check.
+          z=res[res.source=='LAB020_FROZEN'].dropna(subset=['ledger_net48','net48h_pct']).copy()
+          if len(z):
+              z['diff48']=z.net48h_pct-z.ledger_net48
+              print('\nLEDGER_TICK_48H_PARITY N',len(z),'MAE_PCT',float(z.diff48.abs().mean()),'MAX_PCT',float(z.diff48.abs().max()))
+
+          os.makedirs('u02b',exist_ok=True)
+          res.to_csv('u02b/unified_recent_tick_events.csv',index=False)
+          sm.to_csv('u02b/unified_recent_branch_summary.csv',index=False)
+          pr.to_csv('u02b/cross_branch_within_48h.csv',index=False)
+
+          lines=['# U02B — Unified Parallel BTC Tick Replay','',
+                 '**Window:** 2026-08-01 through frozen continuation coverage, outcomes on official Binance BTCUSDT aggTrades.','',
+                 '**Research mode:** branches run independently; no portfolio conflict rules or deduplication.','',
+                 '**Common entry comparison:** first Binance aggTrade at/after signal; H1 ATR14 from same trade path; SL 1.5 ATR; TP 2.25 ATR (RR 1:1.5); $27.5/BTC frozen round-trip cost proxy.','',
+                 '## Branch summary','',sm.to_markdown(index=False),'','## Event ledger','',res[showcols].to_markdown(index=False),'',
+                 '## Interpretation guardrails','',
+                 '- Small recent N is diagnostic only, not a historical edge closure.','- Tier A/B and SELL B3 definitions come from the frozen LAB020 parent ledger.','- EARLY_V283 uses exact MT5 EXEC_EVENT timestamps mapped to Binance UTC by the validated -3h offset.','- Native exits are deliberately not used here; this isolates entry quality on a common outcome surface.']
+          with open('u02b/U02B_UNIFIED_PARALLEL_TICK_REPLAY_REPORT.md','w') as f:f.write('\n'.join(lines))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02b-unified-parallel-tick-replay
+          path: u02b/
