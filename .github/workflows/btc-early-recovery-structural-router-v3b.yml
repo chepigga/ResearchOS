@@ -1,0 +1,202 @@
+name: BTC Early Recovery Structural Router V3b
+
+on:
+  push:
+    branches: [lab-btc-early-recovery-reversal]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v3b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - run: python -m pip install --quiet pandas numpy scikit-learn
+      - name: Run causal structural router V3b
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          cat > /tmp/v3b.py <<'PY'
+          import zipfile, math
+          import numpy as np, pandas as pd
+          from sklearn.pipeline import Pipeline
+          from sklearn.impute import SimpleImputer
+          from sklearn.preprocessing import StandardScaler
+          from sklearn.linear_model import Ridge
+
+          SPREAD_USD=27.5
+          OOS_YEARS=[2024,2025,2026]
+          Q_HIGH=2/3
+          ALPHA=10.0
+
+          def pf(x):
+              x=pd.Series(x).dropna(); gp=x[x>0].sum(); gl=-x[x<0].sum()
+              return float(gp/gl) if gl>0 else float('inf')
+          def span_weeks(g):
+              if len(g)<2:return np.nan
+              return max((g.event_time.max()-g.event_time.min()).total_seconds()/604800.0,1e-9)
+          def stat(g,col='net2h'):
+              z=g.dropna(subset=[col])
+              if len(z)==0:return dict(N=0,EV=np.nan,PF=np.nan,WR=np.nan,FREQ=np.nan)
+              return dict(N=len(z),EV=float(z[col].mean()),PF=pf(z[col]),WR=float((z[col]>0).mean()),FREQ=len(z)/span_weeks(z) if len(z)>1 else np.nan)
+          def pr(label,g):
+              s=stat(g,'net2h'); s1=stat(g,'net1h'); s4=stat(g,'net4h')
+              print(f"STAT {label} N={s['N']} FREQ_W={s['FREQ']:.3f} EV1H={s1['EV']:+.5f} PF1H={s1['PF']:.3f} EV2H={s['EV']:+.5f} PF2H={s['PF']:.3f} WR2H={s['WR']:.3f} EV4H={s4['EV']:+.5f} PF4H={s4['PF']:.3f}")
+
+          frames=[]
+          with zipfile.ZipFile('btc_5m.zip') as z:
+              for n in sorted(x for x in z.namelist() if x.lower().endswith('.csv')):
+                  with z.open(n) as f: frames.append(pd.read_csv(f))
+          b=pd.concat(frames,ignore_index=True)
+          b['time']=pd.to_datetime(b['time'],utc=True).dt.tz_localize(None)
+          for c in ['open','high','low','close','volume']:
+              if c in b.columns:b[c]=pd.to_numeric(b[c],errors='coerce')
+          b=(b.dropna(subset=['time','open','high','low','close']).sort_values('time').drop_duplicates('time',keep='last').reset_index(drop=True))
+          print('DATA_RANGE',b.time.min(),b.time.max(),'M5_ROWS',len(b))
+
+          def rs(rule):
+              x=b.set_index('time').resample(rule,label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
+              x['close_time']=x.time+pd.Timedelta(rule); return x
+          m=rs('15min'); h1=rs('1h'); h4=rs('4h')
+          def atr(df,p=14):
+              pc=df.close.shift(1); tr=pd.concat([df.high-df.low,(df.high-pc).abs(),(df.low-pc).abs()],axis=1).max(axis=1)
+              return tr.ewm(alpha=1/p,adjust=False,min_periods=p).mean()
+          def eff(c,n): return (c-c.shift(n)).abs()/c.diff().abs().rolling(n).sum().replace(0,np.nan)
+          for df in [m,h1,h4]: df['atr14']=atr(df,14)
+          m['ema20']=m.close.ewm(span=20,adjust=False).mean(); m['ema50']=m.close.ewm(span=50,adjust=False).mean()
+          h1['ema50']=h1.close.ewm(span=50,adjust=False).mean(); h4['ema50']=h4.close.ewm(span=50,adjust=False).mean()
+          m['ema50_slope_atr']=(m.ema50-m.ema50.shift(4))/m.atr14
+          h1['ema50_slope_atr']=(h1.ema50-h1.ema50.shift(3))/h1.atr14
+          h4['ema50_slope_atr']=(h4.ema50-h4.ema50.shift(2))/h4.atr14
+          for n in [1,2,4,8]: m[f'mom{n}']=(m.close-m.close.shift(n))/m.atr14
+          for n in [1,3,6,12]: h1[f'mom{n}']=(h1.close-h1.close.shift(n))/h1.atr14
+          m['eff4']=eff(m.close,4); m['eff8']=eff(m.close,8); h1['eff6']=eff(h1.close,6)
+          m['body_atr']=(m.close-m.open)/m.atr14; m['range_atr']=(m.high-m.low)/m.atr14
+          for df,nm,lb in [(m,'m15',20),(h1,'h1',20)]:
+              ph=df.high.shift(1).rolling(lb).max(); pl=df.low.shift(1).rolling(lb).min()
+              df[f'bos_up_{nm}']=(df.close>ph).astype(float); df[f'bos_dn_{nm}']=(df.close<pl).astype(float)
+          prior_hi=m.high.shift(1).rolling(8).max(); prior_lo=m.low.shift(1).rolling(8).min()
+          m['micro_up']=(m.close>m.high.shift(1)).astype(float); m['micro_dn']=(m.close<m.low.shift(1)).astype(float)
+          m['sweep_low_reclaim']=((m.low<prior_lo)&(m.close>prior_lo)).astype(float)
+          m['sweep_high_reclaim']=((m.high>prior_hi)&(m.close<prior_hi)).astype(float)
+          m['atr_ratio100']=m.atr14/m.atr14.shift(1).rolling(100).mean(); h1['atr_ratio100']=h1.atr14/h1.atr14.shift(1).rolling(100).mean()
+
+          bull=(m.low>m.high.shift(2)).to_numpy(); bear=(m.high<m.low.shift(2)).to_numpy(); N=len(m); raw=[]
+          for side,mask,nearcol,hitcol,cmp in [('BUY',bull,'low','low','le'),('SELL',bear,'high','high','ge')]:
+              for j in np.flatnonzero(mask):
+                  near=float(m.loc[j,nearcol]); far=float(m.loc[j-2,'high'] if side=='BUY' else m.loc[j-2,'low']); k0=j+2; k1=min(j+200,N-1)
+                  if k0>k1:continue
+                  z=m.loc[k0:k1,hitcol].to_numpy(float); hit=np.flatnonzero(z<=near) if cmp=='le' else np.flatnonzero(z>=near)
+                  if hit.size:
+                      k=k0+int(hit[0]); raw.append((m.loc[j,'time'],m.loc[k,'time'],side,j,k,k-j,near,far))
+          ev=pd.DataFrame(raw,columns=['fvg_time','event_time','side','birth_idx','touch_idx','age_bars','entry','far_edge']).sort_values('event_time').reset_index(drop=True)
+          ev['d']=np.where(ev.side.eq('BUY'),1.0,-1.0)
+          print('RAW_COUNTS',ev.side.value_counts().to_dict())
+          ev=ev[ev.age_bars.between(2,10)].copy().reset_index(drop=True)
+
+          # Explicit prefixes remove every pandas suffix ambiguity.
+          mcols=['close_time','close','atr14','ema20','ema50','ema50_slope_atr','mom1','mom2','mom4','mom8','eff4','eff8','body_atr','range_atr','bos_up_m15','bos_dn_m15','micro_up','micro_dn','sweep_low_reclaim','sweep_high_reclaim','atr_ratio100']
+          ms=m[mcols].copy().rename(columns={c:'m15s_'+c for c in mcols if c!='close_time'}).rename(columns={'close_time':'m15_state_time'})
+          h1cols=['close_time','close','atr14','ema50','ema50_slope_atr','mom1','mom3','mom6','mom12','eff6','bos_up_h1','bos_dn_h1','atr_ratio100']
+          hs=h1[h1cols].copy().rename(columns={c:'h1s_'+c for c in h1cols if c!='close_time'}).rename(columns={'close_time':'h1_state_time'})
+          h4cols=['close_time','close','atr14','ema50','ema50_slope_atr']
+          h4s=h4[h4cols].copy().rename(columns={c:'h4s_'+c for c in h4cols if c!='close_time'}).rename(columns={'close_time':'h4_state_time'})
+          ev=pd.merge_asof(ev.sort_values('event_time'),ms.sort_values('m15_state_time'),left_on='event_time',right_on='m15_state_time',direction='backward',allow_exact_matches=True)
+          ev=pd.merge_asof(ev.sort_values('event_time'),hs.sort_values('h1_state_time'),left_on='event_time',right_on='h1_state_time',direction='backward',allow_exact_matches=True)
+          ev=pd.merge_asof(ev.sort_values('event_time'),h4s.sort_values('h4_state_time'),left_on='event_time',right_on='h4_state_time',direction='backward',allow_exact_matches=True)
+          d=ev.d
+          ev['m15_ema20_dist']=d*(ev.m15s_close-ev.m15s_ema20)/ev.m15s_atr14
+          ev['m15_ema50_dist']=d*(ev.m15s_close-ev.m15s_ema50)/ev.m15s_atr14
+          ev['m15_slope']=d*ev.m15s_ema50_slope_atr
+          for n in [1,2,4,8]:ev[f'm15_mom{n}']=d*ev[f'm15s_mom{n}']
+          ev['m15_body']=d*ev.m15s_body_atr; ev['m15_eff4']=ev.m15s_eff4; ev['m15_eff8']=ev.m15s_eff8; ev['m15_range']=ev.m15s_range_atr; ev['m15_atr_ratio']=ev.m15s_atr_ratio100
+          ev['bos_m15']=np.where(ev.side.eq('BUY'),ev.m15s_bos_up_m15,ev.m15s_bos_dn_m15)
+          ev['micro_aligned']=np.where(ev.side.eq('BUY'),ev.m15s_micro_up,ev.m15s_micro_dn)
+          ev['sweep_reclaim_aligned']=np.where(ev.side.eq('BUY'),ev.m15s_sweep_low_reclaim,ev.m15s_sweep_high_reclaim)
+          ev['h1_ema50_dist']=d*(ev.h1s_close-ev.h1s_ema50)/ev.h1s_atr14
+          ev['h1_slope']=d*ev.h1s_ema50_slope_atr
+          for n in [1,3,6,12]:ev[f'h1_mom{n}']=d*ev[f'h1s_mom{n}']
+          ev['h1_eff6']=ev.h1s_eff6; ev['h1_atr_ratio']=ev.h1s_atr_ratio100
+          ev['bos_h1']=np.where(ev.side.eq('BUY'),ev.h1s_bos_up_h1,ev.h1s_bos_dn_h1)
+          ev['h4_ema50_dist']=d*(ev.h4s_close-ev.h4s_ema50)/ev.h4s_atr14
+          ev['h4_slope']=d*ev.h4s_ema50_slope_atr; ev['h4_bias_aligned']=(ev.h4_ema50_dist>0).astype(float)
+          ev['fvg_size_atr15']=(ev.entry-ev.far_edge).abs()/ev.m15s_atr14
+          ev['choch_m15_proxy']=((ev.bos_m15>0)&(ev.h1_ema50_dist<0)).astype(float)
+          ev['choch_h1_proxy']=((ev.bos_h1>0)&(ev.h4_ema50_dist<0)).astype(float)
+          ev['recovery_disagreement']=((ev.h1_mom6<0)&(ev.m15_mom4>0)).astype(float)
+          ev['impulse_abs']=ev.m15_mom4.abs()
+
+          H=m.high.to_numpy(float); L=m.low.to_numpy(float); C=m.close.to_numpy(float)
+          for hh in [1,2,4,8]:
+              bars=hh*4; gross=np.full(len(ev),np.nan); mfe=np.full(len(ev),np.nan); mae=np.full(len(ev),np.nan)
+              for i,r in enumerate(ev.itertuples(index=False)):
+                  k=int(r.touch_idx); end=k+bars-1
+                  if end>=N:continue
+                  dd=1.0 if r.side=='BUY' else -1.0; en=float(r.entry); gross[i]=dd*(C[end]-en)/en*100.0; a=k+1
+                  if a<=end:
+                      if dd>0: mfe[i]=(np.max(H[a:end+1])-en)/en*100; mae[i]=(np.min(L[a:end+1])-en)/en*100
+                      else: mfe[i]=(en-np.min(L[a:end+1]))/en*100; mae[i]=(en-np.max(H[a:end+1]))/en*100
+              ev[f'net{hh}h']=gross-SPREAD_USD/ev.entry*100.0; ev[f'mfe{hh}h']=mfe; ev[f'mae{hh}h']=mae
+          ev['year']=ev.event_time.dt.year
+
+          FEATURES=['age_bars','fvg_size_atr15','m15_ema20_dist','m15_ema50_dist','m15_slope','m15_mom1','m15_mom2','m15_mom4','m15_mom8','m15_body','m15_eff4','m15_eff8','m15_range','m15_atr_ratio','bos_m15','micro_aligned','sweep_reclaim_aligned','h1_ema50_dist','h1_slope','h1_mom1','h1_mom3','h1_mom6','h1_mom12','h1_eff6','h1_atr_ratio','bos_h1','h4_ema50_dist','h4_slope','h4_bias_aligned','choch_m15_proxy','choch_h1_proxy','recovery_disagreement','impulse_abs']
+          ev['oos_score']=np.nan; ev['bucket']='NA'; ev['fold']=0; coef_rows=[]
+          print('\n=== EXPANDING OOS RIDGE ===')
+          for side in ['BUY','SELL']:
+              for y in OOS_YEARS:
+                  tr=ev[(ev.side==side)&(ev.year<y)&ev.net2h.notna()].copy(); te=ev[(ev.side==side)&(ev.year==y)&ev.net2h.notna()].copy()
+                  if len(tr)<500 or len(te)==0:continue
+                  model=Pipeline([('imp',SimpleImputer(strategy='median')),('sc',StandardScaler()),('ridge',Ridge(alpha=ALPHA))])
+                  model.fit(tr[FEATURES],tr.net2h); trsc=model.predict(tr[FEATURES]); tesc=model.predict(te[FEATURES]); q1,q2=np.quantile(trsc,[1/3,Q_HIGH])
+                  ev.loc[te.index,'oos_score']=tesc; ev.loc[te.index,'fold']=y; ev.loc[te.index,'bucket']=np.where(tesc>=q2,'HIGH',np.where(tesc>=q1,'MID','LOW'))
+                  co=model.named_steps['ridge'].coef_; coef_rows += [(side,y,f,float(v)) for f,v in zip(FEATURES,co)]
+                  print(f'MODEL {side} {y} TRAIN={len(tr)} TEST={len(te)} Q33={q1:+.6f} Q67={q2:+.6f}')
+                  for f,v in sorted(zip(FEATURES,co),key=lambda z:abs(z[1]),reverse=True)[:8]: print(f'COEF {side} {y} {f} {v:+.6f}')
+          oos=ev[ev.year.isin(OOS_YEARS)&ev.oos_score.notna()].copy()
+          print('\n=== OOS BUCKETS ===')
+          for side in ['BUY','SELL']:
+              for bk in ['LOW','MID','HIGH']:pr(f'{side}_{bk}',oos[(oos.side==side)&(oos.bucket==bk)])
+          for bk in ['LOW','MID','HIGH']:pr(f'COMBINED_{bk}',oos[oos.bucket==bk])
+          hi=oos[oos.bucket=='HIGH'].copy()
+          print('\n=== YEARLY HIGH ===')
+          for side in ['BUY','SELL']:
+              for y,g in hi[hi.side==side].groupby('year'):
+                  s=stat(g); print(f'HIGH_YEAR {side} {y} N={s["N"]} FREQ_W={s["FREQ"]:.3f} EV2H={s["EV"]:+.6f} PF2H={s["PF"]:.3f} WR={s["WR"]:.3f}')
+          for y,g in hi.groupby('year'):
+              s=stat(g); print(f'HIGH_YEAR COMBINED {y} N={s["N"]} FREQ_W={s["FREQ"]:.3f} EV2H={s["EV"]:+.6f} PF2H={s["PF"]:.3f} WR={s["WR"]:.3f}')
+          print('\n=== TAIL ROBUSTNESS HIGH ==='); pr('HIGH_ALL',hi)
+          for p in [0.01,0.03,0.05]:
+              ncut=max(1,int(math.ceil(len(hi)*p))); z=hi.sort_values('net2h').iloc[:-ncut] if len(hi)>ncut else hi.iloc[0:0]; pr(f'HIGH_REMOVE_TOP_{int(p*100)}PCT',z)
+          co=pd.DataFrame(coef_rows,columns=['side','year','feature','coef'])
+          print('\n=== COEFFICIENT STABILITY ===')
+          for side in ['BUY','SELL']:
+              z=co[co.side==side].pivot(index='feature',columns='year',values='coef'); cols=[c for c in OOS_YEARS if c in z.columns]
+              z['same_sign']=z[cols].apply(lambda r: len(set(np.sign(r.dropna())))==1,axis=1); z['mean_abs']=z[cols].abs().mean(axis=1)
+              print('COEF_STABLE',side); print(z.sort_values('mean_abs',ascending=False).head(12).to_string())
+          print('\n=== HIGH DELIVERY GEOMETRY ===')
+          for side in ['BUY','SELL']:
+              g=hi[hi.side==side]
+              if len(g):print('GEOM',side,'N',len(g),'MFE2H_MED',g.mfe2h.median(),'MFE2H_P75',g.mfe2h.quantile(.75),'MAE2H_MED',g.mae2h.median(),'P_MFE_GT_0.2',float((g.mfe2h>.2).mean()),'P_MFE_GT_0.4',float((g.mfe2h>.4).mean()))
+
+          manual=pd.DataFrame([
+              ('2026-08-06 17:11:08','BUY',342.68,'BTC_AI_BUY_FIN150'),('2026-08-07 21:35:30','SELL',401.14,'BTC_MARKET_SELL'),('2026-08-09 02:15:14','BUY',-3.45,'BTC_AI_BUY_FIN150'),('2026-08-09 09:00:37','BUY',43.76,'BTC_AI_BUY_FIN150'),('2026-08-09 10:55:14','BUY',86.21,'BTC_AI_BUY_FIN150'),('2026-08-09 12:00:07','BUY',127.60,'BTC_AI_BUY_FIN150'),('2026-08-09 18:04:02','SELL',15.43,'BTC_MARKET_SELL'),('2026-08-10 17:08:08','SELL',290.28,'BTC_MARKET_SELL'),('2026-08-10 19:54:15','SELL',-79.16,'BTC_MARKET_SELL')],columns=['mt5_time','side','manual_profit','cluster'])
+          manual.mt5_time=pd.to_datetime(manual.mt5_time); manual['engine_time']=manual.mt5_time-pd.Timedelta(hours=3); rows=[]
+          for r in manual.itertuples(index=False):
+              z=oos[(oos.side==r.side)&(oos.year==2026)].copy(); z['delta_min']=(z.event_time-r.engine_time).abs().dt.total_seconds()/60; q=z.loc[z.delta_min.idxmin()] if len(z) else None
+              rows.append((r.mt5_time,r.side,r.manual_profit,r.cluster,q.event_time if q is not None else pd.NaT,float(q.delta_min) if q is not None else np.nan,q.bucket if q is not None else 'NONE',float(q.oos_score) if q is not None else np.nan))
+          mr=pd.DataFrame(rows,columns=['mt5_time','side','manual_profit','cluster','match_time','delta_min','bucket','score'])
+          print('\n=== MANUAL V3 SANITY ==='); print(mr.to_string(index=False))
+          for cl,g in mr.groupby('cluster'):
+              near=g.delta_min<=90; print('MANUAL_CLUSTER',cl,'N',len(g),'YOUNG90_RECALL',float(near.mean()),'HIGH90_RECALL',float(((near)&(g.bucket=='HIGH')).mean()),'HIGH_SHARE_AMONG_NEAR',float((g.loc[near,'bucket']=='HIGH').mean()) if near.any() else np.nan)
+          print('\n=== VERDICT GATES ===')
+          low=oos[oos.bucket=='LOW']; mid=oos[oos.bucket=='MID']; monotonic=(low.net2h.mean()<mid.net2h.mean()<hi.net2h.mean()); posyears=int((hi.groupby('year').net2h.mean()>0).sum()); freq=stat(hi)['FREQ']
+          print('MONOTONIC_LOW_MID_HIGH',bool(monotonic),'HIGH_POS_YEARS',posyears,'OF',hi.year.nunique(),'HIGH_FREQ_W',freq,'HIGH_EV2H',hi.net2h.mean(),'HIGH_PF2H',pf(hi.net2h))
+          if monotonic and hi.net2h.mean()>0 and pf(hi.net2h)>1.10 and posyears>=2 and 8<=freq<=25: print('VERDICT PASS_CANDIDATE')
+          elif hi.net2h.mean()>0 and posyears>=2: print('VERDICT PARTIAL_PASS')
+          else: print('VERDICT FAIL')
+          PY
+          python /tmp/v3b.py
