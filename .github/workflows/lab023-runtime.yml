@@ -1,0 +1,283 @@
+name: LAB023 SELL H4 ST Phase Migration
+
+on:
+  push:
+    branches: [lab023-runtime]
+
+permissions:
+  contents: read
+
+jobs:
+  lab023:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: python -m pip install --quiet pandas numpy
+
+      - name: Download frozen LAB020 assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o events.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          curl -L --fail --retry 3 -o sensitivity.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_SENSITIVITY.csv
+          echo "=== SHA256 ==="
+          sha256sum events.csv sensitivity.csv
+          test "$(sha256sum events.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          test "$(sha256sum sensitivity.csv | awk '{print $1}')" = "49e5078abd5e4030011c472cd658be9eecce241b464c1b52aea16b9440e9a3e4"
+
+      - name: Run LAB023
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import numpy as np
+          import pandas as pd
+
+          RNG = np.random.default_rng(23023)
+          ev = pd.read_csv('events.csv')
+          sens = pd.read_csv('sensitivity.csv')
+          ev['entry_time'] = pd.to_datetime(ev['entry_time'])
+          sell = ev[ev['side'].eq('SELL')].copy().sort_values('entry_time').reset_index(drop=True)
+
+          def pf(x):
+              x = pd.to_numeric(x, errors='coerce').dropna()
+              gp = x[x > 0].sum(); gl = -x[x < 0].sum()
+              return float(gp / gl) if gl > 0 else float('inf')
+
+          def met(x):
+              if len(x) == 0:
+                  return dict(N=0, EV=np.nan, PF=np.nan, stressEV=np.nan, stressPF=np.nan)
+              return dict(
+                  N=int(len(x)),
+                  EV=float(x['NET48_SPREAD_PCT'].mean()),
+                  PF=pf(x['NET48_SPREAD_PCT']),
+                  stressEV=float(x['NET48_STRESS_PCT'].mean()),
+                  stressPF=pf(x['NET48_STRESS_PCT']),
+              )
+
+          # Frozen SELL ST-age boundaries from TRAIN<=2023 only.
+          st = sens[(sens['side'].eq('SELL')) & (sens['feature'].str.upper().eq('H4_ST_AGE_BARS')) & (sens['part'].eq('TRAIN_LE_2023'))]
+          if st.empty:
+              raise SystemExit('Missing frozen SELL H4_ST_AGE_BARS sensitivity rows')
+          q25, q50, q75 = map(float, [st.q25.iloc[0], st.q50.iloc[0], st.q75.iloc[0]])
+          print(f'FROZEN_SELL_ST_AGE_CUTS q25={q25:g} q50={q50:g} q75={q75:g}')
+
+          def st_bucket(v):
+              if pd.isna(v): return np.nan
+              if v <= q25: return 'B1'
+              if v <= q50: return 'B2'
+              if v <= q75: return 'B3'
+              return 'B4'
+          sell['ST_BUCKET'] = sell['H4_ST_AGE_BARS'].map(st_bucket)
+
+          # Exact parity against LAB020 TRAIN sensitivity.
+          parity = []
+          for b in ['B1','B2','B3','B4']:
+              x = sell[(sell.year <= 2023) & sell.ST_BUCKET.eq(b)]
+              t = st[st.bucket.eq(b)].iloc[0]
+              parity.append(dict(bucket=b, N=len(x), targetN=int(t.N), EV=x.NET48_SPREAD_PCT.mean(), targetEV=float(t.EV48_spread_pct), PF=pf(x.NET48_SPREAD_PCT), targetPF=float(t.PF48_spread)))
+          parity = pd.DataFrame(parity)
+          print('\n=== PARITY ===')
+          print(parity.to_string(index=False))
+          if not ((parity.N == parity.targetN).all() and np.allclose(parity.EV, parity.targetEV, atol=1e-12) and np.allclose(parity.PF, parity.targetPF, atol=1e-12)):
+              raise SystemExit('PARITY FAIL')
+
+          # 1) Frozen B1-B4 by calendar year.
+          yearly=[]
+          for y in sorted(sell.year.unique()):
+              yy=sell[sell.year.eq(y)]
+              for b in ['B1','B2','B3','B4']:
+                  x=yy[yy.ST_BUCKET.eq(b)]
+                  r=met(x); r.update(year=int(y),bucket=b,share=float(len(x)/len(yy)) if len(yy) else np.nan)
+                  yearly.append(r)
+          yearly=pd.DataFrame(yearly)[['year','bucket','N','share','EV','PF','stressEV','stressPF']]
+          yearly.to_csv('LAB023_SELL_ST_AGE_YEARLY.csv', index=False)
+          print('\n=== YEARLY B1-B4 ===')
+          print(yearly.to_string(index=False))
+
+          # 2) Era aggregates.
+          eras={'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026),'FULL_2020_26':(2020,2026)}
+          era_rows=[]
+          for name,(a,b) in eras.items():
+              base=sell[sell.year.between(a,b)]
+              for bucket in ['B1','B2','B3','B4']:
+                  x=base[base.ST_BUCKET.eq(bucket)]
+                  r=met(x); r.update(era=name,bucket=bucket,share=float(len(x)/len(base)) if len(base) else np.nan)
+                  era_rows.append(r)
+          era=pd.DataFrame(era_rows)[['era','bucket','N','share','EV','PF','stressEV','stressPF']]
+          era.to_csv('LAB023_SELL_ST_AGE_ERAS.csv', index=False)
+          print('\n=== ERA B1-B4 ===')
+          print(era.to_string(index=False))
+
+          # 3) Best bucket by year, descriptive only.
+          best=[]
+          for y,g in yearly.groupby('year'):
+              valid=g[g.N>=20]
+              if valid.empty: continue
+              rr=valid.loc[valid.EV.idxmax()]
+              best.append(dict(year=int(y),best_bucket=rr.bucket,N=int(rr.N),EV=float(rr.EV),PF=float(rr.PF),stressEV=float(rr.stressEV)))
+          best=pd.DataFrame(best)
+          best.to_csv('LAB023_SELL_ST_AGE_BEST_BY_YEAR.csv',index=False)
+          print('\n=== BEST BUCKET BY YEAR (N>=20) ===')
+          print(best.to_string(index=False))
+
+          # 4) Continuous descriptive age surface using fixed, non-optimized windows.
+          age_edges=[-np.inf,11,20,30,40,50,65,85,120,np.inf]
+          age_labels=['<=11','12-20','21-30','31-40','41-50','51-65','66-85','86-120','121+']
+          sell['AGE_BAND']=pd.cut(sell.H4_ST_AGE_BARS,bins=age_edges,labels=age_labels,right=True)
+          surface=[]
+          for name,(a,b) in {'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026)}.items():
+              base=sell[sell.year.between(a,b)]
+              for band in age_labels:
+                  x=base[base.AGE_BAND.astype(str).eq(band)]
+                  r=met(x); r.update(era=name,age_band=band,median_age=float(x.H4_ST_AGE_BARS.median()) if len(x) else np.nan)
+                  surface.append(r)
+          surface=pd.DataFrame(surface)[['era','age_band','N','median_age','EV','PF','stressEV','stressPF']]
+          surface.to_csv('LAB023_SELL_CONTINUOUS_AGE_SURFACE.csv',index=False)
+          print('\n=== FIXED AGE SURFACE ===')
+          print(surface.to_string(index=False))
+
+          # 5) Rolling 12-month B1-B4 surface, sampled quarterly for readable output.
+          end0=max(pd.Timestamp('2020-12-31'), sell.entry_time.min()+pd.Timedelta(days=365))
+          end1=sell.entry_time.max().normalize()
+          qends=pd.date_range(end0,end1,freq='QE')
+          roll=[]
+          for end in qends:
+              start=end-pd.Timedelta(days=365)
+              w=sell[(sell.entry_time>start)&(sell.entry_time<=end)]
+              if len(w)<80: continue
+              vals={}
+              for b in ['B1','B2','B3','B4']:
+                  x=w[w.ST_BUCKET.eq(b)]
+                  vals[b]=met(x)
+              valid=[b for b in vals if vals[b]['N']>=15]
+              bestb=max(valid,key=lambda b: vals[b]['EV']) if valid else None
+              roll.append(dict(
+                  end=end.date().isoformat(),windowN=len(w),best_bucket=bestb,
+                  B1_N=vals['B1']['N'],B1_EV=vals['B1']['EV'],
+                  B2_N=vals['B2']['N'],B2_EV=vals['B2']['EV'],
+                  B3_N=vals['B3']['N'],B3_EV=vals['B3']['EV'],
+                  B4_N=vals['B4']['N'],B4_EV=vals['B4']['EV'],
+                  B3_minus_B4=vals['B3']['EV']-vals['B4']['EV'] if vals['B3']['N'] and vals['B4']['N'] else np.nan,
+              ))
+          roll=pd.DataFrame(roll)
+          roll.to_csv('LAB023_SELL_ROLLING_12M.csv',index=False)
+          print('\n=== ROLLING 12M QUARTER-END ===')
+          print(roll.to_string(index=False))
+
+          # Detect first sustained 4-quarter B3>B4 period.
+          sustained=None
+          if len(roll)>=4:
+              d=roll['B3_minus_B4'].to_numpy(float)
+              for i in range(3,len(roll)):
+                  if np.all(np.isfinite(d[i-3:i+1])) and np.all(d[i-3:i+1]>0):
+                      sustained=roll.iloc[i]['end']; break
+          print('FIRST_SUSTAINED_4Q_B3_GT_B4', sustained)
+
+          # 6) H4 direction interaction: aligned SELL H4 direction = -1.
+          inter=[]
+          for name,(a,b) in {'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026)}.items():
+              base=sell[sell.year.between(a,b)]
+              for buck in ['B1','B2','B3','B4']:
+                  for h4dir in [-1.0,1.0]:
+                      x=base[base.ST_BUCKET.eq(buck)&base.H4_ST_DIR.eq(h4dir)]
+                      r=met(x); r.update(era=name,bucket=buck,h4_dir=int(h4dir),aligned_bear=bool(h4dir==-1))
+                      inter.append(r)
+          inter=pd.DataFrame(inter)[['era','bucket','h4_dir','aligned_bear','N','EV','PF','stressEV','stressPF']]
+          inter.to_csv('LAB023_SELL_ST_DIR_INTERACTION.csv',index=False)
+          print('\n=== H4 ST DIRECTION INTERACTION ===')
+          print(inter.to_string(index=False))
+
+          # 7) Signed-distance interaction using frozen TRAIN<=2023 SELL quartiles.
+          train=sell[sell.year<=2023]
+          dq=train.H4_ST_TRADE_SIGNED_ATR.quantile([.25,.5,.75]).to_numpy(float)
+          def dbucket(v):
+              if pd.isna(v): return np.nan
+              if v<=dq[0]:return 'D1'
+              if v<=dq[1]:return 'D2'
+              if v<=dq[2]:return 'D3'
+              return 'D4'
+          sell['DIST_BUCKET']=sell.H4_ST_TRADE_SIGNED_ATR.map(dbucket)
+          dist=[]
+          for name,(a,b) in {'OLD_2020_22':(2020,2022),'RECENT_2024_26':(2024,2026)}.items():
+              base=sell[sell.year.between(a,b)&sell.ST_BUCKET.isin(['B3','B4'])]
+              for buck in ['B3','B4']:
+                  for d in ['D1','D2','D3','D4']:
+                      x=base[base.ST_BUCKET.eq(buck)&base.DIST_BUCKET.eq(d)]
+                      r=met(x); r.update(era=name,bucket=buck,dist_bucket=d)
+                      dist.append(r)
+          dist=pd.DataFrame(dist)[['era','bucket','dist_bucket','N','EV','PF','stressEV','stressPF']]
+          dist.to_csv('LAB023_SELL_SIGNED_DISTANCE_INTERACTION.csv',index=False)
+          print('\n=== SIGNED DISTANCE QUARTILES ===')
+          print('TRAIN_DIST_CUTS', [float(x) for x in dq])
+          print(dist.to_string(index=False))
+
+          # 8) Weekly-block bootstrap for B3-B4 EV difference.
+          def block_bootstrap_diff(base, reps=4000):
+              z=base[base.ST_BUCKET.isin(['B3','B4'])].copy()
+              z['week']=z.entry_time.dt.to_period('W-SUN').astype(str)
+              weeks=z.week.unique()
+              if len(weeks)<10:return dict(diff=np.nan,lo=np.nan,hi=np.nan,p_gt0=np.nan,nweeks=len(weeks))
+              obs=z[z.ST_BUCKET.eq('B3')].NET48_SPREAD_PCT.mean()-z[z.ST_BUCKET.eq('B4')].NET48_SPREAD_PCT.mean()
+              vals=[]
+              groups={w:z[z.week.eq(w)] for w in weeks}
+              for _ in range(reps):
+                  draw=RNG.choice(weeks,size=len(weeks),replace=True)
+                  s=pd.concat([groups[w] for w in draw],ignore_index=True)
+                  a=s[s.ST_BUCKET.eq('B3')].NET48_SPREAD_PCT
+                  b=s[s.ST_BUCKET.eq('B4')].NET48_SPREAD_PCT
+                  if len(a) and len(b):vals.append(a.mean()-b.mean())
+              vals=np.asarray(vals,float)
+              return dict(diff=float(obs),lo=float(np.quantile(vals,.025)),hi=float(np.quantile(vals,.975)),p_gt0=float((vals>0).mean()),nweeks=int(len(weeks)))
+          boots=[]
+          for name,(a,b) in {'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026)}.items():
+              r=block_bootstrap_diff(sell[sell.year.between(a,b)])
+              r['era']=name; boots.append(r)
+          boots=pd.DataFrame(boots)[['era','nweeks','diff','lo','hi','p_gt0']]
+          boots.to_csv('LAB023_SELL_B3_B4_BLOCK_BOOTSTRAP.csv',index=False)
+          print('\n=== WEEKLY-BLOCK BOOTSTRAP B3-B4 ===')
+          print(boots.to_string(index=False))
+
+          # 9) Tail delivery: location of top 3% positive SELL returns by era.
+          tails=[]
+          for name,(a,b) in {'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026)}.items():
+              base=sell[sell.year.between(a,b)].copy()
+              thr=float(base.NET48_SPREAD_PCT.quantile(.97))
+              t=base[base.NET48_SPREAD_PCT>=thr]
+              for buck in ['B1','B2','B3','B4']:
+                  x=t[t.ST_BUCKET.eq(buck)]
+                  tails.append(dict(era=name,threshold=thr,bucket=buck,tailN=len(x),tail_share=float(len(x)/len(t)) if len(t) else np.nan,mean_tail=float(x.NET48_SPREAD_PCT.mean()) if len(x) else np.nan))
+          tails=pd.DataFrame(tails)
+          tails.to_csv('LAB023_SELL_TOP3_TAIL_LOCATION.csv',index=False)
+          print('\n=== TOP 3% TAIL LOCATION ===')
+          print(tails.to_string(index=False))
+
+          # Mechanical summary; no new trading gate is promoted here.
+          old=era[era.era.eq('OLD_2020_22')].set_index('bucket')
+          recent=era[era.era.eq('RECENT_2024_26')].set_index('bucket')
+          summary={
+              'sell_cutoffs':{'q25':q25,'q50':q50,'q75':q75},
+              'old_best_bucket':str(old.EV.idxmax()),
+              'recent_best_bucket':str(recent.EV.idxmax()),
+              'old_B3_minus_B4_EV':float(old.loc['B3','EV']-old.loc['B4','EV']),
+              'recent_B3_minus_B4_EV':float(recent.loc['B3','EV']-recent.loc['B4','EV']),
+              'migration_difference_in_difference':float((recent.loc['B3','EV']-recent.loc['B4','EV'])-(old.loc['B3','EV']-old.loc['B4','EV'])),
+              'first_sustained_4q_B3_gt_B4':sustained,
+              'recent_B3_EV':float(recent.loc['B3','EV']),
+              'recent_B3_PF':float(recent.loc['B3','PF']),
+              'recent_B3_stressEV':float(recent.loc['B3','stressEV']),
+              'recent_B4_EV':float(recent.loc['B4','EV']),
+              'recent_B4_PF':float(recent.loc['B4','PF']),
+          }
+          with open('LAB023_SUMMARY.json','w') as f: json.dump(summary,f,indent=2)
+          print('\n=== SUMMARY ===')
+          print(json.dumps(summary,indent=2))
+          PY
+
+      - name: Upload LAB023 outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: BTC_SELL_H4_ST_PHASE_MIGRATION_LAB_023
+          path: |
+            LAB023_*.csv
+            LAB023_SUMMARY.json
