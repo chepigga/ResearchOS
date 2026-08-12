@@ -1,0 +1,29 @@
+name: U03 BTC v283 gate ablation
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  u03:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen BTC M1
+        run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+      - name: Rebuild U02 exact outcomes
+        run: python research/btc_unified_lifecycle/u02_exact_outcomes.py
+      - name: Run U03 gates
+        run: python research/btc_unified_lifecycle/u03_gate_ablation.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u03-v283-gate-ablation
+          path: u03_out/
