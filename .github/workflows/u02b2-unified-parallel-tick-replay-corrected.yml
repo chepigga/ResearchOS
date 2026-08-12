@@ -1,0 +1,196 @@
+name: U02B2 Unified Parallel BTC Tick Replay Corrected
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen ledger and official Binance ticks
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o continuation.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          test "$(sha256sum continuation.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          mkdir -p ticks
+          for d in 30 31; do
+            u="https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-07-${d}.zip"
+            curl -L --fail --retry 3 "$u" -o "ticks/BTCUSDT-aggTrades-2026-07-${d}.zip"
+            curl -L --fail --retry 3 "$u.CHECKSUM" -o "ticks/BTCUSDT-aggTrades-2026-07-${d}.zip.CHECKSUM"
+            (cd ticks && sha256sum -c "BTCUSDT-aggTrades-2026-07-${d}.zip.CHECKSUM")
+          done
+          for d in $(seq -w 1 11); do
+            u="https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$u" -o "ticks/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$u.CHECKSUM" -o "ticks/BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM"
+            (cd ticks && sha256sum -c "BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM")
+          done
+      - name: Corrected common-outcome replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, zipfile, numpy as np, pandas as pd
+
+          COST_USD=27.5
+          START=pd.Timestamp('2026-08-01')
+          END_SIGNAL=pd.Timestamp('2026-08-09 12:00:00')
+          H=[1,2,4,8,24,48]
+
+          def pf(s):
+              s=pd.Series(s).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum()
+              return float(gp/gl) if gl>0 else float('inf')
+
+          # Frozen continuation events.
+          c=pd.read_csv('continuation.csv'); c['entry_time']=pd.to_datetime(c.entry_time)
+          c=c[(c.entry_time>=START)&(c.entry_time<=END_SIGNAL)].copy()
+          events=[]
+          for r in c.itertuples(index=False):
+              br=None
+              if r.side=='BUY' and r.H4_ST_AGE_BARS>58 and r.H4_ST_DIR==-1: br='TIER_A'
+              elif r.side=='BUY' and r.H4_ST_AGE_BARS>58 and r.H4_ST_DIR==1: br='TIER_B'
+              elif r.side=='SELL' and 27<=r.H4_ST_AGE_BARS<=50: br='SELL_B3'
+              if br:
+                  events.append({'signal_time':r.entry_time,'branch':br,'side':r.side,'source':'LAB020_FROZEN',
+                                 'ledger_entry':float(r.entry_price),'ledger_net48':float(r.NET48_SPREAD_PCT),
+                                 'h4_age':float(r.H4_ST_AGE_BARS),'h4_dir':int(r.H4_ST_DIR)})
+          # Exact v283 MT5 executions, timezone parity MT5-3h=UTC.
+          e=pd.read_csv('research/unified_recent_v283_exec_events.csv'); e['binance_utc']=pd.to_datetime(e.binance_utc)
+          for r in e.itertuples(index=False):
+              events.append({'signal_time':r.binance_utc,'branch':'EARLY_V283','side':r.side,'source':'MT5_EXACT_EXEC',
+                             'ledger_entry':float(r.mt5_entry),'ledger_net48':np.nan,'h4_age':np.nan,'h4_dir':np.nan,
+                             'pre':int(r.pre),'ai':int(r.ai),'final':int(r.final)})
+          ev=pd.DataFrame(events).sort_values('signal_time').reset_index(drop=True)
+
+          # Trade-by-trade Binance path.
+          fs=[]
+          for fn in sorted(os.listdir('ticks')):
+              if not fn.endswith('.zip'): continue
+              with zipfile.ZipFile('ticks/'+fn) as z:
+                  name=[x for x in z.namelist() if x.endswith('.csv')][0]
+                  with z.open(name) as f: q=pd.read_csv(f,header=None,usecols=range(8))
+              q.columns=['agg_id','price','qty','first','last','ts','buyer_maker','best']
+              q['price']=pd.to_numeric(q.price,errors='coerce'); q['ts']=pd.to_numeric(q.ts,errors='coerce')
+              q['time']=pd.to_datetime(q.ts,unit='us',utc=True).dt.tz_localize(None)
+              fs.append(q[['time','price']])
+          t=pd.concat(fs,ignore_index=True).dropna().sort_values('time').reset_index(drop=True)
+          print('TICK_PATH',t.time.min(),t.time.max(),'ROWS',len(t))
+          times=t.time.to_numpy(dtype='datetime64[ns]'); px=t.price.to_numpy(float)
+
+          # Completed-H1 Wilder ATR14 from exact same trade path.
+          h=t.set_index('time').price.resample('1h',label='left',closed='left').agg(['first','max','min','last']).dropna().reset_index()
+          h.columns=['bar_time','open','high','low','close']; h['close_time']=h.bar_time+pd.Timedelta(hours=1)
+          pc=h.close.shift(); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1)
+          h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+          hct=h.close_time.to_numpy(dtype='datetime64[ns]'); hatr=h.atr14.to_numpy(float)
+
+          def idx(ts): return int(np.searchsorted(times,np.datetime64(ts),'left'))
+          def atr(ts):
+              j=int(np.searchsorted(hct,np.datetime64(ts),'right')-1)
+              return float(hatr[j]) if j>=0 and np.isfinite(hatr[j]) else np.nan
+          def tick_price(ts):
+              j=idx(ts); return (float(px[j]),j) if j<len(px) else (np.nan,j)
+
+          rows=[]
+          for r in ev.itertuples(index=False):
+              sig=pd.Timestamp(r.signal_time); d=1.0 if r.side=='BUY' else -1.0
+              entry,j0=tick_price(sig); a=atr(sig)
+              if not np.isfinite(entry) or not np.isfinite(a): continue
+              stopdist=1.5*a; tpdist=1.5*stopdist  # RR 1:1.5
+              sl=entry-d*stopdist; tp=entry+d*tpdist; costR=COST_USD/stopdist
+              out={'signal_time':sig,'branch':r.branch,'side':r.side,'source':r.source,'entry_tick':entry,'atr_h1':a,
+                   'sl':sl,'tp':tp,'cost_R':costR,'ledger_entry':r.ledger_entry,'ledger_net48':r.ledger_net48,
+                   'h4_age':r.h4_age,'h4_dir':r.h4_dir,
+                   'pre':getattr(r,'pre',np.nan),'ai':getattr(r,'ai',np.nan),'final':getattr(r,'final',np.nan)}
+
+              # 48h MFE/MAE telemetry.
+              j48=int(np.searchsorted(times,np.datetime64(min(sig+pd.Timedelta(hours=48),t.time.max())),'right'))
+              p48=px[j0:j48]
+              if d>0:
+                  out['mfe48_R']=(p48.max()-entry)/stopdist; out['mae48_R']=(p48.min()-entry)/stopdist
+              else:
+                  out['mfe48_R']=(entry-p48.min())/stopdist; out['mae48_R']=(entry-p48.max())/stopdist
+
+              for hh in H:
+                  target=sig+pd.Timedelta(hours=hh)
+                  if target>t.time.max():
+                      out[f'term{hh}h_R']=np.nan; out[f'real{hh}h_R']=np.nan; out[f'real{hh}h_exit']='NA'; continue
+                  je=int(np.searchsorted(times,np.datetime64(target),'right'))
+                  path=px[j0:je]
+                  endp=float(path[-1])
+                  terminal=d*(endp-entry)/stopdist-costR
+                  if d>0:
+                      sh=np.flatnonzero(path<=sl); th=np.flatnonzero(path>=tp)
+                  else:
+                      sh=np.flatnonzero(path>=sl); th=np.flatnonzero(path<=tp)
+                  is_=int(sh[0]) if sh.size else 10**18; it=int(th[0]) if th.size else 10**18
+                  if it<is_: realized=1.5-costR; ex='TP'
+                  elif is_<it: realized=-1.0-costR; ex='SL'
+                  else: realized=terminal; ex='TIME'
+                  out[f'term{hh}h_R']=terminal; out[f'real{hh}h_R']=realized; out[f'real{hh}h_exit']=ex
+
+              # LAB020-style parity candidate: no TP, stop=-1R or time48 close.
+              target=sig+pd.Timedelta(hours=48)
+              if target<=t.time.max():
+                  je=int(np.searchsorted(times,np.datetime64(target),'right')); path=px[j0:je]; endp=float(path[-1])
+                  if d>0: sh=np.flatnonzero(path<=sl)
+                  else: sh=np.flatnonzero(path>=sl)
+                  if sh.size: labR=-1-costR
+                  else: labR=d*(endp-entry)/stopdist-costR
+                  out['lab020_style_R']=labR
+                  out['lab020_style_pct']=labR*stopdist/entry*100.0
+              else:
+                  out['lab020_style_R']=np.nan; out['lab020_style_pct']=np.nan
+              rows.append(out)
+
+          res=pd.DataFrame(rows).sort_values('signal_time').reset_index(drop=True)
+          print('\n=== CORRECTED EVENTS ===')
+          cols=['signal_time','branch','side','entry_tick','mfe48_R','mae48_R','real2h_R','real8h_R','real24h_R','real48h_R','real48h_exit','term48h_R']
+          print(res[cols].to_string(index=False))
+
+          summary=[]
+          for br,g in res.groupby('branch'):
+              row={'branch':br,'N':len(g),'MFE_med_R':g.mfe48_R.median(),'MAE_med_R':g.mae48_R.median()}
+              for hh in H:
+                  z=g[f'real{hh}h_R'].dropna(); row[f'EV{hh}h_R']=z.mean() if len(z) else np.nan; row[f'PF{hh}h']=pf(z); row[f'WR{hh}h']=(z>0).mean() if len(z) else np.nan
+              row['TP48']=int((g.real48h_exit=='TP').sum()); row['SL48']=int((g.real48h_exit=='SL').sum()); row['TIME48']=int((g.real48h_exit=='TIME').sum())
+              summary.append(row)
+          sm=pd.DataFrame(summary)
+          print('\n=== CORRECTED BRANCH SUMMARY ==='); print(sm.to_string(index=False))
+
+          # Continuation parity to frozen LAB020 net48 using LAB020-style stop/time outcome.
+          z=res[res.source.eq('LAB020_FROZEN')].dropna(subset=['ledger_net48','lab020_style_pct']).copy()
+          z['parity_diff_pct']=z.lab020_style_pct-z.ledger_net48
+          print('\n=== LAB020 STYLE PARITY ===')
+          print(z[['signal_time','branch','side','ledger_net48','lab020_style_pct','parity_diff_pct']].to_string(index=False))
+          print('PARITY_N',len(z),'MAE_PCT',z.parity_diff_pct.abs().mean() if len(z) else np.nan,'MAX_PCT',z.parity_diff_pct.abs().max() if len(z) else np.nan)
+
+          # Cross-branch relation in same 48h episode.
+          pairs=[]
+          for i,a in res.iterrows():
+              for j,b in res.iterrows():
+                  if j<=i or a.branch==b.branch: continue
+                  dh=(b.signal_time-a.signal_time).total_seconds()/3600
+                  if abs(dh)<=48: pairs.append({'a_time':a.signal_time,'a_branch':a.branch,'a_side':a.side,'b_time':b.signal_time,'b_branch':b.branch,'b_side':b.side,'delta_h':dh,'same_side':a.side==b.side})
+          pr=pd.DataFrame(pairs)
+          print('\n=== CROSS BRANCH <=48H ==='); print(pr.to_string(index=False) if len(pr) else 'NONE')
+
+          os.makedirs('u02b2',exist_ok=True)
+          res.to_csv('u02b2/events.csv',index=False); sm.to_csv('u02b2/summary.csv',index=False); z.to_csv('u02b2/lab020_parity.csv',index=False); pr.to_csv('u02b2/cross_branch.csv',index=False)
+          report=['# U02B2 Unified Parallel BTC Tick Replay — Corrected','',
+                  'All branches are independent. Common outcome is first-hit SL=1R / TP=1.5R, otherwise time-exit at the stated horizon. Terminal horizon return is telemetry only.','','## Summary','',sm.to_markdown(index=False),'','## Events','',res[cols].to_markdown(index=False),'','## LAB020-style parity','',z[['signal_time','branch','ledger_net48','lab020_style_pct','parity_diff_pct']].to_markdown(index=False),'','Recent N is diagnostic only; no historical edge closure.']
+          open('u02b2/REPORT.md','w').write('\n'.join(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02b2-unified-parallel-tick-replay-corrected
+          path: u02b2/
