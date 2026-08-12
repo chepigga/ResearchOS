@@ -1,0 +1,51 @@
+name: U02C2 v283 Market Clock Conditional
+
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen Binance sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+      - name: Fast historical v283 default shadow opportunity scan
+        run: |
+          python research/btc_unified_lifecycle/u02c2_fast_v283_shadow.py --btc-1m btc_1m.zip --outdir u01_shadow
+          cat u01_shadow/u01_v283_shadow_summary.json
+      - name: Stage exact August MT5 sanity panel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p exact_u02 exact_u05 exact_aug
+          gh run download 31641724892 -n u02-v283-exact-outcomes -D exact_u02
+          gh run download 31641746928 -n u05-btc-market-clock-mapping -D exact_u05
+          cp exact_u02/u02_exec_poll_outcomes.csv exact_aug/
+          cp exact_u05/u05_signal_market_clock_map.csv exact_aug/
+      - name: Build market-clock conditional matrix
+        run: |
+          python research/btc_unified_lifecycle/u02c2_v283_market_clock_conditional.py
+          cat u02c2_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02c2-v283-market-clock-conditional
+          path: u02c2_out/
