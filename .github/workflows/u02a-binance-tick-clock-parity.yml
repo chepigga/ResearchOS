@@ -1,0 +1,95 @@
+name: U02A Binance Tick Clock Parity
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download official Binance BTCUSDT aggTrades
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p binance_ticks
+          for d in 03 04 07; do
+            url="https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$url" -o "binance_ticks/BTCUSDT-aggTrades-2026-08-${d}.zip"
+            curl -L --fail --retry 3 "$url.CHECKSUM" -o "binance_ticks/BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM"
+            (cd binance_ticks && sha256sum -c "BTCUSDT-aggTrades-2026-08-${d}.zip.CHECKSUM")
+          done
+      - name: Match MT5 v283 executions to Binance tick clock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import zipfile, pandas as pd, numpy as np, json, os
+          events=[
+            ('2026-08-03 19:00:19','BUY',63680.48),
+            ('2026-08-03 20:00:19','BUY',63702.78),
+            ('2026-08-03 23:02:29','BUY',63789.35),
+            ('2026-08-04 00:14:39','BUY',63693.69),
+            ('2026-08-07 03:15:08','SELL',64246.05),
+          ]
+          frames=[]
+          for p in sorted(os.listdir('binance_ticks')):
+            if not p.endswith('.zip'): continue
+            path='binance_ticks/'+p
+            with zipfile.ZipFile(path) as z:
+              name=[n for n in z.namelist() if n.endswith('.csv')][0]
+              with z.open(name) as f:
+                df=pd.read_csv(f,header=None)
+            # aggTradeId, price, qty, firstId, lastId, timestamp, buyerMaker, bestMatch
+            df=df.iloc[:,:8]
+            df.columns=['agg_id','price','qty','first_id','last_id','ts','buyer_maker','best_match']
+            df['price']=pd.to_numeric(df.price,errors='coerce')
+            df['ts']=pd.to_numeric(df.ts,errors='coerce')
+            # Spot data >=2025 is microseconds per Binance public-data docs.
+            df['time']=pd.to_datetime(df.ts,unit='us',utc=True).dt.tz_localize(None)
+            frames.append(df[['time','price','buyer_maker']])
+          t=pd.concat(frames,ignore_index=True).dropna().sort_values('time').reset_index(drop=True)
+          print('TICK_RANGE',t.time.min(),t.time.max(),'ROWS',len(t))
+          out=[]
+          for s,side,mt5p in events:
+            mt=pd.Timestamp(s)
+            for off in [0,-3,3]:
+              target=mt+pd.Timedelta(hours=off)
+              lo=np.searchsorted(t.time.values,np.datetime64(target-pd.Timedelta(seconds=60)))
+              hi=np.searchsorted(t.time.values,np.datetime64(target+pd.Timedelta(seconds=60)),side='right')
+              z=t.iloc[lo:hi].copy()
+              if len(z)==0:
+                out.append((s,side,mt5p,off,None,None,None,None)); continue
+              z['dt_ms']=(z.time-target).abs().dt.total_seconds()*1000
+              z['px_diff']=(z.price-mt5p).abs()
+              # primary matching criterion: nearest time; report closest price separately
+              q=z.sort_values(['dt_ms','px_diff']).iloc[0]
+              qp=z.sort_values(['px_diff','dt_ms']).iloc[0]
+              out.append((s,side,mt5p,off,str(q.time),float(q.dt_ms),float(q.price),float(q.price-mt5p),str(qp.time),float(qp.px_diff)))
+          cols=['mt5_time','side','mt5_price','offset_h','nearest_tick_time','nearest_dt_ms','nearest_tick_price','nearest_price_minus_mt5','closest_price_time','closest_abs_price_diff']
+          r=pd.DataFrame(out,columns=cols)
+          print(r.to_string(index=False))
+          summary={}
+          for off,g in r.groupby('offset_h'):
+            summary[str(off)]={
+              'median_abs_nearest_price_diff':float(g.nearest_price_minus_mt5.abs().median()),
+              'median_closest_price_diff_60s':float(g.closest_abs_price_diff.median()),
+              'max_closest_price_diff_60s':float(g.closest_abs_price_diff.max()),
+            }
+          best=min(summary,key=lambda k:summary[k]['median_closest_price_diff_60s'])
+          print('SUMMARY',json.dumps(summary,indent=2))
+          print('BEST_OFFSET_H',best)
+          os.makedirs('u02a',exist_ok=True)
+          r.to_csv('u02a/mt5_binance_tick_parity.csv',index=False)
+          with open('u02a/summary.json','w') as f: json.dump({'tick_rows':len(t),'tick_start':str(t.time.min()),'tick_end':str(t.time.max()),'offset_summary':summary,'best_offset_h':best},f,indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02a-binance-tick-clock-parity
+          path: u02a/
