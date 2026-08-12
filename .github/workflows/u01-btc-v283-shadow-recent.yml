@@ -1,0 +1,26 @@
+name: U01 BTC v283 shadow recent
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+      - name: Restrict decision scan to Jul-Aug 2026
+        run: |
+          sed -i "s/t<pd.Timestamp('2024-01-01')/t<pd.Timestamp('2026-07-01')/" research/btc_unified_lifecycle/u01_v283_shadow_replay.py
+          python research/btc_unified_lifecycle/u01_v283_shadow_replay.py --btc-1m btc_1m.zip --outdir u01_recent
+          cat u01_recent/u01_v283_shadow_summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u01-v283-shadow-recent
+          path: u01_recent/
