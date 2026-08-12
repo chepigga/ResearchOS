@@ -1,0 +1,49 @@
+name: LAB022 Runtime
+
+on:
+  push:
+    branches: [lab022-runtime]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download frozen BTC release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o events.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          curl -L --fail --retry 3 -o sensitivity.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_SENSITIVITY.csv
+          curl -L --fail --retry 3 -o yearly.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_YEARLY.csv
+          sha256sum btc_5m.zip events.csv sensitivity.csv yearly.csv
+      - name: Inspect schemas and ranges
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pandas as pd, json, zipfile, os
+          for fn in ['events.csv','sensitivity.csv','yearly.csv']:
+              df=pd.read_csv(fn)
+              print('\n===',fn,'===')
+              print('shape',df.shape)
+              print('columns',list(df.columns))
+              print(df.head(5).to_string())
+              for c in df.columns:
+                  lc=c.lower()
+                  if any(k in lc for k in ['time','date','year','h4','st','age','bucket','bin','ret','ev','profit','dir','side','tl_dist']):
+                      s=df[c]
+                      try:
+                          print('COL',c,'dtype',s.dtype,'nunique',s.nunique(dropna=True),'sample',s.dropna().astype(str).head(12).tolist())
+                      except Exception as e:
+                          print('COL',c,'ERR',e)
+          with zipfile.ZipFile('btc_5m.zip') as z:
+              print('\nZIP FILES', z.namelist()[:20], 'count=',len(z.namelist()))
+              name=z.namelist()[0]
+              with z.open(name) as f:
+                  raw=pd.read_csv(f,nrows=5)
+              print('RAW COLUMNS',list(raw.columns))
+              print(raw.to_string())
+          PY
