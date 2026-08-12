@@ -20,113 +20,39 @@ jobs:
           curl -L --fail --retry 3 -o events.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
           curl -L --fail --retry 3 -o sensitivity.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_SENSITIVITY.csv
           sha256sum events.csv sensitivity.csv
-      - name: Run LAB022 frozen transfer
+      - name: Diagnose frozen SELL ST-age buckets
         shell: bash
         run: |
           python - <<'PY'
           import pandas as pd, numpy as np
-          from math import inf
-
-          ev = pd.read_csv('events.csv')
-          s = pd.read_csv('sensitivity.csv')
-          ev['entry_time'] = pd.to_datetime(ev['entry_time'])
-
+          ev=pd.read_csv('events.csv'); s=pd.read_csv('sensitivity.csv')
           def pf(x):
-              x = pd.to_numeric(x, errors='coerce').dropna()
-              gp = x[x>0].sum(); gl = -x[x<0].sum()
-              return float(gp/gl) if gl>0 else float('inf')
-
-          def weeks_for_year(y):
-              starts = {2019: pd.Timestamp('2019-09-08')}
-              ends = {2026: pd.Timestamp('2026-08-10 23:59:59')}
-              a = starts.get(y, pd.Timestamp(f'{y}-01-01'))
-              b = ends.get(y, pd.Timestamp(f'{y}-12-31 23:59:59'))
-              return (b-a).total_seconds()/86400/7
-
-          # Exact frozen TRAIN quartile boundaries used by LAB020 sensitivity.
-          st = s[(s['feature'].str.upper()=='H4_ST_AGE_BARS')].copy()
-          print('=== FROZEN H4_ST_AGE_BARS SENSITIVITY ROWS ===')
-          print(st.to_string(index=False))
-
-          cuts = {}
+              x=pd.to_numeric(x,errors='coerce').dropna(); gp=x[x>0].sum(); gl=-x[x<0].sum(); return gp/gl if gl>0 else np.inf
+          st=s[s.feature.str.upper().eq('H4_ST_AGE_BARS')]
+          cuts={}
           for side in ['BUY','SELL']:
-              z = st[(st['side']==side) & (st['part']=='TRAIN_LE_2023')]
-              if z.empty:
-                  raise SystemExit(f'MISSING TRAIN H4_ST_AGE rows for {side}')
-              q25=float(z['q25'].iloc[0]); q50=float(z['q50'].iloc[0]); q75=float(z['q75'].iloc[0])
-              cuts[side]=(q25,q50,q75)
-              print(f'CUTS {side}: q25={q25} q50={q50} q75={q75}; B4 = value > q75')
-
-          def bucket_for_row(r, feature, mode):
-              side=r['side']
-              q25,q50,q75=cuts[side] if mode=='ST' else tlcuts[side]
-              v=r[feature]
+              z=st[(st.side==side)&(st.part=='TRAIN_LE_2023')]
+              cuts[side]=(float(z.q25.iloc[0]),float(z.q50.iloc[0]),float(z.q75.iloc[0]))
+          def buck(r):
+              q25,q50,q75=cuts[r.side]; v=r.H4_ST_AGE_BARS
               if pd.isna(v): return np.nan
-              if v <= q25: return 'B1'
-              if v <= q50: return 'B2'
-              if v <= q75: return 'B3'
+              if v<=q25:return 'B1'
+              if v<=q50:return 'B2'
+              if v<=q75:return 'B3'
               return 'B4'
-
-          ev['ST_BUCKET'] = ev.apply(lambda r: bucket_for_row(r,'H4_ST_AGE_BARS','ST'),axis=1)
-
-          # Verify our bucket reconstruction matches TRAIN sensitivity counts/EV/PF.
-          print('\n=== TRAIN RECONSTRUCTION PARITY ===')
-          for side in ['BUY','SELL']:
-              for b in ['B1','B2','B3','B4']:
-                  x=ev[(ev.side==side)&(ev.year<=2023)&(ev.ST_BUCKET==b)]
-                  target=st[(st.side==side)&(st.part=='TRAIN_LE_2023')&(st.bucket==b)].iloc[0]
-                  print(side,b,'N',len(x),'targetN',int(target.N),'EV',x.NET48_SPREAD_PCT.mean(),'targetEV',target.EV48_spread_pct,'PF',pf(x.NET48_SPREAD_PCT),'targetPF',target.PF48_spread)
-
+          ev['B']=ev.apply(buck,axis=1)
+          print('=== SELL H4_ST_AGE ALL BUCKETS YEARLY ===')
           rows=[]
-          parent=[]
           for y in sorted(ev.year.unique()):
-              py=ev[ev.year==y]
-              parent.append({'year':int(y),'parent_n':len(py),'parent_ev':py.NET48_SPREAD_PCT.mean(),'parent_pf':pf(py.NET48_SPREAD_PCT),'parent_stress_ev':py.NET48_STRESS_PCT.mean()})
-              for side in ['BUY','SELL','COMBINED']:
-                  z=ev[(ev.year==y)&(ev.ST_BUCKET=='B4')]
-                  if side!='COMBINED': z=z[z.side==side]
-                  rows.append({
-                      'year':int(y),'side':side,'N':len(z),
-                      'freq_week':len(z)/weeks_for_year(int(y)),
-                      'EV48_spread_pct':z.NET48_SPREAD_PCT.mean() if len(z) else np.nan,
-                      'PF48_spread':pf(z.NET48_SPREAD_PCT) if len(z) else np.nan,
-                      'EV48_stress_pct':z.NET48_STRESS_PCT.mean() if len(z) else np.nan,
-                      'PF48_stress':pf(z.NET48_STRESS_PCT) if len(z) else np.nan,
-                      'parent_share':len(z)/len(py) if len(py) else np.nan
-                  })
-          yr=pd.DataFrame(rows)
-          print('\n=== LAB022 H4_ST_AGE B4 YEARLY ===')
-          print(yr.to_string(index=False))
-
-          print('\n=== PARENT YEARLY ===')
-          print(pd.DataFrame(parent).to_string(index=False))
-
-          # Aggregate old / transition / recent regimes.
-          print('\n=== ERA AGGREGATES B4 ===')
-          eras={'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026),'FULL_2020_26':(2020,2026)}
-          for name,(a,b) in eras.items():
-              for side in ['BUY','SELL','COMBINED']:
-                  z=ev[(ev.year>=a)&(ev.year<=b)&(ev.ST_BUCKET=='B4')]
-                  if side!='COMBINED': z=z[z.side==side]
-                  print(name,side,'N',len(z),'EV',z.NET48_SPREAD_PCT.mean(),'PF',pf(z.NET48_SPREAD_PCT),'stressEV',z.NET48_STRESS_PCT.mean(),'stressPF',pf(z.NET48_STRESS_PCT))
-
-          # Secondary pre-registered audit of H1_TL_DIST_ATR B1 only, using its own TRAIN quartiles.
-          tls=s[(s['feature'].str.upper()=='H1_TL_DIST_ATR')].copy()
-          print('\n=== FROZEN H1_TL_DIST_ATR SENSITIVITY ROWS ===')
-          print(tls.to_string(index=False))
-          tlcuts={}
-          for side in ['BUY','SELL']:
-              z=tls[(tls.side==side)&(tls.part=='TRAIN_LE_2023')]
-              if not z.empty:
-                  tlcuts[side]=(float(z.q25.iloc[0]),float(z.q50.iloc[0]),float(z.q75.iloc[0]))
-          if len(tlcuts)==2:
-              ev['TL_BUCKET']=ev.apply(lambda r: bucket_for_row(r,'H1_TL_DIST_ATR','TL'),axis=1)
-              print('\n=== SECONDARY H1_TL_DIST_ATR B1 YEARLY ===')
-              rr=[]
-              for y in sorted(ev.year.unique()):
-                  for side in ['BUY','SELL','COMBINED']:
-                      z=ev[(ev.year==y)&(ev.TL_BUCKET=='B1')]
-                      if side!='COMBINED': z=z[z.side==side]
-                      rr.append({'year':int(y),'side':side,'N':len(z),'EV':z.NET48_SPREAD_PCT.mean() if len(z) else np.nan,'PF':pf(z.NET48_SPREAD_PCT) if len(z) else np.nan,'stressEV':z.NET48_STRESS_PCT.mean() if len(z) else np.nan})
-              print(pd.DataFrame(rr).to_string(index=False))
+              for b in ['B1','B2','B3','B4']:
+                  z=ev[(ev.year==y)&(ev.side=='SELL')&(ev.B==b)]
+                  rows.append({'year':int(y),'bucket':b,'N':len(z),'EV':z.NET48_SPREAD_PCT.mean() if len(z) else np.nan,'PF':pf(z.NET48_SPREAD_PCT) if len(z) else np.nan,'stressEV':z.NET48_STRESS_PCT.mean() if len(z) else np.nan,'stressPF':pf(z.NET48_STRESS_PCT) if len(z) else np.nan})
+          print(pd.DataFrame(rows).to_string(index=False))
+          print('\n=== BUY H4_ST_AGE ALL BUCKETS YEARLY ===')
+          rows=[]
+          for y in sorted(ev.year.unique()):
+              for b in ['B1','B2','B3','B4']:
+                  z=ev[(ev.year==y)&(ev.side=='BUY')&(ev.B==b)]
+                  rows.append({'year':int(y),'bucket':b,'N':len(z),'EV':z.NET48_SPREAD_PCT.mean() if len(z) else np.nan,'PF':pf(z.NET48_SPREAD_PCT) if len(z) else np.nan,'stressEV':z.NET48_STRESS_PCT.mean() if len(z) else np.nan})
+          print(pd.DataFrame(rows).to_string(index=False))
           PY
