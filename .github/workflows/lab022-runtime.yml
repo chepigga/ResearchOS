@@ -11,6 +11,8 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
+      - name: Install analysis dependencies
+        run: python -m pip install --quiet pandas numpy
       - name: Download frozen BTC release assets
         shell: bash
         run: |
@@ -24,7 +26,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import pandas as pd, json, zipfile, os
+          import pandas as pd, zipfile
           for fn in ['events.csv','sensitivity.csv','yearly.csv']:
               df=pd.read_csv(fn)
               print('\n===',fn,'===')
@@ -35,10 +37,7 @@ jobs:
                   lc=c.lower()
                   if any(k in lc for k in ['time','date','year','h4','st','age','bucket','bin','ret','ev','profit','dir','side','tl_dist']):
                       s=df[c]
-                      try:
-                          print('COL',c,'dtype',s.dtype,'nunique',s.nunique(dropna=True),'sample',s.dropna().astype(str).head(12).tolist())
-                      except Exception as e:
-                          print('COL',c,'ERR',e)
+                      print('COL',c,'dtype',s.dtype,'nunique',s.nunique(dropna=True),'sample',s.dropna().astype(str).head(12).tolist())
           with zipfile.ZipFile('btc_5m.zip') as z:
               print('\nZIP FILES', z.namelist()[:20], 'count=',len(z.namelist()))
               name=z.namelist()[0]
