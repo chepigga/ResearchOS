@@ -1,0 +1,20 @@
+name: U05 inspect LAB018
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch frozen LAB018 report
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o lab018.md https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_ATR_SUPERTREND_PHASE_LAB_018_REPORT.md
+          test "$(sha256sum lab018.md | awk '{print $1}')" = "14208154e04fbe13696071fa822adab7260e5a1373ada175cc97ce39814e6c24"
+          cat lab018.md
