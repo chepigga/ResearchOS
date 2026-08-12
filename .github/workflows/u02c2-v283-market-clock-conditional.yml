@@ -43,7 +43,7 @@ jobs:
           cp exact_u05/u05_signal_market_clock_map.csv exact_aug/
       - name: Build market-clock conditional matrix
         run: |
-          python research/btc_unified_lifecycle/u02c2_v283_market_clock_conditional.py
+          python research/btc_unified_lifecycle/u02c2_v283_market_clock_conditional_v2.py
           cat u02c2_out/REPORT.md
       - uses: actions/upload-artifact@v4
         with:
