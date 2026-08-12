@@ -1,0 +1,35 @@
+{
+  "lab": "U01_BTC_V283_ORACLE_EXACT_ENTRY_PIPELINE_REPLAY",
+  "source_file": "Grok_BTC_Core_Leveraged_v283_ORACLE.mq5",
+  "source_sha256": "88b8acff6ae26f020fa3f0b08474364233ab9d38eacdf3f1c600f9d0d9ba40e7",
+  "secret_policy": "Source contains private credentials. Never commit source; manifest only.",
+  "timing": {
+    "timer_sec": 10,
+    "flat_ai_poll_sec": 180,
+    "in_position_ai_poll_sec": 120,
+    "prescore_update": "new M5 bar",
+    "bos_update": "new H1 bar",
+    "d1_context": "every timer cycle",
+    "live_price_features": ["e_index", "distATR", "M1 microbreak", "M5 BOS cascade", "entry late guard"]
+  },
+  "canonical_reachable_smartmock": {
+    "Priority_A_RaidReclaim": false,
+    "Priority_B_CHoCH_BOS": true,
+    "Priority_C_OBFVG_Microbreak": true,
+    "Priority_D_EQH_EQL": false,
+    "Priority_E": false,
+    "Priority_F": false
+  },
+  "parity_log_markers": [
+    "D1_PARITY",
+    "EMA_PARITY",
+    "PRE_SCORE_BTC",
+    "SMART_MOCK",
+    "ORACLE_GATE_BLOCK",
+    "BOS_ONLY_BLOCK",
+    "KNIFE_BTC",
+    "LATE_ENTRY_BLOCK",
+    "EXEC_EVENT"
+  ],
+  "hard_blocker": "Exact execution parity cannot be proven from ResearchOS M1/M5 bars because v283 evaluates broker bid/ask every 10 seconds. One exact v283 MT5 Strategy Tester log is required before accepting profitability."
+}
