@@ -1,0 +1,95 @@
+name: BUY B4 x H4 ST DIR Fast Test
+
+on:
+  push:
+    branches: [lab-buy-b4-st-dir]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python -m pip install --quiet pandas numpy
+      - name: Run preregistered test
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o events.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          curl -L --fail --retry 3 -o sensitivity.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_SENSITIVITY.csv
+          test "$(sha256sum events.csv|awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          test "$(sha256sum sensitivity.csv|awk '{print $1}')" = "49e5078abd5e4030011c472cd658be9eecce241b464c1b52aea16b9440e9a3e4"
+          python - <<'PY'
+          import json, numpy as np, pandas as pd
+          RNG=np.random.default_rng(24001)
+          ev=pd.read_csv('events.csv'); s=pd.read_csv('sensitivity.csv'); ev.entry_time=pd.to_datetime(ev.entry_time)
+          # IDENTICAL PRE-REGISTRATION TO buy-b4-st-dir-prereg.yml:
+          # BUY B4>58, ALIGNED=+1, OPPOSITE=-1, primary 2020-2026.
+          # Strong pass: opp EV/stress>0; opp>aligned >=5/7 years; weekly-block p>=.95;
+          # >=40% top3 tails; >=.25/wk. No threshold optimization.
+          def pf(x):
+              x=pd.to_numeric(x,errors='coerce').dropna(); gp=x[x>0].sum(); gl=-x[x<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          def met(x):
+              return dict(N=len(x),EV=x.NET48_SPREAD_PCT.mean(),PF=pf(x.NET48_SPREAD_PCT),stressEV=x.NET48_STRESS_PCT.mean(),stressPF=pf(x.NET48_STRESS_PCT))
+          sb=s[(s.side=='BUY')&(s.feature.str.upper()=='H4_ST_AGE_BARS')&(s.part=='TRAIN_LE_2023')]
+          q75=float(sb.q75.iloc[0]); assert q75==58.0
+          b=ev[(ev.side=='BUY')&(ev.H4_ST_AGE_BARS>58)].copy().sort_values('entry_time')
+          b['state']=np.where(b.H4_ST_DIR.eq(1),'ALIGNED','OPPOSITE')
+          t=sb[sb.bucket=='B4'].iloc[0]; tr=b[b.year<=2023]
+          assert len(tr)==int(t.N) and abs(tr.NET48_SPREAD_PCT.mean()-float(t.EV48_spread_pct))<1e-12 and abs(pf(tr.NET48_SPREAD_PCT)-float(t.PF48_spread))<1e-12
+          print('PARITY PASS; BUY B4 >58; prereg unchanged')
+
+          years=[]
+          for y in sorted(b.year.unique()):
+              base=b[b.year==y]
+              for state in ['ALIGNED','OPPOSITE','ALL']:
+                  x=base if state=='ALL' else base[base.state==state]; r=met(x); r.update(year=int(y),state=state); years.append(r)
+          years=pd.DataFrame(years)
+          print('\n=== YEARLY ==='); print(years[['year','state','N','EV','PF','stressEV','stressPF']].to_string(index=False))
+
+          eras={'OLD_2020_22':(2020,2022),'TRANSITION_2023':(2023,2023),'RECENT_2024_26':(2024,2026),'FULL_2020_26':(2020,2026)}
+          era=[]
+          for name,(a,c) in eras.items():
+              base=b[b.year.between(a,c)]; weeks=max((base.entry_time.max()-base.entry_time.min()).days/7,1)
+              for state in ['ALIGNED','OPPOSITE','ALL']:
+                  x=base if state=='ALL' else base[base.state==state]; r=met(x); r.update(era=name,state=state,freq_week=len(x)/weeks,share=len(x)/len(base)); era.append(r)
+          era=pd.DataFrame(era)
+          print('\n=== ERA ==='); print(era[['era','state','N','share','freq_week','EV','PF','stressEV','stressPF']].to_string(index=False))
+
+          def fast_boot(base,reps=5000):
+              z=base.copy(); z['week']=z.entry_time.dt.to_period('W-SUN').astype(str)
+              weeks=sorted(z.week.unique()); wi={w:i for i,w in enumerate(weeks)}; n=len(weeks)
+              osum=np.zeros(n); on=np.zeros(n); asum=np.zeros(n); an=np.zeros(n)
+              for (w,state),g in z.groupby(['week','state']):
+                  i=wi[w]
+                  if state=='OPPOSITE': osum[i]=g.NET48_SPREAD_PCT.sum(); on[i]=len(g)
+                  else: asum[i]=g.NET48_SPREAD_PCT.sum(); an[i]=len(g)
+              obs=osum.sum()/on.sum()-asum.sum()/an.sum()
+              vals=[]; chunk=500
+              for start in range(0,reps,chunk):
+                  m=min(chunk,reps-start); idx=RNG.integers(0,n,size=(m,n))
+                  om=osum[idx].sum(1)/on[idx].sum(1); am=asum[idx].sum(1)/an[idx].sum(1); vals.append(om-am)
+              v=np.concatenate(vals)
+              return dict(diff=float(obs),lo=float(np.quantile(v,.025)),hi=float(np.quantile(v,.975)),p_gt0=float((v>0).mean()),nweeks=n)
+          boots=[]
+          for name,(a,c) in eras.items():
+              r=fast_boot(b[b.year.between(a,c)]); r['era']=name; boots.append(r)
+          boots=pd.DataFrame(boots)
+          print('\n=== BOOT OPP-ALIGNED ==='); print(boots.to_string(index=False))
+
+          tails=[]
+          for name,(a,c) in {'FULL_2020_26':(2020,2026),'RECENT_2024_26':(2024,2026)}.items():
+              base=b[b.year.between(a,c)]; thr=base.NET48_SPREAD_PCT.quantile(.97); top=base[base.NET48_SPREAD_PCT>=thr]
+              for state in ['ALIGNED','OPPOSITE']:
+                  x=top[top.state==state]; tails.append(dict(era=name,state=state,tailN=len(x),tail_share=len(x)/len(top),mean_tail=x.NET48_SPREAD_PCT.mean()))
+          tails=pd.DataFrame(tails)
+          print('\n=== TOP3 TAILS ==='); print(tails.to_string(index=False))
+
+          full=era[era.era=='FULL_2020_26'].set_index('state'); yr=years[years.year.between(2020,2026)].pivot(index='year',columns='state',values='EV')
+          k=int((yr.OPPOSITE>yr.ALIGNED).sum()); bp=boots[boots.era=='FULL_2020_26'].iloc[0]; ts=tails[(tails.era=='FULL_2020_26')&(tails.state=='OPPOSITE')].iloc[0]
+          crit=dict(opposite_positive=bool(full.loc['OPPOSITE','EV']>0),opposite_stress_positive=bool(full.loc['OPPOSITE','stressEV']>0),opposite_gt_aligned_years=k,year_transfer_pass_5of7=bool(k>=5),bootstrap_p_gt0=float(bp.p_gt0),bootstrap_pass_095=bool(bp.p_gt0>=.95),tail_share=float(ts.tail_share),tail_pass_040=bool(ts.tail_share>=.40),freq_week=float(full.loc['OPPOSITE','freq_week']),freq_pass_025=bool(full.loc['OPPOSITE','freq_week']>=.25))
+          crit['STRONG_CONFIRMATION']=all([crit['opposite_positive'],crit['opposite_stress_positive'],crit['year_transfer_pass_5of7'],crit['bootstrap_pass_095'],crit['tail_pass_040'],crit['freq_pass_025']])
+          out=dict(criteria=crit,full_opposite_ev=float(full.loc['OPPOSITE','EV']),full_aligned_ev=float(full.loc['ALIGNED','EV']),full_all_ev=float(full.loc['ALL','EV']),opposite_vs_all_ev_ratio=float(full.loc['OPPOSITE','EV']/full.loc['ALL','EV']))
+          print('\n=== SUMMARY ==='); print(json.dumps(out,indent=2))
+          PY
