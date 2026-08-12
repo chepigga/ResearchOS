@@ -1,0 +1,86 @@
+name: U02C1E SELL B3 Frozen Entry Reprice
+
+on:
+  push:
+    branches: [lab-btc-unified-lifecycle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  reprice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen ledger and prior path telemetry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572043 -H 'Accept: application/octet-stream' > continuation.csv
+          test "$(sha256sum continuation.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          gh api /repos/chepigga/ResearchOS/actions/artifacts/9159009823/zip -H 'Accept: application/octet-stream' > prior.zip
+          mkdir prior && unzip -q prior.zip -d prior
+          find prior -maxdepth 2 -type f -print
+      - name: Reprice with frozen entry
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pandas as pd, numpy as np
+          from pathlib import Path
+          COST=27.5; WIDTHS=[1.5,2.0,2.5,3.0,4.0,5.0,7.5]
+          out=Path('u02c1e'); out.mkdir(exist_ok=True)
+          r=pd.read_csv('prior/events.csv')
+          c=pd.read_csv('continuation.csv')
+          c=c[['zone_id','entry_price','NET48_SPREAD_PCT','year']].drop_duplicates('zone_id')
+          r=r.drop(columns=['frozen_net48','year'],errors='ignore').merge(c,on='zone_id',how='left')
+          assert len(r)==176 and r.entry_price.notna().all()
+          # Reconstruct absolute path extrema and terminal from prior M1 telemetry.
+          old_entry=r.entry.to_numpy(float); a=r.atr_h1.to_numpy(float)
+          maxp=old_entry+r.adverse_atr.to_numpy(float)*a
+          minp=old_entry-r.favorable_atr.to_numpy(float)*a
+          old_net=r.terminal_net_pct.to_numpy(float)
+          terminal=old_entry*(1-old_net/100.0)-COST
+          f=r.entry_price.to_numpy(float)
+          r['entry_frozen']=f; r['terminal_abs']=terminal
+          r['adverse_atr_frozen']=(maxp-f)/a
+          r['favorable_atr_frozen']=(f-minp)/a
+          r['terminal_net_pct_frozen']=(f-terminal)/f*100.0-COST/f*100.0
+          def pf(x):
+              s=pd.Series(x).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          for w in WIDTHS:
+              hit=maxp>=f+w*a; costR=COST/(w*a)
+              rr=np.where(hit,-1.0-costR,(f-terminal)/(w*a)-costR)
+              pct=np.where(hit,-(w*a)/f*100-COST/f*100,(f-terminal)/f*100-COST/f*100)
+              r[f'hit_{w:g}']=hit; r[f'R_{w:g}']=rr; r[f'pct_{w:g}']=pct
+          aq=r.adverse_atr_frozen.quantile([.25,.5,.75,.9,.95,.99]).rename('adverse_atr').reset_index().rename(columns={'index':'quantile'})
+          fq=r.favorable_atr_frozen.quantile([.25,.5,.75,.9,.95,.99]).rename('favorable_atr').reset_index().rename(columns={'index':'quantile'})
+          sm=[]
+          for w in WIDTHS:
+              z=r[f'R_{w:g}']; p=r[f'pct_{w:g}']
+              sm.append({'stop_atr':w,'N':len(r),'stop_hit_rate':r[f'hit_{w:g}'].mean(),'EV_R':z.mean(),'PF_R':pf(z),'WR_R':(z>0).mean(),'EV_pct':p.mean(),'PF_pct':pf(p),'WR_pct':(p>0).mean()})
+          sm=pd.DataFrame(sm)
+          yr=[]
+          for y,g in r.groupby('year'):
+              for w in WIDTHS:
+                  z=g[f'R_{w:g}']; yr.append({'year':int(y),'stop_atr':w,'N':len(g),'stop_hit_rate':g[f'hit_{w:g}'].mean(),'EV_R':z.mean(),'PF_R':pf(z),'WR_R':(z>0).mean()})
+          yr=pd.DataFrame(yr)
+          r['parity_diff']=r.terminal_net_pct_frozen-r.NET48_SPREAD_PCT
+          print('ADVERSE'); print(aq.to_string(index=False))
+          print('\nFAVORABLE'); print(fq.to_string(index=False))
+          print('\nSUMMARY'); print(sm.to_string(index=False))
+          print('\nYEARLY'); print(yr.to_string(index=False))
+          print('\nNO_STOP',r.terminal_net_pct_frozen.mean(),pf(r.terminal_net_pct_frozen),(r.terminal_net_pct_frozen>0).mean())
+          print('PARITY_MAE',r.parity_diff.abs().mean(),'MAX',r.parity_diff.abs().max(),'CORR',r[['terminal_net_pct_frozen','NET48_SPREAD_PCT']].corr().iloc[0,1])
+          r.to_csv(out/'events.csv',index=False); aq.to_csv(out/'adverse_quantiles.csv',index=False); fq.to_csv(out/'favorable_quantiles.csv',index=False); sm.to_csv(out/'summary.csv',index=False); yr.to_csv(out/'yearly.csv',index=False)
+          report=['# U02C1E — SELL B3 Stop Width Repriced at Frozen FVG Entry','',f'N={len(r)}; frozen LAB020 entry_price; path extrema from frozen Binance M1; 48h stop-or-time exit.','', '## Adverse excursion','',aq.to_markdown(index=False),'','## Stop width','',sm.to_markdown(index=False),'','## Yearly','',yr.to_markdown(index=False),'',f'No-stop terminal EV={r.terminal_net_pct_frozen.mean():.6f}%, PF={pf(r.terminal_net_pct_frozen):.4f}, WR={(r.terminal_net_pct_frozen>0).mean():.3f}.',f'Parity MAE={r.parity_diff.abs().mean():.6f} pp; corr={r[["terminal_net_pct_frozen","NET48_SPREAD_PCT"]].corr().iloc[0,1]:.4f}.']
+          (out/'REPORT.md').write_text('\n'.join(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02c1e-sell-b3-frozen-entry-reprice
+          path: u02c1e/
