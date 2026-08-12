@@ -1,0 +1,79 @@
+name: BTC Early Recovery Parity Debug 2
+
+on:
+  push:
+    branches: [lab-btc-early-recovery-reversal]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - run: python -m pip install --quiet pandas numpy
+      - name: Isolate touch and H1 formula
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o frozen.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          python - <<'PY'
+          import zipfile,numpy as np,pandas as pd
+          fs=[]
+          with zipfile.ZipFile('btc_5m.zip') as z:
+              for n in sorted(x for x in z.namelist() if x.endswith('.csv')):
+                  with z.open(n) as fh: fs.append(pd.read_csv(fh))
+          b=pd.concat(fs,ignore_index=True); b.time=pd.to_datetime(b.time,utc=True).dt.tz_localize(None)
+          for c in ['open','high','low','close']: b[c]=pd.to_numeric(b[c],errors='coerce')
+          b=b.dropna(subset=['time','open','high','low','close']).sort_values('time').drop_duplicates('time').reset_index(drop=True)
+          def rs(rule):
+              x=b.set_index('time').resample(rule,label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index(); x['close_time']=x.time+pd.Timedelta(rule); return x
+          m=rs('15min'); h=rs('1h'); f=pd.read_csv('frozen.csv'); f.entry_time=pd.to_datetime(f.entry_time); f.fvg_time=pd.to_datetime(f.fvg_time)
+
+          # Map every FVG birth to GLOBAL first touch and to FIRST touch in 11..60 window.
+          births=[]; bull=(m.low>m.high.shift(2)).to_numpy(); bear=(m.high<m.low.shift(2)).to_numpy(); N=len(m)
+          for side,mask,nearcol,hitcol,cmp in [('BUY',bull,'low','low','le'),('SELL',bear,'high','high','ge')]:
+              for j in np.flatnonzero(mask):
+                  near=float(m.loc[j,nearcol]); arr=m[hitcol].to_numpy(float)
+                  def first(a,b):
+                      if a>b or a>=N:return (pd.NaT,np.nan)
+                      z=arr[a:min(b,N-1)+1]; hit=np.flatnonzero(z<=near) if cmp=='le' else np.flatnonzero(z>=near)
+                      if not hit.size:return (pd.NaT,np.nan)
+                      k=a+int(hit[0]); return (m.loc[k,'time'],k-j)
+                  tg,ag=first(j+2,j+200); tw,aw=first(j+11,j+60)
+                  births.append((m.loc[j,'time'],side,near,tg,ag,tw,aw))
+          br=pd.DataFrame(births,columns=['fvg_time','side','near','global_time','global_age','win_time','win_age'])
+          z=f.merge(br,on=['fvg_time','side'],how='left')
+          print('FROZEN_BY_BIRTH_MATCH',z.near.notna().mean(),'N',len(z))
+          print('FROZEN_EQ_GLOBAL',float(((z.entry_time==z.global_time)&(z.age_bars==z.global_age)).mean()))
+          print('FROZEN_EQ_WINDOW11_60',float(((z.entry_time==z.win_time)&(z.age_bars==z.win_age)).mean()))
+          left=z[~((z.entry_time==z.global_time)&(z.age_bars==z.global_age))]
+          print('GLOBAL_MISMATCH_WITH_WINDOW_MATCH',float(((left.entry_time==left.win_time)&(left.age_bars==left.win_age)).mean()),'N',len(left))
+          print(left[['fvg_time','side','age_bars','global_age','win_age','entry_time','global_time','win_time']].head(20).to_string(index=False))
+
+          # H1 ATR and entry-price displacement candidates.
+          pc=h.close.shift(1); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1)
+          h['atr_w']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean(); h['atr_s']=tr.rolling(14).mean()
+          # attach last CLOSED H1 index for each frozen entry
+          hs=h[['close_time','close','atr_w','atr_s']].copy().reset_index().rename(columns={'index':'hidx'})
+          q=pd.merge_asof(f.sort_values('entry_time'),hs.sort_values('close_time'),left_on='entry_time',right_on='close_time',direction='backward')
+          hc=h.close.to_numpy(float); aw=h.atr_w.to_numpy(float); ass=h.atr_s.to_numpy(float)
+          def test(name,vals):
+              target=q.H1_DISP6_ATR.to_numpy(float); ok=np.isfinite(vals)&np.isfinite(target); print('FORMULA',name,'CORR',float(np.corrcoef(vals[ok],target[ok])[0,1]),'MAE',float(np.mean(np.abs(vals[ok]-target[ok]))),'SIGN',float(np.mean(np.sign(vals[ok])==np.sign(target[ok]))))
+          d=np.where(q.side.eq('BUY'),1.0,-1.0); idx=q.hidx.to_numpy(int); entry=q.entry_price.to_numpy(float)
+          for lag in [5,6,7]:
+              past=np.full(len(q),np.nan); ok=idx-lag>=0; past[ok]=hc[idx[ok]-lag]
+              for denname,denarr in [('w',aw),('s',ass)]:
+                  den=np.full(len(q),np.nan); den[ok]=denarr[idx[ok]]
+                  test(f'entry_minus_closed_lag{lag}_{denname}',d*(entry-past)/den)
+          # current H1 bar open-index variant: use hour containing event and entry as current price vs close 6 bars back
+          hopen=h[['time']].copy().reset_index().rename(columns={'index':'oidx'})
+          qo=pd.merge_asof(f.sort_values('entry_time'),hopen.sort_values('time'),left_on='entry_time',right_on='time',direction='backward')
+          oi=qo.oidx.to_numpy(int); d2=np.where(qo.side.eq('BUY'),1.0,-1.0); e2=qo.entry_price.to_numpy(float)
+          for lag in [5,6]:
+              ok=oi-lag>=0; past=np.full(len(qo),np.nan); den=np.full(len(qo),np.nan); past[ok]=hc[oi[ok]-lag]; den[ok]=aw[oi[ok]-1]
+              test(f'entry_currenthour_minus_close_lag{lag}_atr_prevclosed',d2*(e2-past)/den)
+          PY
