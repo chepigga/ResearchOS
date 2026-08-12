@@ -1,0 +1,89 @@
+name: BTC Early Recovery Parity Debug
+
+on:
+  push:
+    branches: [lab-btc-early-recovery-reversal]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - run: python -m pip install --quiet pandas numpy
+      - name: Compare reconstructed events with frozen LAB020 ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o frozen.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_M15_FVG_CONTINUATION_LAB_020_FREQ_MATCHED_EVENTS.csv
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          test "$(sha256sum frozen.csv|awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          python - <<'PY'
+          import zipfile, numpy as np, pandas as pd
+          frames=[]
+          with zipfile.ZipFile('btc_5m.zip') as z:
+              for n in sorted(x for x in z.namelist() if x.endswith('.csv')):
+                  with z.open(n) as f: frames.append(pd.read_csv(f))
+          b=pd.concat(frames,ignore_index=True); b['time']=pd.to_datetime(b.time,utc=True).dt.tz_localize(None)
+          for c in ['open','high','low','close']: b[c]=pd.to_numeric(b[c],errors='coerce')
+          b=b.dropna(subset=['time','open','high','low','close']).sort_values('time').drop_duplicates('time').reset_index(drop=True)
+          def rs(rule):
+              x=b.set_index('time').resample(rule,label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
+              x['close_time']=x.time+pd.Timedelta(rule); return x
+          m15=rs('15min'); h1=rs('1h')
+          f=pd.read_csv('frozen.csv'); f['entry_time']=pd.to_datetime(f.entry_time); print('FROZEN',f.shape); print('COLS',list(f.columns)); print(f.head(3).to_string(index=False))
+
+          # raw near-edge first touch exactly as report wording
+          raw=[]; n=len(m15); bull=(m15.low>m15.high.shift(2)).to_numpy(); bear=(m15.high<m15.low.shift(2)).to_numpy()
+          for side,mask,nearcol,hitcol,cmp in [('BUY',bull,'low','low','le'),('SELL',bear,'high','high','ge')]:
+              for j in np.flatnonzero(mask):
+                  near=float(m15.loc[j,nearcol]); k0=j+2; k1=min(j+200,n-1)
+                  if k0>k1: continue
+                  arr=m15.loc[k0:k1,hitcol].to_numpy(float); hit=np.flatnonzero(arr<=near) if cmp=='le' else np.flatnonzero(arr>=near)
+                  if hit.size:
+                      k=k0+int(hit[0]); raw.append((m15.loc[k,'time'],side,k-j,near,j,k))
+          r=pd.DataFrame(raw,columns=['entry_time','side','age_bars','entry_raw','birth_idx','touch_idx'])
+          print('RAW_N',len(r),'BUY',int((r.side=='BUY').sum()),'SELL',int((r.side=='SELL').sum()))
+
+          # exact event identity comparison
+          fm=f.merge(r,on=['entry_time','side','age_bars'],how='left',suffixes=('_f','_r'),indicator=True)
+          print('FROZEN_EXACT_RAW_MATCH',fm._merge.value_counts().to_dict())
+          both=fm[fm._merge=='both'].copy(); print('ENTRY_PRICE_MAE',float((both.entry_price-both.entry_raw).abs().mean()),'MAX',float((both.entry_price-both.entry_raw).abs().max()))
+          print('FROZEN_NO_RAW_SAMPLE'); print(fm[fm._merge!='both'][['entry_time','side','age_bars','entry_price']].head(20).to_string(index=False))
+
+          # reverse: how many raw 11-60 are exact frozen events
+          rr=r[r.age_bars.between(11,60)].merge(f[['entry_time','side','age_bars']],on=['entry_time','side','age_bars'],how='left',indicator=True)
+          print('RAW_11_60_N',len(rr),'EXACT_FROZEN_SHARE',float((rr._merge=='both').mean()),'EXTRA_N',int((rr._merge!='both').sum()))
+
+          # ATR variants + H1 timestamp attachment variants
+          pc=h1.close.shift(1); tr=pd.concat([h1.high-h1.low,(h1.high-pc).abs(),(h1.low-pc).abs()],axis=1).max(axis=1)
+          h1['atr_w']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean(); h1['atr_sma']=tr.rolling(14).mean()
+          h1['disp6']=h1.close-h1.close.shift(6)
+          h1['dw']=h1.disp6/h1.atr_w; h1['ds']=h1.disp6/h1.atr_sma
+          # closed: merge on close_time. open/current: merge on bar open 'time' (uses that bar's eventual close, descriptive diagnostic only)
+          for variant,key in [('closed_w','close_time'),('open_w','time'),('closed_s','close_time'),('open_s','time')]:
+              col='dw' if variant.endswith('_w') else 'ds'
+              x=pd.merge_asof(f.sort_values('entry_time'),h1[[key,col]].sort_values(key),left_on='entry_time',right_on=key,direction='backward',allow_exact_matches=True)
+              trade=np.where(x.side.eq('BUY'),1,-1); calc=trade*x[col]
+              target=x.H1_DISP6_ATR
+              ok=np.isfinite(calc)&np.isfinite(target)
+              corr=np.corrcoef(calc[ok],target[ok])[0,1]; mae=np.mean(np.abs(calc[ok]-target[ok])); sign=np.mean(np.sign(calc[ok])==np.sign(target[ok]))
+              print('H1_VARIANT',variant,'CORR',corr,'MAE',mae,'SIGN_MATCH',sign)
+
+          # infer whether frozen H1_DISP6_ATR is trade-signed or raw signed by side
+          print('FROZEN_H1_STATS')
+          print(f.groupby('side').H1_DISP6_ATR.agg(['count','min','median','mean','max']).to_string())
+          print('FROZEN_H1_POS_SHARE',f.groupby('side').H1_DISP6_ATR.apply(lambda s: float((s>0).mean())).to_dict())
+
+          # Compare frozen rows to our raw matched nearest H1 closed state and age/entry fields
+          hw=h1[['close_time','dw']].sort_values('close_time')
+          q=pd.merge_asof(f.sort_values('entry_time'),hw,left_on='entry_time',right_on='close_time',direction='backward')
+          q['trade_calc']=np.where(q.side.eq('BUY'),q.dw,-q.dw)
+          q['raw_calc']=q.dw
+          for calc in ['trade_calc','raw_calc']:
+              ok=q[calc].notna()&q.H1_DISP6_ATR.notna(); print('TARGET_COMPARE',calc,'CORR',float(q.loc[ok,[calc,'H1_DISP6_ATR']].corr().iloc[0,1]),'MAE',float((q.loc[ok,calc]-q.loc[ok,'H1_DISP6_ATR']).abs().mean()))
+          PY
