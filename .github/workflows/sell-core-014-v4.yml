@@ -1,4 +1,4 @@
-name: SELL CORE 014 v4
+name: SELL CORE 015 via Long History
 on:
   push:
     branches: [lab-btc-v283-market-clock-matrix]
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: python -m pip install --quiet pandas numpy tabulate
+      - run: python -m pip install --quiet pandas numpy tabulate scikit-learn
       - env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -22,8 +22,12 @@ jobs:
       - run: |
           mkdir -p research/btc_unified_lifecycle/hist_1m research/btc_unified_lifecycle/hist_5m d
           for y in 2020 2021 2022 2023; do for m in 01 02 03 04 05 06 07 08 09 10 11 12; do for tf in 1m 5m; do f="BTCUSDT-${tf}-${y}-${m}.zip"; curl -fsSL "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/${tf}/${f}" -o "d/$f"; unzip -q "d/$f" -d "research/btc_unified_lifecycle/hist_${tf}"; done; done; done
-      - run: cd research/btc_unified_lifecycle && python sell_core_014_runner.py && cat sell_core_014_out/REPORT.md
+      - run: |
+          cd research/btc_unified_lifecycle
+          python -m py_compile sell_core_015_2026_regime_fingerprint_backcast.py
+          python sell_core_015_2026_regime_fingerprint_backcast.py
+          cat sell_core_015_out/REPORT.md
       - uses: actions/upload-artifact@v4
         with:
-          name: sell-core-014-v4
-          path: research/btc_unified_lifecycle/sell_core_014_out/
+          name: sell-core-015-regime-fingerprint
+          path: research/btc_unified_lifecycle/sell_core_015_out/
