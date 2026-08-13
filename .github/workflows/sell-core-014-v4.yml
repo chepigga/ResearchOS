@@ -1,4 +1,4 @@
-name: SELL CORE 016 Recent Exact
+name: SELL CORE 018 Schema Audit
 on:
   push:
     branches: [lab-btc-v283-market-clock-matrix]
@@ -10,16 +10,19 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: python -m pip install --quiet pandas numpy tabulate
+      - run: python -m pip install --quiet pandas
       - env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
-          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+        run: gh api /repos/chepigga/ResearchOS/releases/assets/511572403 -H 'Accept: application/octet-stream' > lab15.csv
       - run: |
-          python research/btc_unified_lifecycle/sell_core_016_2026_edge_source_decomposition.py
-          cat sell_core_016_out/REPORT.md
-      - uses: actions/upload-artifact@v4
-        with:
-          name: sell-core-016-edge-source-decomposition
-          path: sell_core_016_out/
+          python - <<'PY'
+          import pandas as pd
+          d=pd.read_csv('lab15.csv')
+          print('ROWS',len(d),'COLS',len(d.columns))
+          for c in d.columns: print(c)
+          print('TRIGGERS',d['trigger_type'].value_counts().to_dict() if 'trigger_type' in d else {})
+          print('QUALITY',d['ordering_quality'].value_counts(dropna=False).to_dict() if 'ordering_quality' in d else {})
+          for c in d.columns:
+              if any(k in c.lower() for k in ['rebound','recovery','breakdown','trigger','pivot','duration','eff','speed','accept','reject','reclaim','atr','mfe','mae']):
+                  print('STAT',c,'NONNULL',int(d[c].notna().sum()),'SAMPLE',d[c].dropna().head(3).astype(str).tolist())
+          PY
