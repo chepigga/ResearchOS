@@ -1,0 +1,42 @@
+name: SELL CORE 014 Long History v2
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths: ['.github/workflows/sell-core-014-long-history-v2.yml']
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          mkdir -p research/btc_unified_lifecycle/frozen_1m research/btc_unified_lifecycle/frozen_5m
+          unzip -q btc_1m.zip -d f1; find f1 -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_1m/ \;
+          unzip -q btc_5m.zip -d f5; find f5 -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_5m/ \;
+      - run: |
+          mkdir -p research/btc_unified_lifecycle/hist_1m research/btc_unified_lifecycle/hist_5m dl
+          python - <<'PY' > months.txt
+          import pandas as pd
+          for x in pd.period_range('2020-01','2023-12',freq='M'): print(x)
+          PY
+          while read ym; do
+            for tf in 1m 5m; do
+              z="dl/BTCUSDT-${tf}-${ym}.zip"
+              curl -fL --retry 4 "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/${tf}/BTCUSDT-${tf}-${ym}.zip" -o "$z"
+              unzip -q "$z" -d "research/btc_unified_lifecycle/hist_${tf}"
+            done
+          done < months.txt
+      - run: |
+          cd research/btc_unified_lifecycle
+          python sell_core_014_b3_lhbos_long_history.py
+          cat sell_core_014_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-014-long-history-v2
+          path: research/btc_unified_lifecycle/sell_core_014_out/
