@@ -1,0 +1,38 @@
+name: SELL CORE 002 B3 Failed Response FVG
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - 'research/btc_unified_lifecycle/sell_core_002_b3_failed_response_fvg.py'
+      - '.github/workflows/sell-core-002-b3-failed-response-fvg.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip|awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572403 -H 'Accept: application/octet-stream' > lab15.csv
+          test "$(sha256sum lab15.csv|awk '{print $1}')" = "833989e64adbe5d28f75c6cff84f2fdf1b2dc9171a41fa59adce4327f6da9729"
+      - name: Run lab
+        working-directory: research/btc_unified_lifecycle
+        run: |
+          cp ../../btc_1m.zip .
+          cp ../../btc_5m.zip .
+          cp ../../lab15.csv .
+          python sell_core_002_b3_failed_response_fvg.py
+          cat sell_core_002_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-002-b3-failed-response-fvg
+          path: research/btc_unified_lifecycle/sell_core_002_out/
