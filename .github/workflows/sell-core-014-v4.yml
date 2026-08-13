@@ -10,19 +10,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: python -m pip install --quiet pandas
       - env:
           GH_TOKEN: ${{ github.token }}
         run: gh api /repos/chepigga/ResearchOS/releases/assets/511572403 -H 'Accept: application/octet-stream' > lab15.csv
-      - run: |
-          python - <<'PY'
-          import pandas as pd
-          d=pd.read_csv('lab15.csv')
-          print('ROWS',len(d),'COLS',len(d.columns))
-          for c in d.columns: print(c)
-          print('TRIGGERS',d['trigger_type'].value_counts().to_dict() if 'trigger_type' in d else {})
-          print('QUALITY',d['ordering_quality'].value_counts(dropna=False).to_dict() if 'ordering_quality' in d else {})
-          for c in d.columns:
-              if any(k in c.lower() for k in ['rebound','recovery','breakdown','trigger','pivot','duration','eff','speed','accept','reject','reclaim','atr','mfe','mae']):
-                  print('STAT',c,'NONNULL',int(d[c].notna().sum()),'SAMPLE',d[c].dropna().head(3).astype(str).tolist())
-          PY
+      - run: head -n 3 lab15.csv
