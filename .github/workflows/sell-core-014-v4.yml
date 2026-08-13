@@ -1,4 +1,4 @@
-name: SELL CORE 015 via Long History
+name: SELL CORE 016 Recent Exact
 on:
   push:
     branches: [lab-btc-v283-market-clock-matrix]
@@ -10,24 +10,16 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: python -m pip install --quiet pandas numpy tabulate scikit-learn
+      - run: python -m pip install --quiet pandas numpy tabulate
       - env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > m1.zip
-          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > m5.zip
-          mkdir -p research/btc_unified_lifecycle/frozen_1m research/btc_unified_lifecycle/frozen_5m
-          unzip -q m1.zip -d a; find a -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_1m/ \;
-          unzip -q m5.zip -d b; find b -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_5m/ \;
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
       - run: |
-          mkdir -p research/btc_unified_lifecycle/hist_1m research/btc_unified_lifecycle/hist_5m d
-          for y in 2020 2021 2022 2023; do for m in 01 02 03 04 05 06 07 08 09 10 11 12; do for tf in 1m 5m; do f="BTCUSDT-${tf}-${y}-${m}.zip"; curl -fsSL "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/${tf}/${f}" -o "d/$f"; unzip -q "d/$f" -d "research/btc_unified_lifecycle/hist_${tf}"; done; done; done
-      - run: |
-          cd research/btc_unified_lifecycle
-          python -m py_compile sell_core_015_2026_regime_fingerprint_backcast.py
-          python sell_core_015_2026_regime_fingerprint_backcast.py
-          cat sell_core_015_out/REPORT.md
+          python research/btc_unified_lifecycle/sell_core_016_2026_edge_source_decomposition.py
+          cat sell_core_016_out/REPORT.md
       - uses: actions/upload-artifact@v4
         with:
-          name: sell-core-015-regime-fingerprint
-          path: research/btc_unified_lifecycle/sell_core_015_out/
+          name: sell-core-016-edge-source-decomposition
+          path: sell_core_016_out/
