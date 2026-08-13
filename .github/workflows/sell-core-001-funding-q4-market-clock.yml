@@ -4,6 +4,7 @@ on:
     branches: [lab-btc-v283-market-clock-matrix]
     paths:
       - 'research/btc_unified_lifecycle/sell_core_001_funding_q4_market_clock.py'
+      - 'research/btc_unified_lifecycle/sell_core_001_fast_runner.py'
       - '.github/workflows/sell-core-001-funding-q4-market-clock.yml'
   workflow_dispatch:
 permissions:
@@ -32,7 +33,7 @@ jobs:
           cp ../../btc_1m.zip .
           cp ../../btc_5m.zip .
           cp ../../binance_btc_funding.csv .
-          python sell_core_001_funding_q4_market_clock.py
+          python sell_core_001_fast_runner.py
           cat sell_core_001_out/REPORT.md
       - uses: actions/upload-artifact@v4
         with:
