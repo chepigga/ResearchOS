@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas
       - name: Download frozen funding assets
         env:
           GH_TOKEN: ${{ github.token }}
@@ -22,23 +23,23 @@ jobs:
           test "$(sha256sum binance_flow.py | awk '{print $1}')" = "cb2d1f220c45e86d69777b25c8b5b77c290430acf9af1bf4d0251313e9da972c"
           gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
           test "$(sha256sum binance_btc_funding.csv | awk '{print $1}')" = "df4dc9d6c0c28069e1f1a20c4d1f0ffb3d7195869aae151263ec8fff10052ef8"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572071 -H 'Accept: application/octet-stream' > BTC_FINDINGS_2026-08-10.md
       - name: Inspect exact prior pipeline
         shell: bash
         run: |
-          echo '=== BINANCE_FLOW.PY ==='
-          cat binance_flow.py
-          echo '=== FUNDING HEAD/TAIL ==='
-          head -5 binance_btc_funding.csv
-          tail -5 binance_btc_funding.csv
+          echo '=== FUNDING REFERENCES IN FINDINGS ==='
+          grep -ni -C 12 'funding\|Q4\|quart' BTC_FINDINGS_2026-08-10.md || true
+          echo '=== FLOW SOURCE FUNDING SECTION ==='
+          grep -ni -C 8 'funding' binance_flow.py || true
+          echo '=== FUNDING DATA ==='
           python - <<'PY'
           import pandas as pd
           x=pd.read_csv('binance_btc_funding.csv')
-          print('columns',list(x.columns))
-          print('shape',x.shape)
-          print(x.head().to_string(index=False))
-          print(x.tail().to_string(index=False))
-          for c in x.columns:
-              if 'time' in c.lower() or 'date' in c.lower():
-                  z=pd.to_datetime(x[c],errors='coerce',unit='ms' if pd.api.types.is_numeric_dtype(x[c]) else None,utc=True)
-                  if z.notna().any(): print('time_col',c,'min',z.min(),'max',z.max())
+          x['time']=pd.to_datetime(x['time'],format='%Y.%m.%d %H:%M',utc=True)
+          print('columns',list(x.columns),'shape',x.shape)
+          print('min',x.time.min(),'max',x.time.max())
+          print(x.funding.describe(percentiles=[.25,.5,.75]).to_string())
+          print('global quartiles',x.funding.quantile([.25,.5,.75]).to_dict())
+          print('year quartiles')
+          print(x.assign(year=x.time.dt.year).groupby('year').funding.quantile([.25,.5,.75]).unstack().to_string())
           PY
