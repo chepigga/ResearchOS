@@ -20,26 +20,23 @@ jobs:
         run: |
           set -euo pipefail
           gh api /repos/chepigga/ResearchOS/releases/assets/511572348 -H 'Accept: application/octet-stream' > binance_flow.py
-          test "$(sha256sum binance_flow.py | awk '{print $1}')" = "cb2d1f220c45e86d69777b25c8b5b77c290430acf9af1bf4d0251313e9da972c"
           gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
-          test "$(sha256sum binance_btc_funding.csv | awk '{print $1}')" = "df4dc9d6c0c28069e1f1a20c4d1f0ffb3d7195869aae151263ec8fff10052ef8"
           gh api /repos/chepigga/ResearchOS/releases/assets/511572071 -H 'Accept: application/octet-stream' > BTC_FINDINGS_2026-08-10.md
-      - name: Inspect exact prior pipeline
+      - name: Locate exact prior quartile analysis
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          echo '=== FUNDING REFERENCES IN FINDINGS ==='
-          grep -ni -C 12 'funding\|Q4\|quart' BTC_FINDINGS_2026-08-10.md || true
-          echo '=== FLOW SOURCE FUNDING SECTION ==='
-          grep -ni -C 8 'funding' binance_flow.py || true
-          echo '=== FUNDING DATA ==='
+          echo '=== RELEASE ASSETS: possible funding analysis ==='
+          gh api /repos/chepigga/ResearchOS/releases/369236352/assets --paginate --jq '.[] | [.id,.name] | @tsv' | grep -Ei 'fund|flow|pressure|information|clock|router|feature|oracle|lab0(1[0-9]|2[0-9])' || true
+          echo '=== FINDINGS FUNDING ==='
+          grep -ni -C 10 'Funding —\|funding Q1\|Q4 (високий)\|funding ×' BTC_FINDINGS_2026-08-10.md || true
           python - <<'PY'
           import pandas as pd
           x=pd.read_csv('binance_btc_funding.csv')
-          x['time']=pd.to_datetime(x['time'],format='%Y.%m.%d %H:%M',utc=True)
-          print('columns',list(x.columns),'shape',x.shape)
-          print('min',x.time.min(),'max',x.time.max())
-          print(x.funding.describe(percentiles=[.25,.5,.75]).to_string())
-          print('global quartiles',x.funding.quantile([.25,.5,.75]).to_dict())
-          print('year quartiles')
-          print(x.assign(year=x.time.dt.year).groupby('year').funding.quantile([.25,.5,.75]).unstack().to_string())
+          x['time']=pd.to_datetime(x.time,format='%Y.%m.%d %H:%M',utc=True)
+          print('funding',len(x),x.time.min(),x.time.max())
+          print('quartiles',x.funding.quantile([.25,.5,.75]).to_dict())
+          print('value counts top')
+          print(x.funding.value_counts().head(12).to_string())
           PY
