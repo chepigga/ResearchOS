@@ -16,22 +16,28 @@ jobs:
         run: |
           gh api /repos/chepigga/ResearchOS/releases/assets/511572318 -H 'Accept: application/octet-stream' > binance_btc_flow.csv
           gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
-      - name: Compare frozen M1 to futures/spot source
+      - name: Aggregate frozen M1 2024-01-01 00h and compare futures H1
         run: |
-          echo '--- frozen zip names/head ---'
-          unzip -l btc_1m.zip | head -10
-          unzip -p btc_1m.zip | head -5 || true
-          echo '--- frozen futures H1 head around 2024 ---'
-          grep '^2024.01.01 00:00' binance_btc_flow.csv | head -1 || true
-          echo '--- Binance futures 1m 2024-01-01 00:00 UTC ---'
+          unzip -p btc_1m.zip btc_1m/BTCUSDT-1m-2024-01.csv > jan.csv
           python - <<'PY'
-          import urllib.request,json,datetime as dt
-          t=int(dt.datetime(2024,1,1,tzinfo=dt.timezone.utc).timestamp()*1000)
-          for label,url in [
-            ('FUT',f'https://fapi.binance.com/fapi/v1/klines?symbol=BTCUSDT&interval=1m&startTime={t}&limit=2'),
-            ('SPOT',f'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&startTime={t}&limit=2')]:
-              try:
-                with urllib.request.urlopen(url,timeout=30) as r: d=json.load(r)
-                print(label,d[:2])
-              except Exception as e: print(label,'ERR',e)
+          import csv
+          rows=[]
+          with open('jan.csv',newline='') as f:
+            r=csv.DictReader(f)
+            for x in r:
+              if x['time'].startswith('2024.01.01 00:'): rows.append(x)
+              elif rows: break
+          print('M1_ROWS',len(rows))
+          o=float(rows[0]['open']); h=max(float(x['high']) for x in rows); l=min(float(x['low']) for x in rows); c=float(rows[-1]['close'])
+          v=sum(float(x['volume']) for x in rows); tr=sum(int(x['trades']) for x in rows)
+          print('M1_AGG',o,h,l,c,v,tr)
+          target=None
+          with open('binance_btc_flow.csv',newline='') as f:
+            for x in csv.DictReader(f):
+              if x['time']=='2024.01.01 00:00': target=x; break
+          print('FUT_H1',target)
+          vals=(float(target['open']),float(target['high']),float(target['low']),float(target['close']),float(target['volume']),int(target['trades']))
+          print('MATCH', [abs(a-b) if isinstance(b,float) else a==b for a,b in zip((o,h,l,c,v,tr),vals)])
+          print('OHLC_MATCH', all(abs(a-b)<1e-9 for a,b in zip((o,h,l,c),vals[:4])))
+          print('VOL_DIFF',v-vals[4],'TRADES_DIFF',tr-vals[5])
           PY
