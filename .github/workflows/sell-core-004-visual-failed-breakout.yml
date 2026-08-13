@@ -1,0 +1,38 @@
+name: SELL CORE 004 Visual Failed Breakout
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - 'research/btc_unified_lifecycle/sell_core_004_htf_bear_local_correction_failed_breakout.py'
+      - '.github/workflows/sell-core-004-visual-failed-breakout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen price assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip|awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+      - name: Run lab
+        working-directory: research/btc_unified_lifecycle
+        run: |
+          cp ../../btc_1m.zip .
+          cp ../../btc_5m.zip .
+          python sell_core_004_htf_bear_local_correction_failed_breakout.py
+          cat sell_core_004_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-004-visual-failed-breakout
+          path: research/btc_unified_lifecycle/sell_core_004_out/
