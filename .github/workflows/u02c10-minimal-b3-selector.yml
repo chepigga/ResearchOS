@@ -31,6 +31,7 @@ jobs:
         run: |
           cp ../../btc_1m.zip .
           cp ../../btc_5m.zip .
+          cp -r ../../u01_shadow .
           python u02c10_minimal_b3_selector.py
           cat u02c10_out/REPORT.md
       - uses: actions/upload-artifact@v4
