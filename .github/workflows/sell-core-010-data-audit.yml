@@ -38,7 +38,7 @@ jobs:
                       x=pd.to_datetime(df[c],errors='coerce',utc=True)
                       if x.notna().sum(): print('timecol',c,'valid',x.notna().sum(),'min',x.min(),'max',x.max())
           PY
-          echo '--- RV / volatility references in frozen findings ---'
-          grep -nEi 'RV168|RV_168|realized vol|realized volatility|168h|168' BTC_FINDINGS_2026-08-10.md || true
-          echo '--- funding references in frozen findings ---'
-          grep -nEi 'funding|Q4|Q1' BTC_FINDINGS_2026-08-10.md || true
+          echo '--- funding section 95-125 ---'
+          sed -n '95,125p' BTC_FINDINGS_2026-08-10.md
+          echo '--- combined context section 188-208 ---'
+          sed -n '188,208p' BTC_FINDINGS_2026-08-10.md
