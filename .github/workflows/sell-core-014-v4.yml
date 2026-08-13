@@ -1,4 +1,4 @@
-name: SELL CORE 018 Schema Audit
+name: SELL CORE 018 Sequence State
 on:
   push:
     branches: [lab-btc-v283-market-clock-matrix]
@@ -10,9 +10,81 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
       - env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
           gh api /repos/chepigga/ResearchOS/releases/assets/511572403 -H 'Accept: application/octet-stream' > lab15.csv
       - run: |
-          head -n 3 lab15.csv
+          python - <<'PY'
+          from pathlib import Path
+          import sys,json
+          import numpy as np,pandas as pd
+          sys.path.insert(0,'research/btc_unified_lifecycle')
+          import u02c2_v283_market_clock_conditional as base
+          import sell_core_002_b3_failed_response_fvg as s2
+          OUT=Path('sell_core_018_out'); OUT.mkdir(exist_ok=True)
+          BOOT=20000; SEED=418018
+          def pf(x):
+              z=pd.Series(x).dropna(); gp=z[z>0].sum(); gl=-z[z<0].sum(); return float(gp/gl) if gl>0 else np.nan
+          def derive(x):
+              x=x.copy()
+              x['correction_min']=(x.rebound_pivot_time-x.breakdown_time).dt.total_seconds()/60
+              x['failure_min']=(x.trigger_time-x.rebound_pivot_time).dt.total_seconds()/60
+              x['cycle_min']=(x.trigger_time-x.breakdown_time).dt.total_seconds()/60
+              x['touch']=x.had_touch_support.astype(int); x['close_reclaim']=x.had_close_reclaim.astype(int)
+              x['new_low']=(x.entry_price<x.breakdown_low).astype(int)
+              x['fast_failure']=(x.failure_min<=x.correction_min).astype(int)
+              x['base_path']=np.where(x.close_reclaim.eq(1),'ACCEPT_THEN_FAIL',np.where(x.touch.eq(1),'REJECTION','NO_TOUCH'))
+              x['path_full']=x.base_path+'|'+np.where(x.new_low.eq(1),'NEW_LOW','NO_NEW_LOW')+'|'+np.where(x.fast_failure.eq(1),'FAST','SLOW')
+              return x
+          def metr(g):
+              if len(g)==0:return {'N':0,'episodes':0,'EV_R':np.nan,'PF':np.nan,'EV_pct':np.nan,'SL_rate':np.nan,'MFE1_rate':np.nan,'MFE2_rate':np.nan,'med_MFE_R':np.nan,'med_MAE_R':np.nan}
+              return {'N':len(g),'episodes':g.b3_episode_id.nunique(),'EV_R':float(g.R.mean()),'PF':pf(g.R),'EV_pct':float(g.pct.mean()),'SL_rate':float((g.exit_type=='SL').mean()),'MFE1_rate':float((g.MFE_R>=1).mean()),'MFE2_rate':float((g.MFE_R>=2).mean()),'med_MFE_R':float(g.MFE_R.median()),'med_MAE_R':float(g.MAE_R.median())}
+          def boot(g,seed):
+              v=g.groupby('b3_episode_id').R.mean().to_numpy(float)
+              if len(v)<3:return (np.nan,np.nan,np.nan)
+              rng=np.random.default_rng(seed); b=rng.choice(v,(BOOT,len(v)),True).mean(1)
+              return float(np.quantile(b,.025)),float(np.quantile(b,.975)),float((b>0).mean())
+          m1=base.load_zip('btc_1m.zip'); m5=base.load_zip('btc_5m.zip'); h1=base.h1_atr_from_m1(m1); clock=s2.build_clock(m5)
+          lab=pd.read_csv('lab15.csv')
+          for c in ['support_time','breakdown_time','rebound_pivot_time','trigger_time','entry_time']:
+              lab[c]=pd.to_datetime(lab[c],format='%Y.%m.%d %H:%M:%S',errors='coerce')
+          lab=lab.dropna(subset=['breakdown_time','rebound_pivot_time','trigger_time','entry_time'])
+          lab=lab[(lab.trigger_time>=m1.time.min())&(lab.trigger_time<=m1.time.max())]
+          lab=lab[lab.ordering_quality==1].sort_values('trigger_time').drop_duplicates(['episode_id','trigger_time','entry_time','breakdown_time','rebound_pivot_time'])
+          lab=derive(lab)
+          z=s2.attach_clock(lab,clock,'trigger_time').dropna(subset=['st_age','st_dir'])
+          z=z[(z.st_dir==-1)&z.st_age.between(27,50)].copy()
+          z=z.sort_values('trigger_time').groupby('b3_episode_id',as_index=False).first()
+          z['signal_time']=z.trigger_time; z['requested_entry_time']=z.entry_time
+          tr=derive(s2.replay(z,m1,h1)); tr.to_csv(OUT/'b3_sequence_events.csv',index=False)
+          masks={
+            'ALL_FAILED_RECOVERY':pd.Series(True,index=tr.index),
+            'TOUCH':tr.touch.eq(1),
+            'REJECTION':tr.base_path.eq('REJECTION'),
+            'ACCEPT_THEN_FAIL':tr.base_path.eq('ACCEPT_THEN_FAIL'),
+            'NEW_LOW':tr.new_low.eq(1),
+            'FAST_FAILURE':tr.fast_failure.eq(1),
+            'REJECTION_NEWLOW_FAST':tr.base_path.eq('REJECTION')&tr.new_low.eq(1)&tr.fast_failure.eq(1),
+            'ACCEPT_NEWLOW_FAST':tr.base_path.eq('ACCEPT_THEN_FAIL')&tr.new_low.eq(1)&tr.fast_failure.eq(1)}
+          rows=[]; yrs=[]
+          for name,mask in masks.items():
+              g=tr[mask]; lo,hi,p=boot(g,SEED+sum(map(ord,name))); rows.append({'sequence':name,**metr(g),'CI_lo':lo,'CI_hi':hi,'P_EV_gt0':p})
+              for y,gy in g.groupby('year'): yrs.append({'sequence':name,'year':int(y),**metr(gy)})
+          S=pd.DataFrame(rows); Y=pd.DataFrame(yrs); S.to_csv(OUT/'sequence_ladder.csv',index=False); Y.to_csv(OUT/'sequence_yearly.csv',index=False)
+          paths=[]
+          for p,g in tr.groupby('path_full'):
+              if len(g)>=3: paths.append({'path':p,**metr(g)})
+          P=pd.DataFrame(paths).sort_values('N',ascending=False); P.to_csv(OUT/'full_path_census.csv',index=False)
+          G=(tr.assign(ratio=tr.failure_min/tr.correction_min.replace(0,np.nan)).groupby('year').agg(N=('R','size'),correction_min_med=('correction_min','median'),failure_min_med=('failure_min','median'),failure_to_correction_med=('ratio','median'),new_low_rate=('new_low','mean'),fast_failure_rate=('fast_failure','mean'),close_reclaim_rate=('close_reclaim','mean')).reset_index())
+          G.to_csv(OUT/'geometry_by_year.csv',index=False)
+          report=['# SELL_CORE_018 — BULL_CORRECTION_ACCEPTANCE_FAILURE_SEQUENCE','',f'Primary B3 episodes: **{len(tr)}**. Frozen flags: TOUCH / CLOSE_RECLAIM / NEW_LOW / FAST_FAILURE.','', '## Sequence ladder','',S.to_markdown(index=False),'','## Year transfer','',Y.to_markdown(index=False),'','## Full path census',P.to_markdown(index=False),'','## Geometry by year',G.to_markdown(index=False),'','## Boundary','- No threshold grid.','- NEW_LOW is known at trigger.','- FAST_FAILURE is the natural 1:1 duration comparison.','- Full-path cells are diagnostic unless already preregistered in the ladder.']
+          (OUT/'REPORT.md').write_text('\n'.join(report)); (OUT/'summary.json').write_text(json.dumps({'N':len(tr),'years':sorted(map(int,tr.year.unique()))},indent=2)); print((OUT/'REPORT.md').read_text())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-018-sequence-state
+          path: sell_core_018_out/
