@@ -13,15 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install --quiet pandas numpy
-      - name: Download funding and flow assets
+      - name: Download funding flow and frozen flow script
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
           gh api /repos/chepigga/ResearchOS/releases/assets/511572318 -H 'Accept: application/octet-stream' > binance_btc_flow.csv
-          sha256sum binance_btc_funding.csv binance_btc_flow.csv
-      - name: Audit coverage
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572348 -H 'Accept: application/octet-stream' > binance_flow.py
+          sha256sum binance_btc_funding.csv binance_btc_flow.csv binance_flow.py
+      - name: Audit coverage and RV definition
         run: |
           python - <<'PY'
           import pandas as pd
@@ -40,3 +41,7 @@ jobs:
                       x=pd.to_datetime(df[c],errors='coerce',utc=True)
                       if x.notna().sum(): print('timecol',c,'valid',x.notna().sum(),'min',x.min(),'max',x.max())
           PY
+          echo '--- RV / volatility references in frozen binance_flow.py ---'
+          grep -nEi 'rv168|rv_|volatility|rolling\(168|168' binance_flow.py || true
+          echo '--- frozen binance_flow.py ---'
+          cat binance_flow.py
