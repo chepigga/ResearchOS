@@ -1,0 +1,42 @@
+name: SELL CORE 010 Data Audit
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - '.github/workflows/sell-core-010-data-audit.yml'
+      - 'research/btc_unified_lifecycle/sell_core_010_autonomous_funding_q4_state.py'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download funding and flow assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572318 -H 'Accept: application/octet-stream' > binance_btc_flow.csv
+          sha256sum binance_btc_funding.csv binance_btc_flow.csv
+      - name: Audit coverage
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          for fn in ['binance_btc_funding.csv','binance_btc_flow.csv']:
+              df=pd.read_csv(fn)
+              print('\nFILE',fn)
+              print('shape',df.shape)
+              print('columns',list(df.columns))
+              print('head')
+              print(df.head(3).to_string(index=False))
+              print('tail')
+              print(df.tail(3).to_string(index=False))
+              for c in df.columns:
+                  lc=c.lower()
+                  if any(k in lc for k in ['time','date','timestamp']):
+                      x=pd.to_datetime(df[c],errors='coerce',utc=True)
+                      if x.notna().sum(): print('timecol',c,'valid',x.notna().sum(),'min',x.min(),'max',x.max())
+          PY
