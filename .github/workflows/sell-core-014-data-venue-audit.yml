@@ -1,0 +1,32 @@
+name: SELL CORE 014 Data Venue Audit
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths: ['.github/workflows/sell-core-014-data-venue-audit.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download frozen assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572348 -H 'Accept: application/octet-stream' > binance_flow.py
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572318 -H 'Accept: application/octet-stream' > binance_btc_flow.csv
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+      - name: Print source and compare H1
+        run: |
+          sed -n '1,180p' binance_flow.py
+          python - <<'PY'
+          import zipfile,pandas as pd,io,numpy as np
+          f=pd.read_csv('binance_btc_flow.csv')
+          print('FLOW HEAD',f.head(3).to_string(index=False))
+          print('FLOW TAIL',f.tail(3).to_string(index=False))
+          with zipfile.ZipFile('btc_1m.zip') as z:
+              print('ZIP',z.namelist())
+              b=z.read(z.namelist()[0]); m=pd.read_csv(io.BytesIO(b))
+          print('M1 cols',m.columns.tolist()); print(m.head(3).to_string(index=False)); print(m.tail(3).to_string(index=False))
+          PY
