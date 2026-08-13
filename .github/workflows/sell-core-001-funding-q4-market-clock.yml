@@ -1,0 +1,40 @@
+name: SELL CORE 001 Funding Q4 Market Clock
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - 'research/btc_unified_lifecycle/sell_core_001_funding_q4_market_clock.py'
+      - '.github/workflows/sell-core-001-funding-q4-market-clock.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  decompose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
+          test "$(sha256sum binance_btc_funding.csv | awk '{print $1}')" = "df4dc9d6c0c28069e1f1a20c4d1f0ffb3d7195869aae151263ec8fff10052ef8"
+      - name: Run decomposition
+        working-directory: research/btc_unified_lifecycle
+        run: |
+          cp ../../btc_1m.zip .
+          cp ../../btc_5m.zip .
+          cp ../../binance_btc_funding.csv .
+          python sell_core_001_funding_q4_market_clock.py
+          cat sell_core_001_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-001-funding-q4-market-clock
+          path: research/btc_unified_lifecycle/sell_core_001_out/
