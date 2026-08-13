@@ -1,0 +1,44 @@
+name: SELL CORE 001 Inspect Funding
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - '.github/workflows/sell-core-001-inspect-funding.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download frozen funding assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572348 -H 'Accept: application/octet-stream' > binance_flow.py
+          test "$(sha256sum binance_flow.py | awk '{print $1}')" = "cb2d1f220c45e86d69777b25c8b5b77c290430acf9af1bf4d0251313e9da972c"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572302 -H 'Accept: application/octet-stream' > binance_btc_funding.csv
+          test "$(sha256sum binance_btc_funding.csv | awk '{print $1}')" = "df4dc9d6c0c28069e1f1a20c4d1f0ffb3d7195869aae151263ec8fff10052ef8"
+      - name: Inspect exact prior pipeline
+        shell: bash
+        run: |
+          echo '=== BINANCE_FLOW.PY ==='
+          cat binance_flow.py
+          echo '=== FUNDING HEAD/TAIL ==='
+          head -5 binance_btc_funding.csv
+          tail -5 binance_btc_funding.csv
+          python - <<'PY'
+          import pandas as pd
+          x=pd.read_csv('binance_btc_funding.csv')
+          print('columns',list(x.columns))
+          print('shape',x.shape)
+          print(x.head().to_string(index=False))
+          print(x.tail().to_string(index=False))
+          for c in x.columns:
+              if 'time' in c.lower() or 'date' in c.lower():
+                  z=pd.to_datetime(x[c],errors='coerce',unit='ms' if pd.api.types.is_numeric_dtype(x[c]) else None,utc=True)
+                  if z.notna().any(): print('time_col',c,'min',z.min(),'max',z.max())
+          PY
