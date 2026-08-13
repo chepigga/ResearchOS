@@ -1,0 +1,34 @@
+name: U02C9 Ordered v283 Component Ladder
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - 'research/btc_unified_lifecycle/u02c9_ordered_component_ladder.py'
+      - '.github/workflows/u02c9-ordered-component-ladder.yml'
+  workflow_dispatch:
+jobs:
+  ladder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen BTC sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+      - name: Rebuild v283 shadow benchmark
+        run: python research/btc_unified_lifecycle/u02c2_fast_v283_shadow.py --btc-1m btc_1m.zip --outdir u01_shadow
+      - name: Run ordered component ladder
+        run: |
+          python research/btc_unified_lifecycle/u02c9_ordered_component_ladder.py
+          cat u02c9_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02c9-ordered-v283-component-ladder
+          path: u02c9_out/
