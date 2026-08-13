@@ -4,6 +4,7 @@ on:
     branches: [lab-btc-v283-market-clock-matrix]
     paths:
       - 'research/btc_unified_lifecycle/sell_core_011_b3_h4_sell_aligned.py'
+      - 'research/btc_unified_lifecycle/sell_core_011_fast_runner.py'
       - '.github/workflows/sell-core-011-b3-h4-sell-aligned.yml'
   workflow_dispatch:
 permissions:
@@ -29,7 +30,7 @@ jobs:
         run: |
           cp ../../btc_1m.zip .
           cp ../../btc_5m.zip .
-          python sell_core_011_b3_h4_sell_aligned.py
+          python sell_core_011_fast_runner.py
           cat sell_core_011_out/REPORT.md
       - uses: actions/upload-artifact@v4
         with:
