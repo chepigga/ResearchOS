@@ -14,19 +14,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api /repos/chepigga/ResearchOS/releases/assets/511572348 -H 'Accept: application/octet-stream' > binance_flow.py
           gh api /repos/chepigga/ResearchOS/releases/assets/511572318 -H 'Accept: application/octet-stream' > binance_btc_flow.csv
           gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
-      - name: Print source and compare H1
+      - name: Compare frozen M1 to futures/spot source
         run: |
-          sed -n '1,180p' binance_flow.py
+          echo '--- frozen zip names/head ---'
+          unzip -l btc_1m.zip | head -10
+          unzip -p btc_1m.zip | head -5 || true
+          echo '--- frozen futures H1 head around 2024 ---'
+          grep '^2024.01.01 00:00' binance_btc_flow.csv | head -1 || true
+          echo '--- Binance futures 1m 2024-01-01 00:00 UTC ---'
           python - <<'PY'
-          import zipfile,pandas as pd,io,numpy as np
-          f=pd.read_csv('binance_btc_flow.csv')
-          print('FLOW HEAD',f.head(3).to_string(index=False))
-          print('FLOW TAIL',f.tail(3).to_string(index=False))
-          with zipfile.ZipFile('btc_1m.zip') as z:
-              print('ZIP',z.namelist())
-              b=z.read(z.namelist()[0]); m=pd.read_csv(io.BytesIO(b))
-          print('M1 cols',m.columns.tolist()); print(m.head(3).to_string(index=False)); print(m.tail(3).to_string(index=False))
+          import urllib.request,json,datetime as dt
+          t=int(dt.datetime(2024,1,1,tzinfo=dt.timezone.utc).timestamp()*1000)
+          for label,url in [
+            ('FUT',f'https://fapi.binance.com/fapi/v1/klines?symbol=BTCUSDT&interval=1m&startTime={t}&limit=2'),
+            ('SPOT',f'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&startTime={t}&limit=2')]:
+              try:
+                with urllib.request.urlopen(url,timeout=30) as r: d=json.load(r)
+                print(label,d[:2])
+              except Exception as e: print(label,'ERR',e)
           PY
