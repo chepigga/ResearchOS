@@ -1,0 +1,55 @@
+name: SELL CORE 014 Long History
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+    paths:
+      - '.github/workflows/sell-core-014-long-history.yml'
+      - 'research/btc_unified_lifecycle/sell_core_014_b3_lhbos_long_history.py'
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen 2024+ assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_1m.zip|awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          test "$(sha256sum btc_5m.zip|awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          mkdir -p research/btc_unified_lifecycle/frozen_1m research/btc_unified_lifecycle/frozen_5m
+          unzip -q btc_1m.zip -d _f1; find _f1 -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_1m/ \;
+          unzip -q btc_5m.zip -d _f5; find _f5 -name '*.csv' -exec cp {} research/btc_unified_lifecycle/frozen_5m/ \;
+      - name: Download Binance USD-M monthly archives 2019-09 through 2023-12
+        run: |
+          set -euo pipefail
+          mkdir -p research/btc_unified_lifecycle/hist_1m research/btc_unified_lifecycle/hist_5m dl
+          python - <<'PY' > months.txt
+          import pandas as pd
+          for x in pd.period_range('2019-09','2023-12',freq='M'): print(str(x))
+          PY
+          while read ym; do
+            for tf in 1m 5m; do
+              url="https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/${tf}/BTCUSDT-${tf}-${ym}.zip"
+              z="dl/BTCUSDT-${tf}-${ym}.zip"
+              echo "$url"
+              curl -fL --retry 4 --retry-delay 1 "$url" -o "$z"
+              unzip -q "$z" -d "research/btc_unified_lifecycle/hist_${tf}"
+            done
+          done < months.txt
+          echo "1m historical files: $(find research/btc_unified_lifecycle/hist_1m -name '*.csv' | wc -l)"
+          echo "5m historical files: $(find research/btc_unified_lifecycle/hist_5m -name '*.csv' | wc -l)"
+      - name: Run long-history validation
+        run: |
+          cd research/btc_unified_lifecycle
+          python sell_core_014_b3_lhbos_long_history.py
+          cat sell_core_014_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sell-core-014-long-history
+          path: research/btc_unified_lifecycle/sell_core_014_out/
