@@ -1,0 +1,37 @@
+name: U02C6B B3 Occurrence Riskset
+
+on:
+  push:
+    branches: [lab-btc-v283-market-clock-matrix]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  riskset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy tabulate
+      - name: Download frozen BTC sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572188 -H 'Accept: application/octet-stream' > btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          gh api /repos/chepigga/ResearchOS/releases/assets/511572122 -H 'Accept: application/octet-stream' > btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+      - name: Rebuild default-v283 historical opportunities
+        run: python research/btc_unified_lifecycle/u02c2_fast_v283_shadow.py --btc-1m btc_1m.zip --outdir u01_shadow
+      - name: Run causal risk-set occurrence control
+        run: |
+          python research/btc_unified_lifecycle/u02c6b_b3_occurrence_riskset_control.py
+          cat u02c6b_out/REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: u02c6b-b3-occurrence-riskset
+          path: u02c6b_out/
