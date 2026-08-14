@@ -1,4 +1,4 @@
-name: SELL CORE 020 Lifecycle Breadth
+name: SELL CORE 020 Lifecycle Breadth Corrected
 on:
   push:
     branches: [lab-btc-v283-market-clock-matrix]
@@ -26,18 +26,16 @@ jobs:
           import u02c2_v283_market_clock_conditional as base
 
           OUT=Path('sell_core_020_out'); OUT.mkdir(exist_ok=True)
-          COST=27.5; STOP=1.5; BOOT=20000; SEED=420020
+          COST=27.5; STOP=1.5; BOOT=20000; SEED=420120
           BUCKETS=[('EARLY_3_11',3,11),('MID_12_26',12,26),('B3_27_50',27,50),('LATE_51_PLUS',51,10**9)]
 
           def pf(x):
               z=np.asarray(pd.Series(x).dropna(),float); gp=z[z>0].sum(); gl=-z[z<0].sum()
               return float(gp/gl) if gl>0 else (float('inf') if gp>0 else np.nan)
-
           def bucket(age):
               for n,a,b in BUCKETS:
                   if a<=age<=b:return n
               return 'EXCLUDED_TRANSITION'
-
           def build_clock(m5):
               h4=base.h4_supertrend(m5)[['time','st_dir','st_age']].copy()
               h4['st_dir']=h4.st_dir.shift(1); h4['st_age']=h4.st_age.shift(1)
@@ -45,7 +43,6 @@ jobs:
               new=h4.st_dir.ne(h4.st_dir.shift())|((h4.time-h4.time.shift())>pd.Timedelta(hours=4,minutes=1))
               h4['st_episode_id']=new.cumsum().astype(int); h4['year']=h4.time.dt.year
               return h4
-
           def replay(events,m1,h1):
               mt=m1.time.to_numpy('datetime64[ns]'); O=m1.open.to_numpy(float); H=m1.high.to_numpy(float)
               hct=h1.close_time.to_numpy('datetime64[ns]'); HA=h1.atr14.to_numpy(float); out=[]
@@ -64,85 +61,81 @@ jobs:
                       d[f'R{hh}']=rr; d[f'pct{hh}']=pct
                   out.append(d)
               return pd.DataFrame(out)
-
           def boot_riskset(g,risksets,metric,seed):
-              if len(g)<3:return {'N':len(g),'treated_EV':np.nan,'control_EV':np.nan,'delta':np.nan,'CI_lo':np.nan,'CI_hi':np.nan,'P_delta_gt0':np.nan}
-              eids=g.st_episode_id.to_numpy(int); tv=g[metric].to_numpy(float); carr=[risksets[e][metric].dropna().to_numpy(float) for e in eids]
+              if len(g)<3:return {'treated_EV':np.nan,'control_EV':np.nan,'delta':np.nan,'CI_lo':np.nan,'CI_hi':np.nan,'P_delta_gt0':np.nan}
+              keys=list(zip(g.st_episode_id.astype(int),g.bucket)); tv=g[metric].to_numpy(float); carr=[risksets[k][metric].dropna().to_numpy(float) for k in keys]
               cmean=np.array([a.mean() for a in carr]); rng=np.random.default_rng(seed); n=len(g); vals=np.empty(BOOT)
               for b in range(BOOT):
                   idx=rng.integers(0,n,n); s=0.0
                   for j in idx:
                       arr=carr[j]; s+=tv[j]-arr[rng.integers(0,len(arr))]
                   vals[b]=s/n
-              return {'N':n,'treated_EV':float(tv.mean()),'control_EV':float(cmean.mean()),'delta':float((tv-cmean).mean()),'CI_lo':float(np.quantile(vals,.025)),'CI_hi':float(np.quantile(vals,.975)),'P_delta_gt0':float((vals>0).mean())}
+              return {'treated_EV':float(tv.mean()),'control_EV':float(cmean.mean()),'delta':float((tv-cmean).mean()),'CI_lo':float(np.quantile(vals,.025)),'CI_hi':float(np.quantile(vals,.975)),'P_delta_gt0':float((vals>0).mean())}
 
           m1=base.load_zip('btc_1m.zip'); m5=base.load_zip('btc_5m.zip'); h1=base.h1_atr_from_m1(m1); clock=build_clock(m5)
           lab=pd.read_csv('lab15.csv')
           for c in ['breakdown_time','rebound_pivot_time','trigger_time','entry_time']:
               lab[c]=pd.to_datetime(lab[c],format='%Y.%m.%d %H:%M:%S',errors='coerce')
           lab=lab.dropna(subset=['breakdown_time','rebound_pivot_time','trigger_time','entry_time'])
-          lab=lab[(lab.trigger_time>=m1.time.min())&(lab.trigger_time<=m1.time.max())]
-          lab=lab[(lab.ordering_quality==1)&(lab.had_touch_support==1)].copy()
+          lab=lab[(lab.trigger_time>=m1.time.min())&(lab.trigger_time<=m1.time.max())&(lab.ordering_quality==1)].copy()
           lab=lab.sort_values('trigger_time').drop_duplicates(['episode_id','trigger_time','entry_time','breakdown_time','rebound_pivot_time'])
           ev=pd.merge_asof(lab.sort_values('trigger_time'),clock.sort_values('time'),left_on='trigger_time',right_on='time',direction='backward')
           ev=ev.dropna(subset=['st_dir','st_age','st_episode_id']).copy(); ev.st_dir=ev.st_dir.astype(int); ev.st_age=ev.st_age.astype(int); ev.st_episode_id=ev.st_episode_id.astype(int)
           ev=ev[(ev.st_dir==-1)&(ev.st_age>=3)].copy(); ev['bucket']=ev.st_age.map(bucket)
-          # PRIMARY: first causal TOUCH->failed-recovery occurrence in each H4 bearish ST episode.
-          first=ev.sort_values('trigger_time').groupby('st_episode_id',as_index=False).first()
-          first.to_csv(OUT/'first_touch_failure_per_bear_episode.csv',index=False)
-          first_occ=first.set_index('st_episode_id')['trigger_time'].to_dict()
 
-          # Treated = next fixed H4 clock after trigger while same H4 bear episode persists.
+          # Correct breadth design: first FAILED_RECOVERY per H4-ST episode PER BUCKET, then apply frozen TOUCH flag.
+          first_fail=ev.sort_values('trigger_time').groupby(['st_episode_id','bucket'],as_index=False).first()
+          qual=first_fail[first_fail.had_touch_support==1].copy()
+          first_fail.to_csv(OUT/'first_failed_recovery_per_episode_bucket.csv',index=False)
+          qual.to_csv(OUT/'qualified_touch_failure_per_episode_bucket.csv',index=False)
+          occ={(int(r.st_episode_id),r.bucket):r.trigger_time for r in qual.itertuples(index=False)}
+
           trrows=[]
-          for r in first.itertuples(index=False):
+          for r in qual.itertuples(index=False):
               q=clock[(clock.st_episode_id==r.st_episode_id)&(clock.st_dir==-1)&(clock.time>r.trigger_time)].sort_values('time')
-              if not len(q): continue
+              if not len(q):continue
               nr=q.iloc[0]
               trrows.append({'st_episode_id':int(r.st_episode_id),'year':int(r.year),'bucket':r.bucket,'trigger_time':r.trigger_time,'occ_age':int(r.st_age),'signal_time':nr.time,'entry_age':int(nr.st_age)})
-          T0=pd.DataFrame(trrows)
-          T=replay(T0,m1,h1)
+          T=replay(pd.DataFrame(trrows),m1,h1)
 
-          # All canonical H4 bear clocks with outcomes for exact-age causal controls.
-          bear=clock[(clock.st_dir==-1)&(clock.st_age>=3)].copy(); bear['signal_time']=bear.time
-          B=replay(bear,m1,h1)
-
+          bear=clock[(clock.st_dir==-1)&(clock.st_age>=3)].copy(); bear['signal_time']=bear.time; B=replay(bear,m1,h1)
           risksets={}; cov=[]; controls=[]
           for r in T.itertuples(index=False):
-              cand=B[(B.year==r.year)&(B.entry_age if False else True)].copy() if False else B[(B.year==r.year)&(B.st_age==r.entry_age)&(B.st_episode_id!=r.st_episode_id)].copy()
+              key=(int(r.st_episode_id),r.bucket)
+              cand=B[(B.year==r.year)&(B.st_age==r.entry_age)&(B.st_episode_id!=r.st_episode_id)].copy()
               keep=[]
               for rr in cand.itertuples(index=False):
-                  ot=first_occ.get(int(rr.st_episode_id),pd.NaT)
+                  ot=occ.get((int(rr.st_episode_id),r.bucket),pd.NaT)
                   keep.append(pd.isna(ot) or ot>rr.signal_time)
               cand=cand[np.asarray(keep,bool)].copy()
               if len(cand):
-                  risksets[int(r.st_episode_id)]=cand
+                  risksets[key]=cand
                   cov.append({'st_episode_id':int(r.st_episode_id),'year':int(r.year),'bucket':r.bucket,'entry_age':int(r.entry_age),'control_clocks':len(cand),'control_episodes':cand.st_episode_id.nunique()})
                   for rr in cand.itertuples(index=False):
-                      controls.append({'treated_episode_id':int(r.st_episode_id),'control_episode_id':int(rr.st_episode_id),'year':int(r.year),'bucket':r.bucket,'entry_age':int(r.entry_age),'control_time':rr.signal_time,'R48':rr.R48,'pct48':rr.pct48,'R72':rr.R72,'pct72':rr.pct72})
-          T=T[T.st_episode_id.isin(risksets)].copy().reset_index(drop=True)
-          COV=pd.DataFrame(cov); CTRL=pd.DataFrame(controls)
-          T.to_csv(OUT/'treated_activation.csv',index=False); COV.to_csv(OUT/'riskset_coverage.csv',index=False); CTRL.to_csv(OUT/'eligible_controls.csv',index=False)
+                      controls.append({'treated_episode_id':int(r.st_episode_id),'bucket':r.bucket,'control_episode_id':int(rr.st_episode_id),'year':int(r.year),'entry_age':int(r.entry_age),'control_time':rr.signal_time,'R48':rr.R48,'pct48':rr.pct48,'R72':rr.R72,'pct72':rr.pct72})
+          T=T[[ (int(r.st_episode_id),r.bucket) in risksets for r in T.itertuples(index=False)]].copy().reset_index(drop=True)
+          pd.DataFrame(cov).to_csv(OUT/'riskset_coverage.csv',index=False); pd.DataFrame(controls).to_csv(OUT/'eligible_controls.csv',index=False); T.to_csv(OUT/'treated_activation.csv',index=False)
 
-          rows=[]; yearly=[]
-          groups=[('ALL_H4_BEAR',T)]+[(n,T[T.bucket==n]) for n,_,_ in BUCKETS]
           spanw=(T.signal_time.max()-T.signal_time.min()).total_seconds()/(7*86400)
-          for gi,(name,g) in enumerate(groups):
-              br=boot_riskset(g,risksets,'R48',SEED+gi); bp=boot_riskset(g,risksets,'pct48',SEED+100+gi); b72=boot_riskset(g,risksets,'R72',SEED+200+gi)
+          rows=[]; yearly=[]
+          for gi,(name,_,_) in enumerate(BUCKETS):
+              g=T[T.bucket==name].copy(); br=boot_riskset(g,risksets,'R48',SEED+gi); bp=boot_riskset(g,risksets,'pct48',SEED+100+gi); b72=boot_riskset(g,risksets,'R72',SEED+200+gi)
               rows.append({'bucket':name,'N':len(g),'episodes':g.st_episode_id.nunique(),'freq_week':len(g)/spanw if spanw>0 else np.nan,'EV_R48':g.R48.mean(),'PF_R48':pf(g.R48),'EV_pct48':g.pct48.mean(),'control_EV_R48':br['control_EV'],'delta_R48':br['delta'],'CI_lo_R48':br['CI_lo'],'CI_hi_R48':br['CI_hi'],'P_delta_gt0_R48':br['P_delta_gt0'],'delta_pct48':bp['delta'],'CI_lo_pct48':bp['CI_lo'],'CI_hi_pct48':bp['CI_hi'],'EV_R72':g.R72.mean(),'PF_R72':pf(g.R72),'delta_R72':b72['delta'],'CI_lo_R72':b72['CI_lo'],'CI_hi_R72':b72['CI_hi']})
               for y,gy in g.groupby('year'):
                   yearly.append({'bucket':name,'year':int(y),'N':len(gy),'EV_R48':gy.R48.mean(),'PF_R48':pf(gy.R48),'EV_pct48':gy.pct48.mean(),'EV_R72':gy.R72.mean(),'PF_R72':pf(gy.R72)})
           S=pd.DataFrame(rows); Y=pd.DataFrame(yearly); S.to_csv(OUT/'breadth_summary.csv',index=False); Y.to_csv(OUT/'breadth_yearly.csv',index=False)
 
-          # Diagnostic first-per-bucket census, no promotion: shows how many extra cycles exist inside same H4 episode.
-          fpb=ev.sort_values('trigger_time').groupby(['st_episode_id','bucket'],as_index=False).first(); diag=fpb.groupby('bucket').agg(events=('st_episode_id','size'),episodes=('st_episode_id','nunique')).reset_index(); diag.to_csv(OUT/'first_per_bucket_census_diagnostic.csv',index=False)
-
-          report=['# SELL_CORE_020 — TOUCH_FAILED_RECOVERY_LIFECYCLE_BREADTH','',
-                  '**Frozen sequence:** H4 ST DOWN -> broken support -> bullish correction TOUCH -> failed recovery -> NEXT H4 SELL.','',
-                  '**Primary unit:** first causal TOUCH->failed-recovery occurrence per H4 bearish Supertrend episode; bucket is the occurrence age. No age threshold search.','',
-                  '## Lifecycle breadth','',S.to_markdown(index=False),'','## Year transfer','',Y.to_markdown(index=False),'','## Diagnostic first-per-bucket census (correlated; not promotion)','',diag.to_markdown(index=False),'','## Boundaries','- Transition age 0–2 excluded by preregistration.','- Exact-age same-year causal risk-set controls.','- One primary trade maximum per H4 ST bear episode.','- 48h primary; 72h sensitivity.']
-          (OUT/'REPORT.md').write_text('\n'.join(report)); (OUT/'summary.json').write_text(json.dumps({'primary_trades':len(T),'buckets':S.to_dict(orient='records')},indent=2,default=str)); print((OUT/'REPORT.md').read_text())
+          # Frequency upper bound if one trade per bucket per H4 episode is allowed; inference remains bucket-wise.
+          raw_freq=len(T)/spanw if spanw>0 else np.nan
+          ep_counts=T.groupby('st_episode_id').size(); overlap={'treated_events_total':len(T),'unique_h4_episodes':int(T.st_episode_id.nunique()),'raw_events_per_week':float(raw_freq),'episodes_with_2plus_buckets':int((ep_counts>=2).sum()),'max_buckets_same_episode':int(ep_counts.max()) if len(ep_counts) else 0}
+          pd.DataFrame([overlap]).to_csv(OUT/'overlap_frequency_diagnostic.csv',index=False)
+          report=['# SELL_CORE_020 — TOUCH_FAILED_RECOVERY_LIFECYCLE_BREADTH (CORRECTED)','',
+                  '**Frozen sequence per bucket:** first failed recovery in that lifecycle bucket -> TOUCH support must be true -> next H4 SELL.','',
+                  'This exactly preserves the 018/019 ordering logic inside each bucket. No age optimization.','',
+                  '## Lifecycle breadth','',S.to_markdown(index=False),'','## Year transfer','',Y.to_markdown(index=False),'','## Frequency / overlap diagnostic','',pd.DataFrame([overlap]).to_markdown(index=False),'','## Boundaries','- Transition age 0–2 excluded.','- Exact-age same-year causal risk-set controls within each frozen bucket.','- One qualifying trade max per bucket per H4 ST episode.','- Cross-bucket pooled inference is intentionally not promoted because the same H4 episode can contribute to multiple buckets.','- 48h primary; 72h sensitivity.']
+          (OUT/'REPORT.md').write_text('\n'.join(report)); (OUT/'summary.json').write_text(json.dumps({'buckets':S.to_dict(orient='records'),'overlap':overlap},indent=2,default=str)); print((OUT/'REPORT.md').read_text())
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: sell-core-020-lifecycle-breadth
+          name: sell-core-020-lifecycle-breadth-corrected
           path: sell_core_020_out/
