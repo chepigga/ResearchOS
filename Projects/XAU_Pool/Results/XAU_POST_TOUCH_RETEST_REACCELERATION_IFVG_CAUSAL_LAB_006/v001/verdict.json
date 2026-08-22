@@ -1,0 +1,132 @@
+{
+  "status": "HEALTH_FILTER_IMPROVES_BUT_NOT_PROFITABLE",
+  "gates": {
+    "G0_DATA_EXECUTION": true,
+    "G1_PRIMARY_POWER": true,
+    "G2_CONFIRMATION_EV": false,
+    "G3_WEEK_CLUSTER_CI": false,
+    "G4_SPLIT_TRANSFER": false,
+    "G5_2R_SURVIVAL": false,
+    "G6_DIRECTION_BREADTH": false,
+    "G7_BRANCH_BREADTH": false,
+    "G8_PROP_DD_PROXY": false,
+    "G9_COST_STRESS": false,
+    "G10_HEALTH_SELECTION": true,
+    "G11_IFVG_INCREMENTAL": false
+  },
+  "primary_confirmation": {
+    "n": 2098,
+    "trades_per_week": 26.94335584150847,
+    "ev": -0.1954067059238114,
+    "pf": 0.7118092660800716,
+    "positive_rate": 0.3398474737845567,
+    "total_R": -409.96326902815633,
+    "gross_ev": -0.15664945796623017,
+    "tp_rate": 0.32125834127740704,
+    "max_dd_R": 414.8381617207674,
+    "worst_day_R": -11.458229938709135,
+    "max_consec_losses": 21,
+    "stress05_ev": -0.23416395388139274,
+    "stress10_ev": -0.272921201838974,
+    "buy_ev": -0.21830094522723703,
+    "sell_ev": -0.17041249651478746,
+    "back_ev": -0.1941305016248658,
+    "through_ev": -0.1967893661920832,
+    "correct_rate": 0.8484270734032412,
+    "median_wait_entry_min": 8.0,
+    "median_vs_retest_entry_atr": -0.2032999763036309
+  },
+  "primary_discovery": {
+    "n": 2348,
+    "trades_per_week": 28.509767925932888,
+    "ev": -0.21151327937886488,
+    "pf": 0.6920410538853594,
+    "positive_rate": 0.3424190800681431,
+    "total_R": -496.63317998157476,
+    "gross_ev": -0.15280283700808434,
+    "tp_rate": 0.32325383304940375,
+    "max_dd_R": 497.2269416314136,
+    "worst_day_R": -10.536339164680612,
+    "max_consec_losses": 15,
+    "stress05_ev": -0.27022372174964543,
+    "stress10_ev": -0.3289341641204261,
+    "buy_ev": -0.18191258049391207,
+    "sell_ev": -0.24041631869413876,
+    "back_ev": -0.2317431718939364,
+    "through_ev": -0.19258423733054986,
+    "correct_rate": 0.8224020442930153,
+    "median_wait_entry_min": 8.0,
+    "median_vs_retest_entry_atr": -0.20279498062874352
+  },
+  "confirmation_2R": {
+    "n": 2084,
+    "trades_per_week": 26.76356223722767,
+    "ev": -0.19393508304037957,
+    "pf": 0.7314807062305256,
+    "positive_rate": 0.2946257197696737,
+    "total_R": -404.160713056151,
+    "gross_ev": -0.1552722156424965,
+    "tp_rate": 0.2533589251439539,
+    "max_dd_R": 408.95012660164804,
+    "worst_day_R": -11.458229938709135,
+    "max_consec_losses": 21,
+    "stress05_ev": -0.23259795043826262,
+    "stress10_ev": -0.27126081783614575,
+    "buy_ev": -0.2285467689191407,
+    "sell_ev": -0.15619897215751766,
+    "back_ev": -0.18908681638324576,
+    "through_ev": -0.1991805104026931,
+    "correct_rate": 0.8464491362763915,
+    "median_wait_entry_min": 8.0,
+    "median_vs_retest_entry_atr": -0.2025197725941199
+  },
+  "weekly_ev_bootstrap": {
+    "n_weeks": 79,
+    "mean": -0.20190554320401327,
+    "ci95": [-0.25723973363381336,-0.148697839542481]
+  },
+  "paired_vs_lab005_retest_bootstrap": {
+    "n_weeks": 79,
+    "mean": -0.3682862601700532,
+    "ci95": [-0.4118074821092433,-0.32650703610357945]
+  },
+  "health_selection_confirmation": {
+    "parent_retest_n": 14577,
+    "primary_pass_n": 4356,
+    "primary_pass_rate": 0.2988269191191603,
+    "pass_correct": 0.8457300275482094,
+    "fail_correct": 0.6612855884942765,
+    "uplift_pp": 18.444443905393282
+  },
+  "health_selection_discovery": {
+    "parent_retest_n": 16642,
+    "primary_pass_n": 4952,
+    "primary_pass_rate": 0.2975603893762769,
+    "pass_correct": 0.8327948303715671,
+    "fail_correct": 0.6561163387510693,
+    "uplift_pp": 17.667849162049777
+  },
+  "health_selection_bootstrap_confirmation": {
+    "n_weeks": 79,
+    "mean": 0.17425850812933916,
+    "ci95": [0.14545238932004567,0.19736625853201062]
+  },
+  "health_selection_bootstrap_discovery": {
+    "n_weeks": 83,
+    "mean": 0.17951313424161708,
+    "ci95": [0.16548367317606744,0.19411908258889327]
+  },
+  "independent_ablation": {
+    "DISCOVERY": {
+      "PRIMARY_BOTH": {"n":4952,"ev":-0.2124336217291354,"pf":0.692334717327601,"correct_rate":0.8327948303715671,"tp_rate":0.32532310177705975},
+      "REACCEL_ONLY": {"n":9862,"ev":-0.20125657919622697,"pf":0.707053869779163,"correct_rate":0.8357331170148043,"tp_rate":0.33177854390590145},
+      "IFVG_ONLY": {"n":7749,"ev":-0.21936092696109064,"pf":0.6830863227931391,"correct_rate":0.7567428055232933,"tp_rate":0.3221060782036392}
+    },
+    "CONFIRMATION": {
+      "PRIMARY_BOTH": {"n":4356,"ev":-0.18305137568186336,"pf":0.7291423811298837,"correct_rate":0.8457300275482094,"tp_rate":0.3314967860422406},
+      "REACCEL_ONLY": {"n":8514,"ev":-0.16543639545592995,"pf":0.7522198246610098,"correct_rate":0.845900869156683,"tp_rate":0.3377965703547099},
+      "IFVG_ONLY": {"n":6570,"ev":-0.1893897135093307,"pf":0.7195218073328068,"correct_rate":0.7634703196347032,"tp_rate":0.32617960426179604}
+    }
+  },
+  "holdout_opened": false
+}
