@@ -1,0 +1,95 @@
+name: LAB011 broad 2026 M1 fill replay
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen M5 and M1
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          echo M1_SHA256=$(sha256sum btc_1m.zip | awk '{print $1}')
+          mkdir -p m5 m1
+          unzip -q btc_5m.zip -d m5
+          unzip -q btc_1m.zip -d m1
+      - name: Broad M1 execution replay
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np, os
+          def load(folder):
+              fs=glob.glob(folder+'/**/*.csv',recursive=True)
+              x=pd.concat([pd.read_csv(f) for f in fs],ignore_index=True)
+              x['time']=pd.to_datetime(x['time'],utc=True).dt.tz_convert(None)
+              x=x.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+              for c in ['open','high','low','close','taker_ratio']:
+                  if c in x: x[c]=pd.to_numeric(x[c],errors='coerce')
+              return x
+          m5=load('m5'); m1=load('m1')
+          print('M1_RANGE',m1.time.min(),m1.time.max(),'ROWS',len(m1))
+          # documented BUY setup
+          m5['trend12h_ret']=m5.close/m5.close.shift(144)-1
+          m5['pullback15']=m5.close<m5.close.shift(3)
+          m5['tr15']=m5.taker_ratio.rolling(3,min_periods=3).mean()
+          m5['setup']=(m5.trend12h_ret>=0.002)&m5.pullback15&(m5.tr15<0.50)&(m5.close>m5.high.shift(1))&(m5.time.dt.hour!=19)
+          ep=m5[(m5.time>=pd.Timestamp('2026-01-01'))&(m5.time<=pd.Timestamp('2026-08-10 05:59'))&m5.setup].copy()
+          rows=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; avail=bt+pd.Timedelta(minutes=5); level=float(m5.loc[idx-1,'high']); bh=float(r.high)
+              z5=m5[(m5.time>=avail)&(m5.time<=bt+pd.Timedelta(hours=12))]
+              rr=z5[(z5.low<=level)&(z5.close>=level)]
+              sp=z5[z5.close>bh]
+              if len(rr)==0 or len(sp)==0: continue
+              rt=rr.iloc[0].time
+              # search M1 from true order availability through end of accepted-retest M5 bar
+              end=rt+pd.Timedelta(minutes=5)
+              z1=m1[(m1.time>=avail)&(m1.time<end)]
+              hit=z1[z1.low<=level]
+              if len(hit)==0:
+                  rows.append({'trigger_time':bt,'order_available':avail,'level':level,'m5_retest_time':rt,'m1_fill':False}); continue
+              h=hit.iloc[0]; ft=h.time
+              after=z1[z1.time>=ft].copy()
+              # pessimistic diagnostic: first-touch minute closes below level
+              same_min_close_below=bool(float(h.close)<level)
+              # how quickly price closes below after fill
+              below=after[after.close<level]
+              first_below=below.iloc[0].time if len(below) else pd.NaT
+              minutes_to_below=(first_below-ft).total_seconds()/60 if pd.notna(first_below) else np.nan
+              # maximum consecutive completed M1 closes >= level after first fill within first 15m
+              q=m1[(m1.time>=ft)&(m1.time<ft+pd.Timedelta(minutes=15))].copy()
+              seq=0; mx=0
+              for v in (q.close>=level):
+                  seq=seq+1 if v else 0; mx=max(mx,seq)
+              # second push M5 timestamp/price
+              st=sp.iloc[0].time; spx=float(sp.iloc[0].close)
+              rows.append({'trigger_time':bt,'order_available':avail,'level':level,'m5_retest_time':rt,'m1_fill':True,'fill_time':ft,
+                           'fill_delay_min':(ft-avail).total_seconds()/60,'same_min_close_below':same_min_close_below,
+                           'first_close_below_time':first_below,'minutes_to_close_below':minutes_to_below,'max_consecutive_closes_ge_level_15m':mx,
+                           'second_push_time':st,'second_push_price':spx,'price_advantage_bps':(spx-level)/spx*10000})
+          a=pd.DataFrame(rows)
+          print('MATCHED_M5_EVENTS',len(a))
+          print('M1_FILLED',int(a.m1_fill.sum()),'FILL_RATE',float(a.m1_fill.mean()))
+          f=a[a.m1_fill].copy()
+          print('FILL_DELAY_MEDIAN_MIN',float(f.fill_delay_min.median()))
+          print('SAME_MIN_CLOSE_BELOW',int(f.same_min_close_below.sum()),'RATE',float(f.same_min_close_below.mean()))
+          print('MEDIAN_MAX_CONSEC_CLOSES_GE_LEVEL_15M',float(f.max_consecutive_closes_ge_level_15m.median()))
+          print('PRICE_ADVANTAGE_BPS_MEDIAN',float(f.price_advantage_bps.median()))
+          print('PRICE_ADVANTAGE_BPS_MEAN',float(f.price_advantage_bps.mean()))
+          # conservative quality classes, descriptive only
+          f['held_3m']=f.max_consecutive_closes_ge_level_15m>=3
+          f['held_5m']=f.max_consecutive_closes_ge_level_15m>=5
+          print('HELD_3M_RATE',float(f.held_3m.mean()),'HELD_5M_RATE',float(f.held_5m.mean()))
+          a.to_csv('lab011_m1_fill_broad.csv',index=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab011-m1-fill-broad
+          path: lab011_m1_fill_broad.csv
