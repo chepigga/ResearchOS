@@ -3,6 +3,8 @@ name: U06 BTC Oracle to Tier transfer
 on:
   push:
     branches: [lab-btc-unified-lifecycle]
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
   workflow_dispatch:
 
 permissions:
