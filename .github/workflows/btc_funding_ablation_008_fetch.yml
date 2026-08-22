@@ -1,24 +1,27 @@
-name: btc-sell-core-replication-009-bundle
+name: btc-sell-core-replication-009-ledger-search
 on:
   pull_request:
     branches: [main]
     paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
 jobs:
-  bundle:
+  search:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: lab-btc-v283-market-clock-matrix
           fetch-depth: 1
-      - name: Bundle historical BTC market-clock research
+      - name: Search all branches for LAB015 ledger files
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p bundle
-          cp -a research/btc_unified_lifecycle bundle/
-          find bundle/btc_unified_lifecycle -type f | sort > bundle/FILES.txt
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --depth=1
+          mkdir -p found
+          : > found/file_hits.txt
+          while IFS= read -r br; do
+            git ls-tree -r --name-only "$br" | grep -Ei 'lab15|failed.*recovery|recovery.*failed|breakdown.*sell|sell.*breakdown' | sed "s#^#$br:#" >> found/file_hits.txt || true
+          done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort)
+          cat found/file_hits.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-market-clock-full-research
-          path: bundle/
+          name: btc-lab15-ledger-search
+          path: found/
