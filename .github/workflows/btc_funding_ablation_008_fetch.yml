@@ -1,0 +1,30 @@
+name: btc-funding-ablation-008-fetch
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Binance BTCUSDT monthly funding archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p funding_zips
+          for y in 2024 2025 2026; do
+            end=12
+            if [ "$y" = "2026" ]; then end=8; fi
+            for m in $(seq -w 1 $end); do
+              f="BTCUSDT-fundingRate-${y}-${m}.zip"
+              u="https://data.binance.vision/data/futures/um/monthly/fundingRate/BTCUSDT/${f}"
+              echo "$u"
+              curl -L --fail --retry 3 "$u" -o "funding_zips/$f"
+            done
+          done
+          sha256sum funding_zips/*.zip > funding_zips/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btcusdt-funding-2024-2026-08
+          path: funding_zips/
