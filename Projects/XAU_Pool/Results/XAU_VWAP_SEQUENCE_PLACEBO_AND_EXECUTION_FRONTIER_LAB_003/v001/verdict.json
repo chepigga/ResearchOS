@@ -1,0 +1,33 @@
+{
+  "status": "GENERIC_SEQUENCE_NOT_VWAP_SPECIFIC",
+  "gates": {
+    "G0_DATA_CLOCK": true,
+    "G1_VWAP_MAP_TRANSFER": true,
+    "G2_VWAP_OVER_MEAN_T3": false,
+    "G3_VWAP_OVER_LAGGED_T3": false,
+    "G4_T1_RETAINS_SIGNAL": true,
+    "G5_DIRECTION_MIRROR": true,
+    "G6_LEVEL_BREADTH": true
+  },
+  "confirmation_vwap_sep": {
+    "T1": 0.4473508720250814,
+    "T3": 0.5791714058075216,
+    "T5": 0.7006252016659729
+  },
+  "confirmation_t3_vs_mean": {
+    "n_cells": 158,
+    "mean_diff": 0.0026087648814087953,
+    "ci95": [-0.01149116804223515, 0.01635757645115392],
+    "vwap_mean_sep": 0.5754754995345659,
+    "other_mean_sep": 0.5728667346531571
+  },
+  "confirmation_t3_vs_lagged": {
+    "n_cells": 157,
+    "mean_diff": 0.01386707655728659,
+    "ci95": [-0.004931101253668965, 0.032190312763662146],
+    "vwap_mean_sep": 0.5762012131523755,
+    "other_mean_sep": 0.5623341365950889
+  },
+  "holdout_opened": false,
+  "interpretation": "The post-touch sequence is strongly transferable, but current-session tick-volume VWAP does not beat both frozen placebos with positive paired-cluster confidence; treat most of the effect as generic short-horizon path persistence rather than VWAP-specific information."
+}
