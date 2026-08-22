@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - run: python -m pip install --quiet pandas numpy
       - name: Download frozen data
         env:
@@ -26,6 +28,44 @@ jobs:
           test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
           curl -L --fail --retry 4 -H 'Accept: application/octet-stream' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' -o lab020_events.csv https://api.github.com/repos/chepigga/ResearchOS/releases/assets/511572043
           test "$(sha256sum lab020_events.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+      - name: Full BUY frozen-ledger audit
+        run: |
+          python - <<'PY'
+          import pandas as pd, json
+          e=pd.read_csv('lab020_events.csv')
+          print('LAB020_SHAPE',e.shape)
+          print('LAB020_COLUMNS',','.join(e.columns))
+          a=e[(e.side=='BUY')&(e.H4_ST_AGE_BARS>58)&(e.H4_ST_DIR==-1)].copy()
+          b=e[(e.side=='BUY')&(e.H4_ST_AGE_BARS>58)&(e.H4_ST_DIR==1)].copy()
+          print('BUY_TIER_A_N',len(a),'BUY_TIER_B_N',len(b))
+          for name,g in [('A',a),('B',b)]:
+              if len(g):
+                  print('BUY_TIER_'+name+'_DATE_RANGE',g.entry_time.min(),g.entry_time.max())
+                  for c in ['NET24_SPREAD_PCT','NET48_SPREAD_PCT','NET72_SPREAD_PCT','NET48_STRESS_PCT']:
+                      if c in g.columns:
+                          print('BUY_TIER_'+name+'_'+c+'_MEAN',float(g[c].mean()),'POS',float((g[c]>0).mean()))
+          print('BUY_TIER_A_HEAD')
+          cols=[c for c in ['entry_time','side','H4_ST_DIR','H4_ST_AGE_BARS','entry_price','NET24_SPREAD_PCT','NET48_SPREAD_PCT','NET72_SPREAD_PCT','NET48_STRESS_PCT'] if c in a.columns]
+          print(a[cols].head(20).to_string(index=False))
+          PY
+      - name: Search complete git history for LAB054 BUY EARLY artifacts
+        run: |
+          set -euo pipefail
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+          echo '--- BRANCH/TREE FILE HITS ---'
+          RXF='LAB054|BUY_CORE|BUY.*EARLY|EARLY.*BUY|RETEST|M15_COUNTER|COUNTER_RESPONSE|SECOND_PUSH'
+          for br in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin); do
+            git ls-tree -r --name-only "$br" | grep -Ei "$RXF" | sed "s#^#$br:#" || true
+          done
+          echo '--- CONTENT HITS AT BRANCH TIPS ---'
+          RXT='LAB054|accepted retest|accepted_retest|EARLY_RETEST|early retest|M15_COUNTER|counter.response|second.push|0\.361R|0\.336R|N[ =:]+72|1\.89'
+          for br in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin); do
+            git grep -n -i -E "$RXT" "$br" -- '*.md' '*.py' '*.csv' '*.json' '*.txt' 2>/dev/null || true
+          done
+          echo '--- COMMIT MESSAGE HITS ---'
+          git log --all --oneline --decorate -i --grep='LAB054\|BUY_CORE\|EARLY retest\|accepted retest\|M15_COUNTER\|second push' || true
+          echo '--- PATCH HISTORY HITS ---'
+          git log --all -i -G'LAB054|accepted[_ -]?retest|EARLY[_ -]?RETEST|M15_COUNTER|second[_ -]?push|0\.361R|N[ =:]+72' --oneline --all -- '*.md' '*.py' '*.csv' '*.json' '*.txt' | head -100 || true
       - name: Rebuild U05 clock map
         run: python research/btc_unified_lifecycle/u05_market_clock_mapping.py
       - name: Run U06
