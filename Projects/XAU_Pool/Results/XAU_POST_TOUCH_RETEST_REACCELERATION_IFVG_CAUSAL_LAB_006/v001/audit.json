@@ -1,0 +1,13 @@
+{
+  "lab": "XAU_POST_TOUCH_RETEST_REACCELERATION_IFVG_CAUSAL_LAB_006",
+  "version": "v001",
+  "canonical_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "pre_holdout_rows": 1080929,
+  "candidate_rows": 53707,
+  "ifvg_events": 188859,
+  "holdout_opened": false,
+  "ask_execution_available": true,
+  "spec_parent": "LAB005 candidates_T3",
+  "health_minutes": 5,
+  "reaccel_thresholds_atr": [0.1,0.05,0.05]
+}
