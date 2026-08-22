@@ -1,0 +1,26 @@
+{
+  "status": "NO_INCREMENTAL_VWAP_EDGE",
+  "gates": {
+    "G0_VOLUME_PROXY_PRESENT": true,
+    "G1_CONFIRMATION_POWER": true,
+    "G2_CONFIRMATION_EV_1P5_POSITIVE": true,
+    "G3_WEEK_CLUSTER_LIFT_1P5_CI_POSITIVE": false,
+    "G4_SPLIT_SIGN_1P5": false,
+    "G5_2R_NOT_NEGATIVE": true,
+    "G6_VOLUME_ABLATION": true
+  },
+  "lift_1p5": {
+    "n_week_dir": 157,
+    "mean_lift_R": 0.10627218893048862,
+    "ci95": [-0.0045746155953756305, 0.2196492174329151]
+  },
+  "lift_2p0": {
+    "n_week_dir": 157,
+    "mean_lift_R": 0.14254796784993845,
+    "ci95": [0.009198137632026954, 0.28512127049864155]
+  },
+  "selected_confirmation_n": 711,
+  "selected_confirmation_ev_1p5": 0.037850912388753204,
+  "selected_confirmation_ev_2p0": 0.06932090879414564,
+  "holdout_opened": false
+}
