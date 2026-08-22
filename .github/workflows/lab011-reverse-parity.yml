@@ -1,0 +1,85 @@
+name: LAB011 reverse parity
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 4 -H 'Accept: application/octet-stream' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' -o lab020_events.csv https://api.github.com/repos/chepigga/ResearchOS/releases/assets/511572043
+          test "$(sha256sum lab020_events.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          mkdir -p m5 && unzip -q btc_5m.zip -d m5
+      - name: Reverse parity candidate
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np
+          files=glob.glob('m5/**/*.csv',recursive=True)
+          print('M5_FILES',len(files),files[:5])
+          parts=[]
+          for f in files:
+              x=pd.read_csv(f)
+              parts.append(x)
+          m=pd.concat(parts,ignore_index=True)
+          print('M5_COLUMNS',','.join(m.columns))
+          tc='time' if 'time' in m.columns else ('timestamp' if 'timestamp' in m.columns else m.columns[0])
+          m[tc]=pd.to_datetime(m[tc],utc=True).dt.tz_convert(None)
+          m=m.sort_values(tc).drop_duplicates(tc).reset_index(drop=True)
+          for c in ['open','high','low','close','taker_ratio']:
+              m[c]=pd.to_numeric(m[c],errors='coerce')
+          # causal 15m weak-buyer proxy from completed 5m bars only
+          m['tr15']=m['taker_ratio'].rolling(3,min_periods=3).mean()
+          m['prev_high']=m['high'].shift(1)
+          m['breakout_buy']=(m['close']>m['prev_high']) & (m['tr15']<0.50) & (m[tc].dt.hour!=19)
+          e=pd.read_csv('lab020_events.csv'); e['entry_time']=pd.to_datetime(e.entry_time)
+          p=e[(e.side=='BUY')&(e.H4_ST_AGE_BARS>58)&(e.H4_ST_DIR==-1)].copy().sort_values('entry_time')
+          print('PARENT_N',len(p))
+          rows=[]
+          horizons=[90,180,360,720]
+          for r in p.itertuples(index=False):
+              t0=r.entry_time
+              z=m[(m[tc]>=t0-pd.Timedelta(minutes=30))&(m[tc]<=t0+pd.Timedelta(hours=12))].copy()
+              b=z[z.breakout_buy]
+              if len(b)==0:
+                  rows.append(dict(entry_time=t0,breakout_time=pd.NaT,retest_time=pd.NaT,second_push_time=pd.NaT)); continue
+              q=b.iloc[0]; bt=q[tc]; level=float(q.prev_high); bh=float(q.high)
+              aft=z[z[tc]>bt]
+              # exact accepted retest: touch breakout level and close back at/above it
+              rr=aft[(aft.low<=level)&(aft.close>=level)]
+              rt=rr.iloc[0][tc] if len(rr) else pd.NaT
+              sp=aft[aft.close>bh]
+              st=sp.iloc[0][tc] if len(sp) else pd.NaT
+              rows.append(dict(entry_time=t0,breakout_time=bt,retest_time=rt,second_push_time=st,
+                               breakout_level=level,breakout_high=bh,
+                               retest_delay_min=((rt-bt).total_seconds()/60 if pd.notna(rt) else np.nan),
+                               second_push_delay_min=((st-bt).total_seconds()/60 if pd.notna(st) else np.nan)))
+          a=pd.DataFrame(rows)
+          a['matched']=a.retest_time.notna()&a.second_push_time.notna()
+          print('ANY_BREAKOUT',int(a.breakout_time.notna().sum()))
+          print('ANY_RETEST',int(a.retest_time.notna().sum()))
+          print('ANY_SECOND_PUSH',int(a.second_push_time.notna().sum()))
+          print('MATCHED_BOTH',int(a.matched.sum()))
+          for h in horizons:
+              x=a[(a.breakout_time.notna()) & ((a.breakout_time-a.entry_time).dt.total_seconds()/60<=h)]
+              print('HORIZON',h,'BREAKOUT',len(x),'RETEST',int(x.retest_time.notna().sum()),'SECOND',int(x.second_push_time.notna().sum()),'MATCHED',int(x.matched.sum()))
+          if a.matched.any():
+              mm=a[a.matched]
+              print('RETEST_DELAY_MEDIAN',float(mm.retest_delay_min.median()))
+              print('SECOND_DELAY_MEDIAN',float(mm.second_push_delay_min.median()))
+          print('TARGET_N72_DIFF',int(a.matched.sum())-72)
+          a.to_csv('reverse_parity_events.csv',index=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab011-reverse-parity
+          path: reverse_parity_events.csv
