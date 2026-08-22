@@ -1,0 +1,22 @@
+{
+  "lab": "XAU_VWAP_TOUCH_RESPONSE_VS_ACCEPTANCE_CAUSAL_MAP_LAB_002",
+  "version": "v001",
+  "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows": 1454538,
+  "rows_pre_holdout": 1080929,
+  "period_start": "2022-06-01 01:05:00",
+  "period_end": "2025-06-30 23:49:00",
+  "holdout_opened": false,
+  "ifvg_events_pre_holdout": 188859,
+  "touch_candidates": 71641,
+  "mapped_events": 71561,
+  "levels": {
+    "MID": 26667,
+    "HIGH": 23155,
+    "LOW": 21739
+  },
+  "splits": {
+    "DISCOVERY": 37834,
+    "CONFIRMATION": 33727
+  }
+}
