@@ -1,0 +1,31 @@
+{
+  "lab": "XAU_VWAP_SEQUENCE_PLACEBO_AND_EXECUTION_FRONTIER_LAB_003",
+  "version": "v001",
+  "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows": 1454538,
+  "rows_pre_holdout": 1080929,
+  "period_start": "2022-06-01 01:05:00",
+  "period_end": "2025-06-30 23:49:00",
+  "holdout_opened": false,
+  "touch_candidates": 179142,
+  "mapped_events": 178914,
+  "volume_proxy_present": true,
+  "family_counts": {
+    "VWAP_VOLUME": 71561,
+    "ANCHOR_MEAN": 67847,
+    "LAGGED_VWAP_SHAPE": 39506
+  },
+  "split_counts": {
+    "DISCOVERY": 94602,
+    "CONFIRMATION": 84312
+  },
+  "anchor_platform_hour": 1,
+  "band_k": 1.618,
+  "touch_atr": 0.05,
+  "rearm_atr": 0.25,
+  "decision_threshold": 0.1,
+  "decision_clocks": [1, 3, 5],
+  "future_barrier_atr": 0.5,
+  "future_label_starts_after_minute": 5,
+  "future_horizon_minutes_from_touch": 60
+}
