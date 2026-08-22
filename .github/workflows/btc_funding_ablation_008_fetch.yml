@@ -1,4 +1,4 @@
-name: btc-sell-core-replication-009-ledger-search
+name: btc-buy-branch-lab011-search
 on:
   pull_request:
     branches: [main]
@@ -10,18 +10,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Search all branches for LAB015 ledger files
+      - name: Search all branches for historical BUY branch artifacts
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --depth=1
-          mkdir -p found
+          mkdir -p found/files
           : > found/file_hits.txt
+          : > found/content_hits.txt
+          : > found/commit_hits.txt
+          RX_FILE='LAB054|BUY_CORE|BUY.*EARLY|EARLY.*BUY|RETEST|COUNTER_RESPONSE|COUNTER-RESPONSE|M15_COUNTER|B4|BUY.*LEDGER|LEDGER.*BUY|BUY.*EVENT|EVENT.*BUY|SECOND_PUSH|SECOND-PUSH'
+          RX_TEXT='LAB054|accepted retest|accepted_retest|EARLY retest|EARLY_RETEST|counter-response|counter_response|M15_COUNTER|BUY B4|second push|second_push|BUY_CORE|0\.336R|1\.89|0\.361R|72 matched|N=72|N = 72'
           while IFS= read -r br; do
-            git ls-tree -r --name-only "$br" | grep -Ei 'lab15|failed.*recovery|recovery.*failed|breakdown.*sell|sell.*breakdown' | sed "s#^#$br:#" >> found/file_hits.txt || true
+            echo "===== $br =====" >> found/file_hits.txt
+            git ls-tree -r --name-only "$br" | grep -Ei "$RX_FILE" | sed "s#^#$br:#" >> found/file_hits.txt || true
+            echo "===== $br =====" >> found/content_hits.txt
+            git grep -n -i -E "$RX_TEXT" "$br" -- '*.md' '*.py' '*.csv' '*.json' '*.txt' 2>/dev/null >> found/content_hits.txt || true
           done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort)
+          git log --all --oneline --decorate -i --grep='LAB054\|BUY_CORE\|EARLY retest\|counter-response\|M15_COUNTER\|BUY B4\|second push' > found/commit_hits.txt || true
           cat found/file_hits.txt
+          echo '--- CONTENT HITS ---'
+          cat found/content_hits.txt
+          echo '--- COMMIT HITS ---'
+          cat found/commit_hits.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-lab15-ledger-search
+          name: btc-buy-branch-lab011-search
           path: found/
