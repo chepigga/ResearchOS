@@ -8,41 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch official Binance BTCUSDT funding history
+      - name: Download official Binance BTCUSDT monthly funding archives
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import csv, json, time, urllib.parse, urllib.request
-          from datetime import datetime, timezone
-          base='https://fapi.binance.com/fapi/v1/fundingRate'
-          start=int(datetime(2024,1,1,tzinfo=timezone.utc).timestamp()*1000)
-          end=int(datetime(2026,8,11,tzinfo=timezone.utc).timestamp()*1000)
-          rows=[]
-          cur=start
-          while cur <= end:
-              q=urllib.parse.urlencode({'symbol':'BTCUSDT','startTime':cur,'endTime':end,'limit':1000})
-              with urllib.request.urlopen(base+'?'+q, timeout=30) as r:
-                  batch=json.load(r)
-              if not batch: break
-              rows.extend(batch)
-              last=max(int(x['fundingTime']) for x in batch)
-              if last < cur: break
-              cur=last+1
-              if len(batch)<1000: break
-              time.sleep(0.1)
-          rows=sorted({int(x['fundingTime']):x for x in rows}.values(), key=lambda x:int(x['fundingTime']))
-          with open('btcusdt_funding_2024_2026-08-10.csv','w',newline='') as f:
-              w=csv.writer(f)
-              w.writerow(['fundingTime','fundingRate','markPrice'])
-              for x in rows:
-                  w.writerow([x.get('fundingTime'),x.get('fundingRate'),x.get('markPrice','')])
-          print('rows',len(rows),'first',rows[0] if rows else None,'last',rows[-1] if rows else None)
-          PY
-          sha256sum btcusdt_funding_2024_2026-08-10.csv > funding_sha256.txt
+          mkdir -p funding_zips
+          for y in 2024 2025 2026; do
+            end=12
+            if [ "$y" = "2026" ]; then end=7; fi
+            for mi in $(seq 1 $end); do
+              m=$(printf '%02d' "$mi")
+              f="BTCUSDT-fundingRate-${y}-${m}.zip"
+              u="https://data.binance.vision/data/futures/um/monthly/fundingRate/BTCUSDT/${f}"
+              curl -L --fail --retry 3 "$u" -o "funding_zips/$f"
+            done
+          done
+          sha256sum funding_zips/*.zip > funding_zips/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: btcusdt-funding-rest-2024-2026-08-10
-          path: |
-            btcusdt_funding_2024_2026-08-10.csv
-            funding_sha256.txt
+          name: btcusdt-funding-2024-2026-07
+          path: funding_zips/
