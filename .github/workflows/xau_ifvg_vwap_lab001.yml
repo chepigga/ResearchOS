@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - '.github/workflows/xau_ifvg_vwap_lab001.yml'
+  pull_request:
+    paths:
+      - 'Projects/XAU_Pool/Triggers/XAU_IFVG_VWAP_LAB001_TRIGGER.txt'
+      - 'Projects/XAU_Pool/Code/Python/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/**'
+      - 'Projects/XAU_Pool/Specs/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001_Spec_v001-2026-08-22.md'
   workflow_dispatch:
 
 permissions:
@@ -58,6 +63,7 @@ jobs:
           cat Results_LAB001/verdict.json
 
       - name: Persist small frozen outputs to ResearchOS
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
