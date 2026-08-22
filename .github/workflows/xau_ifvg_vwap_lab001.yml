@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   lab001:
@@ -56,6 +56,56 @@ jobs:
             --outdir Results_LAB001
           cat Results_LAB001/audit.json
           cat Results_LAB001/verdict.json
+
+      - name: Persist small frozen outputs to ResearchOS
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="Projects/XAU_Pool/Results/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/v001"
+          mkdir -p "$DEST"
+          cp Results_LAB001/audit.json "$DEST/audit.json"
+          cp Results_LAB001/verdict.json "$DEST/verdict.json"
+          cp Results_LAB001/summary.csv "$DEST/summary.csv"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('Projects/XAU_Pool/Results/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/v001')
+          a=json.loads((d/'audit.json').read_text())
+          v=json.loads((d/'verdict.json').read_text())
+          g=v['gates']
+          all_pass=all(g.values())
+          if not g.get('G0_VOLUME_PROXY_PRESENT',False): verdict='INVALID_DATA_CLOCK_OR_VOLUME'
+          elif all_pass: verdict='GO_TO_ECONOMICS'
+          elif not g.get('G1_CONFIRMATION_POWER',False) and (v.get('selected_confirmation_ev_1p5') or -999)>0: verdict='WATCH_POWER'
+          elif g.get('G2_CONFIRMATION_EV_1P5_POSITIVE',False) and not g.get('G3_WEEK_CLUSTER_LIFT_1P5_CI_POSITIVE',False): verdict='NO_INCREMENTAL_VWAP_EDGE'
+          else: verdict='NO_SIGNAL'
+          txt=f'''# XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001 — v001 internal result
+
+- Status: `{verdict}`
+- Holdout opened: `{a['holdout_opened']}`
+- Input rows retained: `{a['input_rows']:,}`
+- Period: `{a['period_start']}` -> `{a['period_end']}`
+- Confirmed iFVG events: `{a['ifvg_events']:,}`
+- Primary confirmation N: `{v['selected_confirmation_n']:,}`
+- Primary confirmation EV 1.5R probe: `{v['selected_confirmation_ev_1p5']}`
+- Primary confirmation EV 2R probe: `{v['selected_confirmation_ev_2p0']}`
+- 1.5R weekly lift: `{v['lift_1p5']}`
+- 2R weekly lift: `{v['lift_2p0']}`
+
+## Frozen gates
+
+'''+"\n".join(f"- {k}: {'PASS' if val else 'FAIL'}" for k,val in g.items())+'''\n
+## Interpretation rule
+
+This is an internal mechanism screen. 2024-H1 2025 is not independent OOS. The sealed `>=2025-07-01` holdout remains untouched and is not authorized unless every internal gate passes. No EA/live allocation follows directly from this result.
+'''
+          (d/'README.md').write_text(txt)
+          PY
+          git config user.name "researchos-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$DEST/audit.json" "$DEST/verdict.json" "$DEST/summary.csv" "$DEST/README.md"
+          git commit -m "record internal XAU iFVG anchored VWAP LAB001 result" || exit 0
+          git push
 
       - name: Upload frozen internal outputs
         uses: actions/upload-artifact@v4
