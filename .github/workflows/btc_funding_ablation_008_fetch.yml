@@ -1,39 +1,37 @@
-name: btc-buy-branch-lab011-search
+name: btc-buy-lab011-recover-lab020
 on:
   pull_request:
     branches: [main]
     paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
+permissions:
+  contents: read
 jobs:
-  search:
+  recover:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Search all branches for historical BUY branch artifacts
-        shell: bash
+      - name: Download canonical frozen lab020 event ledger
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --depth=1
-          mkdir -p found/files
-          : > found/file_hits.txt
-          : > found/content_hits.txt
-          : > found/commit_hits.txt
-          RX_FILE='LAB054|BUY_CORE|BUY.*EARLY|EARLY.*BUY|RETEST|COUNTER_RESPONSE|COUNTER-RESPONSE|M15_COUNTER|B4|BUY.*LEDGER|LEDGER.*BUY|BUY.*EVENT|EVENT.*BUY|SECOND_PUSH|SECOND-PUSH'
-          RX_TEXT='LAB054|accepted retest|accepted_retest|EARLY retest|EARLY_RETEST|counter-response|counter_response|M15_COUNTER|BUY B4|second push|second_push|BUY_CORE|0\.336R|1\.89|0\.361R|72 matched|N=72|N = 72'
-          while IFS= read -r br; do
-            echo "===== $br =====" >> found/file_hits.txt
-            git ls-tree -r --name-only "$br" | grep -Ei "$RX_FILE" | sed "s#^#$br:#" >> found/file_hits.txt || true
-            echo "===== $br =====" >> found/content_hits.txt
-            git grep -n -i -E "$RX_TEXT" "$br" -- '*.md' '*.py' '*.csv' '*.json' '*.txt' 2>/dev/null >> found/content_hits.txt || true
-          done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort)
-          git log --all --oneline --decorate -i --grep='LAB054\|BUY_CORE\|EARLY retest\|counter-response\|M15_COUNTER\|BUY B4\|second push' > found/commit_hits.txt || true
-          cat found/file_hits.txt
-          echo '--- CONTENT HITS ---'
-          cat found/content_hits.txt
-          echo '--- COMMIT HITS ---'
-          cat found/commit_hits.txt
+          curl -L --fail --retry 4 \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -o lab020_events.csv \
+            https://api.github.com/repos/chepigga/ResearchOS/releases/assets/511572043
+          echo "SHA256=$(sha256sum lab020_events.csv | awk '{print $1}')"
+          test "$(sha256sum lab020_events.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          python - <<'PY'
+          import pandas as pd
+          p='lab020_events.csv'
+          x=pd.read_csv(p)
+          print('rows',len(x))
+          print('columns',list(x.columns))
+          print(x.head(3).to_string(index=False))
+          PY
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-buy-branch-lab011-search
-          path: found/
+          name: canonical-lab020-events
+          path: lab020_events.csv
