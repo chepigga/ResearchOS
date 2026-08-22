@@ -1,0 +1,20 @@
+{
+  "lab": "XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001",
+  "version": "v001",
+  "input": "XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv",
+  "input_rows": 1080929,
+  "period_start": "2022-06-01 01:05:00",
+  "period_end": "2025-06-30 23:49:00",
+  "canonical_expected_member": "XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv",
+  "canonical_expected_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "canonical_sha256_verified": true,
+  "holdout_opened": false,
+  "ifvg_events": 188859,
+  "context_rows": 377672,
+  "outcome_rows": 377388,
+  "volume_proxy_present": true,
+  "quote_side_available": true,
+  "anchor_platform_hour": 1,
+  "band_k": 1.618,
+  "implementation_patch": "v001a: canonical semicolon CSV parser fix only; local events output written as csv.gz because pyarrow unavailable. Research logic and frozen thresholds unchanged."
+}
