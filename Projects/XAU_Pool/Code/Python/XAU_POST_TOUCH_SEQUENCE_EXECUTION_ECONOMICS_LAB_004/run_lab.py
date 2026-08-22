@@ -129,19 +129,19 @@ def build_candidates(df):
     return x
 
 
-def simulate_one(df,row,target):
+def simulate_one(df,row,target,A):
     di=int(row.decision_i); direction=int(row.direction); risk=RISK_ATR*float(row.atr0)
     if direction==0 or risk<=0: return None
     entry=float(df.at[di,'ask_close']) if direction>0 else float(df.at[di,'close'])
     tp=entry+direction*target*risk; sl=entry-direction*risk
     start=di+1; end_time=pd.Timestamp(row.decision_time)+pd.Timedelta(minutes=HORIZON_MIN)
-    T=df.time.to_numpy(dtype='datetime64[ns]'); end=int(np.searchsorted(T,np.datetime64(end_time),side='right')); end=min(end,len(df))
+    T=A['T']; end=int(np.searchsorted(T,np.datetime64(end_time),side='right')); end=min(end,len(df))
     if start>=end: return None
     if direction>0:
-        h=df.high.to_numpy(float)[start:end]; l=df.low.to_numpy(float)[start:end]
+        h=A['bh'][start:end]; l=A['bl'][start:end]
         th=np.flatnonzero(h>=tp); sh=np.flatnonzero(l<=sl)
     else:
-        l=df.ask_low.to_numpy(float)[start:end]; h=df.ask_high.to_numpy(float)[start:end]
+        l=A['al'][start:end]; h=A['ah'][start:end]
         th=np.flatnonzero(l<=tp); sh=np.flatnonzero(h>=sl)
     pt=int(th[0]) if len(th) else 10**9; ps=int(sh[0]) if len(sh) else 10**9
     if pt==ps and pt<10**9:
@@ -162,11 +162,12 @@ def simulate_one(df,row,target):
 
 def simulate_candidates(df,cands):
     sig=cands[cands.direction!=0].copy().reset_index(drop=True)
+    A={'T':df.time.to_numpy(dtype='datetime64[ns]'),'bh':df.high.to_numpy(float),'bl':df.low.to_numpy(float),'ah':df.ask_high.to_numpy(float),'al':df.ask_low.to_numpy(float)}
     rows=[]
     for r in sig.itertuples(index=False):
         base=r._asdict()
         for target in TARGETS:
-            z=simulate_one(df,r,target)
+            z=simulate_one(df,r,target,A)
             if z is not None: rows.append(base|z)
     return pd.DataFrame(rows)
 
