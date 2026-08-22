@@ -1,0 +1,86 @@
+{
+  "status": "NO_EXECUTABLE_EDGE",
+  "gates": {
+    "G0_DATA_EXECUTION": true,
+    "G1_CONFIRMATION_EV": false,
+    "G2_WEEK_CLUSTER_CI": false,
+    "G3_SPLIT_TRANSFER": false,
+    "G4_2R_SURVIVAL": false,
+    "G5_T1_EXECUTABLE": false,
+    "G6_DIRECTION_BREADTH": false,
+    "G7_PROP_DD_PROXY": false,
+    "G8_COST_STRESS": false
+  },
+  "primary_confirmation": {
+    "split": "CONFIRMATION",
+    "family": "VWAP_VOLUME",
+    "clock": 3,
+    "target": 1.5,
+    "view": "SERIAL",
+    "n": 14806,
+    "trades_per_week": 189.87823170708432,
+    "ev_R": -0.18023356689949074,
+    "pf": 0.7311506101044508,
+    "win_rate": 0.3472240983385114,
+    "tp_rate": 0.328583006889099,
+    "total_R": -2668.53819151386,
+    "max_dd_R": 2672.4091894941616,
+    "worst_day_R": -44.06955046586974,
+    "max_consecutive_losses": 16,
+    "buy_n": 7527,
+    "sell_n": 7279,
+    "buy_ev_R": -0.17216909043463904,
+    "sell_ev_R": -0.1885728050298574,
+    "ev_stress_0p05": -0.21832955507808713,
+    "ev_stress_0p10": -0.2564255432566835
+  },
+  "primary_discovery": {
+    "split": "DISCOVERY",
+    "family": "VWAP_VOLUME",
+    "clock": 3,
+    "target": 1.5,
+    "view": "SERIAL",
+    "n": 16580,
+    "trades_per_week": 201.234185864779,
+    "ev_R": -0.19429507045076908,
+    "pf": 0.7150758083602481,
+    "win_rate": 0.34849215922798554,
+    "tp_rate": 0.33142340168878165,
+    "total_R": -3221.4122680737514,
+    "max_dd_R": 3229.931344987342,
+    "worst_day_R": -39.68476045998451,
+    "max_consecutive_losses": 21,
+    "buy_n": 8360,
+    "sell_n": 8220,
+    "buy_ev_R": -0.19661963607164912,
+    "sell_ev_R": -0.19193091368792767,
+    "ev_stress_0p05": -0.25262677527956723,
+    "ev_stress_0p10": -0.3109584801083654
+  },
+  "confirmation_T1_1p5R": {
+    "n": 13848,
+    "ev_R": -0.19411902944261994,
+    "pf": 0.7133985912498335
+  },
+  "confirmation_T5_1p5R": {
+    "n": 14829,
+    "ev_R": -0.17003357006561143,
+    "pf": 0.744683571983296
+  },
+  "confirmation_T3_2R": {
+    "n": 13884,
+    "ev_R": -0.1777601686027348,
+    "pf": 0.7521488528722791
+  },
+  "confirmation_anchor_mean_T3_1p5R": {
+    "n": 13825,
+    "ev_R": -0.17976267607418273,
+    "pf": 0.7312484694652581
+  },
+  "weekly_cluster_ci": {
+    "n_weeks": 79,
+    "mean_R": -0.1726821056730832,
+    "ci95": [-0.19586185979731746, -0.14997261550319466]
+  },
+  "holdout_opened": false
+}
