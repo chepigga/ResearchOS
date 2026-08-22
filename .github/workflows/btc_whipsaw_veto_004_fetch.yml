@@ -1,8 +1,9 @@
 name: btc-whipsaw-veto-004-fetch
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [lab-btc-whipsaw-veto-004-run]
-    paths: ['.github/workflows/btc_whipsaw_veto_004_fetch.yml']
 jobs:
   fetch:
     runs-on: ubuntu-latest
