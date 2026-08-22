@@ -1,0 +1,95 @@
+name: XAU IFVG VWAP LAB001 Comment Trigger
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  lab001:
+    if: github.event.issue.pull_request && github.event.comment.body == '/run-xau-ifvg-vwap-lab001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout frozen main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+
+      - name: Fetch and verify canonical XAU release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release view ak47 --repo "${GITHUB_REPOSITORY}" --json assets --jq '.assets[].name' | tee /tmp/assets.txt
+          ASSET="$(grep -E '^XAUUSD_M1_20220601_20260723_TICK_NATIVE\.csv(\.zip)?$' /tmp/assets.txt | head -n1 || true)"
+          if [[ -z "$ASSET" ]]; then
+            echo "Canonical asset not found in release ak47" >&2
+            exit 21
+          fi
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern "$ASSET" --dir data
+          if [[ "$ASSET" == *.zip ]]; then
+            unzip -j "data/$ASSET" -d data
+          fi
+          INPUT="data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv"
+          test -f "$INPUT"
+          echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
+          echo "INPUT=$INPUT" >> "$GITHUB_ENV"
+
+      - name: Run frozen internal LAB001 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python Projects/XAU_Pool/Code/Python/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/run_lab.py "$INPUT" --outdir Results_LAB001
+          test "$(python -c 'import json; print(str(json.load(open("Results_LAB001/audit.json"))["holdout_opened"]).lower())')" = "false"
+          cat Results_LAB001/audit.json
+          cat Results_LAB001/verdict.json
+
+      - name: Persist frozen internal outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="Projects/XAU_Pool/Results/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/v001"
+          mkdir -p "$DEST"
+          cp Results_LAB001/audit.json "$DEST/audit.json"
+          cp Results_LAB001/verdict.json "$DEST/verdict.json"
+          cp Results_LAB001/summary.csv "$DEST/summary.csv"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('Projects/XAU_Pool/Results/XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001/v001')
+          a=json.loads((d/'audit.json').read_text())
+          v=json.loads((d/'verdict.json').read_text())
+          g=v['gates']
+          if not g.get('G0_VOLUME_PROXY_PRESENT',False): status='INVALID_DATA_CLOCK_OR_VOLUME'
+          elif all(g.values()): status='GO_TO_ECONOMICS'
+          elif not g.get('G1_CONFIRMATION_POWER',False) and (v.get('selected_confirmation_ev_1p5') or -999)>0: status='WATCH_POWER'
+          elif g.get('G2_CONFIRMATION_EV_1P5_POSITIVE',False) and not g.get('G3_WEEK_CLUSTER_LIFT_1P5_CI_POSITIVE',False): status='NO_INCREMENTAL_VWAP_EDGE'
+          else: status='NO_SIGNAL'
+          txt=f'''# XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001 — v001 internal result\n\n- Status: `{status}`\n- Holdout opened: `{a['holdout_opened']}`\n- Input rows retained: `{a['input_rows']:,}`\n- Period: `{a['period_start']}` -> `{a['period_end']}`\n- Confirmed iFVG events: `{a['ifvg_events']:,}`\n- Primary confirmation N: `{v['selected_confirmation_n']:,}`\n- Primary confirmation EV 1.5R probe: `{v['selected_confirmation_ev_1p5']}`\n- Primary confirmation EV 2R probe: `{v['selected_confirmation_ev_2p0']}`\n- 1.5R weekly lift: `{v['lift_1p5']}`\n- 2R weekly lift: `{v['lift_2p0']}`\n\n## Frozen gates\n\n'''+"\n".join(f"- {k}: {'PASS' if val else 'FAIL'}" for k,val in g.items())+'''\n\nHoldout `>=2025-07-01` remains sealed. This is an internal mechanism screen, not EA authorization.\n'''
+          (d/'README.md').write_text(txt)
+          PY
+          git config user.name "researchos-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$DEST"
+          git commit -m "record internal XAU iFVG anchored VWAP LAB001 result"
+          git push origin HEAD:main
+
+      - name: Upload full LAB outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: XAU_IFVG_ANCHORED_VWAP_CAUSAL_REACTION_LAB_001_v001_internal
+          path: Results_LAB001/
+          retention-days: 30
