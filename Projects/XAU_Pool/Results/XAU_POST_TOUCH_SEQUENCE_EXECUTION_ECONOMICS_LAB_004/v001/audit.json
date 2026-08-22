@@ -1,0 +1,12 @@
+{
+  "lab": "XAU_POST_TOUCH_SEQUENCE_EXECUTION_ECONOMICS_LAB_004",
+  "version": "v001-fast-replay",
+  "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows": 1454538,
+  "preholdout_rows": 1080929,
+  "candidate_rows": 418333,
+  "signal_rows": 316694,
+  "simulated_rows": 633388,
+  "parent_vwap_events": "XAU_VWAP_TOUCH_RESPONSE_VS_ACCEPTANCE_CAUSAL_MAP_LAB_002/v001/events.csv.gz",
+  "holdout_opened": false
+}
