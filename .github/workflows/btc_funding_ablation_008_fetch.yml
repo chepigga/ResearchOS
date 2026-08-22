@@ -9,21 +9,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: lab-btc-unified-lifecycle
           fetch-depth: 1
-      - name: Collect historical BTC SELL core artifacts
+      - name: Search all BTC branches for historical failed-response SELL core
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p sell_core_bundle
-          find research -type f | sort > sell_core_bundle/all_research_files.txt
-          grep -RniE 'LAB031|failed[-_ ]?response|failed response|SELL.*failed|bearish.*response|B3|SELL' research Projects 2>/dev/null > sell_core_bundle/grep_hits.txt || true
-          while IFS= read -r f; do
-            case "$f" in
-              *.csv|*.md|*.json|*.py|*.txt) cp --parents "$f" sell_core_bundle/ 2>/dev/null || true ;;
-            esac
-          done < <(find research/btc_unified_lifecycle research -maxdepth 3 -type f | grep -Ei 'sell|failed|response|b3|ledger|event|u0[2-9]' | sort -u)
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --depth=1
+          mkdir -p discovery
+          git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort > discovery/branches.txt
+          : > discovery/grep_all_branches.txt
+          while IFS= read -r br; do
+            echo "===== $br =====" >> discovery/grep_all_branches.txt
+            git grep -n -i -E 'LAB031|failed[-_ ]?response|failed response|bearish response|response failure|SELL.*failure|failure.*SELL' "$br" -- '*.md' '*.py' '*.csv' '*.json' '*.txt' 2>/dev/null >> discovery/grep_all_branches.txt || true
+          done < discovery/branches.txt
+          git log --all --oneline --decorate --grep='failed\|response\|SELL_CORE\|LAB031' -i > discovery/commit_hits.txt || true
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-sell-core-history-bundle
-          path: sell_core_bundle/
+          name: btc-sell-core-all-branch-search
+          path: discovery/
