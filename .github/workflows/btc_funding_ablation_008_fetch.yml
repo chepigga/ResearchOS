@@ -1,30 +1,29 @@
-name: btc-funding-ablation-008-fetch
+name: btc-sell-core-replication-009-discovery
 on:
   pull_request:
     branches: [main]
     paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
 jobs:
-  fetch:
+  discover:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download official Binance BTCUSDT monthly funding archives
+        with:
+          ref: lab-btc-unified-lifecycle
+          fetch-depth: 1
+      - name: Collect historical BTC SELL core artifacts
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p funding_zips
-          for y in 2024 2025 2026; do
-            end=12
-            if [ "$y" = "2026" ]; then end=7; fi
-            for mi in $(seq 1 $end); do
-              m=$(printf '%02d' "$mi")
-              f="BTCUSDT-fundingRate-${y}-${m}.zip"
-              u="https://data.binance.vision/data/futures/um/monthly/fundingRate/BTCUSDT/${f}"
-              curl -L --fail --retry 3 "$u" -o "funding_zips/$f"
-            done
-          done
-          sha256sum funding_zips/*.zip > funding_zips/SHA256SUMS.txt
+          mkdir -p sell_core_bundle
+          find research -type f | sort > sell_core_bundle/all_research_files.txt
+          grep -RniE 'LAB031|failed[-_ ]?response|failed response|SELL.*failed|bearish.*response|B3|SELL' research Projects 2>/dev/null > sell_core_bundle/grep_hits.txt || true
+          while IFS= read -r f; do
+            case "$f" in
+              *.csv|*.md|*.json|*.py|*.txt) cp --parents "$f" sell_core_bundle/ 2>/dev/null || true ;;
+            esac
+          done < <(find research/btc_unified_lifecycle research -maxdepth 3 -type f | grep -Ei 'sell|failed|response|b3|ledger|event|u0[2-9]' | sort -u)
       - uses: actions/upload-artifact@v4
         with:
-          name: btcusdt-funding-2024-2026-07
-          path: funding_zips/
+          name: btc-sell-core-history-bundle
+          path: sell_core_bundle/
