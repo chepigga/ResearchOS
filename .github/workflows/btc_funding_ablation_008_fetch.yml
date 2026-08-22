@@ -1,29 +1,24 @@
-name: btc-sell-core-replication-009-discovery
+name: btc-sell-core-replication-009-bundle
 on:
   pull_request:
     branches: [main]
     paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
 jobs:
-  discover:
+  bundle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: lab-btc-v283-market-clock-matrix
           fetch-depth: 1
-      - name: Search all BTC branches for historical failed-response SELL core
+      - name: Bundle historical BTC market-clock research
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --depth=1
-          mkdir -p discovery
-          git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort > discovery/branches.txt
-          : > discovery/grep_all_branches.txt
-          while IFS= read -r br; do
-            echo "===== $br =====" >> discovery/grep_all_branches.txt
-            git grep -n -i -E 'LAB031|failed[-_ ]?response|failed response|bearish response|response failure|SELL.*failure|failure.*SELL' "$br" -- '*.md' '*.py' '*.csv' '*.json' '*.txt' 2>/dev/null >> discovery/grep_all_branches.txt || true
-          done < discovery/branches.txt
-          git log --all --oneline --decorate --grep='failed\|response\|SELL_CORE\|LAB031' -i > discovery/commit_hits.txt || true
+          mkdir -p bundle
+          cp -a research/btc_unified_lifecycle bundle/
+          find bundle/btc_unified_lifecycle -type f | sort > bundle/FILES.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-sell-core-all-branch-search
-          path: discovery/
+          name: btc-market-clock-full-research
+          path: bundle/
