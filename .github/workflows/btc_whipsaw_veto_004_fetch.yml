@@ -1,0 +1,22 @@
+name: btc-whipsaw-veto-004-fetch
+on:
+  push:
+    branches: [lab-btc-whipsaw-veto-004-run]
+    paths: ['.github/workflows/btc_whipsaw_veto_004_fetch.yml']
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download btc_1m release asset
+        run: |
+          curl -L --fail -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          sha256sum btc_1m.zip | tee btc_1m.sha256
+          unzip -l btc_1m.zip | tee btc_1m_contents.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-1m-release-asset
+          path: |
+            btc_1m.zip
+            btc_1m.sha256
+            btc_1m_contents.txt
