@@ -16,7 +16,8 @@ jobs:
           for y in 2024 2025 2026; do
             end=12
             if [ "$y" = "2026" ]; then end=8; fi
-            for m in $(seq -w 1 $end); do
+            for mi in $(seq 1 $end); do
+              m=$(printf '%02d' "$mi")
               f="BTCUSDT-fundingRate-${y}-${m}.zip"
               u="https://data.binance.vision/data/futures/um/monthly/fundingRate/BTCUSDT/${f}"
               echo "$u"
