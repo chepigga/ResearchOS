@@ -1,0 +1,10 @@
+{
+  "lab": "XAU_POST_TOUCH_SEQUENCE_RETEST_ENTRY_CAUSAL_LAB_005",
+  "version": "v001",
+  "canonical_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_preholdout_rows": 1080929,
+  "lab002_events": 71561,
+  "ask_execution_present": true,
+  "lineage_ok": true,
+  "holdout_opened": false
+}
