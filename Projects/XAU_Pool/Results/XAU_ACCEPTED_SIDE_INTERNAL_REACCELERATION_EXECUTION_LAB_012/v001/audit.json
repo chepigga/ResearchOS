@@ -1,0 +1,11 @@
+{
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows": 1080929,
+  "break_events": 25788,
+  "bias_events": 25545,
+  "strong_bias_events": 5333,
+  "setup_rows": 5333,
+  "holdout_opened": false,
+  "max_price_time_read": "2025-06-30 23:49:00",
+  "causality_violations": 0
+}
