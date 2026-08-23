@@ -1,0 +1,3 @@
+split,strong_bias_n,digestion_n,digestion_rate,micro_n,micro_rate_of_strong,micro_rate_of_digestion,degraded_n,causality_violations,median_micro_wait_min
+DISCOVERY,2703,2423,0.8964113947465778,1180,0.43655197928227896,0.48699958728848536,652,0,4.0
+CONFIRMATION,2630,2354,0.8950570342205323,1160,0.44106463878326996,0.4927782497875956,663,0,4.0
