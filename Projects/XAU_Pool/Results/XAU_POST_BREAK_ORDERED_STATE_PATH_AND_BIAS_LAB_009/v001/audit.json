@@ -1,0 +1,9 @@
+{
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows": 1080929,
+  "preholdout_rows": 1080929,
+  "break_rows": 50532,
+  "story_rows": 100012,
+  "primary_confirmation_n": 12027,
+  "holdout_opened": false
+}
