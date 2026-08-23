@@ -1,0 +1,16 @@
+{
+  "lab": "XAU_RETEST_BAR_EARLY_HEALTH_PROXY_AND_IFVG_ENTRY_LAB_007",
+  "version": "v001",
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "rows_preholdout": 1080929,
+  "events_preholdout": 71561,
+  "parent_signals": 53707,
+  "filled_retests": 31219,
+  "ifvg_events": 188859,
+  "discovery_train_n": 16642,
+  "confirmation_oos_n": 14577,
+  "primary_cutoff": 0.5636892292518342,
+  "holdout_opened": false,
+  "latest_feature_time": "retest_confirm_time",
+  "entry_rule": "next contiguous M1 open after retest close"
+}
