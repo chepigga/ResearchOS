@@ -1,0 +1,60 @@
+{
+  "status": "DEEP_RETEST_ADVERSE_BUT_NO_INTERNAL_EDGE",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_LEVEL_RETEST_ADVERSE": true,
+    "G3_INTERNAL_PATH_PREDICTIVE": true,
+    "G4_ORDER_INCREMENTAL": true,
+    "G5_ORDER_BEATS_BAG": false,
+    "G6_CONSTRUCTIVE_PATH_EXISTS": false,
+    "G7_DIRECTION_MIRROR": true,
+    "G8_LEVEL_BREADTH": true,
+    "G9_YEAR_TRANSFER": true,
+    "G10_CALIBRATION": true
+  },
+  "census": {
+    "strong_bias_discovery": 2700,
+    "strong_bias_confirmation": 2622,
+    "resolved_confirmation": 1873,
+    "confirmation_unresolved_rate": 0.28565980167810834
+  },
+  "primary_confirmation": {
+    "n": 1873,
+    "base_rate": 0.400427122263748,
+    "snapshot_auc": 0.7916337192045118,
+    "snapshot_brier": 0.16899543306025128,
+    "bag_auc": 0.8060451172454733,
+    "bag_brier": 0.1709916952365663,
+    "ordered_auc": 0.8150626298604927,
+    "ordered_brier": 0.16478852780606185,
+    "ordered_minus_snapshot": 0.02342891065598096,
+    "ordered_minus_bag": 0.009017512615019374
+  },
+  "weekly_order_minus_snapshot": {
+    "n": 64,
+    "mean": 0.020224696632131733,
+    "ci95": [0.007265368648426137, 0.03255618051606555]
+  },
+  "weekly_order_minus_bag": {
+    "n": 64,
+    "mean": 0.011276095937424836,
+    "ci95": [0.005002498199772052, 0.01792867010838408]
+  },
+  "level_retest_adverse": {
+    "DISCOVERY": {
+      "NO_LEVEL_RETEST": {"n": 2027,"new_leg_rate_all": 0.3586581154415392,"resolved_rate": 0.6393685249136655,"new_leg_rate_resolved": 0.5609567901234568,"future_acceptance": 0.876665022200296},
+      "ANY_LEVEL_RETEST": {"n": 673,"new_leg_rate_all": 0.1099554234769688,"resolved_rate": 0.950965824665676,"new_leg_rate_resolved": 0.115625,"future_acceptance": 0.3952451708766716}
+    },
+    "CONFIRMATION": {
+      "NO_LEVEL_RETEST": {"n": 1944,"new_leg_rate_all": 0.35030864197530864,"resolved_rate": 0.6286008230452675,"new_leg_rate_resolved": 0.5572831423895254,"future_acceptance": 0.8837448559670782},
+      "ANY_LEVEL_RETEST": {"n": 678,"new_leg_rate_all": 0.10176991150442478,"resolved_rate": 0.9601769911504425,"new_leg_rate_resolved": 0.10599078341013825,"future_acceptance": 0.37315634218289084}
+    }
+  },
+  "constructive_paths": [],
+  "calibration_gap": 0.7839144385026737,
+  "direction_auc": {"BUY": 0.8244625629858457,"SELL": 0.8058977105368859},
+  "level_auc": {"HIGH": 0.7938852890078415,"LOW": 0.8521725731895223,"MID": 0.8058773386955761},
+  "year_auc": {"2024": 0.8095227500278117,"2025": 0.8294397262010392},
+  "holdout_opened": false
+}
