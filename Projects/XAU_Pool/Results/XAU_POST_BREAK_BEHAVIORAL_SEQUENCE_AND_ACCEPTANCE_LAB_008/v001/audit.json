@@ -1,0 +1,14 @@
+{
+  "lab": "XAU_POST_BREAK_BEHAVIORAL_SEQUENCE_AND_ACCEPTANCE_LAB_008",
+  "version": "v001",
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "rows_preholdout": 1080929,
+  "period_start": "2022-06-01 01:05:00",
+  "period_end": "2025-06-30 23:49:00",
+  "holdout_opened": false,
+  "break_rows": 51665,
+  "feature_rows": 151200,
+  "clocks": [5,15,30],
+  "implementation_sha256": "e966be07c26944554cb33f79c15ab17d3612f246426d317a0c8708045b304c98",
+  "note": "Full runner was frozen by hash before outcome replay; performance-only cache/Numba patch was re-frozen before the successful run."
+}
