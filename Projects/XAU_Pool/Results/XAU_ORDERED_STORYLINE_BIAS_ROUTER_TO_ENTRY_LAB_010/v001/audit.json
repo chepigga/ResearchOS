@@ -1,0 +1,11 @@
+{
+  "lab": "XAU_ORDERED_STORYLINE_BIAS_ROUTER_TO_ENTRY_LAB_010",
+  "version": "v001",
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows_pre_holdout": 1080929,
+  "breaks": 25788,
+  "bias_events": 25545,
+  "entry_candidates": 14603,
+  "holdout_opened": false,
+  "p_gate": 0.75
+}
