@@ -1,0 +1,122 @@
+name: LAB013 BUY M1 acceptance score
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy scikit-learn scipy
+      - name: Download frozen M5 and M1
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          mkdir -p m5 m1 && unzip -q btc_5m.zip -d m5 && unzip -q btc_1m.zip -d m1
+      - name: Expanding OOT acceptance score
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np, os, json
+          from sklearn.preprocessing import StandardScaler
+          from sklearn.linear_model import Ridge
+          from scipy.stats import spearmanr
+          COST_USD=27.5
+          ALPHA=10.0
+          FEATURES=['frac_above','end_dist_R','mean_dist_R','mfe5_R','mae5_R','range5_R','recrosses','eff5','slope_R_per_min']
+          def load(folder):
+              x=pd.concat([pd.read_csv(f) for f in glob.glob(folder+'/**/*.csv',recursive=True)],ignore_index=True)
+              x['time']=pd.to_datetime(x['time'],utc=True).dt.tz_convert(None)
+              x=x.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+              for c in ['open','high','low','close','taker_ratio']:
+                  if c in x: x[c]=pd.to_numeric(x[c],errors='coerce')
+              return x
+          def pf(v):
+              s=pd.Series(v).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          m5=load('m5'); m1=load('m1')
+          m5['trend12h_ret']=m5.close/m5.close.shift(144)-1
+          m5['pullback15']=m5.close<m5.close.shift(3)
+          m5['tr15']=m5.taker_ratio.rolling(3,min_periods=3).mean()
+          m5['setup']=(m5.trend12h_ret>=0.002)&m5.pullback15&(m5.tr15<0.50)&(m5.close>m5.high.shift(1))&(m5.time.dt.hour!=19)
+          ep=m5[(m5.time>=pd.Timestamp('2026-01-01'))&(m5.time<=pd.Timestamp('2026-08-10 05:59'))&m5.setup].copy()
+          h=m1.set_index('time').resample('1h',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index()
+          h['close_time']=h.time+pd.Timedelta(hours=1); pc=h.close.shift(); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1); h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+          rows=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; avail=bt+pd.Timedelta(minutes=5); level=float(m5.loc[idx-1,'high']); bh=float(r.high)
+              z5=m5[(m5.time>=avail)&(m5.time<=bt+pd.Timedelta(hours=12))]
+              rr=z5[(z5.low<=level)&(z5.close>=level)]; sp=z5[z5.close>bh]
+              if len(rr)==0 or len(sp)==0: continue
+              rt=rr.iloc[0].time; z1=m1[(m1.time>=avail)&(m1.time<rt+pd.Timedelta(minutes=5))]; hit=z1[z1.low<=level]
+              if len(hit)==0: continue
+              ft=hit.iloc[0].time
+              q5=m1[(m1.time>=ft)&(m1.time<ft+pd.Timedelta(minutes=5))].copy()
+              if len(q5)<5: continue
+              hh=h[h.close_time<=ft].tail(1)
+              if len(hh)==0 or not np.isfinite(hh.iloc[0].atr14): continue
+              atr=float(hh.iloc[0].atr14); stopdist=1.5*atr; sl=level-stopdist; tp=level+1.5*stopdist; costR=COST_USD/stopdist
+              c=q5.close.to_numpy(float); hi=q5.high.to_numpy(float); lo=q5.low.to_numpy(float)
+              above=c>=level; frac_above=float(above.mean()); end_dist=(c[-1]-level)/stopdist; mean_dist=float(np.mean(c-level)/stopdist)
+              mfe5=float((hi.max()-level)/stopdist); mae5=float((lo.min()-level)/stopdist); range5=float((hi.max()-lo.min())/stopdist)
+              recrosses=int(np.sum(above[1:]!=above[:-1])); denom=float(np.sum(np.abs(np.diff(c))))
+              eff5=float((c[-1]-c[0])/denom) if denom>0 else 0.0
+              slope=float(np.polyfit(np.arange(5), (c-level)/stopdist,1)[0])
+              path=m1[(m1.time>=ft)&(m1.time<=ft+pd.Timedelta(hours=48))].copy()
+              if len(path)<2: continue
+              arrh=path.high.to_numpy(float); arrl=path.low.to_numpy(float); arrc=path.close.to_numpy(float)
+              sh=np.flatnonzero(arrl<=sl); th=np.flatnonzero(arrh>=tp); is_=int(sh[0]) if len(sh) else 10**18; it=int(th[0]) if len(th) else 10**18
+              if it<is_: R=1.5-costR; ex='TP'
+              elif is_<it: R=-1.0-costR; ex='SL'
+              else: R=(arrc[-1]-level)/stopdist-costR; ex='TIME'
+              rows.append(dict(fill_time=ft,trigger_time=bt,level=level,R48=R,R48_125=R-0.25*costR,exit_kind=ex,costR=costR,frac_above=frac_above,end_dist_R=end_dist,mean_dist_R=mean_dist,mfe5_R=mfe5,mae5_R=mae5,range5_R=range5,recrosses=recrosses,eff5=eff5,slope_R_per_min=slope))
+          a=pd.DataFrame(rows).sort_values('fill_time').reset_index(drop=True)
+          a['month']=a.fill_time.dt.to_period('M').astype(str)
+          months=sorted(a.month.unique())
+          print('UNIVERSE_N',len(a),'MONTHS',months)
+          # Freeze Jan-Mar minimum training, then OOT Apr-Aug.
+          oot=[]; coef_rows=[]
+          for test_month in months:
+              tm=pd.Period(test_month,'M'); train=a[a.fill_time < tm.start_time].copy(); test=a[a.month==test_month].copy()
+              if len(train)<100 or tm < pd.Period('2026-04','M'): continue
+              sc=StandardScaler(); Xtr=sc.fit_transform(train[FEATURES]); Xte=sc.transform(test[FEATURES])
+              model=Ridge(alpha=ALPHA); model.fit(Xtr,train.R48)
+              train_score=model.predict(Xtr); test_score=model.predict(Xte); q80=float(np.quantile(train_score,.80))
+              test['score']=test_score; test['score_q80']=q80; test['HIGH']=test.score>=q80
+              oot.append(test)
+              for f,c0 in zip(FEATURES,model.coef_): coef_rows.append({'test_month':test_month,'feature':f,'coef_std':float(c0)})
+              rho=spearmanr(test_score,test.R48).statistic if len(test)>2 else np.nan
+              print('MONTH',test_month,'TRAIN',len(train),'TEST',len(test),'RHO',rho,'HIGH_N',int(test.HIGH.sum()),'HIGH_EV',float(test.loc[test.HIGH,'R48'].mean()) if test.HIGH.any() else np.nan,'HIGH_PF',pf(test.loc[test.HIGH,'R48']))
+          o=pd.concat(oot,ignore_index=True) if oot else pd.DataFrame()
+          print('\nOOT_N',len(o))
+          rho=spearmanr(o.score,o.R48).statistic if len(o)>2 else np.nan
+          print('POOLED_SPEARMAN',rho)
+          # pooled score quintiles on OOT ranks only for monotonic diagnostic (not a gate)
+          o['q']=pd.qcut(o.score.rank(method='first'),5,labels=['Q1','Q2','Q3','Q4','Q5'])
+          qtab=o.groupby('q',observed=False).R48.agg(['count','mean','sum']).reset_index(); qtab['PF']=[pf(o.loc[o.q==q,'R48']) for q in qtab.q]
+          print('\nQUINTILES'); print(qtab.to_string(index=False))
+          hi=o[o.HIGH].copy(); lo=o[~o.HIGH].copy()
+          print('\nHIGH_POOLED','N',len(hi),'SHARE',len(hi)/len(o),'EV',float(hi.R48.mean()),'PF',pf(hi.R48),'EV125',float(hi.R48_125.mean()),'PF125',pf(hi.R48_125))
+          print('LOW_POOLED','N',len(lo),'EV',float(lo.R48.mean()),'PF',pf(lo.R48))
+          # tail stress HIGH
+          hs=hi.sort_values('R48',ascending=False)
+          for pct in [0.01,0.03,0.05]:
+              k=max(1,int(np.ceil(len(hs)*pct))); z=hs.iloc[k:]; print('HIGH_REMOVE_BEST',pct,'N',len(z),'EV',float(z.R48.mean()),'PF',pf(z.R48))
+          # monthly transfer
+          print('\nHIGH_MONTHLY'); print(hi.groupby('month').R48.agg(['count','mean','sum']).to_string())
+          # frequency OOT
+          weeks=max(1,(o.fill_time.max()-o.fill_time.min()).days/7); print('HIGH_FREQ_WEEK',len(hi)/weeks)
+          # weekly-block bootstrap HIGH
+          hi['week']=hi.fill_time.dt.to_period('W').astype(str); w=hi.groupby('week').R48.sum().to_numpy(float); rng=np.random.default_rng(13013); boots=np.array([rng.choice(w,size=len(w),replace=True).mean() for _ in range(20000)]) if len(w) else np.array([np.nan]); print('HIGH_WEEK_BOOT_CI',float(np.nanquantile(boots,.025)),float(np.nanquantile(boots,.975)),'P_GT0',float(np.nanmean(boots>0)))
+          os.makedirs('lab013',exist_ok=True); a.to_csv('lab013/full_ledger.csv',index=False); o.to_csv('lab013/oot_ledger.csv',index=False); qtab.to_csv('lab013/quintiles.csv',index=False); pd.DataFrame(coef_rows).to_csv('lab013/coefficients.csv',index=False)
+          summary={'universe_N':len(a),'oot_N':len(o),'pooled_spearman':None if not np.isfinite(rho) else float(rho),'high_N':len(hi),'high_share':len(hi)/len(o),'high_EV':float(hi.R48.mean()),'high_PF':pf(hi.R48),'high_EV125':float(hi.R48_125.mean()),'high_PF125':pf(hi.R48_125),'high_freq_week':len(hi)/weeks,'high_boot_ci':[float(np.nanquantile(boots,.025)),float(np.nanquantile(boots,.975))],'high_boot_p_gt0':float(np.nanmean(boots>0))}
+          json.dump(summary,open('lab013/summary.json','w'),indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab013-buy-m1-acceptance-score
+          path: lab013/
