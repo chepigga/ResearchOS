@@ -1,0 +1,11 @@
+{
+  "lab": "XAU_STRONG_BIAS_ACCEPTED_SIDE_INTERNAL_STRUCTURE_MAP_LAB_011",
+  "version": "v001",
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "raw_rows_pre_holdout": 1080929,
+  "breaks": 25788,
+  "bias_events": 25545,
+  "strong_bias_events": 5333,
+  "mapped_internal_events": 5322,
+  "holdout_opened": false
+}
