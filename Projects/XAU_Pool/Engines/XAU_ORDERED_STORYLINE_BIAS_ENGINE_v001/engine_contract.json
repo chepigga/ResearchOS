@@ -1,0 +1,98 @@
+{
+  "engine": "XAU_ORDERED_STORYLINE_BIAS_ENGINE_v001",
+  "source_lab": "XAU_POST_BREAK_ORDERED_STATE_PATH_AND_BIAS_LAB_009",
+  "source_version": "v001",
+  "status": "PROMOTED_PRE_HOLDOUT_BIAS_ONLY",
+  "holdout_opened": false,
+  "role": "BIAS_CONTEXT_ONLY",
+  "primary_clock_minutes": 15,
+  "secondary_clock_minutes": 30,
+  "block_minutes": 5,
+  "primary_blocks": 3,
+  "state_alphabet": [
+    "RECLAIM",
+    "FAILED_RECOVERY",
+    "EXPAND",
+    "TEST",
+    "HOLD",
+    "CHOP"
+  ],
+  "state_priority": [
+    "RECLAIM",
+    "FAILED_RECOVERY",
+    "EXPAND",
+    "TEST",
+    "HOLD",
+    "CHOP"
+  ],
+  "target": {
+    "name": "ACCEPTANCE_PERSISTS",
+    "future_minutes": 30,
+    "definition": "At least 20 of the next 30 completed M1 closes remain on the breakout side of the contemporaneous dynamic level"
+  },
+  "probability_estimator": {
+    "training_split": "Discovery only: break_time < 2024-01-01",
+    "smoothing": "Beta(1,1)",
+    "formula": "(successes + 1) / (N + 2)",
+    "exact_path_min_n": 50,
+    "backoff": [
+      "EXACT_3",
+      "LAST_2",
+      "SNAPSHOT"
+    ],
+    "threshold_optimization": false
+  },
+  "validated_level_scope": {
+    "primary": "VWAP_VOLUME MID/HIGH/LOW",
+    "diagnostic_control": "anchored mean",
+    "generic_arbitrary_levels_validated": false
+  },
+  "required_inputs": [
+    "break_time",
+    "break_dir",
+    "level_source",
+    "dynamic_level_series",
+    "ATR_touch",
+    "contiguous_M1_OHLC_first_15m"
+  ],
+  "outputs": [
+    "ordered_path",
+    "p_accept",
+    "backoff_level",
+    "bias_direction",
+    "decision_time",
+    "research_validity_horizon"
+  ],
+  "forbidden_outputs": [
+    "entry_price",
+    "stop_loss",
+    "take_profit",
+    "lot_size",
+    "market_order",
+    "limit_order"
+  ],
+  "confirmation_evidence": {
+    "n": 12027,
+    "snapshot_auc": 0.8083037025,
+    "bag_auc": 0.8114256010,
+    "ordered_auc": 0.8249865916,
+    "ordered_minus_snapshot_auc": 0.0166828891,
+    "ordered_minus_snapshot_ci95": [0.0133183177, 0.0201673421],
+    "ordered_minus_bag_auc": 0.0135609906,
+    "ordered_minus_bag_ci95": [0.0106016606, 0.0164375355],
+    "ordered_brier": 0.1669621492,
+    "calibration_top_minus_bottom": 0.7260535425,
+    "t30_ordered_auc": 0.8709076883,
+    "all_frozen_gates_passed": true
+  },
+  "integration_invariants": [
+    "Bias formation and entry timing are separate modules",
+    "No direct market chase from p_accept",
+    "No retroactive p_accept threshold selection from LAB009 Confirmation",
+    "Downstream tests must compare the same entry universe with and without the Bias Engine",
+    "Changing state definitions or probability logic requires a new preregistered Bias Engine version",
+    "Holdout >= 2025-07-01 remains sealed"
+  ],
+  "live_allocation": 0,
+  "entry_authorization": "NONE"
+}
