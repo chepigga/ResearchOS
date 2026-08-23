@@ -1,0 +1,57 @@
+{
+  "status": "NO_POST_BREAK_PREDICTIVE_MAP",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_SEQUENCE_AUC": false,
+    "G3_SEQUENCE_BEATS_SNAPSHOT": false,
+    "G4_MULTISCALE_INCREMENTAL": false,
+    "G5_SCALE_BUILD": true,
+    "G6_CALIBRATION": false,
+    "G7_STATE_ORDERING": false,
+    "G8_DIRECTION_MIRROR": false,
+    "G9_LEVEL_BREADTH": false,
+    "G10_DISCOVERY_CONFIRMATION_TRANSFER": false
+  },
+  "holdout_opened": false,
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "breaks_total": 51665,
+  "model_breaks": 50597,
+  "feature_rows": 151200,
+  "primary_T15": {
+    "snapshot_auc_confirmation": 0.5058246431328939,
+    "sequence_auc_confirmation": 0.49694518424907397,
+    "multiscale_auc_confirmation": 0.4980032684958775,
+    "sequence_auc_discovery_oof": 0.5063221771170898,
+    "sequence_brier_confirmation": 0.25078292341372826,
+    "resolved_confirmation_n": 11790,
+    "sequence_minus_snapshot": -0.008879458883819913,
+    "bootstrap": {
+      "n_weeks": 78,
+      "mean_diff": -0.008879458883819913,
+      "ci95": [-0.017831801131591184, 0.0006620888492364218]
+    }
+  },
+  "scale": {
+    "5": {"sequence_auc": 0.5028060112493662, "snapshot_auc": 0.5026579510612528, "multiscale_auc": 0.5080038433205263},
+    "15": {"sequence_auc": 0.49694518424907397, "snapshot_auc": 0.5058246431328939, "multiscale_auc": 0.4980032684958775},
+    "30": {"sequence_auc": 0.5012382848751591, "snapshot_auc": 0.5050718363258478, "multiscale_auc": 0.4997134894238553}
+  },
+  "direction_auc": [
+    {"dir": -1, "n": 5996, "auc": 0.49295893445248845, "continuation_rate": 0.49416277518345564},
+    {"dir": 1, "n": 5794, "auc": 0.5007057542264228, "continuation_rate": 0.5022437003797031}
+  ],
+  "level_auc": [
+    {"level": "HIGH", "n": 4010, "auc": 0.4938621684207538, "continuation_rate": 0.48354114713216956},
+    {"level": "LOW", "n": 3295, "auc": 0.5030218216878269, "continuation_rate": 0.5095599393019726},
+    {"level": "MID", "n": 4485, "auc": 0.49480974018871865, "continuation_rate": 0.5027870680044593}
+  ],
+  "state_rates_T15": {
+    "ACCEPTED_BUT_WEAKENING": 0.479108635097493,
+    "CHOP_UNRESOLVED": 0.486646884272997,
+    "CLEAN_ACCEPTANCE": 0.5055762081784386,
+    "FAILED_BREAK": 0.5074906367041199,
+    "TESTED_AND_RECLAIMED": 0.48507462686567165
+  },
+  "control_anchor_mean_T15_sequence_auc": 0.4991545574106114
+}
