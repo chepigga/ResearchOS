@@ -1,0 +1,98 @@
+{
+  "status": "NO_BIAS_ROUTER_ENTRY_LIFT",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_ROUTED_EV": false,
+    "G3_WEEK_CI": false,
+    "G4_INCREMENTAL_LIFT": false,
+    "G5_SPLIT_TRANSFER": false,
+    "G6_2R_SURVIVAL": false,
+    "G7_DIRECTION_BREADTH": false,
+    "G8_LEVEL_BREADTH": false,
+    "G9_PROP_DD_PROXY": false,
+    "G10_COST_STRESS": false,
+    "G11_ROUTER_MONOTONICITY": true
+  },
+  "confirmation_baseline_serial": {
+    "n": 5544,
+    "trades_per_week": 71.20733944954128,
+    "ev": -0.17443335672392607,
+    "pf": 0.7369480154852374,
+    "tp_rate": 0.32485569985569984,
+    "total_R": -967.0585296774461,
+    "gross_ev": -0.13510447043911597,
+    "stress10_ev": -0.25309112929354627,
+    "max_dd_R": 968.5341705579752,
+    "worst_day_R": -17.693275921994147,
+    "max_consec_losses": 17,
+    "buy_ev": -0.15872695570183984,
+    "sell_ev": -0.1898034322423274
+  },
+  "confirmation_routed_serial": {
+    "n": 990,
+    "trades_per_week": 12.738970588235295,
+    "ev": -0.15624346478898052,
+    "pf": 0.7649081535490502,
+    "tp_rate": 0.3424242424242424,
+    "total_R": -154.6810301410907,
+    "gross_ev": -0.11625689715548847,
+    "stress10_ev": -0.2362166000559646,
+    "max_dd_R": 157.89999053997676,
+    "worst_day_R": -5.411403472680637,
+    "max_consec_losses": 12,
+    "buy_ev": -0.17350561272948184,
+    "sell_ev": -0.13898131684847917
+  },
+  "confirmation_routed_2R": {
+    "n": 988,
+    "trades_per_week": 12.713235294117649,
+    "ev": -0.1457532657100057,
+    "pf": 0.7950258142212322,
+    "tp_rate": 0.2742914979757085,
+    "total_R": -144.00422652148563,
+    "gross_ev": -0.1057730424637314,
+    "stress10_ev": -0.2257137122025542,
+    "max_dd_R": 154.76361591463407,
+    "worst_day_R": -6.223079277124448,
+    "max_consec_losses": 23,
+    "buy_ev": -0.15165743303701973,
+    "sell_ev": -0.1398729536045149
+  },
+  "discovery_routed_serial": {
+    "n": 1030,
+    "trades_per_week": 12.51736111111111,
+    "ev": -0.11966305527652663,
+    "pf": 0.8158668384138461,
+    "tp_rate": 0.36019417475728155,
+    "total_R": -123.25294693482242,
+    "gross_ev": -0.06021309541238303,
+    "stress10_ev": -0.2385629750048138,
+    "max_dd_R": 141.24468868317751,
+    "worst_day_R": -6.441925730937108,
+    "max_consec_losses": 12,
+    "buy_ev": -0.179213248012755,
+    "sell_ev": -0.05579936769421327
+  },
+  "weekly_routed": {
+    "n_weeks": 78,
+    "mean": -0.15177201180009034,
+    "ci95": [-0.2322849205140702, -0.07476904788996426]
+  },
+  "weekly_incremental": {
+    "n_weeks": 78,
+    "mean": 0.013284782044341194,
+    "ci95": [-0.06112647477350157, 0.08544701386109371]
+  },
+  "candidate_counts": {
+    "confirmation_all": 6876,
+    "confirmation_routed": 1016,
+    "route_rate": 0.14776032577079698
+  },
+  "level_ev": {
+    "MID": -0.2398256419026763,
+    "HIGH": -0.134814761330447,
+    "LOW": -0.06228067478088883
+  },
+  "holdout_opened": false
+}
