@@ -1,0 +1,12 @@
+feature,coefficient_model_space
+close_hold_atr,0.044966457657565476
+body_dir_atr,0.059790311019869986
+rejection_wick_atr,-0.11926745136782255
+adverse_wick_atr,-0.02640691809062525
+directional_clv,0.060911823185872384
+range_atr,0.05333282619211889
+penetration_atr,0.11142054721458103
+progress_1m_atr,-0.15985297035780016
+progress_3m_atr,0.04087932482675127
+wait_from_decision_min,-0.023255726654734018
+existing_aligned_ifvg,2.145612201172009
