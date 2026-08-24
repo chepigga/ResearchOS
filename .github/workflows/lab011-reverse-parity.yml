@@ -1,0 +1,74 @@
+name: LAB011 2026 BUY parent parity
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen M5
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          mkdir -p m5 && unzip -q btc_5m.zip -d m5
+      - name: Reconstruct documented 2026 BUY setup
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np
+          m=pd.concat([pd.read_csv(f) for f in glob.glob('m5/**/*.csv',recursive=True)],ignore_index=True)
+          m['time']=pd.to_datetime(m['time'],utc=True).dt.tz_convert(None)
+          m=m.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+          for c in ['open','high','low','close','taker_ratio']:
+              m[c]=pd.to_numeric(m[c],errors='coerce')
+          # frozen documented setup from portfolio spec
+          m['trend12h_ret']=m['close']/m['close'].shift(144)-1.0
+          m['pullback15']=m['close'] < m['close'].shift(3)
+          m['tr15']=m['taker_ratio'].rolling(3,min_periods=3).mean()
+          m['weak_buyers']=m['tr15'] < 0.50
+          m['trigger']=m['close'] > m['high'].shift(1)
+          m['time_ok']=m['time'].dt.hour != 19
+          m['setup']= (m['trend12h_ret']>=0.002) & m['pullback15'] & m['weak_buyers'] & m['trigger'] & m['time_ok']
+          x=m[(m.time>=pd.Timestamp('2026-01-01'))&(m.time<=pd.Timestamp('2026-08-10 05:59'))].copy()
+          raw=x[x.setup].copy()
+          x['episode_start']=x.setup & (~x.setup.shift(1,fill_value=False))
+          ep=x[x.episode_start].copy()
+          print('2026_RANGE',x.time.min(),x.time.max())
+          print('RAW_TRIGGERS',len(raw))
+          print('EPISODE_STARTS',len(ep))
+          # diagnostics only: natural reset-based episodes, no cooldown selection
+          # also count distinct days/weeks and time gaps
+          if len(ep):
+              gaps=ep.time.diff().dt.total_seconds()/60
+              print('EP_GAP_MEDIAN_MIN',float(gaps.median()))
+              print('EP_GAP_Q25_Q75',float(gaps.quantile(.25)),float(gaps.quantile(.75)))
+              print('DISTINCT_DAYS',ep.time.dt.date.nunique())
+              print('MONTH_COUNTS'); print(ep.groupby(ep.time.dt.to_period('M')).size().to_string())
+          # accepted retest after each episode-start trigger: breakout reference = prior M5 high
+          rows=[]
+          for r in ep.itertuples(index=False):
+              bt=r.time; level=float(m.loc[r.Index-1,'high']) if hasattr(r,'Index') else np.nan
+          # use index-preserving selection explicitly
+          rows=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; level=float(m.loc[idx-1,'high']); bh=float(r.high)
+              z=m[(m.time>bt)&(m.time<=bt+pd.Timedelta(hours=12))]
+              rr=z[(z.low<=level)&(z.close>=level)]
+              rt=rr.iloc[0].time if len(rr) else pd.NaT
+              sp=z[z.close>bh]
+              st=sp.iloc[0].time if len(sp) else pd.NaT
+              rows.append({'trigger_time':bt,'level':level,'breakout_high':bh,'retest_time':rt,'second_push_time':st})
+          a=pd.DataFrame(rows)
+          print('EP_WITH_RETEST_12H',int(a.retest_time.notna().sum()))
+          print('EP_WITH_SECOND_PUSH_12H',int(a.second_push_time.notna().sum()))
+          print('EP_MATCHED_BOTH_12H',int((a.retest_time.notna()&a.second_push_time.notna()).sum()))
+          a.to_csv('buy_2026_parent_reconstruction.csv',index=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab011-buy-2026-parent
+          path: buy_2026_parent_reconstruction.csv

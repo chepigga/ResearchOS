@@ -1,0 +1,126 @@
+name: LAB012 BUY M1 acceptance quality
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen M5 and M1
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          mkdir -p m5 m1 && unzip -q btc_5m.zip -d m5 && unzip -q btc_1m.zip -d m1
+      - name: Frozen acceptance-quality replay
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np, os, json
+          COST_USD=27.5
+          def load(folder):
+              x=pd.concat([pd.read_csv(f) for f in glob.glob(folder+'/**/*.csv',recursive=True)],ignore_index=True)
+              x['time']=pd.to_datetime(x['time'],utc=True).dt.tz_convert(None)
+              x=x.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+              for c in ['open','high','low','close','taker_ratio']:
+                  if c in x: x[c]=pd.to_numeric(x[c],errors='coerce')
+              return x
+          def pf(v):
+              s=pd.Series(v).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum()
+              return float(gp/gl) if gl>0 else float('inf')
+          m5=load('m5'); m1=load('m1')
+          # Documented broad 2026 BUY universe; no new selector.
+          m5['trend12h_ret']=m5.close/m5.close.shift(144)-1
+          m5['pullback15']=m5.close<m5.close.shift(3)
+          m5['tr15']=m5.taker_ratio.rolling(3,min_periods=3).mean()
+          m5['setup']=(m5.trend12h_ret>=0.002)&m5.pullback15&(m5.tr15<0.50)&(m5.close>m5.high.shift(1))&(m5.time.dt.hour!=19)
+          ep=m5[(m5.time>=pd.Timestamp('2026-01-01'))&(m5.time<=pd.Timestamp('2026-08-10 05:59'))&m5.setup].copy()
+          # H1 ATR14 from completed M1/H1 bars only.
+          h=m1.set_index('time').resample('1h',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index()
+          h['close_time']=h.time+pd.Timedelta(hours=1); pc=h.close.shift(); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1); h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+          rows=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; avail=bt+pd.Timedelta(minutes=5); level=float(m5.loc[idx-1,'high']); bh=float(r.high)
+              z5=m5[(m5.time>=avail)&(m5.time<=bt+pd.Timedelta(hours=12))]
+              rr=z5[(z5.low<=level)&(z5.close>=level)]; sp=z5[z5.close>bh]
+              if len(rr)==0 or len(sp)==0: continue
+              rt=rr.iloc[0].time; z1=m1[(m1.time>=avail)&(m1.time<rt+pd.Timedelta(minutes=5))]; hit=z1[z1.low<=level]
+              if len(hit)==0: continue
+              ft=hit.iloc[0].time
+              # frozen 5-minute decision clock after fill
+              q5=m1[(m1.time>=ft)&(m1.time<ft+pd.Timedelta(minutes=5))].copy()
+              if len(q5)<5: continue
+              closes=(q5.close>=level).to_numpy(bool)
+              immediate_reject=bool(q5.iloc[0].close<level)
+              reclaim3=bool(immediate_reject and closes[1:4].any())
+              seq=mx=0
+              for v in closes:
+                  seq=seq+1 if v else 0; mx=max(mx,seq)
+              hold3=mx>=3; hold5=mx>=5
+              no_accept=not closes.any()
+              if hold5: state='HOLD5'
+              elif hold3: state='HOLD3_NOT5'
+              elif reclaim3: state='REJECT_RECLAIM3'
+              elif immediate_reject: state='REJECT_NO_RECLAIM3'
+              else: state='OTHER'
+              # causal ATR known at fill from last completed H1
+              hh=h[h.close_time<=ft].tail(1)
+              if len(hh)==0 or not np.isfinite(hh.iloc[0].atr14): continue
+              atr=float(hh.iloc[0].atr14); stopdist=1.5*atr; sl=level-stopdist; tp=level+1.5*stopdist; costR=COST_USD/stopdist
+              # 48h path from fill; common outcome = first SL/TP else time-close
+              path=m1[(m1.time>=ft)&(m1.time<=ft+pd.Timedelta(hours=48))].copy()
+              if len(path)<2: continue
+              arrh=path.high.to_numpy(float); arrl=path.low.to_numpy(float); arrc=path.close.to_numpy(float)
+              sh=np.flatnonzero(arrl<=sl); th=np.flatnonzero(arrh>=tp); is_=int(sh[0]) if len(sh) else 10**18; it=int(th[0]) if len(th) else 10**18
+              if it<is_: R=1.5-costR; exit_kind='TP'
+              elif is_<it: R=-1.0-costR; exit_kind='SL'
+              else: R=(arrc[-1]-level)/stopdist-costR; exit_kind='TIME'
+              R125=R-0.25*costR
+              mfe=(arrh.max()-level)/stopdist; mae=(arrl.min()-level)/stopdist
+              # management-at-5m: if rejected state, exit at 5m close; else keep frozen 48h outcome
+              px5=float(q5.iloc[-1].close); exit5=(px5-level)/stopdist-costR
+              keep_gate=hold3 or reclaim3
+              gatedR=R if keep_gate else exit5
+              rows.append(dict(trigger_time=bt,fill_time=ft,level=level,state=state,immediate_reject=immediate_reject,reclaim3=reclaim3,hold3=hold3,hold5=hold5,no_accept=no_accept,max_seq5=mx,costR=costR,R48=R,R48_125=R125,MFE48=mfe,MAE48=mae,exit_kind=exit_kind,exit5R=exit5,keep_gate=keep_gate,gatedR=gatedR,second_push_time=sp.iloc[0].time))
+          a=pd.DataFrame(rows).sort_values('fill_time').reset_index(drop=True)
+          print('UNIVERSE_N',len(a))
+          def tab(mask,name):
+              g=a[mask].copy();
+              if len(g)==0: return None
+              weeks=max(1,(g.fill_time.max()-g.fill_time.min()).days/7)
+              d={'group':name,'N':len(g),'share':len(g)/len(a),'freq_week':len(g)/weeks,'EV_R':g.R48.mean(),'PF':pf(g.R48),'EV_125_R':g.R48_125.mean(),'PF_125':pf(g.R48_125),'MFE_med':g.MFE48.median(),'MAE_med':g.MAE48.median(),'TP_rate':(g.exit_kind=='TP').mean(),'SL_rate':(g.exit_kind=='SL').mean(),'SumR':g.R48.sum()}
+              return d
+          groups=[(pd.Series(True,index=a.index),'ALL'),(a.immediate_reject,'IMMEDIATE_REJECT'),(~a.immediate_reject,'NO_IMMEDIATE_REJECT'),(a.reclaim3,'RECLAIM_WITHIN_3M'),(a.hold3,'HOLD_GE_3'),(a.hold5,'HOLD_GE_5'),(a.no_accept,'NO_ACCEPT_5M')]
+          res=[tab(m,n) for m,n in groups]; res=[x for x in res if x]
+          for st in ['HOLD5','HOLD3_NOT5','REJECT_RECLAIM3','REJECT_NO_RECLAIM3','OTHER']:
+              x=tab(a.state.eq(st),st)
+              if x: res.append(x)
+          s=pd.DataFrame(res)
+          print('\nGROUP_TABLE'); print(s.to_string(index=False))
+          print('\nSTATE_COUNTS'); print(a.state.value_counts().to_string())
+          # fixed 5m management router economics
+          print('\nGATED_KEEP_HOLD3_OR_RECLAIM3')
+          print('N',len(a),'KEEP',int(a.keep_gate.sum()),'KEEP_SHARE',float(a.keep_gate.mean()),'EV',float(a.gatedR.mean()),'PF',pf(a.gatedR),'SUMR',float(a.gatedR.sum()))
+          # tail stress on primary keep population
+          kg=a[a.keep_gate].sort_values('R48',ascending=False).copy()
+          for pct in [0.01,0.03,0.05]:
+              k=max(1,int(np.ceil(len(kg)*pct))); z=kg.iloc[k:]
+              print('KEEP_REMOVE_BEST',pct,'N',len(z),'EV',float(z.R48.mean()),'PF',pf(z.R48))
+          # monthly transfer and weekly bootstrap for keep population
+          kg['month']=kg.fill_time.dt.to_period('M').astype(str); print('\nKEEP_MONTHLY'); print(kg.groupby('month').R48.agg(['count','mean','sum']).to_string())
+          kg['week']=kg.fill_time.dt.to_period('W').astype(str); w=kg.groupby('week').R48.sum().to_numpy(float)
+          rng=np.random.default_rng(12012); boots=np.array([rng.choice(w,size=len(w),replace=True).mean() for _ in range(20000)]) if len(w) else np.array([np.nan])
+          print('KEEP_WEEK_BOOT_CI',float(np.nanquantile(boots,.025)),float(np.nanquantile(boots,.975)),'P_GT0',float(np.nanmean(boots>0)))
+          os.makedirs('lab012',exist_ok=True); a.to_csv('lab012/event_ledger.csv',index=False); s.to_csv('lab012/group_table.csv',index=False)
+          with open('lab012/summary.json','w') as f: json.dump({'N':len(a),'keep_N':int(a.keep_gate.sum()),'keep_share':float(a.keep_gate.mean()),'gated_EV':float(a.gatedR.mean()),'gated_PF':pf(a.gatedR)},f,indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab012-buy-m1-acceptance-quality
+          path: lab012/

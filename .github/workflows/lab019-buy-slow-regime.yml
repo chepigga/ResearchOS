@@ -1,0 +1,106 @@
+name: LAB019 BUY slow regime
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen BTC data
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          mkdir -p m5 m1 && unzip -q btc_5m.zip -d m5 && unzip -q btc_1m.zip -d m1
+      - name: Slow regime replay
+        run: |
+          python - <<'PY'
+          import glob,pandas as pd,numpy as np,os,json
+          COST=27.5; START=pd.Timestamp('2024-01-01'); END=pd.Timestamp('2026-08-10 05:59')
+          def load(folder):
+              x=pd.concat([pd.read_csv(f) for f in glob.glob(folder+'/**/*.csv',recursive=True)],ignore_index=True)
+              x['time']=pd.to_datetime(x.time,utc=True).dt.tz_convert(None); x=x.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+              for c in ['open','high','low','close','taker_ratio']:
+                  if c in x:x[c]=pd.to_numeric(x[c],errors='coerce')
+              return x
+          def pf(v):
+              s=pd.Series(v).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          m5=load('m5'); m1=load('m1')
+          m5['trend12h_ret']=m5.close/m5.close.shift(144)-1; m5['pullback15']=m5.close<m5.close.shift(3); m5['tr15']=m5.taker_ratio.rolling(3,min_periods=3).mean()
+          m5['setup']=(m5.trend12h_ret>=0.002)&m5.pullback15&(m5.tr15<0.50)&(m5.close>m5.high.shift(1))&(m5.time.dt.hour!=19)
+          ep=m5[(m5.time>=START)&(m5.time<=END)&m5.setup].copy()
+          h1=m1.set_index('time').resample('1h',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index(); h1['close_time']=h1.time+pd.Timedelta(hours=1)
+          pc=h1.close.shift(); tr=pd.concat([h1.high-h1.low,(h1.high-pc).abs(),(h1.low-pc).abs()],axis=1).max(axis=1); h1['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+          # causal slow return states from completed H1 closes
+          for hours in [72,168,336,720]:
+              h1[f'ret_{hours}h']=h1.close/h1.close.shift(hours)-1
+          # D1 EMA20/50 state from completed daily bars
+          d1=m1.set_index('time').resample('1D',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index(); d1['close_time']=d1.time+pd.Timedelta(days=1)
+          d1['ema20']=d1.close.ewm(span=20,adjust=False,min_periods=20).mean(); d1['ema50']=d1.close.ewm(span=50,adjust=False,min_periods=50).mean()
+          d1['ema20p']=d1.ema20.shift(1)
+          d1['D1_STATE']=np.where((d1.close>d1.ema20)&(d1.ema20>d1.ema20p)&(d1.ema20>d1.ema50),'BULL',np.where((d1.close<d1.ema20)&(d1.ema20<d1.ema20p)&(d1.ema20<d1.ema50),'BEAR','NEUTRAL'))
+          rows=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; avail=bt+pd.Timedelta(minutes=5); level=float(m5.loc[idx-1,'high']); bh=float(r.high)
+              z5=m5[(m5.time>=avail)&(m5.time<=bt+pd.Timedelta(hours=12))]; rr=z5[(z5.low<=level)&(z5.close>=level)]; sp=z5[z5.close>bh]
+              if len(rr)==0 or len(sp)==0:continue
+              rt=rr.iloc[0].time; hit=m1[(m1.time>=avail)&(m1.time<rt+pd.Timedelta(minutes=5))&(m1.low<=level)]
+              if len(hit)==0:continue
+              ft=hit.iloc[0].time; hh=h1[h1.close_time<=avail].tail(1); dd=d1[d1.close_time<=avail].tail(1)
+              if len(hh)==0 or len(dd)==0 or not np.isfinite(hh.iloc[0].atr14):continue
+              sd=1.5*float(hh.iloc[0].atr14); sl=level-sd; tp=level+1.5*sd; costR=COST/sd
+              path=m1[(m1.time>=ft)&(m1.time<=ft+pd.Timedelta(hours=48))].copy(); ah=path.high.to_numpy(float); al=path.low.to_numpy(float); ac=path.close.to_numpy(float)
+              sh=np.flatnonzero(al<=sl); th=np.flatnonzero(ah>=tp); is_=int(sh[0]) if len(sh) else 10**18; it=int(th[0]) if len(th) else 10**18
+              if it<is_: R=1.5-costR; outcome='TP'
+              elif is_<it:R=-1-costR; outcome='SL'
+              else:R=(ac[-1]-level)/sd-costR; outcome='TIME'
+              x={'fill_time':ft,'year':ft.year,'R48':R,'TP':outcome=='TP','D1_STATE':dd.iloc[0].D1_STATE}
+              for hours in [72,168,336,720]: x[f'ret_{hours}h']=float(hh.iloc[0][f'ret_{hours}h'])
+              rows.append(x)
+          a=pd.DataFrame(rows).dropna().sort_values('fill_time').reset_index(drop=True)
+          print('N',len(a),'BASE',a.R48.mean(),pf(a.R48),a.TP.mean())
+          tabs=[]
+          # D1 state
+          for k,g in a.groupby('D1_STATE'):
+              d={'feature':'D1_STATE','state':k,'N':len(g),'share':len(g)/len(a),'P_TP':g.TP.mean(),'EV':g.R48.mean(),'PF':pf(g.R48)}; tabs.append(d); print(d)
+          # return sign states, no optimized thresholds
+          for hours in [72,168,336,720]:
+              c=f'ret_{hours}h'; state=np.where(a[c]>0,'UP','DOWN');
+              for k in ['UP','DOWN']:
+                  g=a[state==k]; d={'feature':c,'state':k,'N':len(g),'share':len(g)/len(a),'P_TP':g.TP.mean(),'EV':g.R48.mean(),'PF':pf(g.R48)}; tabs.append(d); print(d)
+          # persistence count: how many of 3d/7d/14d/30d returns > 0, frozen ordinal score 0..4
+          cols=['ret_72h','ret_168h','ret_336h','ret_720h']; a['SLOW_UP_COUNT']=(a[cols]>0).sum(axis=1)
+          for k,g in a.groupby('SLOW_UP_COUNT'):
+              d={'feature':'SLOW_UP_COUNT','state':str(k),'N':len(g),'share':len(g)/len(a),'P_TP':g.TP.mean(),'EV':g.R48.mean(),'PF':pf(g.R48)}; tabs.append(d); print(d)
+          # high regime predeclared: D1 BULL and >=3/4 horizons up. Diagnostic only, not hard gate.
+          a['SLOW_HIGH']=(a.D1_STATE=='BULL')&(a.SLOW_UP_COUNT>=3)
+          for k,g in a.groupby('SLOW_HIGH'):
+              d={'feature':'SLOW_HIGH','state':str(k),'N':len(g),'share':len(g)/len(a),'P_TP':g.TP.mean(),'EV':g.R48.mean(),'PF':pf(g.R48)}; tabs.append(d); print(d)
+          yr=[]
+          for y,g in a[a.SLOW_HIGH].groupby('year'):
+              d={'year':int(y),'N':len(g),'P_TP':g.TP.mean(),'EV':g.R48.mean(),'PF':pf(g.R48)}; yr.append(d); print('HIGH_YEAR',d)
+          # frequency
+          hi=a[a.SLOW_HIGH]; weeks=max((a.fill_time.max()-a.fill_time.min()).days/7,1); freq=len(hi)/weeks
+          # weekly block bootstrap high EV via weekly sums / events is awkward; bootstrap weekly mean R using grouped means weighted naturally at event level blocks
+          a['week']=a.fill_time.dt.to_period('W').astype(str); wh=hi.groupby(hi.fill_time.dt.to_period('W').astype(str)).R48.agg(['sum','count']); allweeks=a.week.unique(); wm=[]
+          for w in allweeks:
+              if w in wh.index: wm.append((wh.loc[w,'sum'],wh.loc[w,'count']))
+              else: wm.append((0.0,0))
+          rng=np.random.default_rng(19019); boots=[]
+          for _ in range(20000):
+              idx=rng.integers(0,len(wm),len(wm)); ss=sum(wm[i][0] for i in idx); nn=sum(wm[i][1] for i in idx); boots.append(ss/nn if nn else 0)
+          boots=np.array(boots)
+          os.makedirs('lab019',exist_ok=True); a.to_csv('lab019/ledger.csv',index=False); pd.DataFrame(tabs).to_csv('lab019/state_table.csv',index=False); pd.DataFrame(yr).to_csv('lab019/yearly_high.csv',index=False)
+          summary={'N':len(a),'base_EV':float(a.R48.mean()),'base_PF':pf(a.R48),'base_P_TP':float(a.TP.mean()),'high_N':len(hi),'high_share':len(hi)/len(a),'high_freq_week':freq,'high_EV':float(hi.R48.mean()),'high_PF':pf(hi.R48),'high_P_TP':float(hi.TP.mean()),'high_boot_ci':[float(np.quantile(boots,.025)),float(np.quantile(boots,.975))],'high_boot_pgt0':float((boots>0).mean())}; json.dump(summary,open('lab019/summary.json','w'),indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab019-buy-slow-regime
+          path: lab019/
