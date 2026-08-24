@@ -1,0 +1,3 @@
+model,auc
+RandomForest_posthoc,0.5222978681918627
+GradientBoosting_posthoc,0.5226528987391135
