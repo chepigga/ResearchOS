@@ -1,0 +1,54 @@
+{
+  "lab": "XAU_TEMPORAL_DISCOVERY_ONLY_PROBABILITY_CALIBRATION_X_PAYOFF_MANAGEMENT_LAB_022",
+  "version": "v001",
+  "holdout_opened": false,
+  "violations": 0,
+  "hashes": {
+    "df_cache": "ec05163508f6f69c9688e5e50e1f418f6ca64aba42f17cf8d6504775df147ef8",
+    "setups_cache": "83526be03cb66ff596c3949138e7e8935cd12b9f8783a41adaf5f2c04d4ccfda",
+    "parent_runner": "09931377bb6258051e6de76b8bd3b56f92bf3cd06ea8ff2ec54751c72aea993a",
+    "lab020_runner": "8e0cd8dc09d5a9d48fab7b951091e836e8d4f276943cd1663192314f8f0ae78d",
+    "lab021_runner": "3e38dd164f61e36e5e5b30a39b303e50fe585e150f15a804e034a01a79a733f3",
+    "spec": "c7b5552bbfd6c68484ff6d62ee91a9244df35f7a4f231393b04164dc2b54a32e"
+  },
+  "expected_hashes": {
+    "df_cache": "ec05163508f6f69c9688e5e50e1f418f6ca64aba42f17cf8d6504775df147ef8",
+    "setups_cache": "83526be03cb66ff596c3949138e7e8935cd12b9f8783a41adaf5f2c04d4ccfda",
+    "parent_runner": "09931377bb6258051e6de76b8bd3b56f92bf3cd06ea8ff2ec54751c72aea993a",
+    "lab020_runner": "8e0cd8dc09d5a9d48fab7b951091e836e8d4f276943cd1663192314f8f0ae78d",
+    "lab021_runner": "3e38dd164f61e36e5e5b30a39b303e50fe585e150f15a804e034a01a79a733f3",
+    "spec": "c7b5552bbfd6c68484ff6d62ee91a9244df35f7a4f231393b04164dc2b54a32e"
+  },
+  "temperature_1p5": {
+    "target_R": 1.5,
+    "temperature": 2.251798214707466,
+    "bounds": [0.5, 5.0],
+    "oof_snapshots": 17216,
+    "oof_trades": 1431,
+    "raw_logloss": 0.9988774328337475,
+    "cal_logloss": 0.8544346354888369,
+    "raw_brier": 0.5503582635969899,
+    "cal_brier": 0.5167069933097157,
+    "folds": [
+      {"fold":"FOLD_A","train_snapshots":9203,"train_trades":819,"cal_snapshots":8837,"cal_trades":719,"train_max_break":"2022-12-30 17:30:00","cal_min_break":"2023-01-03 01:19:00","cal_max_break":"2023-06-30 18:15:00"},
+      {"fold":"FOLD_B","train_snapshots":18040,"train_trades":1538,"cal_snapshots":8379,"cal_trades":712,"train_max_break":"2023-06-30 18:15:00","cal_min_break":"2023-07-03 04:44:00","cal_max_break":"2023-12-29 19:50:00"}
+    ]
+  },
+  "temperature_2p0": {
+    "target_R": 2.0,
+    "temperature": 2.0958217917434094,
+    "bounds": [0.5, 5.0],
+    "oof_snapshots": 21719,
+    "oof_trades": 1447,
+    "raw_logloss": 1.0113767148170096,
+    "cal_logloss": 0.8850706213078168,
+    "raw_brier": 0.5609706189721467,
+    "cal_brier": 0.5257599579108609,
+    "folds": [
+      {"fold":"FOLD_A","train_snapshots":11265,"train_trades":823,"cal_snapshots":11144,"cal_trades":729,"train_max_break":"2022-12-30 17:30:00","cal_min_break":"2023-01-03 01:19:00","cal_max_break":"2023-06-30 18:15:00"},
+      {"fold":"FOLD_B","train_snapshots":22409,"train_trades":1552,"cal_snapshots":10575,"cal_trades":718,"train_max_break":"2023-06-30 18:15:00","cal_min_break":"2023-07-03 04:44:00","cal_max_break":"2023-12-29 19:50:00"}
+    ]
+  },
+  "time_mean_1p5": 0.1346119019330351,
+  "time_mean_2p0": 0.3879157570387082
+}
