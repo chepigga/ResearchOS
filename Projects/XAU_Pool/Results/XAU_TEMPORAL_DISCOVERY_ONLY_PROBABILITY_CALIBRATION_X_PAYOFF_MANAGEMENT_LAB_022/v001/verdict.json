@@ -1,0 +1,45 @@
+{
+  "lab": "XAU_TEMPORAL_DISCOVERY_ONLY_PROBABILITY_CALIBRATION_X_PAYOFF_MANAGEMENT_LAB_022",
+  "version": "v001",
+  "verdict": "CALIBRATION_FIXES_PROBABILITIES_NOT_ECONOMICS",
+  "holdout_opened": false,
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_RANK_INFORMATION": true,
+    "G3_CALIBRATION_IMPROVES": true,
+    "G4_CALIBRATION_MATERIAL": true,
+    "G5_CONFIRMATION_EV": false,
+    "G6_WEEK_CLUSTER_CI": false,
+    "G7_MANAGEMENT_LIFT": false,
+    "G8_BEATS_RAW_MANAGER": false,
+    "G9_TEMPORAL_TRANSFER": false,
+    "G10_2R_SURVIVAL": false,
+    "G11_DIRECTION_BREADTH": false,
+    "G12_PROP_DD_PROXY": false,
+    "G13_COST_STRESS": false
+  },
+  "relative_logloss_improvement": 0.07377846683852637,
+  "relative_brier_improvement": 0.03819082354801166,
+  "paired_vs_baseline": {
+    "n": 78,
+    "mean": 0.011585181004378733,
+    "ci95": [-0.02584144301906628, 0.04947866077067842],
+    "trade_mean": 0.013020128562284091,
+    "n_trades": 2354
+  },
+  "paired_vs_raw_manager": {
+    "trade_mean": 0.020270724292300035,
+    "n_trades": 2354,
+    "n_weeks": 78,
+    "week_mean": 0.019451492576965157,
+    "ci95": [-0.0060356072203701025, 0.043962098254847946]
+  },
+  "weekly_ev": {
+    "n": 78,
+    "mean": -0.15442799569614957,
+    "ci95": [-0.18339211823876841, -0.12659238672274242]
+  },
+  "temperature_1p5": 2.251798214707466,
+  "temperature_2p0": 2.0958217917434094
+}
