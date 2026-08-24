@@ -1,0 +1,13 @@
+{
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "break_sha": "c9cba1459a60ef9c3bb308e751ebae95840f48a24f94754808862a180832ccdb",
+  "parent_runner_sha": "09931377bb6258051e6de76b8bd3b56f92bf3cd06ea8ff2ec54751c72aea993a",
+  "parent_events_sha": "a6ab0ece5ad2cdfff0b306a4de8d0a8932f6787dfad485441e57f6fe50b68c89",
+  "eligible_events": 4777,
+  "discovery_n": 2423,
+  "confirmation_n": 2354,
+  "max_price_time_read": "2025-06-30 23:49:00",
+  "max_feature_time": "2025-06-30 10:26:00",
+  "causality_violations": 0,
+  "holdout_opened": false
+}
