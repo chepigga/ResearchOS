@@ -1,0 +1,151 @@
+name: LAB014 BUY M5-M15 acceptance state
+on:
+  pull_request:
+    branches: [lab-btc-unified-lifecycle]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen M5 and M1
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          test "$(sha256sum btc_5m.zip | awk '{print $1}')" = "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd"
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          test "$(sha256sum btc_1m.zip | awk '{print $1}')" = "4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea"
+          mkdir -p m5 m1 && unzip -q btc_5m.zip -d m5 && unzip -q btc_1m.zip -d m1
+      - name: Frozen M5-M15 state replay
+        run: |
+          python - <<'PY'
+          import glob, pandas as pd, numpy as np, os, json
+          COST_USD=27.5
+          CLOCKS=[15,30,60]
+          PRIMARY=30
+          def load(folder):
+              x=pd.concat([pd.read_csv(f) for f in glob.glob(folder+'/**/*.csv',recursive=True)],ignore_index=True)
+              x['time']=pd.to_datetime(x['time'],utc=True).dt.tz_convert(None)
+              x=x.sort_values('time').drop_duplicates('time').reset_index(drop=True)
+              for c in ['open','high','low','close','taker_ratio']:
+                  if c in x: x[c]=pd.to_numeric(x[c],errors='coerce')
+              return x
+          def pf(v):
+              s=pd.Series(v).dropna(); gp=s[s>0].sum(); gl=-s[s<0].sum(); return float(gp/gl) if gl>0 else float('inf')
+          m5=load('m5'); m1=load('m1')
+          # Frozen broad 2026 BUY setup from LAB011/012/013
+          m5['trend12h_ret']=m5.close/m5.close.shift(144)-1
+          m5['pullback15']=m5.close<m5.close.shift(3)
+          m5['tr15']=m5.taker_ratio.rolling(3,min_periods=3).mean()
+          m5['setup']=(m5.trend12h_ret>=0.002)&m5.pullback15&(m5.tr15<0.50)&(m5.close>m5.high.shift(1))&(m5.time.dt.hour!=19)
+          ep=m5[(m5.time>=pd.Timestamp('2026-01-01'))&(m5.time<=pd.Timestamp('2026-08-10 05:59'))&m5.setup].copy()
+          # Causal H1 ATR14
+          h=m1.set_index('time').resample('1h',label='left',closed='left').agg({'open':'first','high':'max','low':'min','close':'last'}).dropna().reset_index()
+          h['close_time']=h.time+pd.Timedelta(hours=1)
+          pc=h.close.shift(); tr=pd.concat([h.high-h.low,(h.high-pc).abs(),(h.low-pc).abs()],axis=1).max(axis=1)
+          h['atr14']=tr.ewm(alpha=1/14,adjust=False,min_periods=14).mean()
+          base=[]
+          for idx,r in ep.iterrows():
+              bt=r.time; avail=bt+pd.Timedelta(minutes=5); level=float(m5.loc[idx-1,'high']); bh=float(r.high)
+              z5=m5[(m5.time>=avail)&(m5.time<=bt+pd.Timedelta(hours=12))]
+              rr=z5[(z5.low<=level)&(z5.close>=level)]; sp=z5[z5.close>bh]
+              if len(rr)==0 or len(sp)==0: continue
+              rt=rr.iloc[0].time
+              z1=m1[(m1.time>=avail)&(m1.time<rt+pd.Timedelta(minutes=5))]
+              hit=z1[z1.low<=level]
+              if len(hit)==0: continue
+              ft=hit.iloc[0].time
+              hh=h[h.close_time<=ft].tail(1)
+              if len(hh)==0 or not np.isfinite(hh.iloc[0].atr14): continue
+              stopdist=1.5*float(hh.iloc[0].atr14); sl=level-stopdist; tp=level+1.5*stopdist; costR=COST_USD/stopdist
+              path=m1[(m1.time>=ft)&(m1.time<=ft+pd.Timedelta(hours=48))].copy()
+              if len(path)<2: continue
+              ah=path.high.to_numpy(float); al=path.low.to_numpy(float); ac=path.close.to_numpy(float)
+              sh=np.flatnonzero(al<=sl); th=np.flatnonzero(ah>=tp); is_=int(sh[0]) if len(sh) else 10**18; it=int(th[0]) if len(th) else 10**18
+              if it<is_: finalR=1.5-costR; ex='TP'; exit_time=path.iloc[it].time
+              elif is_<it: finalR=-1.0-costR; ex='SL'; exit_time=path.iloc[is_].time
+              else: finalR=(ac[-1]-level)/stopdist-costR; ex='TIME'; exit_time=path.iloc[-1].time
+              base.append(dict(trigger_time=bt,fill_time=ft,level=level,stopdist=stopdist,sl=sl,tp=tp,costR=costR,finalR=finalR,exit_kind=ex,exit_time=exit_time))
+          b=pd.DataFrame(base).sort_values('fill_time').reset_index(drop=True)
+          print('BASE_N',len(b),'EV',float(b.finalR.mean()),'PF',pf(b.finalR))
+          allrows=[]; states=[]
+          for clock in CLOCKS:
+              for r in b.itertuples(index=False):
+                  dt=r.fill_time+pd.Timedelta(minutes=clock)
+                  # only classify positions still open strictly at decision clock
+                  if r.exit_time<=dt:
+                      allrows.append(dict(clock=clock,fill_time=r.fill_time,decision_time=dt,resolved_preclock=True,state='RESOLVED',score=np.nan,finalR=r.finalR,forwardR=np.nan,routerR=r.finalR))
+                      continue
+                  q=m1[(m1.time>=r.fill_time)&(m1.time<dt)].copy()
+                  if len(q)<clock: continue
+                  # event-relative M5 bars: 5-minute chunks after fill
+                  n5=clock//5
+                  chunks=[]
+                  for k in range(n5):
+                      z=q.iloc[k*5:(k+1)*5]
+                      if len(z)<5: continue
+                      chunks.append(dict(open=float(z.iloc[0].open),high=float(z.high.max()),low=float(z.low.min()),close=float(z.iloc[-1].close),taker=float(z.taker_ratio.mean())))
+                  c5=pd.DataFrame(chunks)
+                  if len(c5)<n5: continue
+                  # event-relative M15 blocks from three M5 bars
+                  n15=clock//15; c15=[]
+                  for k in range(n15):
+                      z=c5.iloc[k*3:(k+1)*3]
+                      c15.append(dict(open=float(z.iloc[0].open),high=float(z.high.max()),low=float(z.low.min()),close=float(z.iloc[-1].close),taker=float(z.taker.mean())))
+                  c15=pd.DataFrame(c15)
+                  last_close_above=bool(c5.iloc[-1].close>=r.level)
+                  frac_above=float((c5.close>=r.level).mean()); majority_above=bool(frac_above>=0.5)
+                  m15_accept=bool(len(c15)>0 and c15.iloc[-1].close>=r.level)
+                  half=max(1,len(c5)//2); first=c5.iloc[:half]; second=c5.iloc[half:]
+                  higher_low=bool(len(second)>0 and second.low.min()>first.low.min())
+                  positive_eff=bool(c5.iloc[-1].close>c5.iloc[0].open)
+                  flow_buy=bool(len(second)>0 and second.taker.mean()>0.50)
+                  votes=[last_close_above,majority_above,m15_accept,higher_low,positive_eff,flow_buy]
+                  score=int(sum(votes))
+                  state='ACCEPTED' if score>=4 else ('FAILED' if score<=2 else 'NEUTRAL')
+                  mark=float(q.iloc[-1].close)
+                  # forward-only path from decision time; original stop/TP, no new transaction cost
+                  f=m1[(m1.time>=dt)&(m1.time<=r.fill_time+pd.Timedelta(hours=48))].copy()
+                  fh=f.high.to_numpy(float); fl=f.low.to_numpy(float); fc=f.close.to_numpy(float)
+                  sh=np.flatnonzero(fl<=r.sl); th=np.flatnonzero(fh>=r.tp); is_=int(sh[0]) if len(sh) else 10**18; it=int(th[0]) if len(th) else 10**18
+                  if it<is_: forwardR=(r.tp-mark)/r.stopdist
+                  elif is_<it: forwardR=(r.sl-mark)/r.stopdist
+                  else: forwardR=(fc[-1]-mark)/r.stopdist if len(fc) else np.nan
+                  # frozen management router: FAILED exits at decision close; ACCEPTED/NEUTRAL hold original trade
+                  exit_now_R=(mark-r.level)/r.stopdist-r.costR
+                  routerR=exit_now_R if state=='FAILED' else r.finalR
+                  allrows.append(dict(clock=clock,fill_time=r.fill_time,decision_time=dt,resolved_preclock=False,state=state,score=score,finalR=r.finalR,forwardR=forwardR,routerR=routerR,
+                                      last_close_above=last_close_above,majority_above=majority_above,m15_accept=m15_accept,higher_low=higher_low,positive_eff=positive_eff,flow_buy=flow_buy,frac_above=frac_above))
+              x=pd.DataFrame([z for z in allrows if z['clock']==clock])
+              surv=x[~x.resolved_preclock].copy(); resolved=x[x.resolved_preclock].copy()
+              print('\nCLOCK',clock,'TOTAL',len(x),'RESOLVED_PRE',len(resolved),'SURVIVORS',len(surv),'SURV_SHARE',len(surv)/len(x))
+              for st in ['FAILED','NEUTRAL','ACCEPTED']:
+                  g=surv[surv.state==st]
+                  if len(g):
+                      print('STATE',st,'N',len(g),'SHARE_SURV',len(g)/len(surv),'FINAL_EV',float(g.finalR.mean()),'FINAL_PF',pf(g.finalR),'FWD_EV',float(g.forwardR.mean()),'FWD_PF',pf(g.forwardR))
+                      states.append(dict(clock=clock,state=st,N=len(g),share_surv=len(g)/len(surv),final_EV=float(g.finalR.mean()),final_PF=pf(g.finalR),forward_EV=float(g.forwardR.mean()),forward_PF=pf(g.forwardR)))
+              print('SCORE_TABLE')
+              for sc in sorted(surv.score.dropna().unique()):
+                  g=surv[surv.score==sc]
+                  print('SCORE',int(sc),'N',len(g),'FINAL_EV',float(g.finalR.mean()),'FWD_EV',float(g.forwardR.mean()))
+              print('ROUTER_ALL_N',len(x),'ROUTER_EV',float(x.routerR.mean()),'ROUTER_PF',pf(x.routerR),'BASE_SAME_EV',float(x.finalR.mean()),'BASE_SAME_PF',pf(x.finalR))
+          a=pd.DataFrame(allrows); st=pd.DataFrame(states)
+          # Primary 30m robustness on ACCEPTED survivors
+          p=a[(a.clock==PRIMARY)&(~a.resolved_preclock)&(a.state=='ACCEPTED')].copy().sort_values('finalR',ascending=False)
+          print('\nPRIMARY_ACCEPTED_30M N',len(p))
+          for pct in [0.01,0.03,0.05]:
+              k=max(1,int(np.ceil(len(p)*pct))); z=p.iloc[k:]; print('ACC30_REMOVE_BEST',pct,'N',len(z),'FINAL_EV',float(z.finalR.mean()),'PF',pf(z.finalR),'FWD_EV',float(z.forwardR.mean()),'FWD_PF',pf(z.forwardR))
+          if len(p):
+              p['month']=p.fill_time.dt.to_period('M').astype(str); print('ACC30_MONTHLY'); print(p.groupby('month').finalR.agg(['count','mean','sum']).to_string())
+              p['week']=p.fill_time.dt.to_period('W').astype(str); w=p.groupby('week').finalR.sum().to_numpy(float); rng=np.random.default_rng(14014); boots=np.array([rng.choice(w,size=len(w),replace=True).mean() for _ in range(20000)]); print('ACC30_WEEK_BOOT_CI',float(np.quantile(boots,.025)),float(np.quantile(boots,.975)),'P_GT0',float((boots>0).mean()))
+          os.makedirs('lab014',exist_ok=True); b.to_csv('lab014/base_ledger.csv',index=False); a.to_csv('lab014/state_ledger.csv',index=False); st.to_csv('lab014/state_table.csv',index=False)
+          summary={'base_N':len(b),'base_EV':float(b.finalR.mean()),'base_PF':pf(b.finalR),'primary_clock':PRIMARY,'primary_accepted_N':len(p),'primary_accepted_EV':float(p.finalR.mean()) if len(p) else None,'primary_accepted_PF':pf(p.finalR) if len(p) else None,'primary_accepted_forward_EV':float(p.forwardR.mean()) if len(p) else None,'primary_accepted_forward_PF':pf(p.forwardR) if len(p) else None}
+          json.dump(summary,open('lab014/summary.json','w'),indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab014-buy-m5-m15-acceptance-state
+          path: lab014/
