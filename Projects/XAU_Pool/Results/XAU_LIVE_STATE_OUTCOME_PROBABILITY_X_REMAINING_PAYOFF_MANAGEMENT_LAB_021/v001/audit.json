@@ -1,0 +1,13 @@
+{
+  "df_cache_sha": "ec05163508f6f69c9688e5e50e1f418f6ca64aba42f17cf8d6504775df147ef8",
+  "setups_cache_sha": "83526be03cb66ff596c3949138e7e8935cd12b9f8783a41adaf5f2c04d4ccfda",
+  "parent_runner_sha": "09931377bb6258051e6de76b8bd3b56f92bf3cd06ea8ff2ec54751c72aea993a",
+  "lab020_runner_sha": "8e0cd8dc09d5a9d48fab7b951091e836e8d4f276943cd1663192314f8f0ae78d",
+  "m1_rows": 1080929,
+  "early_entry_events": 4777,
+  "discovery_snapshots_1p5": 26419,
+  "confirmation_snapshots_1p5": 27004,
+  "snapshot_causality_violations": 0,
+  "max_price_time_read": "2025-06-30 23:49:00",
+  "holdout_opened": false
+}
