@@ -1,0 +1,53 @@
+{
+  "status": "NO_EARLY_REACCEL_PROBABILITY_EDGE",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_MODEL_POWER": false,
+    "G2_REACCEL_AUC": true,
+    "G3_SEQUENCE_INCREMENTAL": false,
+    "G4_SELECTION_PRECISION": true,
+    "G5_CONFIRMATION_EV": false,
+    "G6_WEEK_CLUSTER_CI": false,
+    "G7_DISCOVERY_TRANSFER": false,
+    "G8_2R_SURVIVAL": false,
+    "G9_DIRECTION_BREADTH": false,
+    "G10_PROP_DD_PROXY": false,
+    "G11_COST_STRESS": false,
+    "G12_ROUTER_LIFT": false
+  },
+  "confirmation_prediction": {
+    "n": 2354,
+    "base_rate": 0.4927782497875956,
+    "auc": 0.6957452492346792,
+    "selected_n": 180,
+    "coverage": 0.07646559048428207,
+    "precision": 0.7611111111111111,
+    "rejected_rate": 0.4705611775528979,
+    "selection_gap": 0.2905499335582132
+  },
+  "confirmation_snapshot_auc": 0.6865166348986311,
+  "confirmation_volume_auc": 0.6953669208109514,
+  "discovery_2023_auc": 0.6886749884724327,
+  "primary_confirmation": {
+    "n": 173,
+    "trades_per_week": 2.2414280646372,
+    "ev": -0.2956825090841234,
+    "pf": 0.5953191536261856,
+    "tp_rate": 0.30057803468208094,
+    "max_dd_R": 55.354773148810274,
+    "worst_day_R": -3.1031451258747573,
+    "stress10_ev": -0.3899377006627747,
+    "buy_ev": -0.2990155600844991,
+    "sell_ev": -0.2926086953837768
+  },
+  "baseline_confirmation_ev": -0.18058070652626182,
+  "confirmation_2R_ev": -0.28222536633402984,
+  "independent_confirmation_ev": -0.24144386469131834,
+  "independent_discovery_2023_ev": -0.17707999887761147,
+  "weekly_ev_ci95": [-0.5944099497368251,-0.20840179985251736],
+  "router_lift_ci95": [-0.3530089855035188,-0.02142605009866918],
+  "sequence_auc_increment_ci95": [-0.002457602399260053,0.018325272831925858],
+  "selection_gap_ci95": [0.13624192999982476,0.4404906100708149],
+  "causality_violations": 0,
+  "holdout_opened": false
+}
