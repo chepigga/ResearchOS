@@ -1,0 +1,15 @@
+LAB016 benchmark-only parity patch
+
+Base runner commit: d5b989e080732dc752e8bab6a9bc958ea35f09ca
+Base runner blob SHA: 612133248aeda42bebd08b87af18e3b9f643c613
+
+Replace exactly:
+post_x=xs[1:]; post_ret=rets[1:]; post_dd=dds[1:]; post_body=bodies[1:]
+
+with:
+post_x=xs[1:]; post_ret=rets[1:]; post_dd=np.maximum.accumulate(post_x)-post_x; post_body=bodies[1:]
+
+Corrected local runner SHA-256:
+4624d3d488e64d63465dd400ef733529a28332a00ba6441905cf2419239c95d2
+
+No EVENT_ALIGNED feature, target, learner, routing threshold, entry, economics, gate or holdout logic changed.
