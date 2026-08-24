@@ -1,0 +1,145 @@
+{
+  "status": "NO_OUTCOME_X_PAYOFF_MANAGEMENT_EDGE",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_PROBABILITY_INFORMATION": true,
+    "G3_FULL_ADDS_OVER_MINIMAL": false,
+    "G4_CALIBRATION": false,
+    "G5_CONFIRMATION_EV": false,
+    "G6_WEEK_CLUSTER_CI": false,
+    "G7_MANAGEMENT_LIFT": false,
+    "G8_TIME_TRANSFER": false,
+    "G9_2R_SURVIVAL": false,
+    "G10_DIRECTION_BREADTH": false,
+    "G11_PROP_DD_PROXY": false,
+    "G12_COST_STRESS": false
+  },
+  "time_mean_discovery_1p5": 0.1346119019330351,
+  "time_mean_discovery_2p0": 0.3879157570387082,
+  "minimal_model": {
+    "n_snapshots": 27004,
+    "n_trades": 2192,
+    "macro_ovr_auc": 0.7512994876277848,
+    "tp_auc": 0.7292983487021552,
+    "sl_auc": 0.7332392645109165,
+    "time_auc": 0.7913608496702826,
+    "logloss": 0.9063045675833461,
+    "multiclass_brier": 0.5203417099684203,
+    "mean_ev_remaining": -0.03496968461776851
+  },
+  "full_model": {
+    "n_snapshots": 27004,
+    "n_trades": 2192,
+    "macro_ovr_auc": 0.7580581693248378,
+    "tp_auc": 0.7235543808196492,
+    "sl_auc": 0.7223198146914073,
+    "time_auc": 0.8283003124634569,
+    "logloss": 0.9065755713242475,
+    "multiclass_brier": 0.5310869145623143,
+    "mean_ev_remaining": -0.042419991241741485
+  },
+  "full_minus_minimal_macro_auc": 0.0067586816970530705,
+  "weekly_auc_diff_bootstrap": {
+    "n": 78,
+    "mean": 0.004420724022239986,
+    "ci95": [-0.006546658663022789, 0.01592354399635357]
+  },
+  "primary_confirmation_serial": {
+    "n": 2109,
+    "trades_per_week": 27.072998343175374,
+    "ev": -0.17018485312486084,
+    "pf": 0.4637410755833894,
+    "gross_ev": -0.13221389808594064,
+    "total_R": -358.9198552403315,
+    "tp_rate": 0.06780464675201517,
+    "model_exit_rate": 0.8601232811759127,
+    "max_dd_R": 363.5276832633667,
+    "worst_day_R": -4.652138421997627,
+    "max_consec_losses": 25,
+    "stress10_ev": -0.24612676320270127,
+    "buy_ev": -0.1633074558835131,
+    "sell_ev": -0.1768125124775563,
+    "median_duration_min": 1.0
+  },
+  "primary_confirmation_independent": {
+    "n": 2354,
+    "trades_per_week": 30.218036083373555,
+    "ev": -0.17937155687311826,
+    "pf": 0.4495120721818914,
+    "gross_ev": -0.14111701588370734,
+    "total_R": -422.24064487932037,
+    "tp_rate": 0.0675446049277825,
+    "model_exit_rate": 0.8538657604078165,
+    "max_dd_R": 426.27618302832184,
+    "worst_day_R": -6.1381345220868,
+    "max_consec_losses": 26,
+    "stress10_ev": -0.25588063885194007,
+    "buy_ev": -0.17743938532761808,
+    "sell_ev": -0.18122335522620994,
+    "median_duration_min": 1.0
+  },
+  "minimal_confirmation_serial": {
+    "n": 2114,
+    "trades_per_week": 27.137182786852886,
+    "ev": -0.16974020549348684,
+    "pf": 0.4510611367971835,
+    "gross_ev": -0.13173853049382303,
+    "total_R": -358.83079441323116,
+    "tp_rate": 0.06669820245979187,
+    "model_exit_rate": 0.8637653736991485,
+    "max_dd_R": 360.2753838077622,
+    "worst_day_R": -4.610499603996154,
+    "max_consec_losses": 21,
+    "stress10_ev": -0.24574355549281449,
+    "buy_ev": -0.16740887914362812,
+    "sell_ev": -0.17199345951907122,
+    "median_duration_min": 1.0
+  },
+  "baseline_confirmation_serial": {
+    "n": 2058,
+    "trades_per_week": 26.41831701766473,
+    "ev": -0.18058070652626182,
+    "pf": 0.7301902968759422,
+    "gross_ev": -0.14267729963690812,
+    "total_R": -371.63509403104683,
+    "tp_rate": 0.32798833819241985,
+    "model_exit_rate": 0.0,
+    "max_dd_R": 375.4141459522738,
+    "worst_day_R": -9.348939489820332,
+    "max_consec_losses": 16,
+    "stress10_ev": -0.25638752030496925,
+    "buy_ev": -0.18732971084364702,
+    "sell_ev": -0.17403837028366742,
+    "median_duration_min": 7.0
+  },
+  "paired_management_minus_baseline": {
+    "n": 78,
+    "mean": -0.007866311572586425,
+    "ci95": [-0.05255517185337038, 0.0347950195149419],
+    "trade_mean": -0.007250595730015946,
+    "n_trades": 2354
+  },
+  "weekly_ev_bootstrap": {
+    "n": 78,
+    "mean": -0.16979021537229574,
+    "ci95": [-0.1939599086828366, -0.14411388897864458]
+  },
+  "year_2024": {
+    "n": 1625,
+    "ev": -0.17388160112674902,
+    "pf": 0.4701691907746835
+  },
+  "year_2025H1": {
+    "n": 729,
+    "ev": -0.1916091125491814,
+    "pf": 0.40237947789199996
+  },
+  "confirmation_2R_serial": {
+    "n": 2116,
+    "ev": -0.1648487415761332,
+    "pf": 0.4421864605284005
+  },
+  "snapshot_causality_violations": 0,
+  "holdout_opened": false
+}
