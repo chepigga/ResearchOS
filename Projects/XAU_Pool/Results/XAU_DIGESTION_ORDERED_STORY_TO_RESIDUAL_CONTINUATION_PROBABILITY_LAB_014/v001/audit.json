@@ -1,0 +1,10 @@
+{
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "parent_events_sha": "6a1ab06285b84003e284fb683058806629e0760089c681f6327d29d6348b7fd8",
+  "eligible_n": 4777,
+  "discovery_n": 2423,
+  "confirmation_n": 2354,
+  "holdout_opened": false,
+  "causality_violations": 0,
+  "last_break_time": "2025-06-30 10:06:00"
+}
