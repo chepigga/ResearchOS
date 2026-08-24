@@ -1,0 +1,11 @@
+{
+  "canonical_sha": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "parent_runner_sha": "09931377bb6258051e6de76b8bd3b56f92bf3cd06ea8ff2ec54751c72aea993a",
+  "raw_rows": 1080929,
+  "break_events": 25788,
+  "strong_bias_events": 5333,
+  "early_entry_events": 4777,
+  "max_price_time_read": "2025-06-30 23:49:00",
+  "holdout_opened": false,
+  "causality_violations": 0
+}
