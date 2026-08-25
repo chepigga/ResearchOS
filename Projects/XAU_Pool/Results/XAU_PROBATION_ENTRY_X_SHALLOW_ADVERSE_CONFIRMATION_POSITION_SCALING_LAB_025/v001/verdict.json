@@ -1,0 +1,87 @@
+{
+  "status": "PROBATION_SELECTS_HEALTH_BUT_EXECUTION_NOT_POSITIVE",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_POSITIVE_ECONOMICS": false,
+    "G3_WEEKLY_ROBUSTNESS": false,
+    "G4_RISK_EFFICIENCY": false,
+    "G5_PROMOTION_SELECTIVITY": true,
+    "G6_PROMOTED_EXECUTION": false,
+    "G7_DISCOVERY_TRANSFER": false,
+    "G8_DIRECTION_BREADTH": false,
+    "G9_2R_SURVIVAL": false,
+    "G10_COST_STRESS": false,
+    "G11_PROP_DD_PROXY": true,
+    "G12_BEATS_FULL_IMMEDIATE": true
+  },
+  "primary_confirmation": {
+    "n": 2276,
+    "trades_per_week": 29.21675876200434,
+    "ev": -0.07154890777852442,
+    "pf": 0.5685360783766512,
+    "positive_rate": 0.22671353251318102,
+    "total_R": -162.84531410392157,
+    "gross_ev": -0.05881480933140875,
+    "tp_rate": 0.14323374340949033,
+    "max_dd_R": 165.17137868926946,
+    "worst_day_R": -3.391844619424916,
+    "max_consec_losses": 29,
+    "stress10_ev": -0.09701710467275575,
+    "buy_ev": -0.08926050281650083,
+    "sell_ev": -0.05444911222372508,
+    "promotion_rate": 0.16432337434094904,
+    "adverse_exit_rate": 0.7021089630931459,
+    "mean_risk_budget_used": 0.3732425307557118,
+    "risk_efficiency": -0.19169548452492238
+  },
+  "primary_discovery": {
+    "n": 2339,
+    "trades_per_week": 28.39905180388529,
+    "ev": -0.05040204678277784,
+    "pf": 0.6671500511472234,
+    "promotion_rate": 0.1569046601111586,
+    "mean_risk_budget_used": 0.367678495083369,
+    "risk_efficiency": -0.13708184584292718
+  },
+  "confirmation_2R": {
+    "n": 2269,
+    "ev": -0.06090867482847797,
+    "pf": 0.6619019887148809,
+    "stress10_ev": -0.08701228359070996,
+    "buy_ev": -0.07734281412493924,
+    "sell_ev": -0.04508584002141794
+  },
+  "full_immediate_baseline": {
+    "n": 2058,
+    "ev": -0.18058070652626182,
+    "pf": 0.7301902968759422,
+    "max_dd_R": 375.4141459522738,
+    "worst_day_R": -9.348939489820332
+  },
+  "starter_only_25_independent": {
+    "n": 2354,
+    "ev": -0.04303024028577558,
+    "pf": 0.7420765886335879,
+    "risk_efficiency": -0.17212096114310232
+  },
+  "weekly_ev_bootstrap": {
+    "n_weeks": 78,
+    "mean": -0.07012878946789011,
+    "ci95": [-0.08391421675902286, -0.055548230088653706]
+  },
+  "paired_staged_minus_full": {
+    "n_weeks": 78,
+    "mean": 0.1038065529523174,
+    "ci95": [0.06111111200003096, 0.14622022638455556]
+  },
+  "promoted_actual": {
+    "n": 382,
+    "staged_ev": -0.0640877622484412,
+    "baseline_ev": 0.2797985067810154,
+    "tp_rate": 0.5078534031413613
+  },
+  "parity_counts": {"event": 1839, "no_event": 515, "pass": true},
+  "causality_violations": 0,
+  "holdout_opened": false
+}
