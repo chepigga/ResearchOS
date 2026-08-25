@@ -1,0 +1,24 @@
+name: BTC STRUCT BREAK REGIME LAB004 Fetch
+
+on:
+  push:
+    branches:
+      - lab/btc-struct-break-regime-004
+    paths:
+      - .github/workflows/btc_struct_break_regime_lab004_fetch.yml
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact BTC M15 release asset
+        run: |
+          curl -L --fail --retry 3 -o btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
+          unzip -l btc_15m.zip | head -50
+          sha256sum btc_15m.zip
+      - name: Upload BTC M15
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-m15-exact-release
+          path: btc_15m.zip
+          retention-days: 1
