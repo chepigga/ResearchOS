@@ -75,7 +75,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--input',type=Path,required=True);ap.add_argument('--events',type=Path,required=True);ap.add_argument('--lab025-runner',type=Path,required=True);ap.add_argument('--parent-runner',type=Path,required=True);ap.add_argument('--outdir',type=Path,required=True);a=ap.parse_args();o=a.outdir;o.mkdir(parents=True,exist_ok=True)
  for p,h in [(a.input,CANONICAL_SHA),(a.events,EVENTS_SHA),(a.lab025_runner,LAB025_SHA),(a.parent_runner,PARENT_SHA)]:
   if sha(p)!=h:raise RuntimeError(f'SHA mismatch {p}')
- l25=mod(a.lab025_runner,'l25'); parent=mod(a.parent_runner,'parent'); ev=pd.read_csv(a.events,compression='gzip',parse_dates=['break_time','baseline_entry_time','primary_exit_time','rr26_exit_time']); df=load_price(a.input)
+ l25=mod(a.lab025_runner,'l25'); parent=mod(a.parent_runner,'parent'); ev=pd.read_csv(a.events,compression='gzip',parse_dates=['break_time','baseline_entry_time','primary_exit_time','rr26_exit_time','baseline_exit_time_1p5','baseline_exit_time_2p0']); df=load_price(a.input)
  p2,v2=sim(ev,df,2.0,False,'w2'); p25,v25=sim(ev,df,2.5,False,'w25'); tr,vt=sim(ev,df,2.5,True,'trail')
  for c in [x for x in p25 if x.startswith('w25_')]:p2[c]=p25[c]
  for c in [x for x in tr if x.startswith('trail_')]:p2[c]=tr[c]
