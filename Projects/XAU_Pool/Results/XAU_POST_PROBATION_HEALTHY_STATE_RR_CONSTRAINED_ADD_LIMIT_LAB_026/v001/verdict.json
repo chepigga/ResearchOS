@@ -1,0 +1,28 @@
+{
+  "status": "HEALTH_SIGNAL_PERSISTS_RR_LIMIT_NOT_ENOUGH",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_POSITIVE_ECONOMICS": false,
+    "G3_WEEKLY_ROBUSTNESS": false,
+    "G4_RISK_EFFICIENCY": false,
+    "G5_HEALTHY_SELECTIVITY": true,
+    "G6_FILLED_ADD_ECONOMICS": false,
+    "G7_BEATS_LAB025_MARKET_PROMOTION": false,
+    "G8_DISCOVERY_TRANSFER": false,
+    "G9_DIRECTION_BREADTH": false,
+    "G10_2R_SURVIVAL": false,
+    "G11_COST_STRESS": false,
+    "G12_PROP_DD_PROXY": true
+  },
+  "primary_confirmation": {"n":2275,"ev":-0.06356326440464265,"pf":0.5762564550092537,"max_dd_R":148.66042945912557,"worst_day_R":-3.0326861647429175,"stress10_ev":-0.08727293446740608,"buy_ev":-0.07431630108526123,"sell_ev":-0.05319094836642939,"promotion_rate":0.08307692307692308,"mean_risk_budget_used":0.3123076923076923,"risk_efficiency":-0.20352769390649122},
+  "primary_discovery": {"n":2339,"ev":-0.04216461214368469,"pf":0.6943384013750847},
+  "confirmation_2R": {"n":2270,"ev":-0.05785923195070111,"pf":0.6409597256783983},
+  "lab025_market_promotion": {"n":2276,"ev":-0.07154890777852439,"pf":0.5685360783766513},
+  "full_immediate": {"n":2238,"ev":-0.17719966439832222,"pf":0.7350940425688981},
+  "paired_vs_full": {"mean":0.11077009841680702,"ci95":[0.06787458704763745,0.15303692515441786]},
+  "paired_vs_lab025_market": {"mean":0.006963545464489602,"ci95":[-0.0007769464397251409,0.014973478163771203]},
+  "filled_add": {"n":191,"combined_ev":-0.24154857647181277,"starter_cf_ev":-0.062204486522154635,"incremental_add_ev":-0.1793440899496582,"mean_rr":1.5281505936186002,"median_rr":1.5,"rr_ge_1p5":1.0},
+  "holdout_opened": false,
+  "causality_violations": 0
+}
