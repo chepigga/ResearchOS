@@ -1,0 +1,20 @@
+name: BTC STRUCT BREAK LAB008 Stage 5M
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_struct_break_lab008_stage_5m.yml'
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact BTC 5m release asset
+        run: |
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          sha256sum btc_5m.zip
+          unzip -l btc_5m.zip | head -50
+      - name: Upload exact BTC 5m
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-5m-exact-release-lab008
+          path: btc_5m.zip
+          retention-days: 1
