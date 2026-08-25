@@ -1,0 +1,20 @@
+name: BTC STRUCT BREAK LAB008 Stage 1M
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_struct_break_lab008_stage_1m.yml'
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact BTC 1m release asset
+        run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          sha256sum btc_1m.zip
+          unzip -l btc_1m.zip | head -50
+      - name: Upload exact BTC 1m
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-1m-exact-release-lab008
+          path: btc_1m.zip
+          retention-days: 1
