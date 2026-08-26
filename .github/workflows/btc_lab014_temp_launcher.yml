@@ -6,9 +6,12 @@ on:
       - '.lab014_trigger'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   lab014:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - name: Checkout research branch
