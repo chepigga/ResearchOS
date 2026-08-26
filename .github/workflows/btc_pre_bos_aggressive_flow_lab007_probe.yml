@@ -1,0 +1,63 @@
+name: BTC PRE BOS AGGRESSIVE FLOW LAB007 PROBE
+
+on:
+  push:
+    branches: [lab-btc-pre-bos-aggressive-flow]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet pandas numpy
+      - name: Download frozen BTC research assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o binance_btc_flow.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_flow.csv
+          curl -L --fail --retry 3 -o btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
+          sha256sum binance_btc_flow.csv btc_15m.zip
+          unzip -l btc_15m.zip | head -40
+          mkdir -p btc15
+          unzip -q btc_15m.zip -d btc15
+      - name: Inspect schemas and coverage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, pandas as pd, json
+          print('FLOW_BYTES', os.path.getsize('binance_btc_flow.csv'))
+          f=pd.read_csv('binance_btc_flow.csv')
+          print('FLOW_SHAPE', f.shape)
+          print('FLOW_COLUMNS', list(f.columns))
+          print('FLOW_HEAD')
+          print(f.head(5).to_string(index=False))
+          print('FLOW_TAIL')
+          print(f.tail(5).to_string(index=False))
+          for c in f.columns:
+              lc=c.lower()
+              if any(k in lc for k in ['time','date','timestamp']):
+                  try:
+                      x=pd.to_datetime(f[c], errors='coerce', utc=True)
+                      print('FLOW_TIME_CANDIDATE',c,'valid',int(x.notna().sum()),'min',x.min(),'max',x.max())
+                  except Exception as e: print('FLOW_TIME_ERR',c,e)
+          files=[]
+          for root,_,fn in os.walk('btc15'):
+              for n in fn:
+                  files.append(os.path.join(root,n))
+          print('BTC15_FILES', files[:20], 'COUNT', len(files))
+          for p in files[:5]:
+              print('\nFILE',p,'BYTES',os.path.getsize(p))
+              try:
+                  d=pd.read_csv(p)
+                  print('SHAPE',d.shape)
+                  print('COLUMNS',list(d.columns))
+                  print(d.head(5).to_string(index=False))
+                  print(d.tail(3).to_string(index=False))
+              except Exception as e:
+                  print('READ_ERR',repr(e))
+          PY
