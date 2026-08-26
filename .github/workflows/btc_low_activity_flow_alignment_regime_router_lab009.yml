@@ -25,11 +25,7 @@ jobs:
           mkdir -p btc15
           unzip -q btc_15m.zip -d btc15
       - name: Run LAB009
-        run: |
-          cd research
-          python btc_low_activity_flow_alignment_regime_router_lab009.py
-          cd ..
-          mv research/lab009 ./lab009
+        run: PYTHONPATH=research python research/btc_low_activity_flow_alignment_regime_router_lab009.py
       - name: Upload LAB009 results
         uses: actions/upload-artifact@v4
         with:
