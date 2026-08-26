@@ -1,0 +1,24 @@
+{
+  "status": "NO_PRE_ENTRY_SURVIVAL_SIGNAL",
+  "gates": {
+    "G0_DATA_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_RANK_INFORMATION": true,
+    "G3_ACTIVITY_ADDS": false,
+    "G4_OPERATIONAL_PRECISION": false,
+    "G5_USEFUL_RETENTION": false,
+    "G6_FAILURE_REJECTION": false,
+    "G7_BREADTH": true,
+    "G8_STARTER_ECONOMICS": false
+  },
+  "full_auc": 0.6246654736998609,
+  "price_only_auc": 0.6280359589222944,
+  "plus_activity_auc": 0.643652496203392,
+  "full_precision": 0.21206409048067862,
+  "base_survival": 0.1622769753610875,
+  "selected_starter_ev": -0.04604679419823994,
+  "unselected_starter_ev": -0.04055493966618959,
+  "real_volume_nonzero_rows": 0,
+  "causality_violations": 0,
+  "holdout_opened": false
+}
