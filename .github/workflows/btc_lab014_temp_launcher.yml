@@ -1,10 +1,9 @@
 name: BTC LAB014 TEMP LAUNCHER
 
-# second commit activates the workflow after registration on default branch
 on:
-  push:
+  pull_request:
     paths:
-      - '.github/workflows/btc_lab014_temp_launcher.yml'
+      - '.lab014_trigger'
   workflow_dispatch:
 
 jobs:
