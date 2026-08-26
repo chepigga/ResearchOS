@@ -1,9 +1,8 @@
 name: BTC LAB014 TEMP LAUNCHER
 
 on:
-  pull_request:
-    paths:
-      - '.lab014_trigger'
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -11,6 +10,7 @@ permissions:
 
 jobs:
   lab014:
+    if: contains(github.event.issue.title, 'BTC LAB014 TRIGGER')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
