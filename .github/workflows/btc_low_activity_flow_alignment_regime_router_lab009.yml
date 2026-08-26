@@ -24,6 +24,18 @@ jobs:
           echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  btc_15m.zip' | sha256sum -c -
           mkdir -p btc15
           unzip -q btc_15m.zip -d btc15
+      - name: Patch LAB009 pandas column access
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('research/btc_low_activity_flow_alignment_regime_router_lab009.py')
+          s=p.read_text()
+          s=s.replace('evaldf.sample == "INDEPENDENT_2019_2022"','evaldf["sample"] == "INDEPENDENT_2019_2022"')
+          s=s.replace('evaldf.layer == "LOW2_X_ALIGN_BASE"','evaldf["layer"] == "LOW2_X_ALIGN_BASE"')
+          s=s.replace('evaldf.layer == "ROUTED"','evaldf["layer"] == "ROUTED"')
+          p.write_text(s)
+          PY
       - name: Run LAB009
         run: PYTHONPATH=research python research/btc_low_activity_flow_alignment_regime_router_lab009.py
       - name: Upload LAB009 results
