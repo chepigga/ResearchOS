@@ -1,0 +1,40 @@
+name: BTC NATIVE FLOW REGIME ROUTER TO POSITIVE CONTINUATION LAB015
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lab-btc-pre-bos-aggressive-flow
+    paths:
+      - 'research/btc_native_flow_regime_router_to_positive_continuation_lab015.py'
+      - '.github/workflows/btc_native_flow_regime_router_to_positive_continuation_lab015.yml'
+
+jobs:
+  lab015:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: python -m pip install --quiet pandas numpy scipy scikit-learn tabulate
+
+      - name: Download frozen Binance BTCUSDT M15 data
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
+          echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  btc_15m.zip' | sha256sum -c -
+          mkdir -p btc15
+          unzip -q btc_15m.zip -d btc15
+
+      - name: Run LAB015
+        run: PYTHONPATH=research python research/btc_native_flow_regime_router_to_positive_continuation_lab015.py
+
+      - name: Upload LAB015 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-native-flow-regime-router-to-positive-continuation-lab015
+          path: lab015/
+          if-no-files-found: warn
