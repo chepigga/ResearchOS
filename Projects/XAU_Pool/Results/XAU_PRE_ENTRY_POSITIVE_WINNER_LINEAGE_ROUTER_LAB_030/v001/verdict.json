@@ -1,0 +1,35 @@
+{
+  "status": "NO_PRE_ENTRY_POSITIVE_LINEAGE_SIGNAL",
+  "gates": {
+    "G0_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_RANK_INFORMATION": true,
+    "G3_ACTIVITY_ADDS": false,
+    "G4_OPERATIONAL_PRECISION": false,
+    "G5_USEFUL_RETENTION": false,
+    "G6_YEARLY_TRANSFER": false,
+    "G7_BREADTH": true,
+    "G8_SUBTYPE_RETENTION": false,
+    "G9_ECONOMIC_SELECTION": false,
+    "G10_DECILE_SPREAD": false
+  },
+  "target_parity": {"early_tp15": 77, "double_no_return_confirmed": 118, "positive_total": 195},
+  "price_only": {"n":2354,"positives":195,"base_rate":0.08283772302463892,"auc":0.617538984097576,"brier":0.07756698640915734,"threshold":0.08851151726560857,"coverage":0.24001699235344096,"precision":0.11327433628318584,"retention":0.3282051282051282,"negative_rejection":0.7679481241315423,"precision_lift":1.3674245518493304,"buy_base":0.08506944444444445,"buy_precision":0.1103448275862069,"sell_base":0.08069883527454243,"sell_precision":0.11636363636363636},
+  "activity": {"n":2354,"positives":195,"base_rate":0.08283772302463892,"auc":0.6091471597724493,"brier":0.07761538008779664,"threshold":0.08011333992286307,"coverage":0.2102803738317757,"precision":0.12323232323232323,"retention":0.3128205128205128,"negative_rejection":0.7989810097267254,"precision_lift":1.4876353276353276,"buy_base":0.08506944444444445,"buy_precision":0.10980392156862745,"sell_base":0.08069883527454243,"sell_precision":0.1375},
+  "yearly": [
+    {"period":"2024","n":1625,"positives":139,"base_rate":0.08553846153846154,"auc":0.6415368378244913,"coverage":0.19815384615384615,"precision":0.14285714285714285,"retention":0.33093525179856115,"negative_rejection":0.8142664872139973,"precision_lift":1.6700924974306268},
+    {"period":"2025H1","n":729,"positives":56,"base_rate":0.07681755829903979,"auc":0.5313627679898111,"coverage":0.23731138545953362,"precision":0.08670520231213873,"retention":0.26785714285714285,"negative_rejection":0.7652303120356612,"precision_lift":1.1287159372419486}
+  ],
+  "selected_full_ev": -0.18577763756938437,
+  "rejected_full_ev": -0.1684845680118438,
+  "selected_starter_ev": -0.04644440939234609,
+  "rejected_starter_ev": -0.04212114200296095,
+  "top_decile_positive_rate": 0.11016949152542373,
+  "bottom_decile_positive_rate": 0.025423728813559324,
+  "subtype_retention": [
+    {"subtype":"DOUBLE_NO_RETURN_CONFIRMED","n":118,"selected_n":47,"retention":0.3983050847457627,"baseline_ev":0.44636704337425476},
+    {"subtype":"EARLY_TP15","n":77,"selected_n":14,"retention":0.18181818181818182,"baseline_ev":1.4627204147383666}
+  ],
+  "causality_violations": 0,
+  "holdout_opened": false
+}
