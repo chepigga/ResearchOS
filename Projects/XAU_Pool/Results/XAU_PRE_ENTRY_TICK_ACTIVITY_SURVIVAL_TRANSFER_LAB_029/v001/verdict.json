@@ -1,0 +1,28 @@
+{
+  "status": "TICK_ACTIVITY_SIGNAL_TRANSFERABLE_NOT_ECONOMIC",
+  "gates": {
+    "G0_CAUSALITY": true,
+    "G1_POWER": true,
+    "G2_ACTIVITY_ADDS": true,
+    "G3_ACTIVITY_AUC": true,
+    "G4_YEARLY_TRANSFER": true,
+    "G5_YEARLY_PRECISION_LIFT": true,
+    "G6_DIRECTION_BREADTH": true,
+    "G7_USEFUL_OPERATIONS": true,
+    "G8_FAILURE_REJECTION": true,
+    "G9_STARTER_ECONOMICS": false,
+    "G10_DECILE_SPREAD": true
+  },
+  "price_only_auc": 0.6395346367469176,
+  "activity_auc": 0.6401784671261536,
+  "activity_coverage": 0.30288870008496177,
+  "activity_precision": 0.23422159887798036,
+  "activity_survivor_retention": 0.43717277486910994,
+  "activity_failure_rejection": 0.7231237322515213,
+  "selected_starter_ev": -0.052891147548799464,
+  "rejected_starter_ev": -0.038745763211713406,
+  "decile_top_survival": 0.2711864406779661,
+  "decile_bottom_survival": 0.025423728813559324,
+  "causality_violations": 0,
+  "holdout_opened": false
+}
