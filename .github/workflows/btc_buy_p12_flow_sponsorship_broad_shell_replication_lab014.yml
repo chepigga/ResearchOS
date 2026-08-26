@@ -38,3 +38,5 @@ jobs:
           name: btc-buy-p12-flow-sponsorship-broad-shell-replication-lab014
           path: lab014/
           if-no-files-found: warn
+
+# no-op retrigger 2026-08-26
