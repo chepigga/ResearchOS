@@ -1,0 +1,37 @@
+name: BTC LOW ACTIVITY FLOW ALIGNMENT REGIME ROUTER LAB009
+
+on:
+  push:
+    branches: [lab-btc-pre-bos-aggressive-flow]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lab009:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: python -m pip install --quiet pandas numpy scikit-learn tabulate
+      - name: Download frozen Binance BTCUSDT M15 data
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
+          echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  btc_15m.zip' | sha256sum -c -
+          mkdir -p btc15
+          unzip -q btc_15m.zip -d btc15
+      - name: Run LAB009
+        run: |
+          cd research
+          python btc_low_activity_flow_alignment_regime_router_lab009.py
+          cd ..
+          mv research/lab009 ./lab009
+      - name: Upload LAB009 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-low-activity-flow-alignment-regime-router-lab009
+          path: lab009/
