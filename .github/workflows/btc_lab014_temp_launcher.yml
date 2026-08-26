@@ -1,5 +1,6 @@
 name: BTC LAB014 TEMP LAUNCHER
 
+# second commit activates the workflow after registration on default branch
 on:
   push:
     paths:
