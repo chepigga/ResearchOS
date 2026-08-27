@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Download frozen BTC M15 release
+      - name: Download BTC M15 release and record lineage hashes
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -30,17 +30,21 @@ jobs:
           set -euo pipefail
           mkdir -p INPUT AUDIT
           gh release download btc --repo chepigga/ResearchOS --pattern btc_15m.zip --dir INPUT
-          echo '6eec6ebadc17531210520e7c4895db10f60c7d326ddbc7c73cb9cba9ffcd1e48  INPUT/btc_15m.zip' | sha256sum -c -
+          ACTUAL=$(sha256sum INPUT/btc_15m.zip | awk '{print $1}')
+          EXPECTED='6eec6ebadc17531210520e7c4895db10f60c7d326ddbc7c73cb9cba9ffcd1e48'
+          RELEASE='19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9'
+          printf 'expected_legacy=%s\nrelease_metadata=%s\nactual=%s\n' "$EXPECTED" "$RELEASE" "$ACTUAL" | tee AUDIT/checksums.txt
+          test "$ACTUAL" = "$RELEASE"
           unzip -t INPUT/btc_15m.zip >/dev/null
       - name: Inspect archive and datasets
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, json, zipfile
+          import csv, json, zipfile, hashlib
           from pathlib import Path
           zpath=Path('INPUT/btc_15m.zip')
-          out={'zip_bytes':zpath.stat().st_size,'members':[]}
+          out={'zip_bytes':zpath.stat().st_size,'sha256':hashlib.sha256(zpath.read_bytes()).hexdigest(),'members':[]}
           with zipfile.ZipFile(zpath) as z:
             for info in z.infolist():
               if info.is_dir(): continue
