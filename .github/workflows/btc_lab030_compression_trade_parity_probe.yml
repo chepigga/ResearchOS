@@ -1,0 +1,214 @@
+name: BTC LAB030 Compression Trade Parity Probe
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'BTC LAB030 COMPRESSION TRADE PARITY TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: python -m pip install --disable-pip-version-check pandas==2.3.2 numpy==2.3.2
+      - name: Download frozen raw
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p INPUT OUT
+          gh release download btc --repo chepigga/ResearchOS --pattern btc_15m.zip --dir INPUT
+      - name: Reconstruct fills pivots and pooled trade queue
+        run: |
+          cat > /tmp/trade_probe.py <<'PY'
+          import zipfile, json, hashlib, itertools
+          from pathlib import Path
+          import numpy as np
+          import pandas as pd
+
+          TARGET=(2599,1363,1236)
+          Z=Path('INPUT/btc_15m.zip')
+          frames=[]
+          with zipfile.ZipFile(Z) as z:
+              for name in sorted(n for n in z.namelist() if n.lower().endswith('.csv')):
+                  with z.open(name) as f: d=pd.read_csv(f)
+                  d['_m']=name; frames.append(d)
+          raw=pd.concat(frames,ignore_index=True)
+          raw['time']=pd.to_datetime(raw.time,format='%Y.%m.%d %H:%M',errors='raise')
+          raw=raw.sort_values(['time','_m'],kind='mergesort')
+          df=raw.drop_duplicates('time',keep='last').sort_values('time').reset_index(drop=True)
+          for c in ['open','high','low','close']: df[c]=pd.to_numeric(df[c],errors='coerce')
+          O=df.open.to_numpy(float); H=df.high.to_numpy(float); L=df.low.to_numpy(float); C=df.close.to_numpy(float)
+          T=df.time.to_numpy(); n=len(df)
+          assert n==242700, n
+
+          # Exact compression release clock recovered in prior parity run.
+          r6=np.full(n,np.nan)
+          for e in range(5,n): r6[e]=np.max(H[e-5:e+1])-np.min(L[e-5:e+1])
+          releases=[]
+          for i in range(48,n):
+              hi=float(np.max(H[i-6:i])); lo=float(np.min(L[i-6:i])); rng=hi-lo
+              base=float(np.median(r6[i-43:i]))
+              if not (np.isfinite(base) and base>0 and rng<=0.70*base): continue
+              full=H[i]-L[i]
+              if not (full>0 and abs(C[i]-O[i])/full>=0.50): continue
+              if C[i]>hi: releases.append((i,'BUY',hi))
+              if C[i]<lo: releases.append((i,'SELL',lo))
+          assert len(releases)==9298, len(releases)
+
+          events=[]; busy={'BUY':-1,'SELL':-1}
+          for rel,side,level in releases:
+              if rel<=busy[side]: continue
+              fill=None; decision=min(rel+8,n-1)
+              for j in range(rel+1,min(rel+9,n)):
+                  if L[j]<=level<=H[j]: fill=j; decision=j; break
+              events.append({'release_idx':rel,'side':side,'entry':float(level),'fill_idx':fill,'decision_idx':decision})
+              busy[side]=decision
+          assert len(events)==8600, len(events)
+
+          # Centered pivot-5. Available after right five bars have closed.
+          pL=[]; pH=[]
+          for i in range(5,n-5):
+              if L[i] <= np.min(L[i-5:i]) and L[i] < np.min(L[i+1:i+6]): pL.append(i)
+              if H[i] >= np.max(H[i-5:i]) and H[i] > np.max(H[i+1:i+6]): pH.append(i)
+          pL=np.asarray(pL,dtype=int); pH=np.asarray(pH,dtype=int)
+
+          def violated(center,fill,side,touch):
+              # pivot confirmed at center+5; inspect after confirmation through fill-1
+              a=center+6; b=fill
+              if a>=b: return False
+              level=L[center] if side=='BUY' else H[center]
+              if side=='BUY':
+                  x=np.min(L[a:b]); return bool(x<=level if touch else x<level)
+              x=np.max(H[a:b]); return bool(x>=level if touch else x>level)
+
+          def pivot_for(fill,side,mode,touch):
+              arr=pL if side=='BUY' else pH
+              # center+5 <= fill-1 => center <= fill-6
+              k=np.searchsorted(arr,fill-6,side='right')-1
+              if k<0: return None
+              if mode=='latest_any':
+                  c=int(arr[k])
+                  if violated(c,fill,side,touch): return None
+                  return c
+              while k>=0:
+                  c=int(arr[k])
+                  if not violated(c,fill,side,touch): return c
+                  k-=1
+              return None
+
+          # Cache broad eligible candidates by pivot convention.
+          candidate_sets={}
+          for mode in ['latest_any','latest_unviolated']:
+            for touch in [False,True]:
+              cs=[]; rejected={'NO_FILL':0,'NO_PIVOT_OR_VIOLATED':0,'STOP_SIDE':0}
+              for e in events:
+                  fill=e['fill_idx']
+                  if fill is None:
+                      rejected['NO_FILL']+=1; continue
+                  c=pivot_for(fill,e['side'],mode,touch)
+                  if c is None:
+                      rejected['NO_PIVOT_OR_VIOLATED']+=1; continue
+                  stop=float(L[c] if e['side']=='BUY' else H[c])
+                  entry=e['entry']
+                  if not ((e['side']=='BUY' and stop<entry) or (e['side']=='SELL' and stop>entry)):
+                      rejected['STOP_SIDE']+=1; continue
+                  r=abs(entry-stop)
+                  if not (np.isfinite(r) and r>0): continue
+                  z=dict(e); z.update(pivot_idx=c,stop=stop,risk=r)
+                  cs.append(z)
+              cs.sort(key=lambda x:(x['fill_idx'],x['release_idx'],0 if x['side']=='SELL' else 1))
+              candidate_sets[(mode,touch)]=(cs,rejected)
+
+          def simulate(e,start_on_fill,be_samebar):
+              side=e['side']; fill=e['fill_idx']; entry=e['entry']; stop=e['stop']; R=e['risk']
+              tp=entry+2.3*R if side=='BUY' else entry-2.3*R
+              arm=entry+R if side=='BUY' else entry-R
+              be=False
+              start=fill if start_on_fill else fill+1
+              end=min(n-1,fill+2000)
+              if start>n-1: return n-1,'END'
+              for j in range(start,end+1):
+                  if side=='BUY':
+                      if not be:
+                          if L[j]<=stop: return j,'SL'
+                          if H[j]>=tp: return j,'TP'
+                          if H[j]>=arm:
+                              if be_samebar and L[j]<=entry: return j,'BE'
+                              be=True
+                      else:
+                          if L[j]<=entry: return j,'BE'
+                          if H[j]>=tp: return j,'TP'
+                  else:
+                      if not be:
+                          if H[j]>=stop: return j,'SL'
+                          if L[j]<=tp: return j,'TP'
+                          if L[j]<=arm:
+                              if be_samebar and H[j]>=entry: return j,'BE'
+                              be=True
+                      else:
+                          if H[j]>=entry: return j,'BE'
+                          if L[j]<=tp: return j,'TP'
+              return end,'TIME'
+
+          def run_variant(mode,touch,start_on_fill,be_samebar,allow_fill_on_exit_bar):
+              cs,rej=candidate_sets[(mode,touch)]
+              accepted=[]; blocked=0; active_exit=-1
+              for e in cs:
+                  f=e['fill_idx']
+                  is_blocked = (f < active_exit) if allow_fill_on_exit_bar else (f <= active_exit)
+                  if is_blocked:
+                      blocked+=1; continue
+                  ex,reason=simulate(e,start_on_fill,be_samebar)
+                  z=dict(e); z.update(exit_idx=ex,exit_reason=reason)
+                  accepted.append(z); active_exit=ex
+              b=sum(1 for x in accepted if x['side']=='BUY'); s=len(accepted)-b
+              score=abs(len(accepted)-TARGET[0])+abs(b-TARGET[1])+abs(s-TARGET[2])
+              return {'pivot_mode':mode,'violation_touch_counts':touch,'start_on_fill_bar':start_on_fill,
+                      'be_samebar_exit':be_samebar,'allow_new_fill_on_exit_bar':allow_fill_on_exit_bar,
+                      'broad_candidates':len(cs),'blocked':blocked,'accepted':len(accepted),'BUY':b,'SELL':s,
+                      'score':score,'rejected':rej},accepted
+
+          results=[]; exact=[]
+          for mode,touch,start,be_same,allow_exit in itertools.product(
+              ['latest_any','latest_unviolated'],[False,True],[False,True],[False,True],[False,True]):
+              r,a=run_variant(mode,touch,start,be_same,allow_exit)
+              results.append(r)
+              if r['score']==0: exact.append((r,a))
+          results.sort(key=lambda x:(x['score'],x['pivot_mode'],x['violation_touch_counts'],x['start_on_fill_bar'],x['be_samebar_exit'],x['allow_new_fill_on_exit_bar']))
+
+          report={'source_sha256':hashlib.sha256(Z.read_bytes()).hexdigest(),
+                  'targets':{'events':8600,'accepted':2599,'BUY':1363,'SELL':1236},
+                  'pivot_counts':{'low':len(pL),'high':len(pH)},
+                  'best10':results[:10],'exact_variant_count':len(exact)}
+          Path('OUT/trade_parity_probe.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+          print(json.dumps(report,indent=2))
+
+          if exact:
+              r,a=exact[0]
+              rows=[]
+              for k,e in enumerate(a):
+                  rows.append({'trade_id':k,'side':e['side'],'release_idx':e['release_idx'],
+                    'release_time':str(pd.Timestamp(T[e['release_idx']])), 'fill_idx':e['fill_idx'],
+                    'fill_time':str(pd.Timestamp(T[e['fill_idx']])), 'entry':e['entry'],
+                    'pivot_idx':e['pivot_idx'],'pivot_time':str(pd.Timestamp(T[e['pivot_idx']])),
+                    'pivot_age':e['fill_idx']-e['pivot_idx'],'stop':e['stop'],
+                    'exit_idx':e['exit_idx'],'exit_time':str(pd.Timestamp(T[e['exit_idx']])),
+                    'exit_reason':e['exit_reason']})
+              pd.DataFrame(rows).to_csv('OUT/exact_count_parity_trades.csv',index=False)
+              Path('OUT/exact_variant.json').write_text(json.dumps(r,indent=2),encoding='utf-8')
+          PY
+          python /tmp/trade_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-lab030-compression-trade-parity-probe
+          path: OUT/
+          retention-days: 30
