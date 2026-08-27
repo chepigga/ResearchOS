@@ -1,0 +1,69 @@
+name: BTC LAB030 Input Audit
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'BTC LAB030 INPUT AUDIT TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout prereg branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-struct-break-regime-004
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen BTC M15 release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p INPUT AUDIT
+          gh release download btc --repo chepigga/ResearchOS --pattern btc_15m.zip --dir INPUT
+          echo '6eec6ebadc17531210520e7c4895db10f60c7d326ddbc7c73cb9cba9ffcd1e48  INPUT/btc_15m.zip' | sha256sum -c -
+          unzip -t INPUT/btc_15m.zip >/dev/null
+      - name: Inspect archive and datasets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, json, zipfile
+          from pathlib import Path
+          zpath=Path('INPUT/btc_15m.zip')
+          out={'zip_bytes':zpath.stat().st_size,'members':[]}
+          with zipfile.ZipFile(zpath) as z:
+            for info in z.infolist():
+              if info.is_dir(): continue
+              rec={'name':info.filename,'bytes':info.file_size}
+              if info.filename.lower().endswith(('.csv','.txt')):
+                try:
+                  with z.open(info) as f:
+                    head=[]
+                    for _ in range(5):
+                      b=f.readline()
+                      if not b: break
+                      head.append(b.decode('utf-8','replace').rstrip())
+                  rec['head']=head
+                  if head and info.filename.lower().endswith('.csv'):
+                    rec['header']=next(csv.reader([head[0]]))
+                except Exception as e: rec['read_error']=repr(e)
+              out['members'].append(rec)
+          Path('AUDIT/input_audit.json').write_text(json.dumps(out,indent=2),encoding='utf-8')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-lab030-input-audit
+          path: AUDIT/
+          retention-days: 30
