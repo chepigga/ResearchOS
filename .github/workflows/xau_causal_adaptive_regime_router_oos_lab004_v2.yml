@@ -1,0 +1,62 @@
+name: XAU Causal Adaptive Regime Router OOS LAB004 V2
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lab004v2:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU CAUSAL LAB004 V2 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout frozen main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow scikit-learn
+      - name: Download LAB001 artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT Results_XAU_CAUSAL_LAB004_V2
+          gh run download 33067830619 --repo chepigga/ResearchOS --name xau-causal-future-probability-lab001 --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+      - name: Run adaptive regime router walk-forward V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_causal_adaptive_regime_router_oos_lab004_v2.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --outdir Results_XAU_CAUSAL_LAB004_V2
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat Results_XAU_CAUSAL_LAB004_V2/router_summary.csv || true
+          cat Results_XAU_CAUSAL_LAB004_V2/router_yearly_summary.csv || true
+          cat Results_XAU_CAUSAL_LAB004_V2/monthly_router_decisions.csv || true
+          cat Results_XAU_CAUSAL_LAB004_V2/verdict.json || true
+      - name: Upload LAB004 V2 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-causal-adaptive-regime-router-oos-lab004-v2
+          path: Results_XAU_CAUSAL_LAB004_V2/
+          if-no-files-found: warn
+          retention-days: 30
