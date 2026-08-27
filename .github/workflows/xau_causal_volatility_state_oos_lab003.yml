@@ -1,0 +1,76 @@
+name: XAU Causal Volatility State OOS LAB003
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lab003:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU CAUSAL LAB003 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout frozen main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+
+      - name: Download LAB001 artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT Results_XAU_CAUSAL_LAB003
+          gh run download 33067830619 \
+            --repo chepigga/ResearchOS \
+            --name xau-causal-future-probability-lab001 \
+            --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+
+      - name: Run causal volatility state OOS test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_causal_volatility_state_oos_lab003.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --outdir Results_XAU_CAUSAL_LAB003
+
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '===== SELECTED ====='
+          cat Results_XAU_CAUSAL_LAB003/selected_configs.json || true
+          echo '===== LOCKED ====='
+          cat Results_XAU_CAUSAL_LAB003/locked_oos_summary.csv || true
+          echo '===== YEARLY ====='
+          cat Results_XAU_CAUSAL_LAB003/locked_yearly_summary.csv || true
+          echo '===== VERDICT ====='
+          cat Results_XAU_CAUSAL_LAB003/verdict.json || true
+
+      - name: Upload LAB003 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-causal-volatility-state-oos-lab003
+          path: Results_XAU_CAUSAL_LAB003/
+          if-no-files-found: warn
+          retention-days: 30
