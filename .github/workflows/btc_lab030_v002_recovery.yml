@@ -1,0 +1,60 @@
+name: BTC LAB030 v002 Recovery Audit
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'BTC LAB030 V002 RECOVERY TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-struct-break-regime-004
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download candidate v002 release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p INPUT OUT
+          gh release download btc --repo chepigga/ResearchOS --pattern 'BTC_LAB016_MAJOR_REVERSAL_TRANSITIONS_v002.csv' --dir INPUT
+          sha256sum INPUT/* | tee OUT/sha256.txt
+      - name: Inspect candidate
+        run: |
+          python - <<'PY'
+          import json, pathlib, pandas as pd, hashlib
+          p=pathlib.Path('INPUT/BTC_LAB016_MAJOR_REVERSAL_TRANSITIONS_v002.csv')
+          df=pd.read_csv(p)
+          out={
+            'file':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+            'rows':len(df),'columns':list(df.columns),
+            'dtypes':{c:str(t) for c,t in df.dtypes.items()},
+            'head':df.head(3).where(pd.notna(df.head(3)),None).to_dict('records')
+          }
+          for c in df.columns:
+            lc=c.lower()
+            if any(k in lc for k in ['time','date','timestamp']):
+              try:
+                x=pd.to_datetime(df[c],errors='coerce',utc=True)
+                if x.notna().any(): out.setdefault('time_ranges',{})[c]=[str(x.min()),str(x.max())]
+              except Exception: pass
+          aliases=['fill_idx','fill_index','riskatr','r','side','direction','entry','stop','sl','tp','be','exit','outcome']
+          out['key_column_matches']={a:[c for c in df.columns if a in c.lower()] for a in aliases}
+          pathlib.Path('OUT/v002_audit.json').write_text(json.dumps(out,indent=2,default=str),encoding='utf-8')
+          df.head(20).to_csv('OUT/v002_head20.csv',index=False)
+          print(json.dumps(out,indent=2,default=str))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-lab030-v002-recovery-audit
+          path: OUT/
+          retention-days: 30
