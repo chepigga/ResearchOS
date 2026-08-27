@@ -37,7 +37,16 @@ jobs:
           curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip "$URL"
           echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
           ls -lh data/xau_raw.zip
-          python -m zipfile -l data/xau_raw.zip | head -100
+          python - <<'PY'
+          import zipfile
+          p='data/xau_raw.zip'
+          with zipfile.ZipFile(p) as z:
+              infos=z.infolist()
+              print('ZIP members:', len(infos))
+              print('Uncompressed bytes:', sum(i.file_size for i in infos))
+              for i in infos[:100]:
+                  print(i.filename, i.file_size)
+          PY
           df -h
 
       - name: Run causal raw audit and multi-barrier baseline
