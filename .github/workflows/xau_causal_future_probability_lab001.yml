@@ -1,0 +1,76 @@
+name: XAU Causal Future Probability LAB001
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lab001:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU CAUSAL LAB001 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout frozen main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy numba pyarrow
+
+      - name: Download and verify XAU raw release asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data Results_XAU_CAUSAL_LAB001
+          URL='https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
+          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip "$URL"
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
+          ls -lh data/xau_raw.zip
+          python -m zipfile -l data/xau_raw.zip | head -100
+          df -h
+
+      - name: Run causal raw audit and multi-barrier baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_causal_future_probability_lab001.py \
+            data/xau_raw.zip \
+            --outdir Results_XAU_CAUSAL_LAB001 \
+            --chunksize 1000000 \
+            --sl-atrs 0.75,1.0,1.25 \
+            --rrs 1.5,2.0 \
+            --horizons 15,60,240
+
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '===== AUDIT ====='
+          cat Results_XAU_CAUSAL_LAB001/audit.json || true
+          echo '===== BASELINE ====='
+          cat Results_XAU_CAUSAL_LAB001/baseline_summary.csv || true
+          echo '===== VERDICT ====='
+          cat Results_XAU_CAUSAL_LAB001/verdict.json || true
+          echo '===== FILES ====='
+          find Results_XAU_CAUSAL_LAB001 -maxdepth 1 -type f -printf '%f %k KB\n' | sort || true
+
+      - name: Upload LAB001 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-causal-future-probability-lab001
+          path: Results_XAU_CAUSAL_LAB001/
+          if-no-files-found: warn
+          retention-days: 30
