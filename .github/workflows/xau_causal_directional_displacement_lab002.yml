@@ -1,0 +1,77 @@
+name: XAU Causal Directional Displacement LAB002
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lab002:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU CAUSAL LAB002 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout frozen main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+
+      - name: Download LAB001 artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT Results_XAU_CAUSAL_LAB002
+          gh run download 33067830619 \
+            --repo chepigga/ResearchOS \
+            --name xau-causal-future-probability-lab001 \
+            --dir LAB001_INPUT
+          ls -lh LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+
+      - name: Run single-family causal displacement OOS test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_causal_directional_displacement_lab002.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --outdir Results_XAU_CAUSAL_LAB002
+
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '===== SELECTED CONFIGS ====='
+          cat Results_XAU_CAUSAL_LAB002/selected_configs.json || true
+          echo '===== LOCKED OOS ====='
+          cat Results_XAU_CAUSAL_LAB002/locked_oos_summary.csv || true
+          echo '===== YEARLY ====='
+          cat Results_XAU_CAUSAL_LAB002/locked_yearly_summary.csv || true
+          echo '===== VERDICT ====='
+          cat Results_XAU_CAUSAL_LAB002/verdict.json || true
+
+      - name: Upload LAB002 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-causal-directional-displacement-lab002
+          path: Results_XAU_CAUSAL_LAB002/
+          if-no-files-found: warn
+          retention-days: 30
