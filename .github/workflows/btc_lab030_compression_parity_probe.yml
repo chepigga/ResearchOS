@@ -1,0 +1,136 @@
+name: BTC LAB030 Compression Parity Probe
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'BTC LAB030 COMPRESSION PARITY TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install analysis deps
+        run: python -m pip install --disable-pip-version-check pandas==2.3.2 numpy==2.3.2
+      - name: Download frozen M15 raw
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p INPUT OUT
+          gh release download btc --repo chepigga/ResearchOS --pattern btc_15m.zip --dir INPUT
+          sha256sum INPUT/btc_15m.zip | tee OUT/source_sha256.txt
+      - name: Probe canonical raw release parity
+        run: |
+          cat > /tmp/probe.py <<'PY'
+          import zipfile, json, hashlib
+          from pathlib import Path
+          import numpy as np
+          import pandas as pd
+
+          Z=Path('INPUT/btc_15m.zip')
+          frames=[]
+          with zipfile.ZipFile(Z) as z:
+              names=sorted(n for n in z.namelist() if n.lower().endswith('.csv'))
+              for n in names:
+                  with z.open(n) as f:
+                      d=pd.read_csv(f)
+                  d['source_member']=n
+                  frames.append(d)
+          raw=pd.concat(frames,ignore_index=True)
+          raw['time']=pd.to_datetime(raw['time'],format='%Y.%m.%d %H:%M',errors='raise')
+          raw=raw.sort_values(['time','source_member'],kind='mergesort').reset_index(drop=True)
+          dup_rows=int(raw.duplicated(['time']).sum())
+          # Monthly archive intentionally contains historical overlap/placeholder files.
+          # Canonicalize by timestamp; identical timestamp OHLC rows are expected duplicates.
+          conflicts=(raw.groupby('time')[['open','high','low','close']].nunique(dropna=False)>1).any(axis=1)
+          conflict_times=int(conflicts.sum())
+          df=raw.drop_duplicates('time',keep='last').sort_values('time').reset_index(drop=True)
+          for c in ['open','high','low','close']:
+              df[c]=pd.to_numeric(df[c],errors='coerce')
+
+          H=df.high.to_numpy(float); L=df.low.to_numpy(float); O=df.open.to_numpy(float); C=df.close.to_numpy(float)
+          n=len(df)
+          # rolling 6-bar range ending at each bar e
+          r6=np.full(n,np.nan)
+          for e in range(5,n):
+              r6[e]=np.max(H[e-5:e+1])-np.min(L[e-5:e+1])
+
+          def raw_releases(baseline_mode):
+              out=[]
+              for i in range(48,n):
+                  comp_hi=float(np.max(H[i-6:i])); comp_lo=float(np.min(L[i-6:i])); comp_rng=comp_hi-comp_lo
+                  if baseline_mode=='contained48_including_current':
+                      # six-bar windows whose six bars are fully within i-48..i-1; ending i-43..i-1
+                      vals=r6[i-43:i]
+                  elif baseline_mode=='precede_current6':
+                      # historical windows end no later than i-7, so baseline cannot include current compression window
+                      vals=r6[i-43:i-6]
+                  elif baseline_mode=='rolling48_endpoints':
+                      # 48 prior rolling-six observations ending i-48..i-1 (uses >48 bars of history)
+                      vals=r6[max(0,i-48):i]
+                  else: raise ValueError
+                  vals=vals[np.isfinite(vals)]
+                  if not len(vals): continue
+                  base=float(np.median(vals))
+                  if not (np.isfinite(base) and base>0 and comp_rng <= 0.70*base): continue
+                  full=H[i]-L[i]
+                  if not (full>0 and abs(C[i]-O[i])/full >= 0.50): continue
+                  if C[i] > comp_hi: out.append((i,'BUY',comp_hi))
+                  if C[i] < comp_lo: out.append((i,'SELL',comp_lo))
+              return out
+
+          def dedup(events, allow_release_on_decision_bar):
+              accepted=[]
+              busy_until={'BUY':-1,'SELL':-1}
+              for i,side,level in events:
+                  if (i < busy_until[side]) if allow_release_on_decision_bar else (i <= busy_until[side]):
+                      continue
+                  decision=i+8
+                  for j in range(i+1,min(i+9,n)):
+                      if L[j] <= level <= H[j]:
+                          decision=j; break
+                  accepted.append((i,side,level,decision))
+                  busy_until[side]=decision
+              return accepted
+
+          report={
+              'source_sha256':hashlib.sha256(Z.read_bytes()).hexdigest(),
+              'archive_csv_members':len(frames),
+              'concatenated_rows':len(raw),
+              'duplicate_timestamp_rows':dup_rows,
+              'conflicting_ohlc_timestamps':conflict_times,
+              'canonical_unique_rows':len(df),
+              'first_time':str(df.time.iloc[0]),'last_time':str(df.time.iloc[-1]),
+              'target':{'canonical_rows':242700,'raw_releases':9298,'dedup_events':8600},
+              'variants':{}
+          }
+          best=None
+          for mode in ['contained48_including_current','precede_current6','rolling48_endpoints']:
+              ev=raw_releases(mode)
+              v={'raw_releases':len(ev)}
+              for allow in [False,True]:
+                  de=dedup(ev,allow)
+                  k='dedup_release_same_decision_bar_allowed' if allow else 'dedup_next_bar_only'
+                  v[k]=len(de)
+                  score=abs(len(ev)-9298)+abs(len(de)-8600)
+                  cand=(score,mode,allow,len(ev),len(de))
+                  if best is None or cand<best: best=cand
+              report['variants'][mode]=v
+          report['best']=dict(zip(['score','baseline_mode','same_decision_bar_allowed','raw_releases','dedup_events'],best))
+          Path('OUT/compression_parity_probe.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+          print(json.dumps(report,indent=2))
+          PY
+          python /tmp/probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-lab030-compression-parity-probe
+          path: OUT/
+          retention-days: 30
