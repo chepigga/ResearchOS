@@ -22,6 +22,13 @@ jobs:
         with:
           ref: main
 
+      - name: Mark started
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body "LAB007 vectorized run started."
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -48,7 +55,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python research/xau_price_time_alogical_path_transition_lab007.py \
+          python research/xau_price_time_alogical_path_transition_lab007_v2.py \
             --bars LAB001_INPUT/m1_bidask_bars.parquet \
             --labels LAB001_INPUT/causal_labels_m1.parquet \
             --outdir Results_XAU_ALOGICAL_LAB007
@@ -81,6 +88,7 @@ jobs:
               v=json.loads(vp.read_text())
               lines += [
                   f"**Verdict:** `{v.get('verdict')}`",
+                  f"**Engine:** {v.get('engine')}",
                   f"**Raw transition rows:** {v.get('raw_transition_rows')}",
                   f"**Unique origin events:** {v.get('unique_origin_events')}",
                   f"**Matrix cells:** {v.get('matrix_cells')}",
