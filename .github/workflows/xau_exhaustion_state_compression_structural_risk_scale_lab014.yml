@@ -1,0 +1,93 @@
+name: XAU Exhaustion State Compression Structural Risk LAB014
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  lab014:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU EXHAUSTION LAB014 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+      - name: Download frozen LAB001 inputs
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT data Results_XAU_EXHAUSTION_LAB014
+          gh run download 33067830619 --repo chepigga/ResearchOS --name xau-causal-future-probability-lab001 --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+          test -s LAB001_INPUT/audit.json
+      - name: Download and verify raw Bid-Ask ticks
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip 'https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
+      - name: Syntax check LAB014
+        run: |
+          PYTHONPATH=research python -m py_compile research/xau_exhaustion_state_compression_structural_risk_scale_lab014.py
+      - name: Run LAB014 compressed exact executable test
+        run: |
+          PYTHONPATH=research python research/xau_exhaustion_state_compression_structural_risk_scale_lab014.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --audit LAB001_INPUT/audit.json \
+            --raw-zip data/xau_raw.zip \
+            --outdir Results_XAU_EXHAUSTION_LAB014
+      - name: Print compact outputs
+        if: always()
+        run: |
+          cat Results_XAU_EXHAUSTION_LAB014/verdict.json || true
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+          p=Path('Results_XAU_EXHAUSTION_LAB014/candidate_transfer.csv')
+          if p.exists():
+              d=pd.read_csv(p)
+              cols=[x for x in ['state','payoff','risk_atr_median','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','state_prepass_count','locked_before_2026','final_n','final_mean_R','final_pf','final_pass'] if x in d.columns]
+              print(d[cols].head(30).to_string(index=False))
+          PY
+      - name: Build issue summary
+        if: always() && github.event_name == 'issues'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          o=Path('Results_XAU_EXHAUSTION_LAB014'); lines=['## XAU EXHAUSTION STATE COMPRESSION + STRUCTURAL RISK LAB014']
+          v=o/'verdict.json'
+          if v.exists():
+            j=json.loads(v.read_text()); lines += [f"**Verdict:** `{j.get('verdict')}`",f"**Correction vs LAB013:** {j.get('correction_vs_lab013')}",f"**Forced-exit rows:** {j.get('forced_exit_rows')}",f"**Stable exhaustion rows:** {j.get('stable_exhaustion_rows')}",f"**Compressed signals:** {j.get('compressed_signals')}",f"**Compressed states:** {j.get('compressed_states')}",f"**Candidate configs:** {j.get('candidate_configs')}",f"**Locked configs pre-2026:** {j.get('locked_configs_pre2026')}",f"**Locked states pre-2026:** {j.get('locked_states_pre2026')}",f"**Locked positive 2026:** {j.get('locked_positive_2026')}",'','**Best config:**','```json',json.dumps(j.get('best_config'),indent=2),'```']
+          c=o/'candidate_transfer.csv'
+          if c.exists():
+            d=pd.read_csv(c); cols=[x for x in ['state','payoff','risk_atr_median','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','state_prepass_count','locked_before_2026','final_n','final_mean_R','final_pf','final_pass'] if x in d.columns]; lines += ['','**Top configs:**','```',d[cols].head(25).to_string(index=False),'```']
+          (o/'issue_comment.md').write_text('\n'.join(lines))
+          PY
+      - name: Comment result to issue
+        if: always() && github.event_name == 'issues'
+        env:
+          GH_TOKEN: '${{ github.token }}'
+          ISSUE_NUMBER: '${{ github.event.issue.number }}'
+        run: |
+          if [ -s Results_XAU_EXHAUSTION_LAB014/issue_comment.md ]; then gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_EXHAUSTION_LAB014/issue_comment.md; fi
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-exhaustion-state-compression-structural-risk-lab014
+          path: Results_XAU_EXHAUSTION_LAB014/
+          if-no-files-found: warn
+          retention-days: 30
