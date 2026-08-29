@@ -82,19 +82,23 @@ jobs:
               v=json.loads(vp.read_text())
               lines += [
                   f"**Verdict:** `{v.get('verdict')}`",
+                  f"**Independent matrix cells:** {v.get('independent_matrix_cells')}",
                   f"**Locked cells before 2026:** {v.get('locked_cells_before_2026')}",
                   f"**Positive locked cells in 2026:** {v.get('locked_cells_positive_in_2026')}",
                   '',
                   '**2026 locked strategy:**',
                   '```json', json.dumps(v.get('final_2026_strategy',{}), indent=2), '```'
               ]
+          tp=out/'top_inversion_cells.csv'
+          if tp.exists():
+              t=pd.read_csv(tp).head(12)
+              cols=['crowd_dir','score_bucket','age_bucket','progress_bucket','n','obvious_mean_R','inverse_mean_R','inverse_pf','inversion_gap_R']
+              lines += ['', '**Top pooled independent inversion cells (diagnostic only):**', '```', t[cols].to_string(index=False), '```']
           cp=out/'candidate_transfer.csv'
           if cp.exists():
-              c=pd.read_csv(cp)
-              c=c[c.get('locked_before_2026', False)==True].head(10)
-              if len(c):
-                  cols=['cell_id','train_2023_2024_n','train_inverse_mean_R','validation_2025_n','validation_inverse_mean_R','final_2026_n','final_2026_inverse_mean_R','final_2026_pass']
-                  lines += ['', '**Locked candidate transfer:**', '```', c[cols].to_string(index=False), '```']
+              c=pd.read_csv(cp).head(15)
+              cols=['cell_id','train_2023_2024_n','train_inverse_mean_R','train_inversion_gap_R','validation_2025_n','validation_inverse_mean_R','validation_inversion_gap_R','discovery_pass','validation_pass','final_2026_n','final_2026_inverse_mean_R']
+              lines += ['', '**Best chronological transfer candidates / near-misses:**', '```', c[cols].to_string(index=False), '```']
           (out/'issue_comment.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
 
