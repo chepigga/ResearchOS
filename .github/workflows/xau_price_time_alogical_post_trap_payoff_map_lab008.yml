@@ -1,0 +1,125 @@
+name: XAU Price-Time Alogical Post-Trap Payoff Map LAB008
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  lab008:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU ALOGICAL LAB008 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+
+      - name: Download frozen LAB001 causal artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT Results_XAU_ALOGICAL_LAB008
+          gh run download 33067830619 \
+            --repo chepigga/ResearchOS \
+            --name xau-causal-future-probability-lab001 \
+            --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+
+      - name: Run short inverse response payoff map
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_price_time_alogical_post_trap_payoff_map_lab008.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --outdir Results_XAU_ALOGICAL_LAB008
+
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          echo '===== VERDICT ====='
+          cat Results_XAU_ALOGICAL_LAB008/verdict.json || true
+          echo '===== TOP TRANSFER CANDIDATES ====='
+          head -n 25 Results_XAU_ALOGICAL_LAB008/candidate_transfer.csv || true
+          echo '===== LOCKED PORTFOLIO YEARLY ====='
+          cat Results_XAU_ALOGICAL_LAB008/locked_portfolio_yearly.csv || true
+
+      - name: Build issue summary
+        if: always() && github.event_name == 'issues'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          out=Path('Results_XAU_ALOGICAL_LAB008')
+          lines=['## XAU PRICE×TIME ALOGICAL POST-TRAP PAYOFF MAP LAB008']
+          vp=out/'verdict.json'
+          if vp.exists():
+              v=json.loads(vp.read_text())
+              lines += [
+                  f"**Verdict:** `{v.get('verdict')}`",
+                  f"**Raw transitions:** {v.get('raw_transition_rows')}",
+                  f"**Independent transitions:** {v.get('independent_transition_rows')}",
+                  f"**Matrix cells:** {v.get('matrix_cells')}",
+                  f"**Locked configs before 2026:** {v.get('locked_configs_before_2026')}",
+                  f"**Positive locked configs in 2026:** {v.get('locked_configs_positive_in_2026')}",
+                  '', '**2026 locked lower-bound portfolio:**', '```json',
+                  json.dumps(v.get('final_2026_locked_portfolio_lower_bound',{}), indent=2), '```',
+                  '', '**Best 2026 descriptive cell (diagnostic only):**', '```json',
+                  json.dumps(v.get('best_2026_descriptive_cell_diagnostic_only',{}), indent=2), '```'
+              ]
+          cp=out/'candidate_transfer.csv'
+          if cp.exists():
+              c=pd.read_csv(cp)
+              cols=[x for x in [
+                  'config_id','train_n','train_mean_R','train_pf','train_ambiguous_rate','train_positive_neighbor_count',
+                  'val_n','val_mean_R','val_pf','locked_before_2026','final_n','final_mean_R','final_pf','final_2026_pass'
+              ] if x in c.columns]
+              lines += ['', '**Top chronological short-response candidates:**', '```', c[cols].head(15).to_string(index=False), '```']
+          yp=out/'locked_portfolio_yearly.csv'
+          if yp.exists():
+              y=pd.read_csv(yp)
+              if len(y): lines += ['', '**Locked portfolio yearly:**', '```', y.to_string(index=False), '```']
+          (out/'issue_comment.md').write_text('\n'.join(lines), encoding='utf-8')
+          PY
+
+      - name: Comment result to issue
+        if: always() && github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        shell: bash
+        run: |
+          if [ -s Results_XAU_ALOGICAL_LAB008/issue_comment.md ]; then
+            gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_ALOGICAL_LAB008/issue_comment.md
+          fi
+
+      - name: Upload LAB008 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-price-time-alogical-post-trap-payoff-map-lab008
+          path: Results_XAU_ALOGICAL_LAB008/
+          if-no-files-found: warn
+          retention-days: 30
