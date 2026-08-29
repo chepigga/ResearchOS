@@ -1,4 +1,4 @@
-name: XAU Price-Time Double Trap Second Stage Response LAB010
+name: XAU Price-Time Double Trap Second Stage Response LAB010 V2
 
 on:
   issues:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   lab010:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU DOUBLE TRAP LAB010 TRIGGER')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU DOUBLE TRAP LAB010 V2 TRIGGER')
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
@@ -37,10 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p LAB001_INPUT LAB009_INPUT data Results_XAU_DOUBLE_TRAP_LAB010
-          gh run download 33067830619 \
-            --repo chepigga/ResearchOS \
-            --name xau-causal-future-probability-lab001 \
-            --dir LAB001_INPUT
+          gh run download 33067830619 --repo chepigga/ResearchOS --name xau-causal-future-probability-lab001 --dir LAB001_INPUT
           test -s LAB001_INPUT/m1_bidask_bars.parquet
           test -s LAB001_INPUT/causal_labels_m1.parquet
           test -s LAB001_INPUT/audit.json
@@ -51,23 +48,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh run download 33245644124 \
-            --repo chepigga/ResearchOS \
-            --name xau-price-time-alogical-tick-order-short-response-lab009 \
-            --dir LAB009_INPUT
+          gh run download 33245644124 --repo chepigga/ResearchOS --name xau-price-time-alogical-tick-order-short-response-lab009 --dir LAB009_INPUT
           test -s LAB009_INPUT/tick_resolved_events.parquet
-          ls -lh LAB009_INPUT/tick_resolved_events.parquet
 
       - name: Download and verify original raw Bid-Ask ticks
         shell: bash
         run: |
           set -euo pipefail
-          URL='https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
-          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip "$URL"
+          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip 'https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
           echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
-          ls -lh data/xau_raw.zip
 
-      - name: Apply technical-only LAB010 parity fixes
+      - name: Apply technical-only frozen parity fixes
         shell: bash
         run: |
           set -euo pipefail
@@ -90,11 +81,11 @@ jobs:
           p.write_text(s)
           PY
 
-      - name: Run double-trap second-stage exact response test
+      - name: Run vectorized frozen LAB010 V2
         shell: bash
         run: |
           set -euo pipefail
-          python research/xau_price_time_double_trap_second_stage_response_lab010.py \
+          python research/xau_price_time_double_trap_second_stage_response_lab010_v2.py \
             --bars LAB001_INPUT/m1_bidask_bars.parquet \
             --labels LAB001_INPUT/causal_labels_m1.parquet \
             --audit LAB001_INPUT/audit.json \
@@ -106,9 +97,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          echo '===== VERDICT ====='
           cat Results_XAU_DOUBLE_TRAP_LAB010/verdict.json || true
-          echo '===== TOP EXACT CONFIGS ====='
           python - <<'PY'
           from pathlib import Path
           import pandas as pd
@@ -118,8 +107,6 @@ jobs:
               cols=[x for x in ['gate_id','payoff_id','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','neighbor_positive_support','locked_before_2026','final_n','final_mean_R','final_pf'] if x in c.columns]
               print(c[cols].head(20).to_string(index=False))
           PY
-          echo '===== YEARLY ====='
-          cat Results_XAU_DOUBLE_TRAP_LAB010/locked_portfolio_yearly.csv || true
 
       - name: Build issue summary
         if: always() && github.event_name == 'issues'
@@ -130,30 +117,16 @@ jobs:
           from pathlib import Path
           import pandas as pd
           o=Path('Results_XAU_DOUBLE_TRAP_LAB010')
-          lines=['## XAU PRICE×TIME DOUBLE-TRAP SECOND-STAGE RESPONSE LAB010']
+          lines=['## XAU PRICE×TIME DOUBLE-TRAP SECOND-STAGE RESPONSE LAB010 V2']
           vp=o/'verdict.json'
           if vp.exists():
               v=json.loads(vp.read_text())
-              lines += [
-                  f"**Verdict:** `{v.get('verdict')}`",
-                  f"**Stage-1 exact DIRECT SL events:** {v.get('stage1_exact_sl_events')}",
-                  f"**Stage-2 structural rows:** {v.get('stage2_structural_rows')}",
-                  f"**Unique stage-2 signals:** {v.get('unique_stage2_physical_signals')}",
-                  f"**Eligible structural gates pre-2026:** {v.get('eligible_structural_gates_pre2026')}",
-                  f"**Locked configs before 2026:** {v.get('locked_configs_before_2026')}",
-                  f"**Locked configs positive in 2026:** {v.get('locked_configs_positive_2026')}",
-                  '', '**2026 locked portfolio:**', '```json', json.dumps(v.get('final_2026_locked_portfolio',{}),indent=2), '```',
-                  '', '**Best exact config:**', '```json', json.dumps(v.get('best_exact_config'),indent=2), '```'
-              ]
+              lines += [f"**Verdict:** `{v.get('verdict')}`", f"**Stage-1 exact DIRECT SL:** {v.get('stage1_exact_sl_events')}", f"**Stage-2 rows:** {v.get('stage2_structural_rows')}", f"**Unique stage-2 signals:** {v.get('unique_stage2_physical_signals')}", f"**Eligible gates pre-2026:** {v.get('eligible_structural_gates_pre2026')}", f"**Locked configs pre-2026:** {v.get('locked_configs_before_2026')}", f"**Locked positive 2026:** {v.get('locked_configs_positive_2026')}", '', '**2026 locked portfolio:**', '```json', json.dumps(v.get('final_2026_locked_portfolio',{}),indent=2), '```', '', '**Best exact config:**', '```json', json.dumps(v.get('best_exact_config'),indent=2), '```']
           cp=o/'candidate_transfer_exact.csv'
           if cp.exists():
               c=pd.read_csv(cp)
               cols=[x for x in ['gate_id','payoff_id','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','neighbor_positive_support','locked_before_2026','final_n','final_mean_R','final_pf'] if x in c.columns]
               lines += ['', '**Top exact configs:**', '```', c[cols].head(15).to_string(index=False), '```']
-          yp=o/'locked_portfolio_yearly.csv'
-          if yp.exists():
-              y=pd.read_csv(yp)
-              if len(y): lines += ['', '**Locked portfolio yearly:**', '```', y.to_string(index=False), '```']
           (o/'issue_comment.md').write_text('\n'.join(lines),encoding='utf-8')
           PY
 
@@ -164,15 +137,13 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         shell: bash
         run: |
-          if [ -s Results_XAU_DOUBLE_TRAP_LAB010/issue_comment.md ]; then
-            gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_DOUBLE_TRAP_LAB010/issue_comment.md
-          fi
+          if [ -s Results_XAU_DOUBLE_TRAP_LAB010/issue_comment.md ]; then gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_DOUBLE_TRAP_LAB010/issue_comment.md; fi
 
       - name: Upload LAB010 outputs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: xau-price-time-double-trap-second-stage-response-lab010
+          name: xau-price-time-double-trap-second-stage-response-lab010-v2
           path: Results_XAU_DOUBLE_TRAP_LAB010/
           if-no-files-found: warn
           retention-days: 30
