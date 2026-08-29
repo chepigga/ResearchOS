@@ -1,0 +1,1 @@
+LAB012 frozen: diagnostic only; no trade payoff selection. Same LAB011 crowd-forced-exit lineage. Measure post-exit MFE/MAE/end/giveback at 5/10/20/40/60/120m; detect stabilization 3/5/10m + reclaim 0.10/0.20/0.30 ATR. Discovery 2023-24, validation 2025, 2026 untouched descriptive OOS.
