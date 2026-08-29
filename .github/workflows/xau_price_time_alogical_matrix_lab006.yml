@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python research/xau_price_time_alogical_matrix_lab006.py \
+          python research/xau_price_time_alogical_matrix_lab006_v2.py \
             --bars LAB001_INPUT/m1_bidask_bars.parquet \
             --labels LAB001_INPUT/causal_labels_m1.parquet \
             --outdir Results_XAU_ALOGICAL_LAB006
