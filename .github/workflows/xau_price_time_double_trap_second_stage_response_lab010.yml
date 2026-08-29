@@ -67,7 +67,7 @@ jobs:
           echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
           ls -lh data/xau_raw.zip
 
-      - name: Apply technical-only LAB010 merge fix
+      - name: Apply technical-only LAB010 parity fixes
         shell: bash
         run: |
           set -euo pipefail
@@ -75,11 +75,19 @@ jobs:
           from pathlib import Path
           p=Path('research/xau_price_time_double_trap_second_stage_response_lab010.py')
           s=p.read_text()
-          old="gs = gate_screen[['gate_id', 'train_n_structural', 'val_n_structural', 'final_n_structural', 'eligible_pre2026']]"
-          new="gs = gate_screen[['gate_id', 'extra_sweep_atr', 'hold_min', 'reclaim_atr', 'train_n_structural', 'val_n_structural', 'final_n_structural', 'eligible_pre2026']]"
-          if old not in s:
-              raise SystemExit('Expected frozen LAB010 merge line not found')
-          p.write_text(s.replace(old,new,1))
+          fixes=[
+            ("gs = gate_screen[['gate_id', 'train_n_structural', 'val_n_structural', 'final_n_structural', 'eligible_pre2026']]",
+             "gs = gate_screen[['gate_id', 'extra_sweep_atr', 'hold_min', 'reclaim_atr', 'train_n_structural', 'val_n_structural', 'final_n_structural', 'eligible_pre2026']]"),
+            ("hit_min = int(r.hit_time_msc // 60000 * 60000)",
+             "hit_min = int(r.hit_time_msc // 60000)"),
+            ("d['end_time_msc'] = d.entry_minute_stage2.to_numpy(np.int64) + int(horizon) * 60_000 - 1",
+             "d['end_time_msc'] = (d.entry_minute_stage2.to_numpy(np.int64) + int(horizon)) * 60_000 - 1"),
+          ]
+          for old,new in fixes:
+              if old not in s:
+                  raise SystemExit(f'Expected frozen LAB010 line not found: {old}')
+              s=s.replace(old,new,1)
+          p.write_text(s)
           PY
 
       - name: Run double-trap second-stage exact response test
