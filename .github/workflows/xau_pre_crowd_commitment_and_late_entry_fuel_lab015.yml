@@ -1,0 +1,103 @@
+name: XAU Pre Crowd Commitment and Late Entry Fuel LAB015
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  lab015:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU PRE CROWD LAB015 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+      - name: Download frozen LAB001 inputs
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT data Results_XAU_PRE_CROWD_LAB015
+          gh run download 33067830619 --repo chepigga/ResearchOS --name xau-causal-future-probability-lab001 --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+          test -s LAB001_INPUT/audit.json
+      - name: Download and verify raw Bid-Ask ticks
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip 'https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
+      - name: Syntax check LAB015
+        run: PYTHONPATH=research python -m py_compile research/xau_pre_crowd_commitment_and_late_entry_fuel_lab015.py
+      - name: Run LAB015 causal pre-crowd exact test
+        run: |
+          PYTHONPATH=research python research/xau_pre_crowd_commitment_and_late_entry_fuel_lab015.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --audit LAB001_INPUT/audit.json \
+            --raw-zip data/xau_raw.zip \
+            --outdir Results_XAU_PRE_CROWD_LAB015
+      - name: Print compact outputs
+        if: always()
+        run: |
+          cat Results_XAU_PRE_CROWD_LAB015/verdict.json || true
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+          o=Path('Results_XAU_PRE_CROWD_LAB015')
+          p=o/'crowd_commitment_transfer.csv'
+          if p.exists():
+              d=pd.read_csv(p)
+              cols=[x for x in ['state','train_n','train_commit20','train_lift20','val_n','val_commit20','val_lift20','final_n','final_commit20','final_lift20'] if x in d.columns]
+              print('\nCROWD TRANSFER')
+              print(d[cols].head(30).to_string(index=False))
+          p=o/'candidate_transfer.csv'
+          if p.exists():
+              d=pd.read_csv(p)
+              cols=[x for x in ['state','payoff','risk_atr_median','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','fuel_transfer','state_prepass_count','locked_before_2026','final_n','final_mean_R','final_pf','final_pass'] if x in d.columns]
+              print('\nPAYOFF TRANSFER')
+              print(d[cols].head(30).to_string(index=False))
+          PY
+      - name: Build issue summary
+        if: always() && github.event_name == 'issues'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          o=Path('Results_XAU_PRE_CROWD_LAB015'); lines=['## XAU PRE-CROWD COMMITMENT + LATE-ENTRY FUEL LAB015']
+          v=o/'verdict.json'
+          if v.exists():
+            j=json.loads(v.read_text()); lines += [f"**Verdict:** `{j.get('verdict')}`",f"**No-leakage:** {j.get('no_future_leakage')}",f"**Near-level base rows:** {j.get('near_level_base_rows')}",f"**Precursor signals:** {j.get('precursor_signals')}",f"**Precursor states:** {j.get('precursor_states')}",f"**Fuel states pre-2026:** {j.get('fuel_states_pre2026')}",f"**Candidate configs:** {j.get('candidate_configs')}",f"**Positive discovery configs:** {j.get('positive_discovery_configs')}",f"**Positive validation configs:** {j.get('positive_validation_configs')}",f"**Locked configs pre-2026:** {j.get('locked_configs_pre2026')}",f"**Locked states pre-2026:** {j.get('locked_states_pre2026')}",f"**Locked positive 2026:** {j.get('locked_positive_2026')}",'','**Best config:**','```json',json.dumps(j.get('best_config'),indent=2),'```']
+          p=o/'crowd_commitment_transfer.csv'
+          if p.exists():
+            d=pd.read_csv(p); cols=[x for x in ['state','train_n','train_commit20','train_lift20','val_n','val_commit20','val_lift20','final_n','final_commit20','final_lift20'] if x in d.columns]; lines += ['','**Crowd commitment transfer:**','```',d[cols].head(20).to_string(index=False),'```']
+          p=o/'candidate_transfer.csv'
+          if p.exists():
+            d=pd.read_csv(p); cols=[x for x in ['state','payoff','risk_atr_median','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','fuel_transfer','state_prepass_count','locked_before_2026','final_n','final_mean_R','final_pf','final_pass'] if x in d.columns]; lines += ['','**Top executable configs:**','```',d[cols].head(25).to_string(index=False),'```']
+          (o/'issue_comment.md').write_text('\n'.join(lines))
+          PY
+      - name: Comment result to issue
+        if: always() && github.event_name == 'issues'
+        env:
+          GH_TOKEN: '${{ github.token }}'
+          ISSUE_NUMBER: '${{ github.event.issue.number }}'
+        run: |
+          if [ -s Results_XAU_PRE_CROWD_LAB015/issue_comment.md ]; then gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_PRE_CROWD_LAB015/issue_comment.md; fi
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-pre-crowd-commitment-late-entry-fuel-lab015
+          path: Results_XAU_PRE_CROWD_LAB015/
+          if-no-files-found: warn
+          retention-days: 30
