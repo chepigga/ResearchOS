@@ -1,0 +1,122 @@
+name: XAU Price-Time Alogical Tick-Order Short Response LAB009
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  lab009:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.title, 'XAU ALOGICAL LAB009 TRIGGER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy pyarrow
+
+      - name: Download frozen LAB001 artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p LAB001_INPUT data Results_XAU_ALOGICAL_LAB009
+          gh run download 33067830619 \
+            --repo chepigga/ResearchOS \
+            --name xau-causal-future-probability-lab001 \
+            --dir LAB001_INPUT
+          test -s LAB001_INPUT/m1_bidask_bars.parquet
+          test -s LAB001_INPUT/causal_labels_m1.parquet
+          test -s LAB001_INPUT/audit.json
+
+      - name: Download and verify original raw Bid-Ask ticks
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://github.com/chepigga/ResearchOS/releases/download/xau/CAUSAL_XAU_RAW_XAUUSD_20260825.zip'
+          curl -L --fail --retry 5 --retry-delay 5 --progress-bar -o data/xau_raw.zip "$URL"
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/xau_raw.zip' | sha256sum -c -
+          ls -lh data/xau_raw.zip
+
+      - name: Run exact tick-order short-response test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/xau_price_time_alogical_tick_order_short_response_lab009.py \
+            --bars LAB001_INPUT/m1_bidask_bars.parquet \
+            --labels LAB001_INPUT/causal_labels_m1.parquet \
+            --audit LAB001_INPUT/audit.json \
+            --raw-zip data/xau_raw.zip \
+            --outdir Results_XAU_ALOGICAL_LAB009
+
+      - name: Print compact outputs
+        if: always()
+        shell: bash
+        run: |
+          echo '===== VERDICT ====='
+          cat Results_XAU_ALOGICAL_LAB009/verdict.json || true
+          echo '===== EXACT TRANSFER ====='
+          head -n 25 Results_XAU_ALOGICAL_LAB009/candidate_transfer_exact.csv || true
+          echo '===== YEARLY ====='
+          cat Results_XAU_ALOGICAL_LAB009/locked_portfolio_yearly.csv || true
+
+      - name: Build issue summary
+        if: always() && github.event_name == 'issues'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          out=Path('Results_XAU_ALOGICAL_LAB009')
+          lines=['## XAU PRICE×TIME ALOGICAL TICK-ORDER SHORT RESPONSE LAB009']
+          vp=out/'verdict.json'
+          if vp.exists():
+              v=json.loads(vp.read_text())
+              lines += [f"**Verdict:** `{v.get('verdict')}`",f"**M1 pre-2026 candidates:** {v.get('m1_pre2026_candidate_configs')}",f"**Exact event rows:** {v.get('exact_event_rows')}",f"**Exact valid rows:** {v.get('exact_valid_rows')}",f"**Locked configs before 2026:** {v.get('locked_configs_before_2026')}",f"**Positive locked configs in 2026:** {v.get('locked_configs_positive_2026')}",'','**2026 locked portfolio:**','```json',json.dumps(v.get('final_2026_locked_portfolio',{}),indent=2),'```']
+          cp=out/'candidate_transfer_exact.csv'
+          if cp.exists():
+              c=pd.read_csv(cp); cols=[x for x in ['config_id','qreq_pre2026','train_n','train_mean_R','train_pf','val_n','val_mean_R','val_pf','locked_before_2026','final_n','final_mean_R','final_pf','final_2026_pass'] if x in c.columns]
+              lines += ['','**Top exact-tick candidates:**','```',c[cols].head(15).to_string(index=False),'```']
+          yp=out/'locked_portfolio_yearly.csv'
+          if yp.exists():
+              y=pd.read_csv(yp)
+              if len(y): lines += ['','**Locked portfolio yearly:**','```',y.to_string(index=False),'```']
+          (out/'issue_comment.md').write_text('\n'.join(lines),encoding='utf-8')
+          PY
+
+      - name: Comment result to issue
+        if: always() && github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        shell: bash
+        run: |
+          if [ -s Results_XAU_ALOGICAL_LAB009/issue_comment.md ]; then
+            gh issue comment "$ISSUE_NUMBER" --repo chepigga/ResearchOS --body-file Results_XAU_ALOGICAL_LAB009/issue_comment.md
+          fi
+
+      - name: Upload LAB009 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xau-price-time-alogical-tick-order-short-response-lab009
+          path: Results_XAU_ALOGICAL_LAB009/
+          if-no-files-found: warn
+          retention-days: 30
