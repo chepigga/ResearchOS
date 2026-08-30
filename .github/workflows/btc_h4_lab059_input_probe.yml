@@ -1,0 +1,58 @@
+name: BTC H4 LAB059 Input Probe
+
+on:
+  push:
+    branches: [lab059-h4-long-oos]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe btc_15m release asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p lab059_probe
+          curl -L --fail --retry 3 -o lab059_probe/btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
+          sha256sum lab059_probe/btc_15m.zip | tee lab059_probe/SHA256.txt
+          unzip -l lab059_probe/btc_15m.zip | tee lab059_probe/ZIP_LIST.txt
+          unzip -q lab059_probe/btc_15m.zip -d lab059_probe/data
+          python - <<'PY'
+          import os, glob, json, zipfile
+          import pandas as pd
+          out=[]
+          for p in glob.glob('lab059_probe/data/**/*', recursive=True):
+              if not os.path.isfile(p):
+                  continue
+              rec={'path':p,'size':os.path.getsize(p)}
+              try:
+                  if p.lower().endswith('.csv'):
+                      d=pd.read_csv(p, nrows=5)
+                      rec['columns']=list(d.columns)
+                      # full time range with low-memory reads
+                      full=pd.read_csv(p)
+                      rec['rows']=len(full)
+                      tc=None
+                      for c in full.columns:
+                          if str(c).lower() in ('time','datetime','date','timestamp','open_time','entry_time'):
+                              tc=c; break
+                      if tc is not None:
+                          t=pd.to_datetime(full[tc], errors='coerce', utc=True)
+                          rec['time_col']=tc
+                          rec['min_time']=str(t.min())
+                          rec['max_time']=str(t.max())
+                      rec['head']=full.head(3).to_dict('records')
+                      rec['tail']=full.tail(3).to_dict('records')
+              except Exception as e:
+                  rec['error']=repr(e)
+              out.append(rec)
+          open('lab059_probe/PROBE.json','w').write(json.dumps(out,indent=2,default=str))
+          print(json.dumps(out,indent=2,default=str))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_H4_LAB059_INPUT_PROBE
+          path: lab059_probe/
+          retention-days: 7
