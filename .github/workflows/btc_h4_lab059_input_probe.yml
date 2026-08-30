@@ -20,7 +20,7 @@ jobs:
           unzip -l lab059_probe/btc_15m.zip | tee lab059_probe/ZIP_LIST.txt
           unzip -q lab059_probe/btc_15m.zip -d lab059_probe/data
           python - <<'PY'
-          import os, glob, json, zipfile
+          import os, glob, json
           import pandas as pd
           out=[]
           for p in glob.glob('lab059_probe/data/**/*', recursive=True):
@@ -29,10 +29,8 @@ jobs:
               rec={'path':p,'size':os.path.getsize(p)}
               try:
                   if p.lower().endswith('.csv'):
-                      d=pd.read_csv(p, nrows=5)
-                      rec['columns']=list(d.columns)
-                      # full time range with low-memory reads
                       full=pd.read_csv(p)
+                      rec['columns']=list(full.columns)
                       rec['rows']=len(full)
                       tc=None
                       for c in full.columns:
