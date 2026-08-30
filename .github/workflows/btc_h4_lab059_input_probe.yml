@@ -14,6 +14,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python -m pip install -q pandas numpy
           mkdir -p lab059_probe
           curl -L --fail --retry 3 -o lab059_probe/btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
           sha256sum lab059_probe/btc_15m.zip | tee lab059_probe/SHA256.txt
@@ -22,32 +23,24 @@ jobs:
           python - <<'PY'
           import os, glob, json
           import pandas as pd
-          out=[]
-          for p in glob.glob('lab059_probe/data/**/*', recursive=True):
-              if not os.path.isfile(p):
-                  continue
-              rec={'path':p,'size':os.path.getsize(p)}
-              try:
-                  if p.lower().endswith('.csv'):
-                      full=pd.read_csv(p)
-                      rec['columns']=list(full.columns)
-                      rec['rows']=len(full)
-                      tc=None
-                      for c in full.columns:
-                          if str(c).lower() in ('time','datetime','date','timestamp','open_time','entry_time'):
-                              tc=c; break
-                      if tc is not None:
-                          t=pd.to_datetime(full[tc], errors='coerce', utc=True)
-                          rec['time_col']=tc
-                          rec['min_time']=str(t.min())
-                          rec['max_time']=str(t.max())
-                      rec['head']=full.head(3).to_dict('records')
-                      rec['tail']=full.tail(3).to_dict('records')
-              except Exception as e:
-                  rec['error']=repr(e)
-              out.append(rec)
+          files=sorted(glob.glob('lab059_probe/data/**/*.csv', recursive=True))
+          rows=[]; mins=[]; maxs=[]; sample=None
+          for p in files:
+              d=pd.read_csv(p)
+              rec={'path':p,'size':os.path.getsize(p),'rows':len(d),'columns':list(d.columns)}
+              if sample is None: sample=d.head(3).to_dict('records')
+              # Binance monthly files: first column is open time in ms when unnamed schema
+              c=d.columns[0]
+              s=d[c]
+              if pd.api.types.is_numeric_dtype(s):
+                  t=pd.to_datetime(s, unit='ms', errors='coerce', utc=True)
+              else:
+                  t=pd.to_datetime(s, errors='coerce', utc=True)
+              rec['min_time']=str(t.min()); rec['max_time']=str(t.max())
+              mins.append(t.min()); maxs.append(t.max()); rows.append(rec)
+          out={'files':len(files),'rows_total':sum(x['rows'] for x in rows),'min_time':str(min(mins)),'max_time':str(max(maxs)),'columns':rows[0]['columns'] if rows else [],'sample':sample,'per_file':rows}
           open('lab059_probe/PROBE.json','w').write(json.dumps(out,indent=2,default=str))
-          print(json.dumps(out,indent=2,default=str))
+          print(json.dumps({k:v for k,v in out.items() if k!='per_file'},indent=2,default=str))
           PY
       - uses: actions/upload-artifact@v4
         with:
