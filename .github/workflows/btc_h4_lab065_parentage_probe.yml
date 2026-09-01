@@ -1,0 +1,124 @@
+name: BTC H4 LAB065 Parentage Probe
+
+on:
+  push:
+    branches: [lab059-h4-long-oos]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: LAB065 parent event-universe audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -q pandas numpy
+          mkdir -p lab065_parentage
+          curl -L --fail --retry 3 -o lab065_parentage/BTC_LAB010_H1_EVENTS.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_H1_EVENTS.csv
+          curl -L --fail --retry 3 -o lab065_parentage/BTC_LAB010_M15_EVENTS.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_M15_EVENTS.csv
+          curl -L --fail --retry 3 -o lab065_parentage/BTC_LAB010_METADATA.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_METADATA.csv
+          curl -L --fail --retry 3 -o lab065_parentage/BTC_DIRECTIONAL_SCALE_ASYMMETRY_LAB_010_TZ.md https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_DIRECTIONAL_SCALE_ASYMMETRY_LAB_010_TZ.md
+          sha256sum lab065_parentage/* | tee lab065_parentage/SHA256.txt
+          python - <<'PY'
+          import pandas as pd, numpy as np, json, re
+          from pathlib import Path
+
+          out=Path('lab065_parentage')
+          frozen=pd.read_csv('lab065/frozen114_D_times.csv')
+          frozen['D_time']=pd.to_datetime(frozen['D_time'], errors='coerce')
+
+          def time_col(df):
+              pri=[c for c in df.columns if any(x in c.lower() for x in ['time','date','timestamp'])]
+              for c in pri+list(df.columns):
+                  try:
+                      t=pd.to_datetime(df[c], errors='coerce')
+                      if t.notna().mean()>.90 and t.nunique()>100:
+                          return c,t
+                  except Exception: pass
+              return None,None
+
+          def side_series(df):
+              cand=[c for c in df.columns if any(x in c.lower() for x in ['side','direction','dir','signal'])]
+              for c in cand:
+                  s=df[c]
+                  if pd.api.types.is_numeric_dtype(s):
+                      vals=set(pd.Series(s.dropna().unique()).astype(float).round(6).tolist())
+                      if vals and vals.issubset({-1.0,0.0,1.0}):
+                          return c,np.sign(pd.to_numeric(s,errors='coerce')).fillna(0).astype(int)
+                  z=s.astype(str).str.upper()
+                  if z.str.contains('BUY|SELL|LONG|SHORT|UP|DOWN',regex=True).mean()>.5:
+                      ss=np.where(z.str.contains('BUY|LONG|UP'),1,np.where(z.str.contains('SELL|SHORT|DOWN'),-1,0))
+                      return c,pd.Series(ss,index=df.index)
+              return None,pd.Series(np.zeros(len(df),dtype=int),index=df.index)
+
+          schema={}
+          summaries=[]
+          for name in ['H1','M15']:
+              p=out/f'BTC_LAB010_{name}_EVENTS.csv'
+              df=pd.read_csv(p,low_memory=False)
+              tc,t=time_col(df); sc,side=side_series(df)
+              schema[name]={
+                  'rows':len(df),'columns':list(df.columns),'time_col':tc,'side_col':sc,
+                  'head':df.head(5).to_dict('records'),
+                  'unique_small':{c:[str(x) for x in df[c].dropna().unique()[:50]] for c in df.columns if df[c].nunique(dropna=True)<=50}
+              }
+              if tc is None: continue
+              work=df.copy(); work['_time']=t; work['_side']=side
+              work=work[work['_time'].between(pd.Timestamp('2023-01-01'),pd.Timestamp('2025-12-31 23:59:59'))].copy()
+              # Identify candidate boolean/categorical gates so parentage can be tested without guessing field names.
+              gate_cols=[]
+              for c in df.columns:
+                  nu=df[c].nunique(dropna=True)
+                  if nu<=20 and c not in [tc,sc]: gate_cols.append(c)
+              # offset grid: frozen ledger is server clock; older event ledger may be UTC/server.
+              for off in range(-6,7):
+                  ev=work.copy(); ev['_cmp_time']=ev['_time']+pd.Timedelta(hours=off)
+                  for same_side in [False,True]:
+                      exact=within1=within4=within8=within24=0
+                      nearest=[]
+                      for _,r in frozen.iterrows():
+                          q=ev
+                          if same_side and sc is not None:
+                              q=q[q['_side']==int(r.side)]
+                          if q.empty:
+                              nearest.append(np.nan); continue
+                          d=(q['_cmp_time']-r.D_time).abs()
+                          m=d.min()/pd.Timedelta(hours=1)
+                          nearest.append(float(m))
+                          exact+=m<1e-9; within1+=m<=1; within4+=m<=4; within8+=m<=8; within24+=m<=24
+                      summaries.append({'universe':name,'offset_hours':off,'same_side':same_side,'rows_2023_2025':len(ev),
+                          'exact':exact,'within1h':within1,'within4h':within4,'within8h':within8,'within24h':within24,
+                          'median_nearest_h':float(np.nanmedian(nearest)),'p90_nearest_h':float(np.nanpercentile(nearest,90))})
+              # best same-side offset by exact then within4
+              tmp=pd.DataFrame([x for x in summaries if x['universe']==name and x['same_side']])
+              if len(tmp):
+                  best=tmp.sort_values(['exact','within4h','within8h'],ascending=False).iloc[0]
+                  off=int(best.offset_hours)
+                  ev=work.copy(); ev['_cmp_time']=ev['_time']+pd.Timedelta(hours=off)
+                  maps=[]
+                  for _,r in frozen.iterrows():
+                      q=ev if sc is None else ev[ev['_side']==int(r.side)]
+                      if q.empty: continue
+                      d=(q['_cmp_time']-r.D_time).abs(); j=d.idxmin(); rr=q.loc[j]
+                      rec={'entry_time':r.entry_time,'D_time':r.D_time,'side':int(r.side),'nearest_event_time_raw':rr['_time'],
+                           'offset_hours':off,'nearest_event_time_cmp':rr['_cmp_time'],'delta_hours':float(d.loc[j]/pd.Timedelta(hours=1))}
+                      for c in df.columns:
+                          if c in gate_cols or any(k in c.lower() for k in ['scale','impulse','accel','return','ret','atr','vol','trend','state','phase','energy','score']):
+                              v=rr[c]
+                              if pd.isna(v): v=None
+                              rec[c]=v
+                      maps.append(rec)
+                  pd.DataFrame(maps).to_csv(out/f'LAB065_LAB010_{name}_NEAREST_PARENTAGE_MAP.csv',index=False)
+
+          pd.DataFrame(summaries).to_csv(out/'LAB065_LAB010_PARENTAGE_OFFSET_SCAN.csv',index=False)
+          (out/'LAB065_LAB010_SCHEMA.json').write_text(json.dumps(schema,indent=2,default=str))
+          print(json.dumps({k:{'rows':v['rows'],'columns':v['columns'],'time_col':v['time_col'],'side_col':v['side_col']} for k,v in schema.items()},indent=2))
+          print(pd.DataFrame(summaries).sort_values(['same_side','exact','within4h'],ascending=[False,False,False]).head(30).to_string(index=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_H4_LAB065_LAB010_PARENTAGE_PROBE
+          path: lab065_parentage/
+          retention-days: 7
