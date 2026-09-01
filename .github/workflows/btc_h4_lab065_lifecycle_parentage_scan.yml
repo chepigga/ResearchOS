@@ -10,76 +10,84 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Vectorized LAB010 lifecycle parentage scan
+      - name: Test H1 precursor identity and semantic state signatures
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install -q pandas numpy
-          mkdir -p lab065_lifecycle
-          curl -L --fail --retry 3 -o lab065_lifecycle/H1.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_H1_EVENTS.csv
-          curl -L --fail --retry 3 -o lab065_lifecycle/M15.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_M15_EVENTS.csv
-          curl -L --fail --retry 3 -o lab065_lifecycle/META.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_METADATA.csv
-          curl -L --fail --retry 3 -o lab065_lifecycle/TZ.md https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_DIRECTIONAL_SCALE_ASYMMETRY_LAB_010_TZ.md
+          mkdir -p lab065_signature
+          curl -L --fail --retry 3 -o lab065_signature/H1.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_H1_EVENTS.csv
           python - <<'PY'
-          import pandas as pd, numpy as np, json
+          import pandas as pd, numpy as np, itertools, json
           from pathlib import Path
-          out=Path('lab065_lifecycle')
-          frozen=pd.read_csv('lab065/frozen114_D_times.csv')
-          frozen['D_time']=pd.to_datetime(frozen['D_time'],errors='coerce')
-          frozen['entry_time_dt']=pd.to_datetime(frozen['entry_time'],errors='coerce')
-          frozen['_side']=pd.to_numeric(frozen['side']).astype(int)
-          tcols=['a_time','b_time','c_time','state_recovery_time','accept_time','entry_time']
-          def flag(x,c): return x[c].astype(str).str.lower().isin(['true','1']) if c in x else pd.Series(False,index=x.index)
-          filters=[('ALL',lambda x:pd.Series(True,index=x.index)),('PRIMARY_TRUE',lambda x:flag(x,'is_primary_episode_trade')),('SECONDARY_TRUE',lambda x:flag(x,'is_secondary_activation')),('STATE_RECOVERED_TRUE',lambda x:flag(x,'state_recovered')),('PRIMARY_AND_RECOVERED',lambda x:flag(x,'is_primary_episode_trade')&flag(x,'state_recovered')),('SECONDARY_AND_RECOVERED',lambda x:flag(x,'is_secondary_activation')&flag(x,'state_recovered'))]
-          NSH=3_600_000_000_000
-          def nearest_hours(events_ns, targets_ns):
-            if len(events_ns)==0: return np.full(len(targets_ns),np.nan)
-            e=np.sort(np.asarray(events_ns,dtype='int64'))
-            t=np.asarray(targets_ns,dtype='int64')
-            idx=np.searchsorted(e,t)
-            lo=np.clip(idx-1,0,len(e)-1); hi=np.clip(idx,0,len(e)-1)
-            d=np.minimum(np.abs(t-e[lo]),np.abs(t-e[hi]))/NSH
-            return d.astype(float)
-          rows=[]; unique={}
-          for universe,file in [('H1','H1.csv'),('M15','M15.csv')]:
-            df=pd.read_csv(out/file,low_memory=False)
-            ds=df['direction']
-            if pd.api.types.is_numeric_dtype(ds): df['_side']=np.sign(pd.to_numeric(ds,errors='coerce')).fillna(0).astype(int)
-            else:
-              z=ds.astype(str).str.upper(); df['_side']=np.where(z.str.contains('BUY|LONG|UP'),1,np.where(z.str.contains('SELL|SHORT|DOWN'),-1,0))
-            unique[universe]={c:df[c].astype(str).value_counts(dropna=False).head(30).to_dict() for c in ['is_primary_episode_trade','is_secondary_activation','state_before_downgrade','state_after_downgrade','state_recovered','tf'] if c in df}
-            for tc in tcols:
-              if tc not in df: continue
-              temp=df.copy(); temp['_t']=pd.to_datetime(temp[tc],errors='coerce')
-              base=temp[temp['_t'].between(pd.Timestamp('2023-01-01'),pd.Timestamp('2025-12-31 23:59:59'))].copy()
-              for fname,ff in filters:
-                q0=base[ff(base)].copy()
-                if q0.empty: continue
-                base_ns=q0['_t'].astype('int64').to_numpy()
-                byside={s:q0.loc[q0['_side']==s,'_t'].astype('int64').to_numpy() for s in [-1,1]}
-                for target in ['D_time','entry_time_dt']:
-                  target_ns=frozen[target].astype('int64').to_numpy()
-                  for same_side in [True,False]:
-                    for off in range(-8,9):
-                      shift=off*NSH
-                      if same_side:
-                        a=np.full(len(frozen),np.nan)
-                        for s in [-1,1]:
-                          mask=frozen['_side'].to_numpy()==s
-                          a[mask]=nearest_hours(byside[s]+shift,target_ns[mask])
-                      else:
-                        a=nearest_hours(base_ns+shift,target_ns)
-                      rows.append({'universe':universe,'time_col':tc,'filter':fname,'target':target,'same_side':same_side,'offset_hours':off,'candidate_rows':len(q0),'exact':int(np.nansum(a<1e-9)),'within1h':int(np.nansum(a<=1)),'within4h':int(np.nansum(a<=4)),'within8h':int(np.nansum(a<=8)),'within24h':int(np.nansum(a<=24)),'median_nearest_h':float(np.nanmedian(a)),'p90_nearest_h':float(np.nanpercentile(a,90))})
-          res=pd.DataFrame(rows); res.to_csv(out/'LAB065_LAB010_LIFECYCLE_PARENTAGE_SCAN.csv',index=False)
-          (out/'LAB065_LAB010_SEMANTIC_UNIQUES.json').write_text(json.dumps(unique,indent=2,default=str))
-          same=res[res.same_side].copy(); same['score']=same.exact*1000000+same.within1h*10000+same.within4h*100+same.within8h-same.candidate_rows*1e-5
-          best=same.sort_values('score',ascending=False).head(200); best.to_csv(out/'LAB065_LAB010_LIFECYCLE_PARENTAGE_TOP200.csv',index=False)
-          print('TOP SAME-SIDE CONFIGS')
-          print(best[['universe','time_col','filter','target','offset_hours','candidate_rows','exact','within1h','within4h','within8h','within24h','median_nearest_h']].head(80).to_string(index=False))
+          out=Path('lab065_signature')
+          f=pd.read_csv('lab065/frozen114_D_times.csv')
+          f['entry']=pd.to_datetime(f.entry_time); f['D']=pd.to_datetime(f.D_time); f['side']=pd.to_numeric(f.side).astype(int)
+          d=pd.read_csv(out/'H1.csv',low_memory=False)
+          z=d.direction.astype(str).str.upper()
+          if pd.api.types.is_numeric_dtype(d.direction): d['side']=np.sign(pd.to_numeric(d.direction,errors='coerce')).fillna(0).astype(int)
+          else: d['side']=np.where(z.str.contains('BUY|LONG|UP'),1,np.where(z.str.contains('SELL|SHORT|DOWN'),-1,0))
+          for c in ['a_time','b_time','c_time','state_recovery_time','accept_time','entry_time']:
+            d[c]=pd.to_datetime(d[c],errors='coerce')
+          d=d[d.a_time.between(pd.Timestamp('2023-01-01'),pd.Timestamp('2025-12-31 23:59:59'))].copy()
+          # exact nearest mapping for the striking H1 a_time +1h -> frozen entry relation
+          maps=[]; chosen=[]
+          for _,r in f.iterrows():
+            q=d[(d.side==r.side)&(d.is_primary_episode_trade.astype(int)==1)].copy()
+            q['cmp']=q.a_time+pd.Timedelta(hours=1)
+            delta=(q.cmp-r.entry).abs(); j=delta.idxmin(); x=q.loc[j]
+            maps.append({'frozen_entry':r.entry,'frozen_D':r.D,'side':r.side,'event_id':x.event_id,'episode_id':x.episode_id,
+              'a_time':x.a_time,'a_plus1':x.cmp,'delta_min':delta.loc[j]/pd.Timedelta(minutes=1),
+              'b_time':x.b_time,'c_time':x.c_time,'state_recovery_time':x.state_recovery_time,'accept_time':x.accept_time,'parent_entry_time':x.entry_time,
+              'primary':x.is_primary_episode_trade,'secondary':x.is_secondary_activation,'state_before':x.state_before_downgrade,'state_after':x.state_after_downgrade,'state_recovered':x.state_recovered,
+              'bc_ab':x.bc_ab,'c_to_b_entry_pos':x.c_to_b_entry_pos,'sl_distance_bps':x.sl_distance_bps,'cost_R':x.cost_R_zero_slip_proxy})
+            chosen.append(j)
+          mp=pd.DataFrame(maps); mp.to_csv(out/'LAB065_H1_A_TIME_PRECURSOR_MAP.csv',index=False)
+          # one-to-one statistics
+          one={'frozen_n':len(mp),'unique_parent_event_ids':int(mp.event_id.nunique()),'unique_parent_episode_ids':int(mp.episode_id.nunique()),
+               'delta_min_median':float(mp.delta_min.median()),'delta_min_p90':float(mp.delta_min.quantile(.9)),'delta_min_max':float(mp.delta_min.max()),
+               'within_1min':int((mp.delta_min<=1).sum()),'within_5min':int((mp.delta_min<=5).sum()),'within_15min':int((mp.delta_min<=15).sum()),'within_60min':int((mp.delta_min<=60).sum())}
+          # categorical signature exhaustive finite semantic dictionary, no numeric thresholds
+          catcols=['is_primary_episode_trade','is_secondary_activation','state_before_downgrade','state_after_downgrade','state_recovered']
+          rows=[]
+          target=f[['entry','side']].copy()
+          def nearest_stats(q):
+            vals=[]
+            for _,r in target.iterrows():
+              qq=q[q.side==r.side]
+              if qq.empty: vals.append(np.nan); continue
+              vals.append(float((qq.a_time+pd.Timedelta(hours=1)-r.entry).abs().min()/pd.Timedelta(minutes=1)))
+            a=np.array(vals,float)
+            return {'candidate_rows':len(q),'exact':int(np.nansum(a<1e-9)),'within1m':int(np.nansum(a<=1)),'within5m':int(np.nansum(a<=5)),'within15m':int(np.nansum(a<=15)),'within60m':int(np.nansum(a<=60)),'median_min':float(np.nanmedian(a)),'p90_min':float(np.nanpercentile(a,90))}
+          # all single, pair, triple categorical value conjunctions
+          value_sets={c:sorted(d[c].dropna().unique().tolist()) for c in catcols}
+          rows.append({'signature':'ALL',**nearest_stats(d)})
+          for k in [1,2,3,4,5]:
+            for cols in itertools.combinations(catcols,k):
+              for vals in itertools.product(*[value_sets[c] for c in cols]):
+                mask=pd.Series(True,index=d.index)
+                parts=[]
+                for c,v in zip(cols,vals): mask &= d[c]==v; parts.append(f'{c}={v}')
+                q=d[mask]
+                if len(q)==0: continue
+                rows.append({'signature':' & '.join(parts),**nearest_stats(q)})
+          sig=pd.DataFrame(rows)
+          sig['recall60']=sig.within60m/114
+          sig['precision_proxy']=sig.within60m/sig.candidate_rows.clip(lower=1)
+          sig.to_csv(out/'LAB065_H1_CATEGORICAL_SIGNATURE_SCAN.csv',index=False)
+          # frontier emphasizing near 114 count while preserving 114 parent coverage
+          front=sig[(sig.candidate_rows.between(80,250)) | (sig.within60m>=100)].sort_values(['within60m','within15m','candidate_rows'],ascending=[False,False,True])
+          front.to_csv(out/'LAB065_H1_CATEGORICAL_SIGNATURE_FRONTIER.csv',index=False)
+          # distribution of semantic states actually mapped to frozen events
+          dist={c:mp[c.replace('is_primary_episode_trade','primary').replace('is_secondary_activation','secondary').replace('state_before_downgrade','state_before').replace('state_after_downgrade','state_after')].astype(str).value_counts().to_dict() if c!='state_recovered' else mp.state_recovered.astype(str).value_counts().to_dict() for c in catcols}
+          (out/'LAB065_H1_PRECURSOR_SUMMARY.json').write_text(json.dumps({'one_to_one':one,'mapped_semantic_distributions':dist},indent=2,default=str))
+          print('ONE TO ONE',json.dumps(one,indent=2))
+          print('\nBEST CATEGORICAL FRONTIER')
+          print(front[['signature','candidate_rows','exact','within1m','within5m','within15m','within60m','median_min','precision_proxy']].head(80).to_string(index=False))
           PY
-          sha256sum lab065_lifecycle/* > lab065_lifecycle/SHA256.txt
+          sha256sum lab065_signature/* > lab065_signature/SHA256.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: BTC_H4_LAB065_LIFECYCLE_PARENTAGE_SCAN_V2
-          path: lab065_lifecycle/
+          name: BTC_H4_LAB065_H1_PRECURSOR_SIGNATURE
+          path: lab065_signature/
           retention-days: 7
