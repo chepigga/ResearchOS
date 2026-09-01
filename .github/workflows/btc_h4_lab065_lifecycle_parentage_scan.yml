@@ -1,0 +1,139 @@
+name: BTC H4 LAB065 Lifecycle Parentage Scan
+
+on:
+  push:
+    branches: [lab059-h4-long-oos]
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan LAB010 lifecycle clocks and semantic gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -q pandas numpy
+          mkdir -p lab065_lifecycle
+          curl -L --fail --retry 3 -o lab065_lifecycle/H1.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_H1_EVENTS.csv
+          curl -L --fail --retry 3 -o lab065_lifecycle/M15.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_M15_EVENTS.csv
+          curl -L --fail --retry 3 -o lab065_lifecycle/META.csv https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_LAB010_METADATA.csv
+          curl -L --fail --retry 3 -o lab065_lifecycle/TZ.md https://github.com/chepigga/ResearchOS/releases/download/btc/BTC_DIRECTIONAL_SCALE_ASYMMETRY_LAB_010_TZ.md
+          python - <<'PY'
+          import pandas as pd, numpy as np, json
+          from pathlib import Path
+
+          out=Path('lab065_lifecycle')
+          frozen=pd.read_csv('lab065/frozen114_D_times.csv')
+          frozen['D_time']=pd.to_datetime(frozen['D_time'],errors='coerce')
+          frozen['entry_time_dt']=pd.to_datetime(frozen['entry_time'],errors='coerce')
+
+          tcols=['a_time','b_time','c_time','state_recovery_time','accept_time','entry_time']
+          filter_specs=[
+            ('ALL', lambda x: pd.Series(True,index=x.index)),
+            ('PRIMARY_TRUE', lambda x: x['is_primary_episode_trade'].astype(str).str.lower().isin(['true','1']) if 'is_primary_episode_trade' in x else pd.Series(False,index=x.index)),
+            ('SECONDARY_TRUE', lambda x: x['is_secondary_activation'].astype(str).str.lower().isin(['true','1']) if 'is_secondary_activation' in x else pd.Series(False,index=x.index)),
+            ('STATE_RECOVERED_TRUE', lambda x: x['state_recovered'].astype(str).str.lower().isin(['true','1']) if 'state_recovered' in x else pd.Series(False,index=x.index)),
+            ('PRIMARY_AND_RECOVERED', lambda x: ((x['is_primary_episode_trade'].astype(str).str.lower().isin(['true','1'])) & (x['state_recovered'].astype(str).str.lower().isin(['true','1']))) if {'is_primary_episode_trade','state_recovered'}.issubset(x.columns) else pd.Series(False,index=x.index)),
+            ('SECONDARY_AND_RECOVERED', lambda x: ((x['is_secondary_activation'].astype(str).str.lower().isin(['true','1'])) & (x['state_recovered'].astype(str).str.lower().isin(['true','1']))) if {'is_secondary_activation','state_recovered'}.issubset(x.columns) else pd.Series(False,index=x.index)),
+          ]
+
+          rows=[]; bestmaps=[]; unique={}
+          for universe,file in [('H1','H1.csv'),('M15','M15.csv')]:
+            df=pd.read_csv(out/file,low_memory=False)
+            # normalize direction strings/numeric
+            ds=df['direction']
+            if pd.api.types.is_numeric_dtype(ds):
+              side=np.sign(pd.to_numeric(ds,errors='coerce')).fillna(0).astype(int)
+            else:
+              z=ds.astype(str).str.upper()
+              side=pd.Series(np.where(z.str.contains('BUY|LONG|UP'),1,np.where(z.str.contains('SELL|SHORT|DOWN'),-1,0)),index=df.index)
+            df['_side']=side
+            unique[universe]={}
+            for c in ['is_primary_episode_trade','is_secondary_activation','state_before_downgrade','state_after_downgrade','state_recovered','tf']:
+              if c in df:
+                unique[universe][c]=df[c].astype(str).value_counts(dropna=False).head(30).to_dict()
+
+            for tc in tcols:
+              if tc not in df: continue
+              df['_t']=pd.to_datetime(df[tc],errors='coerce')
+              base=df[df['_t'].between(pd.Timestamp('2023-01-01'),pd.Timestamp('2025-12-31 23:59:59'))].copy()
+              for fname,ff in filter_specs:
+                q0=base[ff(base)].copy()
+                if q0.empty: continue
+                for target in ['D_time','entry_time_dt']:
+                  for same_side in [True,False]:
+                    for off in range(-8,9):
+                      q=q0.copy(); q['_cmp']=q['_t']+pd.Timedelta(hours=off)
+                      near=[]
+                      for _,r in frozen.iterrows():
+                        qq=q[q['_side']==int(r.side)] if same_side else q
+                        if qq.empty: near.append(np.nan); continue
+                        d=(qq['_cmp']-r[target]).abs()
+                        near.append(float(d.min()/pd.Timedelta(hours=1)))
+                      a=np.array(near,float)
+                      rows.append({
+                        'universe':universe,'time_col':tc,'filter':fname,'target':target,'same_side':same_side,'offset_hours':off,
+                        'candidate_rows':len(q0),'exact':int(np.nansum(a<1e-9)),'within1h':int(np.nansum(a<=1)),'within4h':int(np.nansum(a<=4)),
+                        'within8h':int(np.nansum(a<=8)),'within24h':int(np.nansum(a<=24)),'median_nearest_h':float(np.nanmedian(a)),'p90_nearest_h':float(np.nanpercentile(a,90))
+                      })
+
+          res=pd.DataFrame(rows)
+          res.to_csv(out/'LAB065_LAB010_LIFECYCLE_PARENTAGE_SCAN.csv',index=False)
+          (out/'LAB065_LAB010_SEMANTIC_UNIQUES.json').write_text(json.dumps(unique,indent=2,default=str))
+
+          # Best configurations, ranking exact, then within1/4/8, penalize huge candidate streams weakly
+          same=res[res.same_side==True].copy()
+          same['score']=same['exact']*1000000+same['within1h']*10000+same['within4h']*100+same['within8h']-same['candidate_rows']*1e-5
+          best=same.sort_values('score',ascending=False).head(100).copy()
+          best.to_csv(out/'LAB065_LAB010_LIFECYCLE_PARENTAGE_TOP100.csv',index=False)
+
+          # For each universe/time/filter/target choose best offset and write nearest maps for top 20 unique configs
+          seen=0
+          for _,br in best.iterrows():
+            key=(br.universe,br.time_col,br['filter'],br.target)
+            if any(x.get('key')==key for x in bestmaps): continue
+            df=pd.read_csv(out/('H1.csv' if br.universe=='H1' else 'M15.csv'),low_memory=False)
+            z=df['direction'].astype(str).str.upper()
+            if pd.api.types.is_numeric_dtype(df['direction']):
+              df['_side']=np.sign(pd.to_numeric(df['direction'],errors='coerce')).fillna(0).astype(int)
+            else:
+              df['_side']=np.where(z.str.contains('BUY|LONG|UP'),1,np.where(z.str.contains('SELL|SHORT|DOWN'),-1,0))
+            df['_t']=pd.to_datetime(df[br.time_col],errors='coerce')
+            q=df[df['_t'].between(pd.Timestamp('2023-01-01'),pd.Timestamp('2025-12-31 23:59:59'))].copy()
+            # apply named filter explicitly
+            if br['filter']=='PRIMARY_TRUE': q=q[q['is_primary_episode_trade'].astype(str).str.lower().isin(['true','1'])]
+            elif br['filter']=='SECONDARY_TRUE': q=q[q['is_secondary_activation'].astype(str).str.lower().isin(['true','1'])]
+            elif br['filter']=='STATE_RECOVERED_TRUE': q=q[q['state_recovered'].astype(str).str.lower().isin(['true','1'])]
+            elif br['filter']=='PRIMARY_AND_RECOVERED': q=q[q['is_primary_episode_trade'].astype(str).str.lower().isin(['true','1']) & q['state_recovered'].astype(str).str.lower().isin(['true','1'])]
+            elif br['filter']=='SECONDARY_AND_RECOVERED': q=q[q['is_secondary_activation'].astype(str).str.lower().isin(['true','1']) & q['state_recovered'].astype(str).str.lower().isin(['true','1'])]
+            q['_cmp']=q['_t']+pd.Timedelta(hours=int(br.offset_hours))
+            maps=[]
+            for _,r in frozen.iterrows():
+              qq=q[q['_side']==int(r.side)]
+              if qq.empty: continue
+              d=(qq['_cmp']-r[br.target]).abs(); j=d.idxmin(); rr=qq.loc[j]
+              maps.append({'entry_time':r.entry_time,'D_time':r.D_time,'side':int(r.side),'parent_event_id':rr.get('event_id'),
+                           'parent_episode_id':rr.get('episode_id'),'parent_time_raw':rr['_t'],'parent_time_cmp':rr['_cmp'],
+                           'delta_hours':float(d.loc[j]/pd.Timedelta(hours=1)),'time_col':br.time_col,'filter':br['filter'],
+                           'target':br.target,'offset_hours':int(br.offset_hours),'is_primary':rr.get('is_primary_episode_trade'),
+                           'is_secondary':rr.get('is_secondary_activation'),'state_recovered':rr.get('state_recovered'),
+                           'state_before':rr.get('state_before_downgrade'),'state_after':rr.get('state_after_downgrade'),
+                           'accept_time':rr.get('accept_time'),'entry_time_parent':rr.get('entry_time')})
+            name=f"MAP_{seen:02d}_{br.universe}_{br.time_col}_{br['filter']}_{br.target}_OFF{int(br.offset_hours):+d}.csv".replace('/','_')
+            pd.DataFrame(maps).to_csv(out/name,index=False)
+            bestmaps.append({'key':key,'map_file':name,'exact':int(br.exact),'within1h':int(br.within1h),'within4h':int(br.within4h),'within8h':int(br.within8h),'candidate_rows':int(br.candidate_rows)})
+            seen+=1
+            if seen>=20: break
+          pd.DataFrame(bestmaps).to_csv(out/'LAB065_LAB010_BEST_CONFIG_MAP_MANIFEST.csv',index=False)
+
+          print('TOP SAME-SIDE PARENTAGE CONFIGS')
+          print(best[['universe','time_col','filter','target','offset_hours','candidate_rows','exact','within1h','within4h','within8h','within24h','median_nearest_h']].head(40).to_string(index=False))
+          PY
+          sha256sum lab065_lifecycle/* > lab065_lifecycle/SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_H4_LAB065_LIFECYCLE_PARENTAGE_SCAN
+          path: lab065_lifecycle/
+          retention-days: 7
