@@ -60,9 +60,9 @@
 | OOS_2026 | BTC_ONLY | 176 | 0.4792 | 0.2519 | 0.6973 |
 | OOS_2026 | BTC_PLUS_PAXG | 176 | 0.4945 | 0.2535 | 0.7005 |
 
-- 2025 AUC delta from PAXG: **+0.0037**.
-- 2026 AUC delta from PAXG: **+0.0085**.
-- 2026 Brier improvement: **-0.00792**.
+- 2025 AUC delta from PAXG: **+0.0248**.
+- 2026 AUC delta from PAXG: **+0.0153**.
+- 2026 Brier improvement: **-0.00157**.
 - 2026 baseline continuation WR: **44.3%**.
 - Frozen augmented top-20%: N **33**, WR **51.5%**, lift **+7.2 pp**, mean signed 4h **+0.133%**.
 

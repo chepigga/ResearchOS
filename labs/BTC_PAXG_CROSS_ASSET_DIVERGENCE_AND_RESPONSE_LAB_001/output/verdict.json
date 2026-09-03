@@ -11,9 +11,9 @@
     "oos_top20_mean_positive": true,
     "mechanism_transfer_same_sign": false
   },
-  "auc_delta_2025": 0.003669319186560549,
-  "auc_delta_2026": 0.008490566037735792,
-  "brier_improvement_2026": -0.007921380812247442,
+  "auc_delta_2025": 0.02482269503546103,
+  "auc_delta_2026": 0.015306122448979609,
+  "brier_improvement_2026": -0.0015699842331488023,
   "oos_base_cont_win_rate": 0.4431818181818182,
   "oos_top20_cont_win_rate": 0.5151515151515151,
   "oos_top20_lift": 0.07196969696969696,
@@ -26,5 +26,6 @@
   "inverse_bridge_n": 62,
   "inverse_oos_n": 21,
   "inverse_bridge_mean": 0.0007491698702843314,
-  "inverse_oos_mean": 0.000179590441110494
+  "inverse_oos_mean": 0.000179590441110494,
+  "audit_fix": "v2_primary_horizon_explicit"
 }
