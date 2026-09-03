@@ -1,0 +1,19 @@
+{
+  "verdict": "WATCH_POSITIVE_BUT_CONCENTRATED",
+  "gates_passed": 7,
+  "gates_total": 12,
+  "gates": {
+    "h2_2025_cum_positive": true,
+    "h2_2025_positive_months_ge_4_of_6": false,
+    "h2_2025_all_lomo_positive": true,
+    "h2_2025_episodes_ge_4": true,
+    "h2_2025_positive_episodes_ge_3": false,
+    "h2_2025_all_loeo_positive": false,
+    "h2_2025_top1_share_le_35pct": true,
+    "h2_2025_top3_share_le_70pct": true,
+    "h2_2025_top_episode_share_le_50pct": false,
+    "h2_2025_cluster_bootstrap_ci_low_gt_0": false,
+    "y2026_jan_jul_cum_positive": true,
+    "y2026_episode_breadth": true
+  }
+}
