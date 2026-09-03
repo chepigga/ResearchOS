@@ -1,0 +1,18 @@
+{
+  "lab": "BTC_POST_IMPULSE_RANGE_STATE_AND_24H_REVERSAL_ROUTER_LAB_004",
+  "seed": 20260903,
+  "coverage_start": "2021-01-01 00:00:00+00:00",
+  "coverage_end": "2026-07-31 23:45:00+00:00",
+  "bars": 195578,
+  "primary_clock": "D30",
+  "clock_bars": {
+    "D15": 1,
+    "D30": 2,
+    "D60": 4
+  },
+  "impulse_q": 0.975,
+  "cooldown_bars": 16,
+  "oos_tuned": false,
+  "entry": "next M15 open after observation clock",
+  "feature_cutoff": "decision bar close"
+}

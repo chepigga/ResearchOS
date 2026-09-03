@@ -1,0 +1,15 @@
+{
+  "verdict": "FAIL_NO_TRANSFERABLE_POST_IMPULSE_MECHANISM",
+  "gates": {
+    "oos_events_ge_100": true,
+    "core_oos_auc_ge_0.55": true,
+    "core_oos_top_return_positive": false,
+    "named_transferable_family_found": false
+  },
+  "gates_passed": 2,
+  "gates_total": 4,
+  "robust_families": [],
+  "core_oos_auc": 0.5626050420168068,
+  "core_oos_top_mean_rev": -0.0026350078427544088,
+  "core_oos_top_hit": 0.23214285714285715
+}
