@@ -1,0 +1,22 @@
+{
+  "verdict": "FAIL_NO_ROBUST_RIGHT_TAIL_TRANSFER",
+  "gates_passed": 3,
+  "gates_total": 8,
+  "gates": {
+    "oos_events_ge_100": true,
+    "bridge_avg_auc_delta_positive": false,
+    "oos_avg_auc_delta_ge_0.02": true,
+    "oos_avg_brier_improves": false,
+    "bridge_top20_return_delta_positive": true,
+    "oos_top20_return_delta_positive": false,
+    "oos_top20_tail_hit_delta_ge_0.05": false,
+    "transfer_same_sign": false
+  },
+  "avg_auc_delta_bridge": -0.01300138312586438,
+  "avg_auc_delta_oos": 0.03699196459232959,
+  "avg_brier_improvement_oos": -0.0038254726930879585,
+  "bridge_top20_return_delta": 0.0059636771743154455,
+  "oos_top20_return_delta": -0.008047717691557158,
+  "bridge_top20_hit_delta": -0.03783783783783784,
+  "oos_top20_hit_delta": -0.14642857142857144
+}
