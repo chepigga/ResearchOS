@@ -1,0 +1,34 @@
+name: BTC Reversal Limit Yearly Fresh Aug2026 LAB007 Runner
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/btc_reversal_limit_yearly_fresh_aug2026_lab007_runner.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab007:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-limit-retest-yearly-fresh-aug2026-007
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB007
+        run: python labs/BTC_REVERSAL_LIMIT_RETEST_YEARLY_STABILITY_AND_FRESH_AUG2026_REPLICATION_LAB_007/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/BTC_REVERSAL_LIMIT_RETEST_YEARLY_STABILITY_AND_FRESH_AUG2026_REPLICATION_LAB_007/output
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Persist BTC yearly stability and fresh Aug2026 LAB007 outputs'
+          git push origin HEAD:lab/btc-reversal-limit-retest-yearly-fresh-aug2026-007
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-limit-yearly-fresh-aug2026-lab007
+          path: labs/BTC_REVERSAL_LIMIT_RETEST_YEARLY_STABILITY_AND_FRESH_AUG2026_REPLICATION_LAB_007/output
