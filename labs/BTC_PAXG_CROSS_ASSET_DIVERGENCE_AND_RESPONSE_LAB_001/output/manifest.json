@@ -1,0 +1,26 @@
+{
+  "lab": "BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001",
+  "seed": 20260903,
+  "freeze": "2026-09-03",
+  "params": {
+    "start_month": "2021-01",
+    "end_month": "2026-08",
+    "interval": "15m",
+    "impulse_quantile": 0.975,
+    "roll_bars": 2880,
+    "cooldown_bars": 16,
+    "paxg_strong_z": 0.5,
+    "primary_horizon": "4h"
+  },
+  "counts": {
+    "synchronized_bars": 195578,
+    "events": 1632
+  },
+  "output_sha256": {
+    "REPORT.md": "724e10dfb4a626354521b01bbcb7b1f0485df86d289711faa421342636617194",
+    "conditional_bins.csv": "31d9797c8cd147ffd0ed1482673ac3057210c66e805c55dba91e371870bb3ae7",
+    "events.csv": "f88691e591ebffeee5d5a17e781dd69bfd1897ea68aa51be047f474ec8aa6ead",
+    "model_metrics.csv": "6b711c32215b07fd642f57ec656900a6265e1c4e3127ffce94ca09e05826d346",
+    "verdict.json": "2d39e064a57a09db39e900f5c30b2dfe2a3e4bc1375ed3ffdbcd40b907fa0dbc"
+  }
+}
