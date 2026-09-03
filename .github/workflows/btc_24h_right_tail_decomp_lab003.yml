@@ -1,0 +1,46 @@
+name: BTC 24H Right Tail Decomposition LAB003
+
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_24h_right_tail_decomp_lab003.yml'
+      - 'labs/BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab003:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout frozen LAB003 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-24h-right-tail-btc-only-decomp-003
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run preregistered LAB003
+        run: python labs/BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003/run_lab.py
+      - name: Persist frozen outputs on LAB003 branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "researchos-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add labs/BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003/output
+          git commit -m "record BTC-only right-tail decomposition LAB003 result" || exit 0
+          git push origin HEAD:lab/btc-24h-right-tail-btc-only-decomp-003
+      - name: Upload outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003
+          path: labs/BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003/output/
+          if-no-files-found: error
+          retention-days: 30
