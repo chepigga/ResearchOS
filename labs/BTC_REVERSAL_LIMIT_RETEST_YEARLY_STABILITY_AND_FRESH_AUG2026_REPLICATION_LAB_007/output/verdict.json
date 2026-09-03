@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL_YEARLY_STABILITY",
+  "gates_passed": 4,
+  "gates_total": 10,
+  "gates": {
+    "dev_positive_years_ge_3_of_4": false,
+    "year_2025_positive": true,
+    "y2026_jan_jul_positive": true,
+    "recent_pf_gt_1": true,
+    "recent_closed_dd_050_lt_5pct": true,
+    "fresh_selected_rev_ge_3": false,
+    "fresh_filled_ge_3": false,
+    "fresh_net_ev_positive": false,
+    "fresh_pf_gt_1": false,
+    "fresh_closed_dd_050_lt_5pct": false
+  },
+  "dev_positive_years": 2,
+  "fresh_selected_rev": 0,
+  "fresh_filled": 0
+}
