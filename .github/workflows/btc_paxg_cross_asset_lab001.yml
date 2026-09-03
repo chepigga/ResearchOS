@@ -25,8 +25,8 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install -q numpy pandas requests scikit-learn
-      - name: Run frozen causal LAB
-        run: python labs/BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001/run_lab.py
+      - name: Run frozen causal LAB (audit-fixed primary horizon)
+        run: python labs/BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001/run_lab_v2.py
       - name: Persist small outputs on research branch
         shell: bash
         run: |
@@ -34,12 +34,12 @@ jobs:
           git config user.name "researchos-lab-bot"
           git config user.email "actions@users.noreply.github.com"
           git add labs/BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001/output
-          git commit -m "record BTC-PAXG cross-asset LAB001 result" || exit 0
+          git commit -m "record audit-fixed BTC-PAXG cross-asset LAB001 result" || exit 0
           git push origin HEAD:lab/btc-paxg-cross-asset-001
       - name: Upload outputs
         uses: actions/upload-artifact@v4
         with:
-          name: BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001
+          name: BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001_v2
           path: labs/BTC_PAXG_CROSS_ASSET_DIVERGENCE_AND_RESPONSE_LAB_001/output/
           if-no-files-found: error
           retention-days: 30
