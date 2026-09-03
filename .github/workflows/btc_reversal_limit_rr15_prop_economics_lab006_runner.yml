@@ -1,0 +1,34 @@
+name: BTC Reversal Limit RR15 Prop Economics LAB006 Runner
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/btc_reversal_limit_rr15_prop_economics_lab006_runner.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab006:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-limit-retest-rr15-economics-006
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB006
+        run: python labs/BTC_REVERSAL_LIMIT_RETEST_RR15_FIRST_HIT_AND_PROP_ECONOMICS_LAB_006/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/BTC_REVERSAL_LIMIT_RETEST_RR15_FIRST_HIT_AND_PROP_ECONOMICS_LAB_006/output
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Persist BTC reversal RR15 prop economics LAB006 outputs'
+          git push origin HEAD:lab/btc-reversal-limit-retest-rr15-economics-006
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-limit-rr15-prop-economics-lab006
+          path: labs/BTC_REVERSAL_LIMIT_RETEST_RR15_FIRST_HIT_AND_PROP_ECONOMICS_LAB_006/output
