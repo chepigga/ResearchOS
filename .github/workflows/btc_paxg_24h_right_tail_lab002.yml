@@ -1,0 +1,45 @@
+name: BTC PAXG 24H Right Tail LAB002 Runner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_paxg_24h_right_tail_lab002.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab002:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout frozen LAB002 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-paxg-24h-right-tail-002
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run preregistered LAB002
+        run: python labs/BTC_PAXG_24H_REGIME_AND_RIGHT_TAIL_TRANSFER_LAB_002/run_lab.py
+      - name: Persist frozen outputs on LAB002 branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "researchos-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add labs/BTC_PAXG_24H_REGIME_AND_RIGHT_TAIL_TRANSFER_LAB_002/output
+          git commit -m "record BTC-PAXG LAB002 frozen result" || exit 0
+          git push origin HEAD:lab/btc-paxg-24h-right-tail-002
+      - name: Upload outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: BTC_PAXG_24H_REGIME_AND_RIGHT_TAIL_TRANSFER_LAB_002
+          path: labs/BTC_PAXG_24H_REGIME_AND_RIGHT_TAIL_TRANSFER_LAB_002/output/
+          if-no-files-found: error
+          retention-days: 30
