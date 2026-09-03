@@ -1,0 +1,16 @@
+{
+  "lab": "BTC_24H_REVERSAL_ENTRY_DECAY_AND_CAUSAL_LIMIT_RETEST_LAB_005",
+  "seed": 20260903,
+  "coverage_start": "2021-01-01 00:00:00+00:00",
+  "coverage_end": "2026-07-31 23:45:00+00:00",
+  "bars": 195578,
+  "selector": "LAB003 exact BTC-only CORE top20 router, REV only",
+  "primary_limit": "LIMIT_R0.50_T60",
+  "limit_definition": {
+    "distance_event_range": 0.5,
+    "ttl_m15_bars": 4,
+    "market_fallback": false
+  },
+  "common_exit": "parent impulse bar + 96 M15 closes",
+  "oos_tuned": false
+}

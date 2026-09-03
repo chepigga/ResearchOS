@@ -1,0 +1,17 @@
+{
+  "verdict": "WATCH_LIMIT_RETEST_EXECUTION",
+  "gates_passed": 7,
+  "gates_total": 8,
+  "gates": {
+    "oos_selected_rev_ge_15": true,
+    "bridge_selected_rev_ge_15": true,
+    "entry_decay_bridge": true,
+    "entry_decay_oos": false,
+    "primary_limit_fill_bridge_ge_0.30": true,
+    "primary_limit_fill_oos_ge_0.30": true,
+    "primary_limit_matched_delta_bridge_positive": true,
+    "primary_limit_matched_delta_oos_positive": true
+  },
+  "oos_selected_rev": 21,
+  "bridge_selected_rev": 27
+}
