@@ -1,0 +1,34 @@
+name: BTC Reversal 2025H2 Profit Concentration LAB011 Runner
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_reversal_2025h2_profit_concentration_lab011_runner.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab011:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-2025h2-profit-concentration-episode-independence-011
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB011
+        run: python labs/BTC_REVERSAL_2025H2_PROFIT_CONCENTRATION_AND_EPISODE_INDEPENDENCE_LAB_011/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/BTC_REVERSAL_2025H2_PROFIT_CONCENTRATION_AND_EPISODE_INDEPENDENCE_LAB_011/output
+          git commit -m 'Persist BTC reversal 2025H2 profit concentration LAB011 outputs' || true
+          git push origin HEAD:lab/btc-reversal-2025h2-profit-concentration-episode-independence-011
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-2025h2-profit-concentration-lab011
+          path: labs/BTC_REVERSAL_2025H2_PROFIT_CONCENTRATION_AND_EPISODE_INDEPENDENCE_LAB_011/output
