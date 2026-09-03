@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS_PROP_ECONOMICS_SCREEN",
+  "gates_passed": 9,
+  "gates_total": 9,
+  "gates": {
+    "bridge_filled_ge_15": true,
+    "oos_filled_ge_10": true,
+    "bridge_net_ev_positive": true,
+    "oos_net_ev_positive": true,
+    "bridge_pf_gt_1": true,
+    "oos_pf_gt_1": true,
+    "oos_max_consecutive_losses_le_8": true,
+    "oos_equity_maxdd_050_lt_5pct": true,
+    "oos_overlap_risk_050_lt_4pct": true
+  }
+}
