@@ -1,0 +1,37 @@
+name: BTC Reversal Slow Regime Acceptance LAB009 Runner
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/btc_reversal_slow_regime_acceptance_lab009_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab009:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-slow-regime-impulse-acceptance-persistence-009
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB009
+        run: python labs/BTC_REVERSAL_SLOW_REGIME_AND_IMPULSE_ACCEPTANCE_PERSISTENCE_LAB_009/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/BTC_REVERSAL_SLOW_REGIME_AND_IMPULSE_ACCEPTANCE_PERSISTENCE_LAB_009/output
+          git diff --cached --quiet || git commit -m "Persist BTC slow regime acceptance LAB009 outputs"
+          git push origin HEAD:lab/btc-reversal-slow-regime-impulse-acceptance-persistence-009
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-slow-regime-acceptance-lab009
+          path: labs/BTC_REVERSAL_SLOW_REGIME_AND_IMPULSE_ACCEPTANCE_PERSISTENCE_LAB_009/output
