@@ -1,0 +1,48 @@
+{
+  "verdict": "FAIL_NO_ROBUST_ON_OFF_ROUTER",
+  "gates_passed": 6,
+  "gates_total": 10,
+  "gates": {
+    "pooled_gated_cum_gt_base": false,
+    "pooled_gated_maxdd_lt_base": true,
+    "year_2022_delta_positive": true,
+    "year_2024_delta_positive": false,
+    "year_2025_gated_positive": false,
+    "y2026_jan_jul_gated_positive": true,
+    "positive_years_ge_4_of_5": false,
+    "pooled_coverage_25_to_75pct": true,
+    "recent_gated_cum_positive": true,
+    "recent_gated_maxdd_le_base": true
+  },
+  "positive_years": 1,
+  "pooled": {
+    "signals": 124,
+    "coverage": 0.4596774193548387,
+    "base_cum_R": 4.254600156597292,
+    "gated_cum_R": -5.787111358614945,
+    "delta_cum_R": -10.041711515212238,
+    "base_ev": 0.034311291585462034,
+    "gated_ev": -0.04667025289205601,
+    "base_pf": 1.0890276255978328,
+    "gated_pf": 0.7872268314969313,
+    "base_maxdd_R": 12.585264751513275,
+    "gated_maxdd_R": 11.32184519805016,
+    "base_max_consecutive_losses": 4,
+    "gated_max_consecutive_losses": 4
+  },
+  "recent": {
+    "signals": 49,
+    "coverage": 0.5306122448979592,
+    "base_cum_R": 11.134896696050195,
+    "gated_cum_R": 1.622770535376452,
+    "delta_cum_R": -9.512126160673743,
+    "base_ev": 0.2272427897153101,
+    "gated_ev": 0.033117766028090856,
+    "base_pf": 1.7148140428299736,
+    "gated_pf": 1.1643911862278604,
+    "base_maxdd_R": 4.061983193932155,
+    "gated_maxdd_R": 3.424517365057287,
+    "base_max_consecutive_losses": 3,
+    "gated_max_consecutive_losses": 2
+  }
+}
