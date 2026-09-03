@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas requests scikit-learn
       - name: Run frozen LAB004
-        run: python labs/BTC_POST_IMPULSE_RANGE_STATE_AND_24H_REVERSAL_ROUTER_LAB_004/run_lab.py
+        run: python labs/BTC_POST_IMPULSE_RANGE_STATE_AND_24H_REVERSAL_ROUTER_LAB_004/run_lab_v2.py
       - name: Persist outputs
         run: |
           git config user.name 'github-actions[bot]'
