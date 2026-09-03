@@ -1,0 +1,68 @@
+{
+  "lab": "BTC_24H_RIGHT_TAIL_BTC_ONLY_CAUSAL_DECOMPOSITION_LAB_003",
+  "seed": 20260903,
+  "primary": "24h",
+  "impulse_q": 0.975,
+  "cooldown_bars": 16,
+  "coverage_start": "2021-01-01 00:00:00+00:00",
+  "coverage_end": "2026-07-31 23:45:00+00:00",
+  "bars": 195578,
+  "events": {
+    "BRIDGE_2025": 301,
+    "DEV_2021_2024": 1155,
+    "OOS_2026": 174
+  },
+  "target_threshold_source": "DEV_2021_2024_only",
+  "core_features": [
+    "impulse_dir",
+    "btc_z15",
+    "btc_z60",
+    "btc_z4h",
+    "btc_z24h",
+    "btc_vol_z",
+    "btc_range_z",
+    "btc_corr7d_lag",
+    "hour_sin",
+    "hour_cos"
+  ],
+  "families": {
+    "IMPULSE_PATH": [
+      "impulse_eff60",
+      "impulse_consistency60",
+      "impulse_clv60",
+      "vol60_z"
+    ],
+    "PRE_STATE": [
+      "pre4h_z",
+      "pre24h_z",
+      "pos7d",
+      "dist7d_high_z",
+      "dist7d_low_z"
+    ],
+    "VOL_REGIME": [
+      "rv4h_z",
+      "rv24h_z",
+      "vol_ratio_24h_7d_z",
+      "atr4h_z"
+    ],
+    "BREAK_ACCEPTANCE": [
+      "break4h_signed_z",
+      "break24h_signed_z",
+      "clv15_signed",
+      "range_pos4h_signed"
+    ],
+    "TREND_REGIME": [
+      "trend7d_z",
+      "trend30d_z",
+      "trend_eff7d",
+      "trend_interaction"
+    ],
+    "CALENDAR": [
+      "dow_sin",
+      "dow_cos",
+      "weekend"
+    ]
+  },
+  "oos_tuned": false,
+  "post_decision_features": false
+}

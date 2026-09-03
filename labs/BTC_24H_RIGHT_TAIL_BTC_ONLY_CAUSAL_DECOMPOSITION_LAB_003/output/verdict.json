@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS_TRANSFERABLE_BTC_COMPONENT_FOUND",
+  "gates": {
+    "oos_events_ge_100": true,
+    "core_oos_top_return_positive": true,
+    "core_oos_tail_hit_ge_0.30": true,
+    "core_bridge_not_catastrophic": true,
+    "robust_core_feature_found": true,
+    "robust_add_family_found": false
+  },
+  "stable_components": [
+    {
+      "component_type": "CORE_FEATURE",
+      "component": "btc_range_z"
+    }
+  ],
+  "core_bridge_top_mean_return": -0.0009764431137652008,
+  "core_bridge_tail_hit": 0.2,
+  "core_oos_top_mean_return": 0.009664934633925185,
+  "core_oos_tail_hit": 0.375,
+  "core_oos_n_top": 24,
+  "core_oos_n_total": 174
+}
