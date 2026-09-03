@@ -52,6 +52,9 @@ Expanding yearly walk-forward. For each test bucket, fit using only strictly ear
 
 The ON threshold is the median fitted score on that test year's training sample. Thus the intended train coverage is ~50%; no test-year threshold tuning is allowed.
 
+## Important causality boundary, frozen before execution
+The new ON/OFF gate itself is strictly event-time causal and its yearly fit uses only prior completed signal outcomes. However, the inherited LAB003 selector was originally trained on the full DEV 2021–2024 block. Therefore retrospective 2022–2024 results are **conditional mechanism diagnostics under that frozen DEV selector**, not a full deployment-causal simulation of the entire pipeline. Forward years 2025 and 2026 are the stronger transfer evidence because the inherited selector was frozen before them. Any PASS in this LAB remains a research PASS and cannot be promoted to production without a later strict end-to-end causal selector replication.
+
 ## Primary comparison
 For each walk-forward year compare:
 - BASE: trade every frozen `selected_rev` signal;
@@ -82,4 +85,4 @@ Primary combined gate only:
 `PASS_CAUSAL_ON_OFF_ABSTENTION_ROUTER` requires >=8/10 with gates 1, 3, 4, 5, 6 all passing. Otherwise WATCH/FAIL according to preregistered score logic.
 
 ## Scientific status
-Years 2022/2024 motivated this LAB and therefore are mechanism-discovery data, not pristine holdout. 2025/2026 and August have also been seen in prior LABs. A PASS here is a causal walk-forward research pass, not production authorization. No live allocation is authorized by this LAB alone.
+Years 2022/2024 motivated this LAB and therefore are mechanism-discovery data, not pristine holdout. 2025/2026 and August have also been seen in prior LABs. A PASS here is a causal walk-forward **gate** research pass, not production authorization. No live allocation is authorized by this LAB alone.
