@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS_CAUSAL_VIRTUAL_FILL_MATURITY_TRANSFER",
+  "gates_passed": 11,
+  "gates_total": 12,
+  "gates": {
+    "h2_2025_cum_positive": true,
+    "y2026_cum_positive": true,
+    "pooled_cum_positive": true,
+    "pooled_retains_ge_70pct_base": true,
+    "h2_2025_retains_ge_70pct_base": true,
+    "y2026_retains_ge_70pct_base": true,
+    "pooled_pf_ge_base": true,
+    "pooled_maxdd_le_base": true,
+    "vf0_fill_mean_nonpositive": true,
+    "vf1plus_fill_mean_positive": true,
+    "pooled_all_loeo_positive": true,
+    "pooled_cluster_bootstrap_ci_low_gt_0": false
+  },
+  "retain_2025H2": 1.1145598129315144,
+  "retain_2026": 1.0537049085213983,
+  "retain_pooled": 1.0852462082949443,
+  "mechanism": {
+    "early_fill_n": 12,
+    "early_fill_mean_R": -0.09103010612523445,
+    "early_fill_positive": 0.4166666666666667,
+    "mature_fill_n": 15,
+    "mature_fill_mean_R": 0.9271035462015339,
+    "mature_fill_positive": 0.8
+  }
+}
