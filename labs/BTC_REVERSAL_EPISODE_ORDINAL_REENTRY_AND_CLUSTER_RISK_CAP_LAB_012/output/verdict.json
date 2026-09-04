@@ -1,0 +1,22 @@
+{
+  "verdict": "WATCH_EPISODE_HARVEST_PARTIAL",
+  "gates_passed": 7,
+  "gates_total": 12,
+  "gates": {
+    "h2_2025_capped_cum_positive": true,
+    "y2026_capped_cum_positive": true,
+    "pooled_capped_cum_positive": true,
+    "pooled_retains_ge_70pct_base": false,
+    "h2_2025_retains_ge_60pct_base": false,
+    "y2026_retains_ge_60pct_base": false,
+    "pooled_maxdd_le_base": true,
+    "worst_capped_episode_ge_minus_2_25R": true,
+    "pooled_top_episode_share_le_60pct": true,
+    "pooled_all_loeo_positive": false,
+    "pooled_cluster_bootstrap_ci_low_gt_0": false,
+    "ordinal_2_mean_positive": true
+  },
+  "retain_pooled": 0.1668104547223827,
+  "retain_2025H2": 0.31112739232805386,
+  "retain_2026": 0.01152611327561597
+}
