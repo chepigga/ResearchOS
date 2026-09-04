@@ -1,0 +1,29 @@
+{
+  "verdict": "FAIL_VF1_BREADTH_DESTROYS_EDGE",
+  "gates_passed": 3,
+  "gates_total": 12,
+  "gates": {
+    "h2_2025_fills_ge_18": true,
+    "y2026_fills_ge_21": true,
+    "pooled_fills_ge_39": true,
+    "h2_2025_mean_fill_R_ge_0.30": false,
+    "y2026_mean_fill_R_ge_0.30": false,
+    "recent_pf_ge_1.5_both": false,
+    "recent_maxdd_le_2.5R_both": false,
+    "recent_cum_R_positive_both": false,
+    "pooled_retains_ge_90pct_baseline_R": false,
+    "pooled_cluster_bootstrap_ci_low_gt_0": false,
+    "pooled_all_loeo_positive": false,
+    "plateau_neighbors_ge_2": false
+  },
+  "primary": "P960_T30",
+  "baseline": "P975_T20",
+  "pooled_R_retention": 0.08180116183220307,
+  "plateau": {
+    "P970_T30": true,
+    "P960_T25": false,
+    "P960_T40": false,
+    "P950_T30": false
+  },
+  "plateau_passed": 1
+}
