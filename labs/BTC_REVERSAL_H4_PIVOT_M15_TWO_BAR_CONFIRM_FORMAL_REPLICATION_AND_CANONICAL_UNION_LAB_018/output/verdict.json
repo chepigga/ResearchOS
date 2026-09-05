@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS_FORMAL_TWO_BAR_REPLICATION_REUSED",
+  "gates_passed": 16,
+  "gates_total": 16,
+  "gates": {
+    "lineage_exact": true,
+    "h2_real_fills_ge_8": true,
+    "y2026_real_fills_ge_5": true,
+    "mean_R_positive_both": true,
+    "pf_gt_1_30_both": true,
+    "cumR_positive_both": true,
+    "pooled_ev_ge_0_25R": true,
+    "pooled_pf_ge_1_50": true,
+    "pooled_loeo_positive": true,
+    "pooled_maxdd_le_3R": true,
+    "union_freq_ge_3_per_month": true,
+    "union_incremental_cumR_ge_2R": true,
+    "union_pf_ge_1_75": true,
+    "union_maxdd_le_4R": true,
+    "union_max_concurrent_risk_050_lt_4pct": true,
+    "union_positive_both_recent_windows": true
+  },
+  "meta": {
+    "lineage_exact": true,
+    "raw": 610,
+    "t25_pre": 294,
+    "removed": 81,
+    "parents": 213,
+    "recent_h2": 22,
+    "recent_2026": 21,
+    "primary": "TWO_BAR_CONFIRM_12H"
+  }
+}
