@@ -1,0 +1,34 @@
+name: BTC Reversal Orthogonal H4 Parent LAB016 Runner
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_reversal_orthogonal_h4_parent_lab016_runner.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab016:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-orthogonal-h4-parent-nonoverlap-family-016
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB016
+        run: python labs/BTC_REVERSAL_ORTHOGONAL_H4_PARENT_AND_NONOVERLAP_FAMILY_LAB_016/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/BTC_REVERSAL_ORTHOGONAL_H4_PARENT_AND_NONOVERLAP_FAMILY_LAB_016/output
+          git commit -m 'Persist BTC reversal orthogonal H4 LAB016 outputs' || true
+          git push origin HEAD:lab/btc-reversal-orthogonal-h4-parent-nonoverlap-family-016
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-orthogonal-h4-parent-lab016
+          path: labs/BTC_REVERSAL_ORTHOGONAL_H4_PARENT_AND_NONOVERLAP_FAMILY_LAB_016/output
