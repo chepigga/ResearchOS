@@ -18,10 +18,13 @@
   },
   "meta": {
     "t25_cutoff": 0.31308988842751206,
-    "raw_h4_parents": 596,
-    "t25_pre": 288,
+    "raw_h4_parents": 610,
+    "t25_pre": 294,
     "removed_24h": 81,
-    "orthogonal_parents": 207,
-    "canonical_selected": 215
+    "orthogonal_parents": 213,
+    "canonical_stream_rows": 216,
+    "frozen_parent_artifact": "LAB016/H4_7D_PIVOT_SWEEP_RECLAIM_nonoverlap_selected.csv",
+    "frozen_canonical_artifact": "LAB015/part_a_p975_t25_signal_stream.csv",
+    "loader": "L7.load_panel"
   }
 }
