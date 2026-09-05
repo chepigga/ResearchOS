@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS_RECENT_BUY_DOMINANCE_REUSED",
+  "gates_passed": 15,
+  "gates_total": 19,
+  "gates": {
+    "lineage_exact": true,
+    "buy_h2_fills_ge_6": true,
+    "buy_2026_fills_ge_5": true,
+    "buy_cumR_positive_both_recent": true,
+    "buy_meanR_ge_0_30_both_recent": true,
+    "buy_pf_gt_1_50_both_recent": true,
+    "buy_sell_mean_delta_positive_both_recent": true,
+    "sell_cumR_negative_both_recent": true,
+    "buy_recent_loeo_positive": true,
+    "buy_recent_cluster_bootstrap_low_gt_0": true,
+    "hist_buy_cumR_positive": false,
+    "hist_buy_pf_gt_1_20": false,
+    "hist_buy_positive_windows_ge_3_of_5": false,
+    "hist_buy_leave_one_window_out_positive": false,
+    "union_freq_ge_2_75_per_month": true,
+    "union_cumR_gt_all_direction_union_21_67R": true,
+    "union_pf_ge_2_50": true,
+    "union_maxdd_le_3_75R": true,
+    "union_riskload_050_lt_4pct": true
+  },
+  "bootstrap": {
+    "n_episodes": 9,
+    "low": 0.1237121298606066,
+    "median": 0.6991006120219736,
+    "high": 1.2358528363271
+  },
+  "positive_recent_buy_months": 6,
+  "buy_recent_month_loo_worst_R": 5.978652819535073,
+  "historical_positive_buy_windows": 2,
+  "historical_leave_one_window_out_worst_R": -9.314254848210798,
+  "lineage": {
+    "parents": 213,
+    "h2_fills": 11,
+    "y26_fills": 7,
+    "h2_buy": 8,
+    "h2_sell": 3,
+    "y26_buy": 6,
+    "y26_sell": 1
+  }
+}
