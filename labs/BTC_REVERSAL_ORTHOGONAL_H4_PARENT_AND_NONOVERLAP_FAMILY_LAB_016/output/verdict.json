@@ -1,0 +1,80 @@
+{
+  "families": {
+    "H4_DISPLACEMENT_EXTREME": {
+      "status": "REJECT_ORTHOGONAL_H4_DISCOVERY",
+      "gates_passed": 3,
+      "gates_total": 10,
+      "gates": {
+        "h2_selected_ge_10": true,
+        "y2026_selected_ge_10": true,
+        "h2_real_fills_ge_5": false,
+        "y2026_real_fills_ge_5": false,
+        "mean_R_positive_both": false,
+        "pf_gt_12_both": false,
+        "cumR_positive_both": false,
+        "pooled_freq_ge_075": false,
+        "pooled_loeo_positive": false,
+        "pooled_maxdd_le_4R": true
+      }
+    },
+    "H4_FAILED_EXTENSION": {
+      "status": "REJECT_ORTHOGONAL_H4_DISCOVERY",
+      "gates_passed": 1,
+      "gates_total": 10,
+      "gates": {
+        "h2_selected_ge_10": false,
+        "y2026_selected_ge_10": false,
+        "h2_real_fills_ge_5": false,
+        "y2026_real_fills_ge_5": false,
+        "mean_R_positive_both": false,
+        "pf_gt_12_both": false,
+        "cumR_positive_both": false,
+        "pooled_freq_ge_075": false,
+        "pooled_loeo_positive": false,
+        "pooled_maxdd_le_4R": true
+      }
+    },
+    "H4_7D_PIVOT_SWEEP_RECLAIM": {
+      "status": "REJECT_ORTHOGONAL_H4_DISCOVERY",
+      "gates_passed": 3,
+      "gates_total": 10,
+      "gates": {
+        "h2_selected_ge_10": true,
+        "y2026_selected_ge_10": true,
+        "h2_real_fills_ge_5": false,
+        "y2026_real_fills_ge_5": false,
+        "mean_R_positive_both": false,
+        "pf_gt_12_both": false,
+        "cumR_positive_both": false,
+        "pooled_freq_ge_075": false,
+        "pooled_loeo_positive": false,
+        "pooled_maxdd_le_4R": true
+      }
+    }
+  },
+  "t25_cutoff": 0.31308988842751206,
+  "canonical_selected": 216,
+  "census": [
+    {
+      "family": "H4_DISPLACEMENT_EXTREME",
+      "raw": 375,
+      "pre": 151,
+      "removed": 0,
+      "post": 151
+    },
+    {
+      "family": "H4_FAILED_EXTENSION",
+      "raw": 19,
+      "pre": 8,
+      "removed": 0,
+      "post": 8
+    },
+    {
+      "family": "H4_7D_PIVOT_SWEEP_RECLAIM",
+      "raw": 610,
+      "pre": 294,
+      "removed": 0,
+      "post": 294
+    }
+  ]
+}
