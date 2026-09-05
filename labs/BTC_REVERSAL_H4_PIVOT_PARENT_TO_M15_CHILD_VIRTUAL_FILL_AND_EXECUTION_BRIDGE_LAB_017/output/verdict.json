@@ -1,6 +1,6 @@
 {
-  "verdict": "FAIL_H4_TO_M15_EXECUTION_BRIDGE",
-  "gates_passed": 7,
+  "verdict": "WATCH_H4_TO_M15_BRIDGE",
+  "gates_passed": 10,
   "gates_total": 12,
   "gates": {
     "h2_parents_ge_15": true,
@@ -8,20 +8,20 @@
     "child_found_ge_50pct_both": true,
     "h2_real_fills_ge_4": true,
     "y2026_real_fills_ge_4": true,
-    "mean_R_positive_both": false,
+    "mean_R_positive_both": true,
     "pf_gt_12_both": false,
-    "cumR_positive_both": false,
+    "cumR_positive_both": true,
     "pooled_freq_ge_050pm": true,
     "pooled_loeo_positive": false,
-    "pooled_maxdd_le_4R": false,
+    "pooled_maxdd_le_4R": true,
     "union_freq_ge_220pm_and_cumR_gt_12": true
   },
   "meta": {
-    "t25_cutoff": 0.31308988842752805,
+    "t25_cutoff": 0.31308988842751206,
     "raw_h4_parents": 596,
     "t25_pre": 288,
-    "removed_24h": 0,
-    "orthogonal_parents": 288,
+    "removed_24h": 81,
+    "orthogonal_parents": 207,
     "canonical_selected": 215
   }
 }
