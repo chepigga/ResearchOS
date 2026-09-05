@@ -19,16 +19,16 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -q numpy pandas requests scikit-learn
-      - name: Run frozen LAB018 v3 summary parity fix
-        run: python labs/BTC_REVERSAL_H4_PIVOT_M15_TWO_BAR_CONFIRM_FORMAL_REPLICATION_AND_CANONICAL_UNION_LAB_018/run_lab_v3.py
+      - name: Run frozen LAB018 v4 unified reporting schema
+        run: python labs/BTC_REVERSAL_H4_PIVOT_M15_TWO_BAR_CONFIRM_FORMAL_REPLICATION_AND_CANONICAL_UNION_LAB_018/run_lab_v4.py
       - name: Persist outputs
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add labs/BTC_REVERSAL_H4_PIVOT_M15_TWO_BAR_CONFIRM_FORMAL_REPLICATION_AND_CANONICAL_UNION_LAB_018/output
-          git commit -m 'Persist BTC reversal H4 pivot M15 two-bar LAB018 v3 outputs' || true
+          git commit -m 'Persist BTC reversal H4 pivot M15 two-bar LAB018 v4 outputs' || true
           git push origin HEAD:lab/btc-reversal-h4-pivot-m15-two-bar-confirm-replication-union-018
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-reversal-h4-pivot-m15-two-bar-lab018-v3
+          name: btc-reversal-h4-pivot-m15-two-bar-lab018-v4
           path: labs/BTC_REVERSAL_H4_PIVOT_M15_TWO_BAR_CONFIRM_FORMAL_REPLICATION_AND_CANONICAL_UNION_LAB_018/output
