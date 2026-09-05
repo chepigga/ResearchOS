@@ -1,0 +1,4 @@
+family,selected_family,canonical_selected,exact_timestamp_overlap,within_24h_overlap,within_24h_share
+RANGE60_EXTREME,199,216,0,199,1.0
+VOLUME60_SHOCK,168,216,0,168,1.0
+PERSISTENT60_MOVE,430,216,0,430,1.0

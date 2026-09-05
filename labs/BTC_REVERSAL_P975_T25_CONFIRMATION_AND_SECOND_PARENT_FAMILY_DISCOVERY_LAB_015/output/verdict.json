@@ -1,0 +1,66 @@
+{
+  "part_a": {
+    "verdict": "PASS_CONFIRM_P975_T25",
+    "gates_passed": 10,
+    "gates_total": 10,
+    "gates": {
+      "h2_fills_ge_10": true,
+      "y2026_fills_ge_10": true,
+      "h2_mean_R_ge_040": true,
+      "y2026_mean_R_ge_040": true,
+      "pf_ge_2_both": true,
+      "cumR_positive_both": true,
+      "maxdd_le_25_both": true,
+      "pooled_cumR_ge_12": true,
+      "pooled_freq_ge_15pm": true,
+      "pooled_all_loeo_positive": true
+    }
+  },
+  "part_b": {
+    "RANGE60_EXTREME": {
+      "status": "REJECT_DISCOVERY",
+      "gates": {
+        "h2_fills_ge_6": false,
+        "y2026_fills_ge_7": false,
+        "mean_positive_both": false,
+        "pf_gt_12_both": false,
+        "cum_positive_both": false,
+        "pooled_freq_ge_075": false,
+        "pooled_loeo_positive": false
+      },
+      "gates_passed": 0,
+      "gates_total": 7
+    },
+    "VOLUME60_SHOCK": {
+      "status": "REJECT_DISCOVERY",
+      "gates": {
+        "h2_fills_ge_6": true,
+        "y2026_fills_ge_7": true,
+        "mean_positive_both": false,
+        "pf_gt_12_both": false,
+        "cum_positive_both": false,
+        "pooled_freq_ge_075": true,
+        "pooled_loeo_positive": false
+      },
+      "gates_passed": 3,
+      "gates_total": 7
+    },
+    "PERSISTENT60_MOVE": {
+      "status": "REJECT_DISCOVERY",
+      "gates": {
+        "h2_fills_ge_6": true,
+        "y2026_fills_ge_7": true,
+        "mean_positive_both": false,
+        "pf_gt_12_both": false,
+        "cum_positive_both": false,
+        "pooled_freq_ge_075": true,
+        "pooled_loeo_positive": false
+      },
+      "gates_passed": 3,
+      "gates_total": 7
+    }
+  },
+  "canonical_t25_cutoff": 0.31308988842752805,
+  "historical_files": 67,
+  "fresh_daily_files": 32
+}
