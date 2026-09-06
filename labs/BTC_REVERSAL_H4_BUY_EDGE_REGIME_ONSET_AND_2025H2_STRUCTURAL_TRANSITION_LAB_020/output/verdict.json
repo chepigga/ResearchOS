@@ -1,0 +1,36 @@
+{
+  "verdict": "FAIL_NO_CAUSAL_REGIME_ONSET_SUPPORT",
+  "gates": {
+    "best_change_point_near_2025H2": true,
+    "post_split_mean_gt_pre": true,
+    "stable_shifts_ge_3": false,
+    "structural_stable_shift_ge_1": true,
+    "2026_similarity_transfer_supportive": true
+  },
+  "stable_shift_count": 1,
+  "structural_stable_shift_count": 1,
+  "change_point": {
+    "k": 24,
+    "split_time": "2025-07-02 04:15:00+00:00",
+    "pre_n": 24,
+    "post_n": 13,
+    "pre_mean": -0.3842950577413405,
+    "post_mean": 0.850143504204984,
+    "delta_mean": 1.2344385619463245,
+    "abs_delta": 1.2344385619463245,
+    "pre_cum": -9.223081385792172,
+    "post_cum": 11.051865554664792,
+    "pre_pf": 0.527382940604172,
+    "post_pf": 5.619279913107014,
+    "pre_dd": 12.879828700002149,
+    "post_dd": 1.2217553245834676
+  },
+  "change_point_bootstrap": {
+    "valid": 5000,
+    "in_band_fraction": 0.5754,
+    "q25_split": "2025-02-27 00:15:00+00:00",
+    "median_split": "2025-07-02 04:15:00+00:00",
+    "q75_split": "2025-07-02 04:15:00+00:00"
+  },
+  "regime_threshold": 0.3834653260107425
+}
