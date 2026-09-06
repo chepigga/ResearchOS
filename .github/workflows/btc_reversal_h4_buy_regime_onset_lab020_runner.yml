@@ -1,0 +1,34 @@
+name: BTC Reversal H4 BUY Regime Onset LAB020 Runner
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_reversal_h4_buy_regime_onset_lab020_runner.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab020:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/btc-reversal-h4-buy-regime-onset-structural-transition-020
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas requests scikit-learn
+      - name: Run frozen LAB020
+        run: python labs/BTC_REVERSAL_H4_BUY_EDGE_REGIME_ONSET_AND_2025H2_STRUCTURAL_TRANSITION_LAB_020/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/BTC_REVERSAL_H4_BUY_EDGE_REGIME_ONSET_AND_2025H2_STRUCTURAL_TRANSITION_LAB_020/output
+          git commit -m 'Persist BTC reversal H4 BUY regime onset LAB020 outputs' || true
+          git push origin HEAD:lab/btc-reversal-h4-buy-regime-onset-structural-transition-020
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-reversal-h4-buy-regime-onset-lab020
+          path: labs/BTC_REVERSAL_H4_BUY_EDGE_REGIME_ONSET_AND_2025H2_STRUCTURAL_TRANSITION_LAB_020/output
