@@ -20,6 +20,18 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -q numpy pandas requests
+      - name: Probe Binance metrics transport
+        shell: bash
+        run: |
+          set +e
+          for u in \
+            'https://data.binance.vision/data/futures/um/daily/metrics/BTCUSDT/BTCUSDT-metrics-2023-01-21.zip' \
+            'https://data.binance.vision/data/futures/um/daily/metrics/BTCUSDT-metrics-2023-01-21.zip'; do
+            echo "URL=$u"
+            curl -L -sS -o /tmp/metric_probe -w 'HTTP=%{http_code} TYPE=%{content_type} SIZE=%{size_download}\n' "$u"
+            file /tmp/metric_probe || true
+            unzip -l /tmp/metric_probe 2>&1 | head -20 || true
+          done
       - name: Download frozen Binance BTCUSDT M15 price data
         shell: bash
         run: |
