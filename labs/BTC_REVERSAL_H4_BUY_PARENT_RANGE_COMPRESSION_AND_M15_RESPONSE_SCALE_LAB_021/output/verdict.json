@@ -1,0 +1,25 @@
+{
+  "verdict": "FAIL_NO_ROBUST_PARENT_COMPRESSION_MECHANISM",
+  "score": 4,
+  "gates": {
+    "recent_compact_cumR_positive": true,
+    "recent_compact_mean_gt_large": true,
+    "recent_spearman_negative": false,
+    "bootstrap_compact_minus_large_low_gt_0": false,
+    "bootstrap_spearman_high_lt_0": false,
+    "both_recent_windows_compact_positive": true,
+    "response_scale_supportive": false,
+    "large_not_rescued_by_high_response": false,
+    "vf_maturity_supportive": false,
+    "historical_compact_improves_baseline": true
+  },
+  "bootstrap": {
+    "episodes": 9,
+    "rho_low": -0.1759596488929647,
+    "rho_median": 0.4524419155998104,
+    "rho_high": 0.8657718120805369,
+    "diff_low": -1.1711376155001954,
+    "diff_median": -0.1235499485008343,
+    "diff_high": 1.6376551694275965
+  }
+}
