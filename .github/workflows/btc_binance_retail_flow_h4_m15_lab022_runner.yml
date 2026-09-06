@@ -28,16 +28,16 @@ jobs:
           echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  btc_15m.zip' | sha256sum -c -
           mkdir -p btc15
           unzip -q btc_15m.zip -d btc15
-      - name: Run frozen LAB022
-        run: python labs/BTC_BINANCE_RETAIL_FLOW_DIRECTION_X_H4_PIVOT_M15_PRICE_TIMING_LAB_022/run_lab.py
+      - name: Run frozen LAB022 with daily metrics loader
+        run: python labs/BTC_BINANCE_RETAIL_FLOW_DIRECTION_X_H4_PIVOT_M15_PRICE_TIMING_LAB_022/run_lab_v2.py
       - name: Persist outputs
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add labs/BTC_BINANCE_RETAIL_FLOW_DIRECTION_X_H4_PIVOT_M15_PRICE_TIMING_LAB_022/output
-          git commit -m 'Persist BTC Binance retail flow x H4 M15 LAB022 outputs' || true
+          git commit -m 'Persist BTC Binance retail flow x H4 M15 LAB022 daily metrics outputs' || true
           git push origin HEAD:lab/btc-binance-retail-flow-direction-x-h4-pivot-m15-price-timing-022
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-binance-retail-flow-h4-m15-lab022
+          name: btc-binance-retail-flow-h4-m15-lab022-v2
           path: labs/BTC_BINANCE_RETAIL_FLOW_DIRECTION_X_H4_PIVOT_M15_PRICE_TIMING_LAB_022/output
