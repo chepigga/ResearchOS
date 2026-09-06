@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "verdict": "WATCH_DIRECTIONAL_FLOW_EXECUTION_BRIDGE",
+    "flow_rows": 205440,
+    "flow_start": "2020-10-01 00:00:00+00:00",
+    "flow_end": "2026-08-31 23:45:00+00:00",
+    "coverage_2022": 0.9491723744292238,
+    "coverage_2022_rows": 33259,
+    "coverage_2022_expected": 35040,
+    "price_offset_minutes": 0,
+    "price_parity_error": 0.000477519755760662,
+    "price_offset_audit": [
+      [
+        0,
+        0.000477519755760662,
+        100
+      ],
+      [
+        15,
+        0.0011595307988092446,
+        100
+      ],
+      [
+        -15,
+        0.001723896744410909,
+        100
+      ]
+    ],
+    "common_child_signals": 209,
+    "pre_aug_bounded": 16
+  },
+  "gates": {
+    "metrics_2022_coverage_ge_90pct": true,
+    "partA_flow_extreme_n_ge_30": true,
+    "partA_flow_mean_positive": true,
+    "partA_agreement_mean_gt_price_only": true,
+    "partB_bounded_n_ge_12": true,
+    "partB_bounded_mean_positive": true,
+    "partB_bounded_pf_gt_1_25": false,
+    "stress_2022_short_n_ge_3_and_cum_positive": false,
+    "recent_2025h2_2026_cum_positive": true,
+    "nostop_time12_mean_positive": false
+  }
+}
