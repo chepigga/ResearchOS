@@ -1,4 +1,5 @@
 name: BTC Reversal H4 BUY Regime Onset LAB020 Runner
+# retrigger: 2026-09-06
 on:
   push:
     branches: [main]
