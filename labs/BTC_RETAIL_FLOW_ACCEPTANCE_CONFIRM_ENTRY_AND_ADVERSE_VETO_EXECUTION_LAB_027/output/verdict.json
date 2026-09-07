@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "verdict": "WATCH_ACCEPTANCE_DRIFT_SURVIVES_BUT_BOUNDED_EXECUTION_WEAK",
+    "lineage_n": 3209,
+    "pre_aug_n": 3196,
+    "timestamp_parity": 1.0,
+    "threshold_parity_max": 1.829647544582258e-13,
+    "entry_bar_ambiguous": 0,
+    "aug_reused_audit": true,
+    "aug_trades": 5,
+    "aug_cum_atr": -7.04297451334609,
+    "aug_ev_trade": -1.4085949026692182
+  },
+  "gates": {
+    "exact_lab026_lineage_and_parity": true,
+    "accept_executable_count_ge_1000": true,
+    "signal_utilization_ge_35pct": true,
+    "bounded_accept_ev_trade_positive": true,
+    "bounded_accept_pf_gt_1_20": false,
+    "bounded_accept_policy_ev_signal_positive": true,
+    "bounded_accept_policy_ev_gt_immediate": false,
+    "bounded_accept_dd_le_immediate": true,
+    "nostop_accept_ev_trade_positive": true,
+    "stress_2022_short_n80_and_cum_positive": true,
+    "pooled_recent_cum_positive": false,
+    "long_bounded_accept_ev_positive": true,
+    "short_bounded_accept_ev_positive": true,
+    "bootstrap_accept_minus_immediate_ci_lower_gt_zero": false
+  },
+  "2022_short": {
+    "sample": "2022_SHORT",
+    "signals": 253,
+    "trades": 132,
+    "utilization": 0.5217391304347826,
+    "ev_trade": 0.5715577182025111,
+    "policy_ev_signal": 0.29820402688826675,
+    "cum_atr": 75.44561880273149,
+    "t_trade": 1.6703138873056473,
+    "pf_trade": 1.561689750674245,
+    "maxdd_policy_atr": 50.30358909756673,
+    "stop_rate": 0.6136363636363636,
+    "median_hold_h": 6.375,
+    "long_trades": 0,
+    "short_trades": 132
+  },
+  "recent": {
+    "sample": "RECENT",
+    "signals": 625,
+    "trades": 260,
+    "utilization": 0.416,
+    "ev_trade": -0.1768673048378132,
+    "policy_ev_signal": -0.0735767988125303,
+    "cum_atr": -45.98549925783144,
+    "t_trade": -0.8801953452938168,
+    "pf_trade": 0.8597251144332771,
+    "maxdd_policy_atr": 67.49563022175337,
+    "stop_rate": 0.7346153846153847,
+    "median_hold_h": 4.0,
+    "long_trades": 115,
+    "short_trades": 145
+  },
+  "bootstrap": {
+    "n_clusters": 1,
+    "draws": 5000,
+    "point_diff": -0.007138566614980926,
+    "ci_lo": -0.0071385666149809315,
+    "ci_hi": -0.0071385666149809315
+  }
+}
