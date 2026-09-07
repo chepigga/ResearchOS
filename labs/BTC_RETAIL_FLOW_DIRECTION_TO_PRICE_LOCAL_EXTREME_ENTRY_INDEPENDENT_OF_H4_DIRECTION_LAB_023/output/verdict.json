@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "verdict": "FAIL_LOCAL_EXTREME_TIMING_NO_TRANSFER",
+    "flow_n": 3209,
+    "price_timestamp_coverage": 1.0,
+    "primary_coverage": 0.9543178973717147,
+    "primary_trigger_n": 3050,
+    "pre_aug_flow_n": 3196,
+    "positive_short_years_2021_2025": 1,
+    "primary_minus_immediate_mean_atr": -0.23281810806404685,
+    "stop_rate_improvement_pp": -1.973306797431218
+  },
+  "gates": {
+    "frozen_flow_lineage_exact_3209": true,
+    "primary_trigger_coverage_ge_30pct": true,
+    "primary_pre_aug_n_ge_700": true,
+    "primary_mean_net_atr_positive": false,
+    "primary_pf_gt_1_20": false,
+    "primary_improves_immediate_by_ge_0_10atr": false,
+    "primary_stop_rate_reduced_ge_10pp": false,
+    "stress_2022_short_n_ge_40_and_cum_positive": false,
+    "short_pooled_positive_and_ge4_of5_years_positive": false,
+    "long_pooled_mean_positive": false,
+    "recent_cum_positive": false,
+    "primary_nostop_time12_mean_positive": false
+  }
+}
