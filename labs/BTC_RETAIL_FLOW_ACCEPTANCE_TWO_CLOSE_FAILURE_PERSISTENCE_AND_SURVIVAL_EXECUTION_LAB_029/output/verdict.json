@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "verdict": "WATCH_TWO_CLOSE_EXECUTION_POSITIVE_BUT_NOT_TRANSFERABLE",
+    "flow_n": 3209,
+    "accept_pre": 1496,
+    "right_tail_retention": 0.6036683422486064,
+    "positive_subwindows": 5,
+    "aug_reused": true,
+    "y22_short": {
+      "sample": "2022_SHORT",
+      "accept_trades": 132,
+      "original_signals": 253,
+      "ev_trade": 0.5962569742748108,
+      "policy_ev_original_signal": 0.3110905952738144,
+      "cum_atr": 78.70592060427504,
+      "t": 1.8461889728388186,
+      "pf": 1.7886897520282952,
+      "dd_atr": 30.757878952638606,
+      "trigger_rate": 0.6893939393939394,
+      "median_hold_h": 4.0,
+      "long_n": 0,
+      "short_n": 132
+    },
+    "recent": {
+      "sample": "RECENT",
+      "accept_trades": 260,
+      "original_signals": 625,
+      "ev_trade": -0.16148210993615478,
+      "policy_ev_original_signal": -0.06717655773344039,
+      "cum_atr": -41.985348583400246,
+      "t": -0.8106155543583395,
+      "pf": 0.8604643666166056,
+      "dd_atr": 67.53772194013578,
+      "trigger_rate": 0.7692307692307693,
+      "median_hold_h": 2.25,
+      "long_n": 115,
+      "short_n": 145
+    }
+  },
+  "m1_parity": {
+    "matched_events": 646,
+    "close_med_rel": 0.0,
+    "trigger_parity": 1.0,
+    "time_parity": 1.0
+  },
+  "bootstrap": {
+    "n_clusters": 289,
+    "draws": 5000,
+    "point_ev_trade": 0.032727432698232174,
+    "ci_ev_lo": -0.05150871018516979,
+    "ci_ev_hi": 0.11735982497015827,
+    "point_policy_ev_signal": 0.015319223816193783,
+    "ci_policy_lo": -0.024110460086675223,
+    "ci_policy_hi": 0.054934386156244304
+  },
+  "gates": {
+    "exact_lineage_and_accept_n": true,
+    "m1_m15_close_parity": false,
+    "origin_close2_trigger_parity_ge_99pct": true,
+    "origin_close2_ev_positive": true,
+    "origin_close2_pf_gt_1_20": true,
+    "origin_close2_ev_gt_hardsl15": true,
+    "origin_close2_policy_ev_gt_hardsl15": true,
+    "origin_close2_dd_le_1_20x_hardsl": true,
+    "right_tail_retention_ge_55pct": true,
+    "bootstrap_point_ev_diff_positive": true,
+    "bootstrap_noninferiority_ci_lo_ge_minus_0_05": false,
+    "stress_2022_short_n80_cum_positive_pf_gt_1_25": true,
+    "pooled_recent_cum_positive": false,
+    "long_and_short_ev_positive": true,
+    "positive_subwindows_ge_5_of_7": true
+  }
+}
