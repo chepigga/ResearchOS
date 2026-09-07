@@ -28,16 +28,16 @@ jobs:
           echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  btc_15m.zip' | sha256sum -c -
           mkdir -p btc15
           unzip -q btc_15m.zip -d btc15
-      - name: Run frozen LAB026 with bootstrap parity fix
-        run: python labs/BTC_RETAIL_FLOW_EARLY_DIRECTIONAL_ACCEPTANCE_VS_ADVERSE_FAILURE_FIRST_PASSAGE_LAB_026/run_lab_v2.py
+      - name: Run frozen LAB026 with optimized identical bootstrap
+        run: python labs/BTC_RETAIL_FLOW_EARLY_DIRECTIONAL_ACCEPTANCE_VS_ADVERSE_FAILURE_FIRST_PASSAGE_LAB_026/run_lab_v3.py
       - name: Persist outputs
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add labs/BTC_RETAIL_FLOW_EARLY_DIRECTIONAL_ACCEPTANCE_VS_ADVERSE_FAILURE_FIRST_PASSAGE_LAB_026/output
-          git commit -m 'Persist BTC retail flow first-passage LAB026 v2 outputs' || true
+          git commit -m 'Persist BTC retail flow first-passage LAB026 v3 outputs' || true
           git push origin HEAD:lab/btc-retail-flow-early-directional-acceptance-vs-adverse-failure-first-passage-026
       - uses: actions/upload-artifact@v4
         with:
-          name: btc-retail-flow-first-passage-lab026-v2
+          name: btc-retail-flow-first-passage-lab026-v3
           path: labs/BTC_RETAIL_FLOW_EARLY_DIRECTIONAL_ACCEPTANCE_VS_ADVERSE_FAILURE_FIRST_PASSAGE_LAB_026/output
