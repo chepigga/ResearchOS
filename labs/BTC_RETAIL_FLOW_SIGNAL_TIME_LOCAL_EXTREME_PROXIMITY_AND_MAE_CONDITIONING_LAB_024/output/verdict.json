@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "verdict": "FAIL_NO_SIGNAL_TIME_PROXIMITY_MECHANISM",
+    "flow_n": 3209,
+    "feature_n": 3209,
+    "pre_aug_n": 3196,
+    "missing_timestamps": 0,
+    "timestamp_parity": 1.0,
+    "payoff_parity_mae": 0.0
+  },
+  "gates": {
+    "frozen_lineage_3209_and_timestamp_parity": true,
+    "feature_rows_pre_aug_ge_3000": true,
+    "rho4h_return_negative": true,
+    "rho4h_mae_positive": false,
+    "near4h_n_ge_500": false,
+    "near4h_ev_baseline_plus_010": false,
+    "near4h_ev_gt_far4h": true,
+    "near4h_median_mae_lower_by_025": false,
+    "near4h_stop_touch_lower_by_10pp": false,
+    "bootstrap_ev_diff_ci_gt_zero": false,
+    "stress_2022_short_near_n40_ev_positive": false,
+    "near4h_long_short_both_positive": true,
+    "recent_near4h_ev_positive": true,
+    "recent_sweep_ev_baseline_plus_010": false
+  }
+}
