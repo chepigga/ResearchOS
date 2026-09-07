@@ -1,8 +1,11 @@
 {
   "meta": {
-    "verdict": "WATCH_REACCEPTANCE_DISCRIMINATIVE_BUT_TRANSFER_INCOMPLETE",
+    "verdict": "PASS_FAILURE_RECOVERY_REACCEPTANCE_MECHANISM",
     "lineage_n": 1501,
-    "failure_n_pre": 1097,
+    "accept_pre": 1496,
+    "raw_failure_n_pre": 1099,
+    "failure_n_pre": 1099,
+    "terminal_failures_pre": 2,
     "median_reclaim_h": 0.75,
     "median_reaccept_h": 1.75,
     "median_extra_bad": 4.0,
@@ -29,12 +32,12 @@
   "bootstrap": {
     "n_clusters": 286,
     "draws": 5000,
-    "point": 3.0058742673684997,
-    "ci_lo": 2.5254515459949567,
-    "ci_hi": 3.5114373817828346
+    "point": 2.992114743139442,
+    "ci_lo": 2.5144548630260046,
+    "ci_hi": 3.4980812448171545
   },
   "gates": {
-    "exact_lab029_lineage_and_failure_n_ge_900": false,
+    "exact_lab029_lineage_and_failure_n_ge_900": true,
     "full_reaccept_n_ge_200": true,
     "full_reaccept_residual_positive": true,
     "residual_gap_ge_0_50atr": true,
