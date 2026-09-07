@@ -60,8 +60,8 @@
 | SHORT | ADVERSE_FIRST | 716 | 0.007 | -0.493 | 0.032 |
 
 ## 7d cluster bootstrap
-- clusters: **1**, valid draws: **5000**
-- ACCEPT minus ADVERSE residual: **0.413 ATR**, 95% CI **[0.413, 0.413]**
+- clusters: **291**, valid draws: **5000**
+- ACCEPT minus ADVERSE residual: **0.413 ATR**, 95% CI **[0.005, 0.822]**
 
 ## Gates
 - PASS — `lineage_3209_and_timestamp_parity`
