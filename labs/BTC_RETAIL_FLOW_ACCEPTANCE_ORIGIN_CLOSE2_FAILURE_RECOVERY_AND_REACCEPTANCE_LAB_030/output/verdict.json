@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "verdict": "WATCH_REACCEPTANCE_DISCRIMINATIVE_BUT_TRANSFER_INCOMPLETE",
+    "lineage_n": 1501,
+    "failure_n_pre": 1097,
+    "median_reclaim_h": 0.75,
+    "median_reaccept_h": 1.75,
+    "median_extra_bad": 4.0,
+    "y22_short": {
+      "sample": "2022_SHORT",
+      "n": 91,
+      "origin_reclaim_n": 75,
+      "origin_reclaim_rate": 0.8241758241758241,
+      "full_reaccept_n": 57,
+      "full_reaccept_rate": 0.6263736263736264,
+      "reaccept_resid": 0.9968532347231029,
+      "reaccept_t": 2.3728286324492607,
+      "reaccept_pf": 2.506934629074433,
+      "no_reaccept_resid": -2.0434734538587898,
+      "residual_gap": 3.0403266885818927,
+      "median_reclaim_h": 1.0,
+      "median_reaccept_h": 1.75,
+      "median_extra_bad": 5.0,
+      "reentry_net": 0.8649486621497255,
+      "long_reaccept": 0,
+      "short_reaccept": 57
+    }
+  },
+  "bootstrap": {
+    "n_clusters": 286,
+    "draws": 5000,
+    "point": 3.0058742673684997,
+    "ci_lo": 2.5254515459949567,
+    "ci_hi": 3.5114373817828346
+  },
+  "gates": {
+    "exact_lab029_lineage_and_failure_n_ge_900": false,
+    "full_reaccept_n_ge_200": true,
+    "full_reaccept_residual_positive": true,
+    "residual_gap_ge_0_50atr": true,
+    "bootstrap_ci_lower_gt_zero": true,
+    "no_reaccept_nonpositive_or_gap_ge_0_50": true,
+    "recent_full_reaccept_n_ge_40": true,
+    "recent_full_reaccept_residual_positive": true,
+    "recent_reaccept_gt_no_reaccept": true,
+    "recent_recovery_shift_support": false,
+    "stress_2022_short_reaccept_n20_residual_positive": true,
+    "long_and_short_reaccept_residual_positive": true
+  }
+}
