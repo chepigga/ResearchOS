@@ -40,8 +40,8 @@
 | SHORT | 1633 | 760 | 0.027 | 0.013 | 20.796 | 1.024 | 126.422 | 0.679 |
 
 ## 7d cluster bootstrap
-- clusters: **1**, draws: **5000**
-- ACCEPT bounded policy EV/signal minus immediate bounded: **-0.007 ATR**, 95% CI **[-0.007, -0.007]**
+- clusters: **291**, draws: **5000**
+- ACCEPT bounded policy EV/signal minus immediate bounded: **-0.007 ATR**, 95% CI **[-0.096, 0.080]**
 
 ## Gates
 - PASS — `exact_lab026_lineage_and_parity`
