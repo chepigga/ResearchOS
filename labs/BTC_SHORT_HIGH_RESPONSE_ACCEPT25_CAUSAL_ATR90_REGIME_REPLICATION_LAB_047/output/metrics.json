@@ -1,0 +1,37 @@
+{
+  "verdict": "WATCH_ATR90_REGIME_POSITIVE_PROOF_INCOMPLETE",
+  "score": 15,
+  "total": 20,
+  "formal_n": 327,
+  "original_n": 475,
+  "aug_original_n": 1,
+  "bootstrap": {
+    "point": 0.026527894284259446,
+    "ci_lo": -0.22638911001117268,
+    "ci_hi": 0.27391305030357893,
+    "clusters": 197,
+    "draws": 5000
+  },
+  "gates": {
+    "exact_frozen_accept25_preaug_n327": true,
+    "atr_rank_coverage_ge99pct": true,
+    "exact_high_response_original_preaug_n475": true,
+    "high_atr_n_ge120": true,
+    "low_atr_n_ge100": true,
+    "high_atr_trade_ev_positive": true,
+    "high_atr_pf_ge1_15": true,
+    "high_atr_ev_gt_low_atr": true,
+    "high_low_gap_ge0_15r": false,
+    "bootstrap_lower_gt0": false,
+    "high_atr_ev_per_original_ge0_055": false,
+    "high_atr_dd025_le4pct": true,
+    "high_atr_2022_not_worse_parent": false,
+    "high_atr_2023_not_worse_parent": false,
+    "high_atr_2025h1_not_worse_parent": true,
+    "high_atr_2025h2_positive": true,
+    "high_atr_2026_positive": true,
+    "high_atr_recent_positive_n30": true,
+    "low_atr_ev_le_high_atr": true,
+    "august_not_used_for_selection": true
+  }
+}
