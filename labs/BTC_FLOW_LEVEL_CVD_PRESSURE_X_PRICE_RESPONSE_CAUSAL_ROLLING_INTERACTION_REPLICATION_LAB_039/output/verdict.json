@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "verdict": "WATCH_ROLLING_INTERACTION_POSITIVE_PROOF_INCOMPLETE",
+    "high_n": 568,
+    "resolved_n": 414,
+    "resolved_share": 0.7288732394366197,
+    "efficient_n": 156,
+    "absorption_n": 55,
+    "efficient_accept": 0.6089743589743589,
+    "absorption_accept": 0.6545454545454545,
+    "efficient_residual": 0.43498280499857456,
+    "absorption_residual": 0.3060506415723319,
+    "efficient_hit": 0.4935897435897436,
+    "frequency_per_month": 2.4,
+    "months": 65,
+    "bootstrap": {
+      "clusters": 131,
+      "rate_point": -0.04557109557109562,
+      "rate_ci_lo": -0.1898257337526205,
+      "rate_ci_hi": 0.1036184694628402,
+      "resid_point": 0.12893216342624264,
+      "resid_ci_lo": -1.3284834262752845,
+      "resid_ci_hi": 1.7034400502548024,
+      "draws": 5000
+    }
+  },
+  "gates": {
+    "frozen_high_volume_ge_500": true,
+    "resolved_rolling_thresholds_ge_80pct": false,
+    "efficient_n_ge_120": true,
+    "absorption_n_ge_80": false,
+    "efficient_accept_rate_gt_absorption": false,
+    "accept_rate_gap_ge_0_03": false,
+    "accept_rate_boot_ci_lower_gt_zero": false,
+    "efficient_residual_gt_absorption": true,
+    "residual_gap_ge_0_50": false,
+    "residual_boot_ci_lower_gt_zero": false,
+    "efficient_residual_positive": true,
+    "efficient_residual_hit_ge_0_50": false,
+    "stress_2022_short_positive_n15": false,
+    "pooled_recent_positive_n30": true,
+    "2025h2_positive": true,
+    "2026_positive": false,
+    "long_positive": true,
+    "short_positive": true,
+    "efficient_frequency_ge_1_per_month": true,
+    "august_not_used_for_selection": true
+  }
+}
