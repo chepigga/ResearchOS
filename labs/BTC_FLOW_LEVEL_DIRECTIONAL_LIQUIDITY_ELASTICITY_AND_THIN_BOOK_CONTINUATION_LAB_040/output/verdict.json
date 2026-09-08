@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "verdict": "WATCH_THIN_BOOK_CONTINUATION_POSITIVE_PROOF_INCOMPLETE",
+    "score": 16,
+    "high_n": 568,
+    "resolved_n": 414,
+    "thin_n": 53,
+    "weak_n": 150,
+    "thin_residual": 0.7134586100218645,
+    "weak_residual": -0.19474696484272078,
+    "thin_accept": 0.660377358490566,
+    "weak_accept": 0.6866666666666666,
+    "frequency_per_month": 0.8153846153846154,
+    "thin_weak_bootstrap": {
+      "clusters": 119,
+      "draws": 5000,
+      "rate_point": -0.026289308176100645,
+      "rate_ci_lo": -0.17980016535915147,
+      "rate_ci_hi": 0.1256731455700721,
+      "resid_point": 0.9082055748645853,
+      "resid_ci_lo": -0.5394391431095124,
+      "resid_ci_hi": 2.5477499001679993
+    },
+    "elasticity_bootstrap": {
+      "clusters": 176,
+      "draws": 5000,
+      "rate_point": 0.10196078431372546,
+      "rate_ci_lo": 0.00548525974561116,
+      "rate_ci_hi": 0.19500875623411473,
+      "resid_point": 0.34559455697187424,
+      "resid_ci_lo": -0.5539728541698637,
+      "resid_ci_hi": 1.2419352148501994
+    }
+  },
+  "gates": {
+    "frozen_high_volume_ge_500": true,
+    "resolved_lab039_cells_ge_400": true,
+    "thin_n_ge_50": true,
+    "weak_n_ge_120": true,
+    "thin_residual_positive": true,
+    "thin_residual_gt_weak": true,
+    "thin_weak_residual_gap_ge_0_50": true,
+    "thin_weak_resid_boot_ci_lower_gt_zero": false,
+    "thin_accept_rate_ge_weak": false,
+    "accept_rate_boot_ci_lower_gt_zero": false,
+    "primary_elasticity_thin_gt_weak": true,
+    "primary_elasticity_state_bh_q_le_0_10": true,
+    "any_elasticity_state_bh_q_le_0_10": true,
+    "primary_elasticity_residual_rho_positive": true,
+    "primary_elasticity_residual_absrho_ge_0_05": false,
+    "primary_elasticity_residual_bh_q_le_0_10": false,
+    "rolling_high_elasticity_residual_gt_low": true,
+    "rolling_elasticity_boot_ci_lower_gt_zero": false,
+    "stress_2022_short_thin_positive_n8": false,
+    "pooled_recent_thin_positive_n15": false,
+    "both_2025h2_2026_thin_positive": false,
+    "long_thin_positive": true,
+    "short_thin_positive": true,
+    "thin_frequency_ge_0_5_per_month": true,
+    "august_not_used_for_selection": true
+  }
+}
