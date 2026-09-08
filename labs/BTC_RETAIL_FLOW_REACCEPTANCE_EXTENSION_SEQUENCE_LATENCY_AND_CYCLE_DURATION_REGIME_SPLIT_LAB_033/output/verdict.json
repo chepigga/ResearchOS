@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "verdict": "FAIL_NO_CAUSAL_SEQUENCE_REGIME_SPLIT",
+    "lineage_pre": 600,
+    "n_h25": 56,
+    "n_26": 56,
+    "clock_valid": 1.0,
+    "failure_parity": 0.9303904923599321,
+    "reaccept_parity": 1.0,
+    "h25_long": 23,
+    "h25_short": 33,
+    "y26_long": 26,
+    "y26_short": 30,
+    "aligned_features": [],
+    "missing_bad": 0
+  },
+  "gates": {
+    "exact_lab032_extension050_pre_aug_ge_590": true,
+    "2025h2_n45_and_2026_n45": true,
+    "clock_ordering_ge_99pct": true,
+    "reconstructed_failure_parity_ge_99pct": false,
+    "reconstructed_reaccept_parity_ge_99pct": true,
+    "at_least_one_feature_bh_q_le_0_10": false,
+    "at_least_one_feature_abs_rbc_ge_0_30": false,
+    "at_least_one_full_aligned_feature": false,
+    "aligned_feature_cluster_boot_ci_excludes_zero": false,
+    "aligned_feature_same_direction_within_side": false,
+    "no_more_than_2_features_gt10pct_missing": true,
+    "august_not_used_for_selection": true
+  }
+}
