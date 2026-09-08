@@ -1,0 +1,20 @@
+{
+  "exact_frozen_accept25_n327": true,
+  "atr_rank_coverage_ge99pct": true,
+  "full_top_minus_low_gap_gt_025r": true,
+  "full_top_minus_low_boot_lower_gt0": true,
+  "top_band_ev_positive_all_7_lopo": true,
+  "low_band_ev_nonpositive_at_least_6_of_7_lopo": true,
+  "top_minus_low_gap_positive_all_7_lopo": true,
+  "top_minus_low_boot_lower_gt0_at_least_5_of_7_lopo": true,
+  "combined_2022_2025h1_top_minus_low_positive": false,
+  "combined_bad_boot_lower_gt0": false,
+  "leave_2025h2_out_top_minus_low_positive": true,
+  "leave_2026_out_top_minus_low_positive": true,
+  "2022_top_minus_low_positive": true,
+  "2025h1_top_minus_low_positive": false,
+  "mid_spike_ev_positive_all_7_lopo": true,
+  "mid_spike_minus_low_positive_all_7_lopo": true,
+  "mid_spike_no_single_period_gt50pct_abs_contribution": true,
+  "august_not_used_for_selection": true
+}
