@@ -1,0 +1,19 @@
+{
+  "exact_frozen_accept25_n327": true,
+  "atr_rank_coverage_ge99pct": true,
+  "fixed_absolute_bins_only": true,
+  "global_atr_rho_positive": true,
+  "global_rho_p_le_005": true,
+  "q5_q1_ev_gap_positive": true,
+  "q5_q1_boot_lower_gt0": true,
+  "quintile_mid_ev_rho_ge_070": true,
+  "d10_d1_ev_gap_positive": true,
+  "decile_mid_ev_rho_ge_050": false,
+  "fixed_effect_atr_beta_positive": true,
+  "fixed_effect_boot_lower_gt0": false,
+  "at_least_5_of_7_period_rhos_positive": true,
+  "2025h2_within_rho_nonnegative": true,
+  "2026_within_rho_nonnegative": true,
+  "lab047_half_split_parity": true,
+  "august_not_used_for_selection": true
+}
