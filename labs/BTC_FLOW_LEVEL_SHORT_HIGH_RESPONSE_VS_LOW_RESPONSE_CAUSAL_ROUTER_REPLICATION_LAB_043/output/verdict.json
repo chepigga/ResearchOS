@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "verdict": "PASS_SHORT_HIGH_RESPONSE_CAUSAL_ROUTER_REPLICATION",
+    "pre_n": 963,
+    "high_n": 475,
+    "low_n": 488,
+    "high_residual": 0.7986111640276734,
+    "low_residual": -0.19534466484676824,
+    "gap": 0.9939558288744417,
+    "high_hit": 0.5242105263157895,
+    "low_hit": 0.45491803278688525,
+    "high_accept": 0.6968421052631579,
+    "low_accept": 0.6618852459016393,
+    "frequency_per_month": 7.196969696969697,
+    "bootstrap": {
+      "point": 0.9939558288744417,
+      "clusters": 275,
+      "draws": 5000,
+      "ci_lo": 0.2834514178629485,
+      "ci_hi": 1.71045878949462
+    }
+  },
+  "gates": {
+    "short_resolved_preaug_ge_900": true,
+    "high_response_n_ge_450": true,
+    "low_response_n_ge_450": true,
+    "high_response_residual_positive": true,
+    "low_response_residual_le_zero": true,
+    "residual_gap_ge_0_50": true,
+    "cluster_boot_ci_lower_gt_zero": true,
+    "high_response_hit_ge_0_50": true,
+    "high_response_frequency_ge_6_month": true,
+    "2021_high_positive": true,
+    "2022_high_positive": true,
+    "2023_high_positive": true,
+    "2024_high_positive": true,
+    "2025h1_high_positive": true,
+    "2025h2_high_positive": true,
+    "2026_high_positive": true,
+    "pooled_recent_high_positive_n60": true,
+    "pooled_recent_low_le_zero_n60": true,
+    "pooled_recent_gap_ge_0_50": true,
+    "2022_stress_high_positive_n50": true,
+    "thin_book_short_positive": true,
+    "driven_move_short_positive": true,
+    "absorption_short_le_zero": true,
+    "weak_short_le_zero": true,
+    "august_not_used_for_selection": true
+  }
+}
