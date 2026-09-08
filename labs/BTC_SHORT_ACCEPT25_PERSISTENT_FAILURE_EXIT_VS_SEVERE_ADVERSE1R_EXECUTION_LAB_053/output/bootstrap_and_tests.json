@@ -1,0 +1,43 @@
+{
+  "paired_oco_minus_parent": {
+    "point": 0.015145934540657852,
+    "ci_lo": -0.023251401227249682,
+    "ci_hi": 0.04916578273378348,
+    "clusters": 196,
+    "draws": 5000
+  },
+  "parent_parity_max_abs": 8.126832540256146e-14,
+  "severe_control_parity_max_abs": 0.0,
+  "persistent_n": 59,
+  "oco_early_exit_n": 59,
+  "full_parent": {
+    "scope": "FULL",
+    "policy": "PARENT_HOLD",
+    "original_n": 475,
+    "traded_n": 327,
+    "early_exit_n": 0,
+    "ev_5bps": 0.0862921691831024,
+    "pf_5bps": 1.1758411936896989,
+    "cum_r_5bps": 28.217539322874483,
+    "max_dd_r_5bps": 11.437994051043603,
+    "max_dd_pct_025": 2.8594985127609007,
+    "ev_per_original_5bps": 0.05940534594289365,
+    "ev_0bps": 0.14819632137727456,
+    "ev_10bps": 0.02438801698893023
+  },
+  "full_oco": {
+    "scope": "FULL",
+    "policy": "OCO_PERSISTENT_OR_SEVERE",
+    "original_n": 475,
+    "traded_n": 327,
+    "early_exit_n": 59,
+    "ev_5bps": 0.10143810372376023,
+    "pf_5bps": 1.228426136288747,
+    "cum_r_5bps": 33.1702599176696,
+    "max_dd_r_5bps": 9.79446541559653,
+    "max_dd_pct_025": 2.4486163538991326,
+    "ev_per_original_5bps": 0.06983212614246231,
+    "ev_0bps": 0.16334225591793242,
+    "ev_10bps": 0.039533951529588086
+  }
+}

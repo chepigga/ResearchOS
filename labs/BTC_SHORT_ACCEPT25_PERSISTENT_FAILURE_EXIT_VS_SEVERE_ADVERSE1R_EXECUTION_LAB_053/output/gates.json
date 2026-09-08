@@ -1,0 +1,22 @@
+{
+  "exact_parent_n327": true,
+  "exact_adverse_first_n145": true,
+  "exact_persistent_failure_n59": true,
+  "parent_5bps_parity_with_frozen_le1e9": true,
+  "severe1r_control_parity_parent_le1e12": true,
+  "oco_early_exit_n_ge40": true,
+  "oco_full_ev_gt_parent": true,
+  "oco_full_pf_gt_parent": true,
+  "oco_cumr_gt_parent": true,
+  "oco_maxdd_le_parent": true,
+  "oco_ev_per_original_gt_parent": true,
+  "paired_delta_gt_003r_per_trade": false,
+  "paired_boot_lower_gt0": false,
+  "2022_oco_evperorig_ge_parent": true,
+  "2025h1_oco_evperorig_ge_parent": true,
+  "bad_pooled_oco_evperorig_gt_parent": true,
+  "recent_pooled_oco_evperorig_positive": true,
+  "2026_degradation_no_worse_than_minus010r_per_original": true,
+  "oco_10bps_ev_positive": true,
+  "no_august_selection_no_new_threshold": true
+}
