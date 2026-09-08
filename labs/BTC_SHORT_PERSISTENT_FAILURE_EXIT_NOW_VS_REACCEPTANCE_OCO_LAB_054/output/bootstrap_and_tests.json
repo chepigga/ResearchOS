@@ -1,0 +1,25 @@
+{
+  "parent_parity": 2.220446049250313e-16,
+  "exit_now_parity": 2.220446049250313e-16,
+  "wait_minus_exit": {
+    "point": -0.011377438040127839,
+    "ci_lo": -0.036564428109416486,
+    "ci_hi": 0.017720986956598375,
+    "clusters": 196
+  },
+  "wait_minus_parent": {
+    "point": 0.0037684965005300095,
+    "ci_lo": -0.020159418798571426,
+    "ci_hi": 0.02415952269699812,
+    "clusters": 196
+  },
+  "oco_counts": {
+    "EXTENSION_EXIT": 39,
+    "REACCEPT_PARENT_HOLD": 13,
+    "PARENT_BEFORE_EXTENSION": 5,
+    "UNRESOLVED_PARENT": 2
+  },
+  "resolved": 52,
+  "reaccept_n": 13,
+  "extension_n": 39
+}

@@ -1,0 +1,22 @@
+{
+  "exact_parent_n327": true,
+  "exact_adverse_n145": true,
+  "exact_persistent_n59": true,
+  "path_coverage_ge99pct": true,
+  "parent_parity_le1e9": true,
+  "exit_now_parity_le1e9": true,
+  "oco_resolved_n_ge30": true,
+  "reaccept_n_ge10": true,
+  "extension_n_ge10": true,
+  "wait_full_ev_gt_exit": false,
+  "wait_full_pf_gt_exit": false,
+  "wait_cumr_gt_exit": false,
+  "wait_dd_le_exit": false,
+  "paired_wait_exit_delta_gt0": false,
+  "paired_wait_exit_boot_lower_gt0": false,
+  "2026_wait_evorig_gt_exit": true,
+  "bad_wait_not_worse_than_exit_minus002": false,
+  "recent_wait_evorig_positive": true,
+  "wait_10bps_ev_positive": true,
+  "no_august_no_new_threshold": true
+}
