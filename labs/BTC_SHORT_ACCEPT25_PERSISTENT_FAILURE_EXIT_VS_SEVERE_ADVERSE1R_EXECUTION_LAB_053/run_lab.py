@@ -23,26 +23,21 @@ def period_of(t):
     if t.year==2025: return '2025_H1' if t < pd.Timestamp('2025-07-01',tz='UTC') else '2025_H2'
     if t.year==2026 and t<PRE: return '2026_JAN_JUL'
     return 'OTHER'
-
 def cluster_id(t):
     epoch=pd.Timestamp('1970-01-01',tz='UTC')
     return (((t-epoch).dt.total_seconds())//(7*86400)).astype('int64')
-
 def pf(v):
     v=np.asarray(v,float); gp=v[v>0].sum(); gl=-v[v<0].sum()
     return float(gp/gl) if gl>0 else (float('inf') if gp>0 else np.nan)
-
 def maxdd(v):
     v=np.asarray(v,float)
     if not len(v): return np.nan
     eq=np.r_[0.0,np.cumsum(v)]; peak=np.maximum.accumulate(eq)
     return float(np.max(peak-eq))
-
 def net_r(entry,exit_px,D,bps):
     gross=(entry-exit_px)/D
     cost=(bps/10000.0)*entry/D
     return float(gross-cost)
-
 def load_inputs():
     p=pd.read_csv(SRC51); s=pd.read_csv(SRC52); o=pd.read_csv(SRC43)
     for d in [p,s,o]:
@@ -64,19 +59,16 @@ def load_inputs():
     if len(pers)!=59: raise RuntimeError(f'Persistent parity failed {len(pers)} != 59')
     keep=['flow_id','sequence_state','state_time','state_price','severe_adverse_1r','severe_time']
     p=p.merge(s[keep],on='flow_id',how='left',validate='one_to_one')
-    # exact original 475 signal universe for period denominators
     mask=(o.side==-1)&(o.response_router=='HIGH_RESPONSE')&(o.signal_time<PRE)
     orig=o[mask][['flow_id','signal_time']].copy().drop_duplicates('flow_id')
     if len(orig)!=ORIGINAL_N: raise RuntimeError(f'Original signal parity failed {len(orig)} != {ORIGINAL_N}')
     orig['period']=orig.signal_time.map(period_of)
     return p,orig
-
 def build_policies(parent):
     rows=[]
     for r in parent.itertuples(index=False):
         ep=float(r.entry_price); D=float(r.risk_dist); px_parent=float(r.exit_price); xt_parent=pd.Timestamp(r.exit_time)
         is_persistent=(str(r.sequence_state)=='PERSISTENT_FAILURE_FIRST' and pd.notna(r.state_time) and np.isfinite(r.state_price))
-        # Frozen Severe +1R is mechanically the existing parent -1R stop; use parent as the exact control.
         for pol in POLICIES:
             xt=xt_parent; px=px_parent; reason=str(r.exit_reason); early=False
             if pol in ['PERSISTENT_EXIT','OCO_PERSISTENT_OR_SEVERE'] and is_persistent:
@@ -89,21 +81,18 @@ def build_policies(parent):
                              parent_frozen_net_r_5bps=float(r.parent_net_r_5bps),
                              net_r_0bps=vals[0.0],net_r_5bps=vals[5.0],net_r_10bps=vals[10.0]))
     return pd.DataFrame(rows)
-
 def original_count(orig,scope):
     if scope in PERIODS: return int((orig.period==scope).sum())
     if scope=='BAD_POOLED': return int(orig.period.isin(['2022','2025_H1']).sum())
     if scope=='RECENT_POOLED': return int(orig.period.isin(['2025_H2','2026_JAN_JUL']).sum())
     if scope=='FULL': return len(orig)
     return 0
-
 def scope_mask(d,scope):
     if scope in PERIODS: return d.period==scope
     if scope=='BAD_POOLED': return d.period.isin(['2022','2025_H1'])
     if scope=='RECENT_POOLED': return d.period.isin(['2025_H2','2026_JAN_JUL'])
     if scope=='FULL': return pd.Series(True,index=d.index)
     raise KeyError(scope)
-
 def summarize_policy(d,orig_n,policy,scope):
     q=d[(d.policy==policy)&scope_mask(d,scope)].sort_values('entry_time')
     v=q.net_r_5bps.to_numpy(float); dd=maxdd(v)
@@ -112,7 +101,6 @@ def summarize_policy(d,orig_n,policy,scope):
                 cum_r_5bps=float(np.sum(v)) if len(v) else 0.0,max_dd_r_5bps=dd,max_dd_pct_025=float(dd*RISK_PCT) if len(v) else np.nan,
                 ev_per_original_5bps=float(np.sum(v)/orig_n) if orig_n else np.nan,
                 ev_0bps=float(q.net_r_0bps.mean()) if len(q) else np.nan,ev_10bps=float(q.net_r_10bps.mean()) if len(q) else np.nan)
-
 def paired_boot(exec_df):
     p=exec_df[exec_df.policy=='PARENT_HOLD'][['flow_id','entry_time','net_r_5bps']].rename(columns={'net_r_5bps':'parent'})
     o=exec_df[exec_df.policy=='OCO_PERSISTENT_OR_SEVERE'][['flow_id','net_r_5bps']].rename(columns={'net_r_5bps':'oco'})
@@ -124,16 +112,13 @@ def paired_boot(exec_df):
         vals.append(float(s[0]/s[1]))
     vals=np.asarray(vals,float)
     return dict(point=float(z.delta.mean()),ci_lo=float(np.quantile(vals,.025)),ci_hi=float(np.quantile(vals,.975)),clusters=m,draws=len(vals))
-
 def row(sm,scope,policy):
     return sm[(sm.scope==scope)&(sm.policy==policy)].iloc[0]
-
 def main():
     parent,orig=load_inputs(); ex=build_policies(parent)
     ex.to_csv(OUT/'execution_stream.csv',index=False)
-    # exact parent parity against frozen 5bps values
-    pq=ex[ex.policy=='PARENT_HOLD'].merge(parent[['flow_id','parent_net_r_5bps']],on='flow_id',suffixes=('_calc','_src'),validate='one_to_one')
-    parity_max=float(np.max(np.abs(pq.net_r_5bps-pq.parent_net_r_5bps_src)))
+    pq=ex[ex.policy=='PARENT_HOLD'].merge(parent[['flow_id','parent_net_r_5bps']],on='flow_id',validate='one_to_one')
+    parity_max=float(np.max(np.abs(pq.net_r_5bps-pq.parent_net_r_5bps)))
     severe=ex[ex.policy=='SEVERE_1R_CONTROL'].sort_values('flow_id').net_r_5bps.to_numpy(float)
     ph=ex[ex.policy=='PARENT_HOLD'].sort_values('flow_id').net_r_5bps.to_numpy(float)
     severe_parity=float(np.max(np.abs(severe-ph)))
