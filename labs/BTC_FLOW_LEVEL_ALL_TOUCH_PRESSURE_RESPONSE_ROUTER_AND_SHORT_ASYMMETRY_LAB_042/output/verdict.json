@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "verdict": "WATCH_ROUTER_POSITIVE_SHORT_ASYMMETRY_PROOF_INCOMPLETE",
+    "resolved_n": 1926,
+    "months": 66,
+    "driven_frequency_per_month": 10.606060606060606,
+    "all_gap": {
+      "label": "ALL_DRIVEN_MINUS_ABSORPTION",
+      "a_n": 700,
+      "b_n": 272,
+      "point": 0.6586386824005324,
+      "clusters": 278,
+      "draws": 5000,
+      "ci_lo": -0.1818059239467186,
+      "ci_hi": 1.4859447662904477
+    },
+    "short_gap": {
+      "label": "SHORT_DRIVEN_MINUS_ABSORPTION",
+      "a_n": 367,
+      "b_n": 153,
+      "point": 0.9521692233885051,
+      "clusters": 241,
+      "draws": 5000,
+      "ci_lo": -0.16549195931427588,
+      "ci_hi": 2.0781385227888607
+    }
+  },
+  "gates": {
+    "resolved_preaug_ge_1900": true,
+    "driven_n_ge_650": true,
+    "absorption_n_ge_250": true,
+    "driven_residual_positive": true,
+    "absorption_residual_le_zero": true,
+    "all_gap_ge_0_40": true,
+    "all_boot_ci_lower_gt_zero": false,
+    "driven_accept_ge_absorption": true,
+    "driven_frequency_ge_8_month": true,
+    "short_driven_n_ge_250": true,
+    "short_absorption_n_ge_100": true,
+    "short_driven_positive": true,
+    "short_absorption_le_zero": true,
+    "short_gap_ge_0_50": true,
+    "short_boot_ci_lower_gt_zero": false,
+    "short_thin_gt_long_thin": true,
+    "short_thin_n100_positive": true,
+    "long_thin_n100": true,
+    "long_driven_positive": true,
+    "short_driven_positive_dup": true,
+    "pooled_recent_driven_positive_n150": false,
+    "both_2025h2_2026_driven_positive": true,
+    "2022_short_driven_positive_n30": true,
+    "august_not_used": true
+  }
+}

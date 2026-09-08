@@ -1,0 +1,64 @@
+{
+  "all": {
+    "label": "ALL_DRIVEN_MINUS_ABSORPTION",
+    "a_n": 700,
+    "b_n": 272,
+    "point": 0.6586386824005324,
+    "clusters": 278,
+    "draws": 5000,
+    "ci_lo": -0.1818059239467186,
+    "ci_hi": 1.4859447662904477
+  },
+  "short": {
+    "label": "SHORT_DRIVEN_MINUS_ABSORPTION",
+    "a_n": 367,
+    "b_n": 153,
+    "point": 0.9521692233885051,
+    "clusters": 241,
+    "draws": 5000,
+    "ci_lo": -0.16549195931427588,
+    "ci_hi": 2.0781385227888607
+  },
+  "asymmetry": [
+    {
+      "label": "DRIVEN_MOVE_SHORT_MINUS_LONG",
+      "a_n": 367,
+      "b_n": 333,
+      "point": 0.1752548346938203,
+      "clusters": 264,
+      "draws": 5000,
+      "ci_lo": -0.6941136146483506,
+      "ci_hi": 0.9755674984624944
+    },
+    {
+      "label": "ABSORPTION_SHORT_MINUS_LONG",
+      "a_n": 153,
+      "b_n": 119,
+      "point": -0.48036414281971834,
+      "clusters": 174,
+      "draws": 5000,
+      "ci_lo": -1.9525860105186432,
+      "ci_hi": 0.8837024680494223
+    },
+    {
+      "label": "THIN_BOOK_SHORT_MINUS_LONG",
+      "a_n": 108,
+      "b_n": 156,
+      "point": 1.5595809277364938,
+      "clusters": 170,
+      "draws": 5000,
+      "ci_lo": 0.13761279021555362,
+      "ci_hi": 3.011200622008339
+    },
+    {
+      "label": "WEAK_SHORT_MINUS_LONG",
+      "a_n": 335,
+      "b_n": 355,
+      "point": -0.5840906183667925,
+      "clusters": 259,
+      "draws": 5000,
+      "ci_lo": -1.4025797193476626,
+      "ci_hi": 0.18768147061295284
+    }
+  ]
+}
