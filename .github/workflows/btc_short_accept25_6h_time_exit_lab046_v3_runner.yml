@@ -1,0 +1,39 @@
+name: BTC SHORT ACCEPT25 6h Time Exit LAB046 v3 Runner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_short_accept25_6h_time_exit_lab046_v3_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab046v3:
+    runs-on: ubuntu-latest
+    env:
+      LAB_BRANCH: lab/btc-flow-level-short-high-response-accept25-6h-vs-12h-time-exit-ablation-046
+      LAB_DIR: labs/BTC_FLOW_LEVEL_SHORT_HIGH_RESPONSE_ACCEPT25_6H_VS_12H_TIME_EXIT_ABLATION_LAB_046
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas scipy requests
+      - name: Run frozen LAB046 computational-only v3
+        run: python "$LAB_DIR/run_lab_v3.py"
+      - name: Persist outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$LAB_DIR/output"
+          git commit -m "Persist BTC SHORT ACCEPT25 6h time-exit LAB046 v3 outputs" || true
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-short-accept25-lab046-v3
+          path: ${{ env.LAB_DIR }}/output
