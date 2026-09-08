@@ -1,6 +1,6 @@
 # BTC_FLOW_LEVEL_SHORT_HIGH_RESPONSE_ACCEPT25_6H_VS_12H_TIME_EXIT_ABLATION_LAB_046
 
-**Verdict: WATCH_ACCEPT25_ENTRY6H_POSITIVE_BUT_DEGRADES — 12/14**
+**Verdict: WATCH_ACCEPT25_ENTRY6H_POSITIVE_BUT_DEGRADES — 13/14**
 
 ## Fixed ACCEPT2.5 time-exit ablation
 
@@ -30,7 +30,7 @@
 ## Gates
 - PASS — `parent_formal_n475_accept327`
 - PASS — `signal12_parent_trade_ev_parity`
-- FAIL — `m15_path_coverage_ge_99pct`
+- PASS — `m15_path_coverage_ge_99pct`
 - PASS — `entry6_net_ev_positive`
 - PASS — `entry6_pf_ge_1_10`
 - FAIL — `entry6_ev_per_original_ge_0_05`

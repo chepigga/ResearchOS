@@ -1,7 +1,7 @@
 {
   "meta": {
     "verdict": "WATCH_ACCEPT25_ENTRY6H_POSITIVE_BUT_DEGRADES",
-    "score": 12,
+    "score": 13,
     "gates_total": 14,
     "paired_entry6_minus_signal12": {
       "point": -0.012801987013632447,
@@ -14,7 +14,7 @@
   "gates": {
     "parent_formal_n475_accept327": true,
     "signal12_parent_trade_ev_parity": true,
-    "m15_path_coverage_ge_99pct": false,
+    "m15_path_coverage_ge_99pct": true,
     "entry6_net_ev_positive": true,
     "entry6_pf_ge_1_10": true,
     "entry6_ev_per_original_ge_0_05": false,
