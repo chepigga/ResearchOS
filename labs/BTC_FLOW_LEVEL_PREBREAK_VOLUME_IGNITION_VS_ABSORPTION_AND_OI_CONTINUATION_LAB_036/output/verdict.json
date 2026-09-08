@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "pre_classified": 1969,
+    "vol_resolved": 1966,
+    "vol_cov": 0.9984763839512443,
+    "high_n": 568,
+    "ign_n": 365,
+    "abs_n": 203,
+    "high_accept_rate": 0.6426056338028169,
+    "low_accept_rate": 0.7138769670958512,
+    "accept_rate_gap": -0.07127133329303437,
+    "verdict": "WATCH_VOLUME_OR_OI_MECHANISM_PARTIAL",
+    "ignition_residual": 0.38196058670318883,
+    "absorption_residual": 0.2656989410056557,
+    "lowvol_accept_residual": 0.33936224882977944,
+    "oi_persist_residual": 0.24571235737296573,
+    "oi_flush_residual": 0.24903005585064325
+  },
+  "gates": {
+    "frozen_lab035_classified_ge_1900": true,
+    "futures_volume_coverage_ge_95pct": true,
+    "spot_volume_coverage_ge_95pct": true,
+    "high_volume_n_ge_250": true,
+    "ignition_n_ge_150": true,
+    "high_volume_accept_rate_gap_ge_0_05": false,
+    "ignition_residual_positive": true,
+    "ignition_minus_absorption_ge_0_20": false,
+    "ignition_absorption_boot_ci_lower_gt_zero": false,
+    "ignition_beats_lowvol_accept_ge_0_10": false,
+    "oi_persist_post1h_residual_positive": true,
+    "oi_persist_minus_flush_ge_0_30": false,
+    "oi_boot_ci_lower_gt_zero": false,
+    "stress_2022_short_ignition_positive_n20": true,
+    "pooled_recent_ignition_positive_n40": true,
+    "both_2025h2_2026_ignition_positive": false,
+    "august_not_used_for_selection": true
+  }
+}
