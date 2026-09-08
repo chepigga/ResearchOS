@@ -1,0 +1,17 @@
+{
+  "exact_frozen_n327": true,
+  "atr_coverage_ge99pct": true,
+  "ext72_coverage_ge99pct": true,
+  "interaction_beta_negative": false,
+  "interaction_boot_upper_lt0": false,
+  "interaction_negative_at_least_5_of_7_lopo": false,
+  "top_band_ext_slope_negative": false,
+  "top_band_ext_rho_negative": false,
+  "2025h1_top_ext_gt_profitable_top_ext": false,
+  "2025h2_and_2026_top_positive": true,
+  "period_fixed_atr_main_positive": false,
+  "period_fixed_ext_main_nonpositive": true,
+  "2022_marginal_atr_effect_nonnegative": true,
+  "no_new_cutoff_router_searched": true,
+  "august_not_used_for_selection": true
+}
