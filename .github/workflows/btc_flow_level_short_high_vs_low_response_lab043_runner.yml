@@ -1,0 +1,39 @@
+name: BTC Flow Level SHORT High vs Low Response LAB043 Runner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_flow_level_short_high_vs_low_response_lab043_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab043:
+    runs-on: ubuntu-latest
+    env:
+      LAB_BRANCH: lab/btc-flow-level-short-high-response-vs-low-response-causal-router-replication-043
+      LAB_DIR: labs/BTC_FLOW_LEVEL_SHORT_HIGH_RESPONSE_VS_LOW_RESPONSE_CAUSAL_ROUTER_REPLICATION_LAB_043
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas
+      - name: Run frozen LAB043
+        run: python "$LAB_DIR/run_lab.py"
+      - name: Persist outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$LAB_DIR/output"
+          git diff --cached --quiet || git commit -m "Persist BTC SHORT high-vs-low response LAB043 outputs"
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-flow-level-short-high-vs-low-response-lab043
+          path: ${{ env.LAB_DIR }}/output
