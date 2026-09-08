@@ -23,14 +23,14 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas scipy
-      - name: Run frozen LAB048 computational-only v2
-        run: python labs/BTC_SHORT_ACCEPT25_ATR_RANK_MONOTONICITY_AND_WITHIN_PERIOD_CONFOUND_AUDIT_LAB_048/run_lab_v2.py
+      - name: Run frozen LAB048 computational-only v3
+        run: python labs/BTC_SHORT_ACCEPT25_ATR_RANK_MONOTONICITY_AND_WITHIN_PERIOD_CONFOUND_AUDIT_LAB_048/run_lab_v3.py
       - name: Persist outputs
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+chepigga@users.noreply.github.com
           git add labs/BTC_SHORT_ACCEPT25_ATR_RANK_MONOTONICITY_AND_WITHIN_PERIOD_CONFOUND_AUDIT_LAB_048/output
-          git commit -m 'Persist BTC SHORT ACCEPT25 ATR monotonicity LAB048 v2 outputs' || true
+          git commit -m 'Persist BTC SHORT ACCEPT25 ATR monotonicity LAB048 v3 outputs' || true
           git push origin HEAD:lab/btc-short-accept25-atr-rank-monotonicity-within-period-confound-audit-048
       - uses: actions/upload-artifact@v4
         with:
