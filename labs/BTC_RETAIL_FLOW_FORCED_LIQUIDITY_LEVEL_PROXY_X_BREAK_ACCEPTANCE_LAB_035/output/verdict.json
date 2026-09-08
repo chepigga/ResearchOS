@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "verdict": "WATCH_LEVEL_ACCEPTANCE_DIRECTIONALLY_USEFUL_TRANSFER_INCOMPLETE",
+    "flow_n": 3209,
+    "event_n": 3209,
+    "pre_n": 3196,
+    "baseline_full_mean": 0.34723565954371016,
+    "futures_cov": 1.0,
+    "oi_cov": 0.9971839799749687,
+    "accept_n": 1365,
+    "reject_n": 604,
+    "touch_n": 1980,
+    "accept_full_mean": 2.6984350237025625,
+    "accept_resid_mean": 0.35294172529705925,
+    "reject_resid_mean": 0.1886287107759267,
+    "boot": {
+      "point": 0.16431301452113256,
+      "n_clusters": 291,
+      "draws": 5000,
+      "ci_lo": -0.3170932016394414,
+      "ci_hi": 0.6535037323212062
+    },
+    "liq": {
+      "files_attempted": 120,
+      "files_ok": 0,
+      "events": 0,
+      "matched_side_share": NaN,
+      "mean_notional": NaN
+    }
+  },
+  "gates": {
+    "frozen_flow_lineage_n_ge_3200": true,
+    "futures_coverage_ge_99pct": true,
+    "oi_metrics_coverage_ge_90pct": true,
+    "touch_n_ge_500": true,
+    "accept_n_ge_200": true,
+    "accept_residual_positive": true,
+    "accept_minus_reject_residual_ge_0_20": false,
+    "cluster_boot_ci_lower_gt_zero": false,
+    "accept_full_mean_beats_baseline_0_15": true,
+    "oi_backed_accept_beats_no_oi_0_15": true,
+    "stress_2022_short_accept_resid_positive_n30": true,
+    "recent_accept_resid_positive_n50": true,
+    "near_touch_rate_gt_far": true
+  }
+}
