@@ -1,0 +1,17 @@
+{
+  "exact_frozen_parent_n327": true,
+  "parent_path_coverage_ge99pct": true,
+  "first_passage_resolved_n_ge100": true,
+  "favorable_first_n_ge40": true,
+  "adverse_first_n_ge40": true,
+  "favorable_residual_positive": true,
+  "adverse_residual_negative": false,
+  "residual_gap_ge0_30r": false,
+  "residual_gap_boot_lower_gt0": false,
+  "bad_pooled_residual_gap_positive": true,
+  "recent_pooled_residual_gap_positive": false,
+  "reclaim2_n_ge20": true,
+  "reclaim2_residual_negative": false,
+  "reclaim2_parent_ev_lt_no_reclaim2": true,
+  "august_not_used_for_selection": true
+}

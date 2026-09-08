@@ -1,0 +1,24 @@
+{
+  "primary_first_passage": {
+    "point": 0.06464445978412192,
+    "fav_ev": 0.15107404834646088,
+    "adv_ev": 0.08642958856233895,
+    "ci_lo": -0.18387820126036492,
+    "ci_hi": 0.30581414166853105,
+    "clusters": 189,
+    "draws": 5000
+  },
+  "coverage": 1.0,
+  "entry_class_parity": 1.0,
+  "reclaim": {
+    "reclaim1_n": 170,
+    "reclaim1_residual": 0.06764966309205099,
+    "reclaim2_n": 115,
+    "reclaim2_residual": 0.11010536109729908,
+    "reclaim2_parent_ev": -0.33151963379165617,
+    "no_reclaim2_parent_ev": 0.31293536419299556
+  },
+  "resolved_n": 304,
+  "fav_n": 159,
+  "adv_n": 145
+}
