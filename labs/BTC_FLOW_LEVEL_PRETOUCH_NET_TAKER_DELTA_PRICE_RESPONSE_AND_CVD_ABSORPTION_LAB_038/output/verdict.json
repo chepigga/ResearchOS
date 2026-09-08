@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "verdict": "WATCH_NET_TAKER_DELTA_ABSORPTION_PARTIAL",
+    "high_n": 568,
+    "ign_n": 365,
+    "abs_n": 203,
+    "fut_cov": 1.0,
+    "spot_cov": 1.0,
+    "pressure_median": 3.4416952838603976,
+    "response_median": 1.713285244513869,
+    "bootstrap": {
+      "clusters": 182,
+      "draws_rate": 5000,
+      "draws_resid": 5000,
+      "rate_point": 0.03459119496855345,
+      "rate_ci_lo": -0.10392047098182416,
+      "rate_ci_hi": 0.17429884539796917,
+      "resid_point": 1.3437637669453524,
+      "resid_ci_lo": 0.14906794806018092,
+      "resid_ci_hi": 2.728399229347948
+    }
+  },
+  "gates": {
+    "frozen_high_volume_ge_500": true,
+    "futures_netdelta_coverage_ge_95pct": true,
+    "spot_netdelta_coverage_ge_95pct": true,
+    "ignition_ge_150_absorption_ge_100": true,
+    "response_eff_ignition_gt_absorption": true,
+    "response_eff_rbc_ge_0_10": false,
+    "response_eff_bh_q_le_0_10": false,
+    "absorption_gap_absorption_gt_ignition": true,
+    "absorption_gap_state_bh_q_le_0_10": false,
+    "any_state_feature_bh_q_le_0_10": false,
+    "accept_residual_rho_response_positive": true,
+    "accept_residual_rho_gap_negative": false,
+    "any_residual_feature_bh_q_le_0_10": false,
+    "efficient_accept_rate_beats_absorption_0_05": false,
+    "efficient_residual_beats_absorption_0_20": true,
+    "cluster_accept_rate_ci_lower_gt_zero": false,
+    "cluster_residual_ci_lower_gt_zero": true,
+    "stress_2022_short_efficient_positive_n20": true,
+    "pooled_recent_efficient_positive_n40": true,
+    "both_2025h2_2026_efficient_positive": true,
+    "august_not_used_for_selection": true
+  }
+}
