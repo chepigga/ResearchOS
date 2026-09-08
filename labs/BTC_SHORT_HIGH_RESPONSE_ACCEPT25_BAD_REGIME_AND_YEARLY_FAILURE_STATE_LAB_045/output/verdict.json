@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "verdict": "WATCH_FAILURE_STATE_PARTIAL_REUSED",
+    "n": 327,
+    "futures_coverage": 1.0,
+    "metrics_coverage": 0.9969418960244648,
+    "bad_n": 133,
+    "good_n": 194,
+    "score": 11
+  },
+  "gates": {
+    "exact_frozen_accept25_preaug_trades_327": true,
+    "frozen_execution_payoff_timestamp_coverage_100pct": true,
+    "futures_regime_feature_coverage_ge_99pct": true,
+    "metrics_regime_feature_coverage_ge_95pct": true,
+    "h1_bad_extension72_gt_good": true,
+    "h1_abs_rbc_ge_0_15": false,
+    "h1_bh_q_le_0_10": false,
+    "h1_trade_rho_negative": true,
+    "h2_bad_bear_eff24_lt_good": true,
+    "h2_abs_rbc_ge_0_15": false,
+    "h2_bh_q_le_0_10": false,
+    "h2_trade_rho_positive": true,
+    "h3_bad_flowpersist12_lt_good": false,
+    "h3_abs_rbc_ge_0_15": false,
+    "h3_bh_q_le_0_10": false,
+    "h3_trade_rho_positive": false,
+    "at_least_2_primary_discrimination_q_le_0_10": false,
+    "at_least_1_primary_boot_ci_expected_excludes_zero": false,
+    "any_feature_discrimination_bh_q_le_0_10": false,
+    "any_feature_trade_payoff_bh_q_le_0_10": true,
+    "recent_periods_not_used_for_threshold_weight_tuning": true,
+    "august_not_used_for_selection": true
+  }
+}
