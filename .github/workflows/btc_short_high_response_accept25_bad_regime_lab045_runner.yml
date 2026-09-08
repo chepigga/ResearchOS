@@ -1,0 +1,39 @@
+name: BTC SHORT High Response ACCEPT25 Bad Regime LAB045 Runner
+
+on:
+  push:
+    paths:
+      - '.github/workflows/btc_short_high_response_accept25_bad_regime_lab045_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab045:
+    runs-on: ubuntu-latest
+    env:
+      LAB_BRANCH: lab/btc-short-high-response-accept25-bad-regime-yearly-failure-state-045
+      LAB_DIR: labs/BTC_SHORT_HIGH_RESPONSE_ACCEPT25_BAD_REGIME_AND_YEARLY_FAILURE_STATE_LAB_045
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas scipy requests
+      - name: Run frozen LAB045
+        run: python "$LAB_DIR/run_lab.py"
+      - name: Persist outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$LAB_DIR/output"
+          git diff --cached --quiet || git commit -m "Persist BTC SHORT ACCEPT25 bad regime LAB045 outputs"
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-short-high-response-accept25-bad-regime-lab045
+          path: ${{ env.LAB_DIR }}/output
