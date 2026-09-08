@@ -1,0 +1,18 @@
+{
+  "thin_vs_weak": {
+    "comparison": "THIN_BOOK-WEAK",
+    "point": 0.22775427601318352,
+    "clusters": 276,
+    "draws": 5000,
+    "ci_lo": -0.5269781787176319,
+    "ci_hi": 1.0065419345221693
+  },
+  "high_vs_low_elasticity": {
+    "comparison": "HIGH_ELASTICITY-LOW_ELASTICITY",
+    "point": 0.23430902021537678,
+    "clusters": 286,
+    "draws": 5000,
+    "ci_lo": -0.26274504633420265,
+    "ci_hi": 0.7280464974557741
+  }
+}

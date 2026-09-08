@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "verdict": "WATCH_ALL_TOUCH_THIN_BOOK_POSITIVE_PROOF_INCOMPLETE",
+    "pre_n": 1966,
+    "resolved_n": 1926,
+    "resolved_share": 0.9796541200406917,
+    "thin_n": 264,
+    "weak_n": 690,
+    "thin_residual": 0.3816565414517095,
+    "weak_residual": 0.153902265438526,
+    "thin_accept": 0.7196969696969697,
+    "weak_accept": 0.7159420289855073,
+    "frequency_per_month": 4.0,
+    "book_bootstrap": {
+      "comparison": "THIN_BOOK-WEAK",
+      "point": 0.22775427601318352,
+      "clusters": 276,
+      "draws": 5000,
+      "ci_lo": -0.5269781787176319,
+      "ci_hi": 1.0065419345221693
+    },
+    "elasticity_bootstrap": {
+      "comparison": "HIGH_ELASTICITY-LOW_ELASTICITY",
+      "point": 0.23430902021537678,
+      "clusters": 286,
+      "draws": 5000,
+      "ci_lo": -0.26274504633420265,
+      "ci_hi": 0.7280464974557741
+    }
+  },
+  "gates": {
+    "all_classified_preaug_ge_1900": true,
+    "feature_coverage_ge_95pct": true,
+    "rolling_resolved_ge_85pct": true,
+    "thin_n_ge_250": true,
+    "weak_n_ge_250": true,
+    "thin_residual_positive": true,
+    "thin_residual_gt_weak": true,
+    "thin_weak_gap_ge_0_30": false,
+    "thin_weak_boot_ci_lower_gt_zero": false,
+    "thin_accept_ge_weak": true,
+    "thin_frequency_ge_3_month": true,
+    "rolling_high_elasticity_gt_low": true,
+    "rolling_elasticity_gap_ge_0_20": true,
+    "rolling_elasticity_boot_ci_lower_gt_zero": false,
+    "primary_elasticity_rho_positive": false,
+    "primary_elasticity_absrho_ge_0_05": false,
+    "primary_elasticity_bh_q_le_0_10": false,
+    "any_elasticity_feature_bh_q_le_0_10": false,
+    "long_thin_positive_n100": false,
+    "short_thin_positive_n100": true,
+    "stress_2022_short_positive_n20": false,
+    "pooled_recent_positive_n80": false,
+    "2025h2_positive": true,
+    "2026_positive": true,
+    "august_not_used": true
+  }
+}
