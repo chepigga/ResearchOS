@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -q numpy pandas requests
+      - run: python -m pip install -q numpy pandas scipy requests
       - name: Run frozen LAB052
         run: python labs/BTC_SHORT_ACCEPT25_ADVERSE_FIRST_RECOVERY_VS_PERSISTENT_FAILURE_SEQUENCE_LAB_052/run_lab.py
       - name: Persist outputs
