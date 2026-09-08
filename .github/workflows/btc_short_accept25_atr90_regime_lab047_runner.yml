@@ -1,0 +1,40 @@
+name: BTC SHORT ACCEPT25 ATR90 Regime LAB047 Runner
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/btc_short_accept25_atr90_regime_lab047_runner.yml'
+permissions:
+  contents: write
+jobs:
+  lab047:
+    runs-on: ubuntu-latest
+    env:
+      LAB_BRANCH: lab/btc-short-high-response-accept25-causal-atr90-regime-replication-047
+      LAB_DIR: labs/BTC_SHORT_HIGH_RESPONSE_ACCEPT25_CAUSAL_ATR90_REGIME_REPLICATION_LAB_047
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas
+      - name: Run frozen LAB047
+        run: python "$LAB_DIR/run_lab.py"
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$LAB_DIR/output"
+          if git diff --cached --quiet; then
+            echo 'No output changes'
+          else
+            git commit -m 'Persist BTC SHORT ACCEPT25 ATR90 regime LAB047 outputs'
+            git push origin HEAD:"$LAB_BRANCH"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btc-short-accept25-atr90-regime-lab047
+          path: ${{ env.LAB_DIR }}/output
