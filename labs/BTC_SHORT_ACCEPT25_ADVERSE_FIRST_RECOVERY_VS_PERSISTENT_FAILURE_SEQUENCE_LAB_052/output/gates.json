@@ -1,0 +1,17 @@
+{
+  "exact_lab051_adverse_first_n145": true,
+  "path_coverage_ge99pct": true,
+  "sequence_resolved_n_ge60": true,
+  "recovered_first_n_ge20": true,
+  "persistent_failure_first_n_ge20": true,
+  "recovered_residual_positive": true,
+  "persistent_residual_negative": true,
+  "residual_gap_ge0_30r": true,
+  "residual_gap_boot_lower_gt0": true,
+  "persistent_parent_ev_lt_recovered_parent_ev": true,
+  "bad_pooled_persistent_residual_negative": true,
+  "bad_pooled_residual_gap_positive": true,
+  "recent_pooled_recovered_residual_positive": true,
+  "recent_pooled_persistent_residual_nonpositive": false,
+  "august_not_used_for_selection": true
+}

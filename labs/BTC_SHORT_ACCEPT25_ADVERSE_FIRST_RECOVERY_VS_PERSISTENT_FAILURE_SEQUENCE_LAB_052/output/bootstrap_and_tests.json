@@ -1,0 +1,20 @@
+{
+  "primary": {
+    "point": 0.45619830389600274,
+    "recovered_ev": 0.37225388703506856,
+    "persistent_ev": -0.08394441686093419,
+    "ci_lo": 0.06344163352253385,
+    "ci_hi": 0.8327816490784473,
+    "clusters": 79,
+    "draws": 5000
+  },
+  "coverage": 1.0,
+  "resolved_n": 90,
+  "recovered_n": 31,
+  "persistent_n": 59,
+  "recovered_parent_ev": 0.5974835979630803,
+  "persistent_parent_ev": -0.6378633521355443,
+  "severe1r_share_all": 0.23448275862068965,
+  "severe1r_share_recovered": 0.0,
+  "severe1r_share_persistent": 0.0
+}
