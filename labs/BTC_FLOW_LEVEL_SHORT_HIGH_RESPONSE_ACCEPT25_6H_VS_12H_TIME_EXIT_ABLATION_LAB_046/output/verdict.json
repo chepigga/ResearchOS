@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "verdict": "WATCH_ACCEPT25_ENTRY6H_POSITIVE_BUT_DEGRADES",
+    "score": 11,
+    "gates_total": 14,
+    "paired_entry6_minus_signal12": {
+      "point": -0.02194564111657344,
+      "clusters": 236,
+      "ci_lo": -0.05601231832806967,
+      "ci_hi": 0.012399956696073366
+    },
+    "parent_ev": 0.0862921691831027
+  },
+  "gates": {
+    "parent_formal_n475_accept327": false,
+    "signal12_parent_trade_ev_parity": true,
+    "m15_path_coverage_ge_99pct": true,
+    "entry6_net_ev_positive": true,
+    "entry6_pf_ge_1_10": true,
+    "entry6_ev_per_original_ge_0_05": false,
+    "entry6_10bps_ev_positive": false,
+    "entry6_dd_025_le_4pct": true,
+    "entry6_2025h2_positive": true,
+    "entry6_2026_positive": true,
+    "entry6_pooled_recent_positive_n50": true,
+    "entry6_not_worse_12h_by_0_05": true,
+    "entry6_pf_not_worse_12h_by_0_10": true,
+    "august_not_used_for_selection": true
+  }
+}
