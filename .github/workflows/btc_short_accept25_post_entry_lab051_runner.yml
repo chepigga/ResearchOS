@@ -22,13 +22,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -q numpy pandas scipy
+      - run: python -m pip install -q numpy pandas scipy requests
       - name: Run frozen LAB051
         run: python labs/BTC_SHORT_ACCEPT25_POST_ENTRY_FIRST_PASSAGE_AND_EARLY_FAILURE_STATE_LAB_051/run_lab.py
       - name: Persist outputs
         run: |
           git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.email 41898282+chepigga@users.noreply.github.com
           git add labs/BTC_SHORT_ACCEPT25_POST_ENTRY_FIRST_PASSAGE_AND_EARLY_FAILURE_STATE_LAB_051/output
           git commit -m 'Persist BTC SHORT ACCEPT25 post-entry LAB051 outputs' || true
           git push origin HEAD:lab/btc-short-accept25-post-entry-first-passage-early-failure-state-051
