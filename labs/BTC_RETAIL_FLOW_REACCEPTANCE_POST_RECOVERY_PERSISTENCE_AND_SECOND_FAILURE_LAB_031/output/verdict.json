@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "verdict": "WATCH_PERSISTENCE_DISCRIMINATIVE_TRANSFER_INCOMPLETE",
+    "lineage_total": 703,
+    "lineage_pre": 701,
+    "median_persist_h": 0.5,
+    "persist_mae": 1.914245407136191,
+    "persist_mfe": 2.546465620300028,
+    "plus05_first": 600,
+    "second_first": 85,
+    "y22_short": {
+      "sample": "2022_SHORT",
+      "n": 57,
+      "persist_n": 32,
+      "persist_rate": 0.5614035087719298,
+      "persist_resid": 1.0120653165387934,
+      "persist_t": 2.2057737162501887,
+      "persist_pf": 2.6827645172792334,
+      "persist_win": 0.71875,
+      "second_n": 16,
+      "second_resid": 0.48151536928077787,
+      "second_pf": 2.3437205674624524,
+      "unresolved_n": 9,
+      "unresolved_resid": 3.2733891889127427,
+      "gap": 0.5305499472580155,
+      "median_persist_h": 0.5,
+      "persist_mae": 1.1312404775416383,
+      "persist_mfe": 3.0105749199629406,
+      "plus05_first": 49,
+      "second_first": 7
+    }
+  },
+  "bootstrap": {
+    "n_clusters": 260,
+    "draws": 5000,
+    "point": 0.0016477865406954728,
+    "ci_lo": -0.7773302575183831,
+    "ci_hi": 0.755702388327745
+  },
+  "gates": {
+    "exact_lab030_full_reaccept_lineage_ge_690": true,
+    "persist2_n_ge_150": true,
+    "second_fail_n_ge_80": true,
+    "persist2_residual_positive": true,
+    "second_fail_residual_lt_persist2": true,
+    "residual_gap_ge_0_50atr": false,
+    "bootstrap_ci_lower_gt_zero": false,
+    "recent_persist2_n_ge_30": true,
+    "recent_persist2_residual_positive": true,
+    "recent_persist_gt_second_fail": true,
+    "2025h2_and_2026_persist_positive": false,
+    "2022_short_persist_n15_residual_positive": true,
+    "long_and_short_persist_positive": true,
+    "persist_win_rate_gt_55pct": false
+  }
+}
