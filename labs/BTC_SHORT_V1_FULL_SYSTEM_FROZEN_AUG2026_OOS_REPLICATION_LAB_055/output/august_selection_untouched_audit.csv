@@ -1,0 +1,2 @@
+flow_id,signal_time,period,book_state,state,level,atr14,entry_time,entry_price,risk_dist,horizon,eligible,covered,traded,parent_exit_time,parent_exit_price,parent_exit_reason,fp_state,fp_time,persistent_failure,persistent_time,persistent_price,final_exit_time,final_exit_price,final_exit_reason,early_exit,net_r_0bps,net_r_5bps,net_r_10bps
+3203,2026-08-05 09:15:00+00:00,AUG2026,DRIVEN_MOVE,REJECT,63917.1,101.221428571429,,,253.0535714285725,2026-08-05 21:15:00+00:00,False,False,False,,,NO_TRADE,NO_TRADE,,False,,,,,NO_TRADE,False,0.0,0.0,0.0

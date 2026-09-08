@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "verdict": "WATCH_FULL_SYSTEM_PARITY_PASS_AUG_OOS_INSUFFICIENT_N",
+    "august_status": "INSUFFICIENT_N",
+    "parity": {
+      "router_ids_equal": true,
+      "traded_ids_equal": true,
+      "persistent_ids_equal": true,
+      "frozen_router_n": 475,
+      "ours_router_n": 475,
+      "frozen_trades_n": 327,
+      "ours_trades_n": 327,
+      "frozen_persistent_n": 59,
+      "ours_persistent_n": 59,
+      "max_abs_net_r_5bps_error": 8.126832540256146e-14
+    },
+    "preaug_path_coverage": 1.0,
+    "august_eligible_path_coverage": 1.0,
+    "preaug_router_n": 475,
+    "preaug_trades": 327,
+    "preaug_persistent": 59,
+    "aug_router_n": 1,
+    "aug_trades": 0,
+    "aug_persistent": 0
+  },
+  "gates": {
+    "preaug_high_response_n_eq475": true,
+    "preaug_accept_trades_n_eq327": true,
+    "preaug_persistent_exit_n_eq59": true,
+    "router_flow_id_parity_100pct": true,
+    "traded_flow_id_parity_100pct": true,
+    "persistent_exit_flow_id_parity_100pct": true,
+    "netr_5bps_max_error_le1e9": true,
+    "preaug_m15_path_coverage_ge99pct": true,
+    "full_5bps_ev_positive": true,
+    "full_pf_gt1_10": true,
+    "full_cumr_positive": true,
+    "full_dd_025_le4pct": true,
+    "full_10bps_ev_positive": true,
+    "2022_ev_per_original_nonnegative": true,
+    "2025h2_ev_per_original_positive": true,
+    "2026_ev_per_original_positive": true,
+    "recent_pooled_ev_per_original_positive": true,
+    "august_reported_without_tuning": true,
+    "august_eligible_path_coverage_100pct": true,
+    "august_trades_ge20": false,
+    "no_september_no_postaug_threshold_change": true
+  }
+}
