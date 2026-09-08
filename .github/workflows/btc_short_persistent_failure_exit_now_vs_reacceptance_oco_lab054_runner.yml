@@ -1,0 +1,38 @@
+name: BTC SHORT Persistent Failure Decision LAB054 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_short_persistent_failure_exit_now_vs_reacceptance_oco_lab054_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab054:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frozen LAB054 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-short-persistent-failure-exit-now-vs-reacceptance-oco-054
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas scipy requests
+      - name: Run frozen LAB054
+        run: python labs/BTC_SHORT_PERSISTENT_FAILURE_EXIT_NOW_VS_REACCEPTANCE_OCO_LAB_054/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_SHORT_PERSISTENT_FAILURE_EXIT_NOW_VS_REACCEPTANCE_OCO_LAB_054/output
+          git commit -m 'Persist BTC SHORT persistent failure decision LAB054 outputs' || true
+          git push origin HEAD:lab/btc-short-persistent-failure-exit-now-vs-reacceptance-oco-054
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_SHORT_PERSISTENT_FAILURE_DECISION_LAB054
+          path: labs/BTC_SHORT_PERSISTENT_FAILURE_EXIT_NOW_VS_REACCEPTANCE_OCO_LAB_054/output
