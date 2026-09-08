@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "verdict": "FAIL_NO_FUTURES_SPOT_DIVERGENCE_QUALITY_EDGE",
+    "flow_n": 3209,
+    "joined_n": 3207,
+    "spot_cov": 0.9993742177722152,
+    "fut_cov": 1.0,
+    "metric_cov": 1.0,
+    "baseline_mean": 0.3454633616538879,
+    "oi_div_mean": 0.6051823870785886
+  },
+  "bootstrap": {
+    "n_clusters": 291,
+    "draws": 5000,
+    "point": -0.004512352472133385,
+    "ci_lo": -0.7403762891807599,
+    "ci_hi": 0.7598125584915272,
+    "q20": -0.04367905706932261,
+    "q80": 0.05919214039751454,
+    "q1_mean": 0.10116591465384692,
+    "q5_mean": 0.09665356218171353
+  },
+  "gates": {
+    "exact_frozen_flow_lineage_ge_3200": true,
+    "spot_kline_coverage_ge_90pct": true,
+    "futures_kline_coverage_ge_90pct": true,
+    "metrics_oi_coverage_ge_90pct": true,
+    "at_least_one_feature_bh_q_le_0_10": false,
+    "at_least_one_feature_abs_rho_ge_0_05": false,
+    "divergence_rho_positive": false,
+    "divergence_q5_minus_q1_ge_0_20": false,
+    "divergence_boot_ci_lower_gt_zero": false,
+    "oi_up_positive_div_cell_beats_baseline_0_15": true,
+    "stress_2022_short_high_div_positive": true,
+    "long_short_divergence_rho_same_sign": false,
+    "2025h2_2026_divergence_rho_same_sign": false,
+    "august_not_used_for_selection": true
+  }
+}
