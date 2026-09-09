@@ -1,8 +1,8 @@
 {
-  "generated_aug_flow_n": 43,
+  "generated_aug_flow_n": 13,
   "frozen_aug_flow_n": 13,
-  "flow_union_n": 43,
-  "flow_exact_match_share": 0.3023255813953488,
+  "flow_union_n": 13,
+  "flow_exact_match_share": 1.0,
   "router_overlap_short_n": 1,
   "router_state_exact_match_share": 1.0
 }

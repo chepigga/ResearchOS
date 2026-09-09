@@ -1,7 +1,7 @@
 {
   "metrics_tail_reaches_sep8": true,
   "futures_tail_reaches_sep8": true,
-  "aug_flow_parity_ge95pct": false,
+  "aug_flow_parity_ge95pct": true,
   "aug_router_parity_100pct_when_overlap": true,
   "fresh_sep_has_flow_short": true,
   "fresh_sep_has_high_response_short": true,
