@@ -1,0 +1,133 @@
+{
+  "lab": "BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057",
+  "rest_host": "https://www.binance.com",
+  "archive_raw_min": "2026-05-01 00:00:00+00:00",
+  "archive_raw_max": "2026-09-08 23:55:00+00:00",
+  "rest_raw_min_after_fixed_shift": "2026-09-07 06:15:00+00:00",
+  "rest_raw_max_after_fixed_shift": "2026-09-08 23:50:00+00:00",
+  "fixed_rest_shift_minutes": -5,
+  "raw_overlap_n": 500,
+  "raw_ratio_abs_error": {
+    "n": 500,
+    "min": 2.1999999999522402e-07,
+    "p01": 2.0228000000943602e-06,
+    "p05": 1.1179500000002562e-05,
+    "p50": 0.00011572500000001096,
+    "p95": 0.00024422649999991105,
+    "p99": 0.0002706819999999399,
+    "max": 0.0002850700000001094,
+    "mean": 0.00011757777999999464
+  },
+  "compare_m15_n": 155,
+  "compare_start": "2026-09-07 09:15:00+00:00",
+  "compare_end": "2026-09-08 23:45:00+00:00",
+  "all_class_pointwise_parity": 1.0,
+  "short_binary_parity": 1.0,
+  "buy_binary_parity": 1.0,
+  "archive_short_rows": 39,
+  "rest_short_rows": 39,
+  "short_false_positive_n": 0,
+  "short_false_negative_n": 0,
+  "short_false_positive_rate": 0.0,
+  "short_false_negative_rate": 0.0,
+  "all_decision_flip_n": 0,
+  "short_decision_flip_n": 0,
+  "ratio_abs_error_m15": {
+    "n": 155,
+    "min": 2.1999999999522402e-07,
+    "p01": 1.1811999998778689e-06,
+    "p05": 1.1964000000053154e-05,
+    "p50": 0.0001270100000001495,
+    "p95": 0.00024718499999993866,
+    "p99": 0.00028026299999998726,
+    "max": 0.0017409200000000347,
+    "mean": 0.0001366119354838593
+  },
+  "delta_abs_error": {
+    "n": 155,
+    "min": 1.4899999998263525e-06,
+    "p01": 3.834799999862248e-06,
+    "p05": 2.472299999995986e-05,
+    "p50": 0.000141600000000075,
+    "p95": 0.00035270500000001944,
+    "p99": 0.00041611460000001287,
+    "max": 0.0016808600000000062,
+    "mean": 0.00017328341935482836
+  },
+  "normalized_delta_error": {
+    "n": 155,
+    "min": 2.0398983301342372e-05,
+    "p01": 5.245745753284504e-05,
+    "p05": 0.00033809637435113676,
+    "p50": 0.0019371859255244278,
+    "p95": 0.004839095971333033,
+    "p99": 0.00570984248984446,
+    "max": 0.023163967612284682,
+    "mean": 0.002372284521340392
+  },
+  "nearest_threshold_distance": {
+    "n": 155,
+    "min": 0.00013308799999996873,
+    "p01": 0.00015675847999998548,
+    "p05": 0.00232880220000008,
+    "p50": 0.02117029999999987,
+    "p95": 0.036431841599999785,
+    "p99": 0.046907909199999834,
+    "max": 0.05284843599999979,
+    "mean": 0.021004183419354814
+  },
+  "margin_error_ratio": {
+    "n": 155,
+    "min": 0.3962594155921325,
+    "p01": 1.019565434047113,
+    "p05": 8.752164371834052,
+    "p50": 134.7654250433835,
+    "p95": 875.4600730400152,
+    "p99": 4704.829169565717,
+    "max": 8295.57449761101,
+    "mean": 335.69882955618016
+  },
+  "short_archive_q80_positive_margin": {
+    "n": 39,
+    "min": 0.00013308799999996873,
+    "p01": 0.00013621159999996997,
+    "p05": 0.0008842921999997791,
+    "p50": 0.018019675999999887,
+    "p95": 0.04646693799999988,
+    "p99": 0.05084238939999976,
+    "max": 0.05284843599999979,
+    "mean": 0.01999824487179483
+  },
+  "flip_threshold_distance": {
+    "n": 0
+  },
+  "flip_delta_abs_error": {
+    "n": 0
+  },
+  "short_flip_threshold_distance": {
+    "n": 0
+  },
+  "short_flip_delta_abs_error": {
+    "n": 0
+  },
+  "event_eval_start": "2026-09-08 09:15:00+00:00",
+  "all_side_flow_event_union_match": 1.0,
+  "all_side_flow_event_union_n": 1,
+  "archive_flow_event_n": 1,
+  "rest_flow_event_n": 1,
+  "short_flow_event_union_match": 1.0,
+  "short_flow_event_union_n": 0,
+  "archive_short_flow_event_n": 0,
+  "rest_short_flow_event_n": 0,
+  "verdict": "FAIL_REST_DECISION_PARITY",
+  "gates": {
+    "comparable_m15_n_ge1500": false,
+    "all_class_pointwise_parity_ge99pct": true,
+    "short_binary_parity_ge99_5pct": true,
+    "short_false_positive_rate_le0_5pct": true,
+    "short_false_negative_rate_le0_5pct": true,
+    "all_side_flow_event_union_match_ge95pct": true,
+    "short_flow_event_union_match_ge95pct": true,
+    "no_tuning": true
+  }
+}
