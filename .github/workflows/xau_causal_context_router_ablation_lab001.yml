@@ -1,0 +1,60 @@
+name: XAU Causal Context Router Ablation LAB001
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_causal_context_router_ablation_lab001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  xau-context-router:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LAB_BRANCH: lab/xau-causal-context-router-001
+      OUTDIR: Projects/XAU_Pool/Results/XAU_CAUSAL_CONTEXT_ROUTER_ABLATION_LAB_001/v001
+      POOL: Projects/XAU_Pool/Results/XAU_POOL_SELECTION_LAB_001/v001/Artifacts/pool_excess.parquet
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy pyarrow
+      - name: Fetch canonical native XAU M1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release view ak47 --repo "${GITHUB_REPOSITORY}" --json assets --jq '.assets[].name' > /tmp/assets.txt
+          ASSET="$(grep -E '^XAUUSD_M1_20220601_20260723_TICK_NATIVE\.csv(\.zip)?$' /tmp/assets.txt | head -n1 || true)"
+          test -n "$ASSET"
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern "$ASSET" --dir data
+          if [[ "$ASSET" == *.zip ]]; then unzip -j "data/$ASSET" -d data; fi
+          test -f data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv
+      - name: Run frozen XAU context-router ablation
+        run: |
+          mkdir -p "$OUTDIR"
+          python Projects/XAU_Pool/Code/Python/XAU_CAUSAL_CONTEXT_ROUTER_ABLATION_LAB_001/run_lab.py \
+            --m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
+            --pool "$POOL" \
+            --out "$OUTDIR"
+          cat "$OUTDIR/REPORT.md"
+      - name: Persist compact outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$OUTDIR"
+          git diff --cached --quiet || git commit -m "Persist XAU causal context router LAB001 outputs"
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xau-causal-context-router-ablation-lab001
+          path: ${{ env.OUTDIR }}
