@@ -1,0 +1,1 @@
+Formal LAB059 scoring starts after 24h causal preroll. Archive side/event stream is ground truth only and is not used by the set-valued clock transitions.
