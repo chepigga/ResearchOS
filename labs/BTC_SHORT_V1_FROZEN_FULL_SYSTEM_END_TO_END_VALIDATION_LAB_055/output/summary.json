@@ -1,0 +1,68 @@
+{
+  "verdict": "FAIL_FROZEN_SYSTEM_VALIDATION",
+  "counts": {
+    "original_high_response": 475,
+    "accept_trades": 327,
+    "adverse_first": 145,
+    "persistent_failure": 59,
+    "final_trades": 327,
+    "early_exits": 59
+  },
+  "core": {
+    "ev_5bps": 0.10143810372376026,
+    "pf_5bps": 1.228426136288747,
+    "cumr_5bps": 33.170259917669604,
+    "maxdd_r": 9.794465415596523,
+    "dd_pct_025": 2.448616353899131,
+    "dd_pct_050": 4.897232707798262,
+    "ev_10bps": 0.03953395152958807,
+    "pf_10bps": 1.0824511277305555,
+    "loss_streak": 8,
+    "win_rate": 0.44036697247706424
+  },
+  "bootstrap": {
+    "clusters": 196,
+    "draws": 5000,
+    "ev_point": 0.10143810372376026,
+    "ev_ci_lo": -0.0143678625310476,
+    "ev_ci_hi": 0.2142729083185156,
+    "total_ci_lo": -4.740384692152528,
+    "total_ci_hi": 70.06137368487765,
+    "dd_p50": 12.133188558931277,
+    "dd_p95": 22.679584207111926,
+    "dd_p99": 29.4719386302356
+  },
+  "recent_ev_per_original": 0.13833886146796365,
+  "profitable_active_month_share": 0.5846153846153846,
+  "worst_quarter": {
+    "quarter": "2022Q3",
+    "trades": 19,
+    "cumr": -4.903364399057873,
+    "ev": -0.25807181047673017
+  },
+  "august": {
+    "high_response_signals": 1,
+    "accept_signals": 0,
+    "executable_trades": 0,
+    "residual_mean": -3.1732411262436955,
+    "note": "Untouched August audit only; no selection/tuning allowed."
+  },
+  "gates": {
+    "exact_original_high_response_475": true,
+    "exact_accept_trades_327": true,
+    "exact_adverse_first_145": true,
+    "exact_persistent_failure_59": true,
+    "exact_final_trades_327": true,
+    "exact_early_exits_59": true,
+    "ev_5bps_positive": true,
+    "pf_5bps_gt_1_10": true,
+    "cumr_positive": true,
+    "ev_10bps_positive": true,
+    "historical_dd_025_lt4pct": true,
+    "bootstrap_ev_lower_gt0": false,
+    "cluster_p95_dd_025_lt5pct": false,
+    "recent_ev_per_original_positive": true,
+    "max_loss_streak_le10": true,
+    "august_not_used_for_selection": true
+  }
+}
