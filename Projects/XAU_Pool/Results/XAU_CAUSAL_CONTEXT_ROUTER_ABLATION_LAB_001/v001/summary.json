@@ -1,0 +1,86 @@
+{
+  "lab": "XAU_CAUSAL_CONTEXT_ROUTER_ABLATION_LAB_001",
+  "verdict": "MIXED_EVENT_ENRICHMENT",
+  "status": "REUSED_HISTORY_EVENT_ABLATION_ONLY",
+  "native_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "m1_rows": 1454538,
+  "m1_start": "2022-06-01 01:05:00",
+  "m1_end": "2026-07-23 23:49:00",
+  "pool_rows_finite": 266297,
+  "context_missing_warmup_events": 2892,
+  "context_eligible_n": 263405,
+  "metrics": {
+    "BASELINE": {
+      "n": 263405,
+      "retention": 1.0,
+      "mean_excess": -0.02495872203689796,
+      "median_excess": -0.8370068260319191,
+      "p_excess_pos": 0.3063912985706422,
+      "mean_R": -0.1036511198766333,
+      "p_R_pos": 0.30465632770828194
+    },
+    "PRIMARY_PULLBACK_EXPANSION": {
+      "n": 232427,
+      "retention": 0.8823940320039483,
+      "mean_excess": -0.024521685756480643,
+      "median_excess": -0.8370068260319191,
+      "p_excess_pos": 0.307141597146631,
+      "mean_R": -0.10135976956782562,
+      "p_R_pos": 0.30540341698683887
+    },
+    "STRICT_DIRECTION_MATCH": {
+      "n": 84488,
+      "retention": 0.3207532127332435,
+      "mean_excess": -0.04062123218971913,
+      "median_excess": -0.9256260365062727,
+      "p_excess_pos": 0.3251349304043178,
+      "mean_R": -0.04396876953820834,
+      "p_R_pos": 0.32460231038727394
+    },
+    "NEG_CONTROL_REVERSAL_RANGE": {
+      "n": 30978,
+      "retention": 0.1176059679960517,
+      "mean_excess": -0.028237792072037606,
+      "median_excess": -0.8392974517593728,
+      "p_excess_pos": 0.30076183097682224,
+      "mean_R": -0.1208430521584217,
+      "p_R_pos": 0.2990509393763316
+    }
+  },
+  "bootstrap": {
+    "BASELINE": {
+      "ci_lo": -0.032243498914374655,
+      "ci_hi": -0.017241463992356435,
+      "weeks": 210,
+      "draws": 2500
+    },
+    "PRIMARY_PULLBACK_EXPANSION": {
+      "ci_lo": -0.031967572479067695,
+      "ci_hi": -0.01672606663539372,
+      "weeks": 208,
+      "draws": 2500
+    },
+    "STRICT_DIRECTION_MATCH": {
+      "ci_lo": -0.0671569147587591,
+      "ci_hi": -0.011904729179826164,
+      "weeks": 190,
+      "draws": 2500
+    },
+    "NEG_CONTROL_REVERSAL_RANGE": {
+      "ci_lo": -0.05179358522406679,
+      "ci_hi": -0.003946041775901155,
+      "weeks": 76,
+      "draws": 2500
+    }
+  },
+  "gates": {
+    "retention_ge_35pct": true,
+    "mean_excess_gt_baseline": true,
+    "mean_excess_gt_negative_control": true,
+    "p_excess_pos_gt_baseline": true,
+    "raw_mean_R_gt_baseline": true,
+    "cluster_ci_low_gt_zero": false,
+    "positive_excess_in_ge3_years_n100": false
+  },
+  "positive_primary_years_n100": 0
+}
