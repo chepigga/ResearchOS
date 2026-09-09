@@ -1,0 +1,74 @@
+{
+  "lab": "BTC_FLOW_EVENT_CLOCK_PHASE_DRIFT_AND_CANONICAL_ANCHOR_RECOVERABILITY_LAB_059",
+  "source_lab": "LAB058",
+  "cooldown_hours": 12,
+  "formal_start": "2026-08-26T00:00:00+00:00",
+  "formal_end": "2026-09-08T23:45:00+00:00",
+  "formal_rows": 1344,
+  "carry_in_divergence_at_formal_start": false,
+  "side_set_contains_archive": 1.0,
+  "archive_path_containment": 1.0,
+  "clock_state_singleton_share": 0.6837797619047619,
+  "state_count": {
+    "p50": 1.0,
+    "p95": 4.0,
+    "max": 5
+  },
+  "divergence_episode_n": 3,
+  "recovered_episode_n": 3,
+  "anchor_recovery_rate_48h": 0.6666666666666666,
+  "resynchronization_hours": {
+    "p50": 25.5,
+    "p95": 54.974999999999994,
+    "max": 58.25
+  },
+  "event_certainty": {
+    "archive_event_n": 15,
+    "certain_event_n": 10,
+    "ambiguous_clock_row_n": 13,
+    "certain_event_precision": 1.0,
+    "archive_event_certain_recall": 0.6666666666666666,
+    "false_certain_event_n": 0
+  },
+  "short_event_certainty": {
+    "archive_short_event_n": 9,
+    "certain_short_event_n": 7,
+    "certain_short_precision": 1.0,
+    "archive_short_certain_recall": 0.7777777777777778,
+    "false_certain_short_n": 0
+  },
+  "naive_abstention_clock_comparison": {
+    "all": {
+      "archive_n": 15,
+      "other_n": 14,
+      "intersection_n": 11,
+      "union_n": 18,
+      "union_match": 0.6111111111111112,
+      "archive_only_n": 4,
+      "other_only_n": 3
+    },
+    "short": {
+      "archive_n": 9,
+      "other_n": 8,
+      "intersection_n": 7,
+      "union_n": 10,
+      "union_match": 0.7,
+      "archive_only_n": 2,
+      "other_only_n": 1
+    }
+  },
+  "gates": {
+    "formal_rows_ge1000": true,
+    "side_set_contains_archive_eq100pct": true,
+    "archive_path_containment_eq100pct": true,
+    "certain_event_precision_eq100pct": true,
+    "false_certain_event_n_eq0": true,
+    "short_certain_event_precision_eq100pct": true,
+    "anchor_recovery_rate_48h_ge90pct": false,
+    "median_resync_hours_le24": false,
+    "no_tuning": true
+  },
+  "verdict": "WATCH_SET_CLOCK_SAFE_BUT_LOW_RECOVERY",
+  "frozen_short_v1_changed": false,
+  "live_allocation": 0
+}
