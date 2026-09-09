@@ -53,6 +53,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
+
           p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
           s=p.read_text()
           pattern=r'd\.stack(?![A-Za-z0-9_])'
@@ -71,7 +72,17 @@ jobs:
           patched=patched.replace(old,warmup,1)
           compile(patched,str(p),'exec')
           p.write_text(patched)
-          print(f'Patched {count} exact stack references and restored XAU warmup mask')
+
+          q=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py')
+          qs=q.read_text()
+          old_cols="    cols = ['available_time','bias','score_expansion','score_pullback','score_reversal','score_range']\n    c = ctx[cols].dropna(subset=['available_time']).sort_values('available_time').reset_index(drop=False)"
+          new_cols="    cols = ['available_time','regime','bias','score_expansion','score_pullback','score_reversal','score_range']\n    c = ctx[cols].dropna(subset=['available_time','regime']).sort_values('available_time').reset_index(drop=False)"
+          if old_cols not in qs:
+              raise SystemExit('Expected LAB002 XAU Context join block not found')
+          qpatched=qs.replace(old_cols,new_cols,1)
+          compile(qpatched,str(q),'exec')
+          q.write_text(qpatched)
+          print(f'Patched {count} exact stack references, restored warmup, and enforced frozen regime availability boundary')
           PY
 
       - name: Run preregistered LAB002
@@ -101,6 +112,7 @@ jobs:
         run: |
           set -euo pipefail
           git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$OUTDIR"
