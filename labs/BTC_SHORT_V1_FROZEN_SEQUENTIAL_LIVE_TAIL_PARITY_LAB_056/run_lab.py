@@ -38,6 +38,7 @@ def load_lab055():
 def get_json(paths, params):
     errors = []
     for base in [
+        "https://www.binance.com",
         "https://fapi.binance.com",
         "https://fapi1.binance.com",
         "https://fapi2.binance.com",
