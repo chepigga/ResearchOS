@@ -42,7 +42,7 @@ jobs:
       - name: Run frozen XAU context-router ablation
         run: |
           mkdir -p "$OUTDIR"
-          python Projects/XAU_Pool/Code/Python/XAU_CAUSAL_CONTEXT_ROUTER_ABLATION_LAB_001/run_lab.py \
+          python Projects/XAU_Pool/Code/Python/XAU_CAUSAL_CONTEXT_ROUTER_ABLATION_LAB_001/run_lab_fixed.py \
             --m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
             --pool "$POOL" \
             --out "$OUTDIR"
