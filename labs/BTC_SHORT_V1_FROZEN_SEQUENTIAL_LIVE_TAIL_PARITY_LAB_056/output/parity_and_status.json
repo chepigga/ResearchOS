@@ -1,6 +1,6 @@
 {
   "lab": "BTC_SHORT_V1_FROZEN_SEQUENTIAL_LIVE_TAIL_PARITY_LAB_056",
-  "run_utc": "2026-09-09 19:22:43.685146+00:00",
+  "run_utc": "2026-09-09 19:25:24.243206+00:00",
   "formal_verdict": "WATCH_POSTFREEZE_INSUFFICIENT_FRESH_TRADES",
   "shadow_status": "SHADOW_PARITY_FAIL_DO_NOT_USE",
   "rest_status": "OK",
@@ -16,58 +16,58 @@
     "tests": [
       {
         "shift_minutes_applied_to_rest": -15,
-        "n": 270,
+        "n": 269,
         "share": 0.0,
         "max_abs": 0.028839959999999998
       },
       {
         "shift_minutes_applied_to_rest": -10,
-        "n": 269,
+        "n": 268,
         "share": 0.0,
         "max_abs": 0.014882410000000013
       },
       {
         "shift_minutes_applied_to_rest": -5,
-        "n": 268,
+        "n": 267,
         "share": 0.0,
         "max_abs": 0.0002850700000001094
       },
       {
         "shift_minutes_applied_to_rest": 0,
-        "n": 267,
+        "n": 266,
         "share": 0.0,
         "max_abs": 0.01462028999999987
       },
       {
         "shift_minutes_applied_to_rest": 5,
-        "n": 266,
+        "n": 265,
         "share": 0.0,
         "max_abs": 0.02882028999999986
       },
       {
         "shift_minutes_applied_to_rest": 10,
-        "n": 265,
+        "n": 264,
         "share": 0.0,
         "max_abs": 0.035990049999999885
       },
       {
         "shift_minutes_applied_to_rest": 15,
-        "n": 264,
+        "n": 263,
         "share": 0.0,
         "max_abs": 0.046003939999999854
       }
     ],
     "chosen": {
-      "shift_minutes_applied_to_rest": -15,
-      "n": 270,
+      "shift_minutes_applied_to_rest": -5,
+      "n": 267,
       "share": 0.0,
-      "max_abs": 0.028839959999999998
+      "max_abs": 0.0002850700000001094
     }
   },
   "ratio_parity": {
-    "n": 90,
+    "n": 89,
     "share": 0.0,
-    "max_abs": 0.02201118000000002
+    "max_abs": 0.00028082999999989866
   },
   "futures_parity": {
     "n": 96,
