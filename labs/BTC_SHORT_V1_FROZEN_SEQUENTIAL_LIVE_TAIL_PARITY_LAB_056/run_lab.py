@@ -138,7 +138,7 @@ def align_ratio_raw(archive_raw, rest_raw):
             "max_abs": max_abs,
         }
         tests.append(row)
-        score = (share, len(c), -abs(minutes))
+        score = (share, -(max_abs if max_abs is not None else float("inf")), len(c), -abs(minutes))
         if best is None or score > best[0]:
             best = (score, row)
     chosen = best[1]
