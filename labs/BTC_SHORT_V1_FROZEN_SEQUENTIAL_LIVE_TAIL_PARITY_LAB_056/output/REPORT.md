@@ -17,7 +17,9 @@ Formal verdict is unchanged until complete archive-locked fresh N reaches 5.
 
 ## REST/archive parity
 - REST status: **OK**
-- ratio overlap: N=90, exact share=0.000%
+- raw ratio chosen timestamp shift: **-15 min**
+- raw ratio exact share after shift: **0.000%**
+- ratio M15 overlap: N=90, exact share=0.000%
 - futures overlap: N=96, exact share=100.000%
 - persisted frozen FLOW reproduction: 100.000%
 - persisted router/state reproduction: 1.0
