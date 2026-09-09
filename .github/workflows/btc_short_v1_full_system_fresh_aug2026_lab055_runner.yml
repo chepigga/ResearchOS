@@ -1,0 +1,38 @@
+name: BTC SHORT v1 Full System Fresh August LAB055 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_short_v1_full_system_fresh_aug2026_lab055_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab055:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frozen LAB055 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-short-v1-full-system-fresh-aug2026-validation-055
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas scipy requests
+      - name: Run frozen LAB055
+        run: python labs/BTC_SHORT_V1_FULL_SYSTEM_FRESH_AUG2026_VALIDATION_LAB_055/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_SHORT_V1_FULL_SYSTEM_FRESH_AUG2026_VALIDATION_LAB_055/output
+          git commit -m 'Persist BTC SHORT v1 full-system fresh August LAB055 outputs' || true
+          git push origin HEAD:lab/btc-short-v1-full-system-fresh-aug2026-validation-055
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_SHORT_V1_FULL_SYSTEM_FRESH_AUG2026_LAB055
+          path: labs/BTC_SHORT_V1_FULL_SYSTEM_FRESH_AUG2026_VALIDATION_LAB_055/output
