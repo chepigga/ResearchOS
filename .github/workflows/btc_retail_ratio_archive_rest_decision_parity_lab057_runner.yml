@@ -1,0 +1,38 @@
+name: BTC Retail Ratio Archive vs REST Decision Parity LAB057 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_retail_ratio_archive_rest_decision_parity_lab057_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab057:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LAB057 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-retail-ratio-archive-rest-decision-parity-057
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas requests
+      - name: Run LAB057
+        run: python labs/BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057/output
+          git commit -m 'Persist BTC retail ratio LAB057 outputs' || true
+          git push origin HEAD:lab/btc-retail-ratio-archive-rest-decision-parity-057
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_RETAIL_RATIO_ARCHIVE_REST_DECISION_PARITY_LAB057
+          path: labs/BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057/output
