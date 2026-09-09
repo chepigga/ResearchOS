@@ -54,11 +54,12 @@ jobs:
           from pathlib import Path
           p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
           s=p.read_text()
-          old='d.stack.astype(float)'
-          new="d['stack'].astype(float)"
-          if old not in s:
-              raise SystemExit('Expected inherited LAB001 stack collision string not found')
-          p.write_text(s.replace(old,new))
+          old='d.stack'
+          count=s.count(old)
+          if count < 2:
+              raise SystemExit(f'Expected >=2 inherited LAB001 stack collisions; found {count}')
+          p.write_text(s.replace(old,"d['stack']"))
+          print(f'Patched {count} inherited stack-column references')
           PY
 
       - name: Run preregistered LAB002
