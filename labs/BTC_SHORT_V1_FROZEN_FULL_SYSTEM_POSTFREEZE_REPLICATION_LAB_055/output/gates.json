@@ -1,0 +1,15 @@
+{
+  "metrics_tail_reaches_sep8": true,
+  "futures_tail_reaches_sep8": true,
+  "aug_flow_parity_ge95pct": false,
+  "aug_router_parity_100pct_when_overlap": true,
+  "fresh_sep_has_flow_short": true,
+  "fresh_sep_has_high_response_short": true,
+  "fresh_sep_trades_ge5": false,
+  "fresh_sep_ev_positive_if_n5": true,
+  "fresh_sep_pf_ge1_10_if_n5": true,
+  "fresh_sep_10bps_positive_if_n5": true,
+  "fresh_sep_dd_le4pct": true,
+  "combined_ev_nonnegative": true,
+  "no_tuning": true
+}
