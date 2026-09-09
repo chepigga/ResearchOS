@@ -1,0 +1,41 @@
+{
+  "lab": "BTC_SHORT_V1_FROZEN_SEQUENTIAL_LIVE_TAIL_PARITY_LAB_056",
+  "run_utc": "2026-09-09 19:16:16.004361+00:00",
+  "formal_verdict": "WATCH_POSTFREEZE_INSUFFICIENT_FRESH_TRADES",
+  "shadow_status": "SHADOW_DATA_UNAVAILABLE",
+  "rest_status": "UNAVAILABLE",
+  "rest_error": "RuntimeError: ratio REST unavailable: https://fapi.binance.com:451;https://fapi1.binance.com:202;https://fapi2.binance.com:202;https://fapi3.binance.com:202;https://fapi4.binance.com:202",
+  "ratio_host": null,
+  "kline_host": null,
+  "archive_metrics_max": "2026-09-08 23:45:00+00:00",
+  "archive_futures_max": "2026-09-08 23:45:00+00:00",
+  "shadow_metrics_max": "2026-09-08 23:45:00+00:00",
+  "shadow_futures_max": "2026-09-08 23:45:00+00:00",
+  "eligible_signal_cutoff": "2026-09-08 11:45:00+00:00",
+  "ratio_parity": {
+    "n": 0,
+    "share": 0.0,
+    "max_abs": null
+  },
+  "futures_parity": {
+    "n": 0,
+    "share": 0.0,
+    "max_rel": null
+  },
+  "persisted_reproduction": {
+    "persisted_flow_cutoff": "2026-09-08 05:00:00+00:00",
+    "flow_union_n": 100,
+    "flow_exact_share": 1.0,
+    "router_overlap_n": 51,
+    "router_state_exact_share": 1.0
+  },
+  "usable_shadow": false,
+  "archive_fresh_trade_n": 2,
+  "shadow_fresh_trade_n": 2,
+  "provisional_added_trade_n": 0,
+  "new_sep9_flow_short_n": 0,
+  "new_sep9_high_response_short_n": 0,
+  "new_sep9_trade_n": 0,
+  "no_tuning": true,
+  "live_allocation": 0
+}

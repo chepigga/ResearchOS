@@ -1,0 +1,1 @@
+signal_time,side,response_router,state,entry_time,entry_price,risk_dist,level,horizon,traded,exit_time,exit_price,exit_reason,persistent_exit,net_r_5bps,net_r_10bps,fp_state,fp_time,parent_exit_reason,parent_exit_time
