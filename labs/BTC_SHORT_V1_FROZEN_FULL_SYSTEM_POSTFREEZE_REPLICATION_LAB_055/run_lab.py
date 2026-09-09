@@ -174,19 +174,21 @@ def first_passage(path,entry,D):
     return 'NONE_120',pd.NaT,np.nan
 
 def simulate_trade(r,fut):
-    t=pd.Timestamp(r.signal_time); horizon=t+pd.Timedelta(hours=12); et=pd.Timestamp(r.class_time); ep=float(r.class_price); atr=float(r.atr14); D=STOP_ATR*atr; lvl=float(r.level)
-    base=dict(signal_time=t,side=int(r.side),response_router=r.response_router,state=r.state,entry_time=et,entry_price=ep,risk_dist=D,level=lvl,horizon=horizon,traded=False,exit_time=pd.NaT,exit_price=np.nan,exit_reason='NO_TRADE',persistent_exit=False,net_r_5bps=0.0,net_r_10bps=0.0)
-    if r.side!=-1 or r.response_router!='HIGH_RESPONSE' or r.state!='ACCEPT' or et not in fut.index or horizon not in fut.index:return base
+    t=pd.Timestamp(r.signal_time); horizon=t+pd.Timedelta(hours=12)
+    base=dict(signal_time=t,side=int(r.side),response_router=r.response_router,state=r.state,entry_time=pd.NaT,entry_price=np.nan,risk_dist=np.nan,level=float(r.level),horizon=horizon,traded=False,exit_time=pd.NaT,exit_price=np.nan,exit_reason='NO_TRADE',persistent_exit=False,net_r_5bps=0.0,net_r_10bps=0.0)
+    if r.side!=-1 or r.response_router!='HIGH_RESPONSE' or r.state!='ACCEPT' or pd.isna(r.class_time) or not np.isfinite(r.class_price):return base
+    et=pd.Timestamp(r.class_time); ep=float(r.class_price); atr=float(r.atr14); D=STOP_ATR*atr; lvl=float(r.level)
+    base.update(entry_time=et,entry_price=ep,risk_dist=D)
+    if et not in fut.index or horizon not in fut.index:return base
     p=fut[(fut.index>et)&(fut.index<=horizon)]
     stop=ep+D; tp=ep-TP_R*D; reason='TIME'; xt=horizon; xp=float(fut.at[horizon,'close'])
     for tt,b in p.iterrows():
         hs=float(b.high)>=stop; ht=float(b.low)<=tp
         if hs:reason='SL'; xt=tt; xp=stop; break
         if ht:reason='TP'; xt=tt; xp=tp; break
-    parent_xt=xt; parent_xp=xp; parent_reason=reason
+    parent_xt=xt; parent_reason=reason
     end120=min(et+pd.Timedelta(minutes=120),parent_xt); p120=fut[(fut.index>et)&(fut.index<=end120)]
-    fps,fpt,fpp=first_passage(p120,ep,D)
-    persistent=False
+    fps,fpt,_=first_passage(p120,ep,D); persistent=False
     if fps=='ADVERSE_FIRST':
         include_end=(parent_reason=='TIME'); pc=fut[(fut.index>fpt)&((fut.index<=parent_xt) if include_end else (fut.index<parent_xt))]
         consec=0
@@ -207,36 +209,38 @@ def maxdd(v):
     if not len(v):return 0.0
     eq=np.r_[0,np.cumsum(v)]; pk=np.maximum.accumulate(eq); return float(np.max(pk-eq))
 def summarize(events,trades,name):
-    e=events.copy(); q=trades[trades.traded].copy().sort_values('entry_time'); v=q.net_r_5bps.to_numpy(float); dd=maxdd(v)
-    return dict(slice=name,flow_short_n=int((e.side==-1).sum()),touch_short_n=int(((e.side==-1)&e.state.isin(['ACCEPT','REJECT','UNRESOLVED'])).sum()),high_response_short_n=int(((e.side==-1)&(e.response_router=='HIGH_RESPONSE')).sum()),accept_trade_n=len(q),persistent_exit_n=int(q.persistent_exit.sum()) if len(q) else 0,ev_5bps=float(q.net_r_5bps.mean()) if len(q) else np.nan,ev_10bps=float(q.net_r_10bps.mean()) if len(q) else np.nan,pf_5bps=pf(v) if len(q) else np.nan,cum_r_5bps=float(v.sum()) if len(q) else 0.0,max_dd_r=dd,dd_pct_025=dd*RISK_PCT,ev_per_high_response=float(v.sum()/max(1,int(((e.side==-1)&(e.response_router=='HIGH_RESPONSE')).sum()))) if len(e) else np.nan,tp_n=int((q.exit_reason=='TP').sum()) if len(q) else 0,sl_n=int((q.exit_reason=='SL').sum()) if len(q) else 0,time_n=int((q.exit_reason=='TIME').sum()) if len(q) else 0)
+    e=events.copy(); q=trades[trades.traded].copy().sort_values('entry_time'); v=q.net_r_5bps.to_numpy(float); dd=maxdd(v); hn=int(((e.side==-1)&(e.response_router=='HIGH_RESPONSE')).sum())
+    return dict(slice=name,flow_short_n=int((e.side==-1).sum()),touch_short_n=int(((e.side==-1)&e.state.isin(['ACCEPT','REJECT','UNRESOLVED'])).sum()),high_response_short_n=hn,accept_trade_n=len(q),persistent_exit_n=int(q.persistent_exit.sum()) if len(q) else 0,ev_5bps=float(q.net_r_5bps.mean()) if len(q) else np.nan,ev_10bps=float(q.net_r_10bps.mean()) if len(q) else np.nan,pf_5bps=pf(v) if len(q) else np.nan,cum_r_5bps=float(v.sum()) if len(q) else 0.0,max_dd_r=dd,dd_pct_025=dd*RISK_PCT,ev_per_high_response=float(v.sum()/hn) if hn else np.nan,tp_n=int((q.exit_reason=='TP').sum()) if len(q) else 0,sl_n=int((q.exit_reason=='SL').sum()) if len(q) else 0,time_n=int((q.exit_reason=='TIME').sum()) if len(q) else 0)
 def parity_aug(flow,a):
     fz=pd.read_csv(SRC22); fz['signal_time']=pd.to_datetime(fz.signal_time,errors='coerce',utc=True); fz['side']=pd.to_numeric(fz.side,errors='coerce')
     x=flow[(flow.signal_time>=AUG0)&(flow.signal_time<SEP0)][['signal_time','side']].drop_duplicates(); y=fz[(fz.signal_time>=AUG0)&(fz.signal_time<SEP0)][['signal_time','side']].drop_duplicates()
     m=x.merge(y,on=['signal_time','side'],how='outer',indicator=True); flow_match=float((m._merge=='both').sum()/max(1,len(m)))
-    ah=pd.read_csv(SRC35); ah['signal_time']=pd.to_datetime(ah.signal_time,errors='coerce',utc=True); rh=pd.read_csv(SRC43); rh['signal_time']=pd.to_datetime(rh.signal_time,errors='coerce',utc=True)
+    rh=pd.read_csv(SRC43); rh['signal_time']=pd.to_datetime(rh.signal_time,errors='coerce',utc=True)
     gx=a[(a.signal_time>=AUG0)&(a.signal_time<SEP0)][['signal_time','side','state','response_router']].copy(); gy=rh[(rh.signal_time>=AUG0)&(rh.signal_time<SEP0)&(pd.to_numeric(rh.side,errors='coerce')==-1)][['signal_time','side','state','response_router']].copy()
     gy['side']=pd.to_numeric(gy.side,errors='coerce'); cmp=gx[gx.side==-1].merge(gy,on=['signal_time','side'],suffixes=('_new','_frozen'))
     router_match=float(((cmp.state_new.astype(str)==cmp.state_frozen.astype(str))&(cmp.response_router_new.astype(str)==cmp.response_router_frozen.astype(str))).mean()) if len(cmp) else np.nan
     return dict(generated_aug_flow_n=len(x),frozen_aug_flow_n=len(y),flow_union_n=len(m),flow_exact_match_share=flow_match,router_overlap_short_n=len(cmp),router_state_exact_match_share=router_match)
 def main():
     metrics=download_metrics(); fut=download_futures(); flow=generate_flow(metrics,fut); flow.to_csv(OUT/'rebuilt_flow_stream.csv',index=False)
-    act=build_activation(flow,fut); hist=load_hist_state(); classified=classify_new(act,hist[hist.signal_time<AUG0].copy()); classified.to_csv(OUT/'activation_router_stream.csv',index=False)
+    act=build_activation(flow,fut); target=act[act.signal_time>=AUG0].copy(); hist=load_hist_state(); classified=classify_new(target,hist[hist.signal_time<AUG0].copy()); classified.to_csv(OUT/'activation_router_stream.csv',index=False)
     par=parity_aug(flow,classified); (OUT/'parity.json').write_text(json.dumps(par,indent=2))
-    aug=classified[(classified.signal_time>=AUG0)&(classified.signal_time<SEP0)].copy(); sep=classified[(classified.signal_time>=SEP0)].copy()
+    aug=classified[(classified.signal_time>=AUG0)&(classified.signal_time<SEP0)].copy(); sep=classified[classified.signal_time>=SEP0].copy()
     rows=[simulate_trade(r,fut) for r in classified.itertuples(index=False)]; ex=pd.DataFrame(rows); ex.to_csv(OUT/'execution_stream.csv',index=False)
     augx=ex[(ex.signal_time>=AUG0)&(ex.signal_time<SEP0)].copy(); sepx=ex[ex.signal_time>=SEP0].copy(); comb=pd.concat([aug,sep],ignore_index=True); combx=pd.concat([augx,sepx],ignore_index=True)
     sm=pd.DataFrame([summarize(aug,augx,'HELDOUT_AUG'),summarize(sep,sepx,'FRESH_SEP'),summarize(comb,combx,'POSTFREEZE_COMBINED')]); sm.to_csv(OUT/'summary.csv',index=False)
-    sr=sm[sm['slice']=='FRESH_SEP'].iloc[0]; cr=sm[sm['slice']=='POSTFREEZE_COMBINED'].iloc[0]
-    fresh_trades=int(sr.accept_trade_n)
+    sr=sm[sm['slice']=='FRESH_SEP'].iloc[0]; cr=sm[sm['slice']=='POSTFREEZE_COMBINED'].iloc[0]; fresh_trades=int(sr.accept_trade_n)
     gates={'metrics_tail_reaches_sep8':metrics.index.max()>=pd.Timestamp('2026-09-08 23:00',tz='UTC'),'futures_tail_reaches_sep8':fut.index.max()>=pd.Timestamp('2026-09-08 23:45',tz='UTC'),'aug_flow_parity_ge95pct':par['flow_exact_match_share']>=.95,'aug_router_parity_100pct_when_overlap':bool(pd.isna(par['router_state_exact_match_share']) or par['router_state_exact_match_share']==1.0),'fresh_sep_has_flow_short':int(sr.flow_short_n)>0,'fresh_sep_has_high_response_short':int(sr.high_response_short_n)>0,'fresh_sep_trades_ge5':fresh_trades>=5,'fresh_sep_ev_positive_if_n5':bool(fresh_trades<5 or sr.ev_5bps>0),'fresh_sep_pf_ge1_10_if_n5':bool(fresh_trades<5 or sr.pf_5bps>=1.10),'fresh_sep_10bps_positive_if_n5':bool(fresh_trades<5 or sr.ev_10bps>0),'fresh_sep_dd_le4pct':sr.dd_pct_025<=4.0,'combined_ev_nonnegative':bool(pd.isna(cr.ev_5bps) or cr.ev_5bps>=0),'no_tuning':True}
+    gates={k:bool(v) for k,v in gates.items()}
     if fresh_trades<5:verdict='WATCH_POSTFREEZE_INSUFFICIENT_FRESH_TRADES'
     elif sr.ev_5bps>0 and sr.pf_5bps>=1.10 and sr.ev_10bps>0 and sr.dd_pct_025<=4.0 and (pd.isna(cr.ev_5bps) or cr.ev_5bps>=0):verdict='PASS_FROZEN_SHORT_V1_POSTFREEZE'
     else:verdict='FAIL_FROZEN_SHORT_V1_POSTFREEZE'
     (OUT/'gates.json').write_text(json.dumps(gates,indent=2))
-    L=[f'# {LAB}','',f'**Verdict: {verdict} — {sum(gates.values())}/{len(gates)} gates**','', '## Frozen system','`FLOW SHORT → HIGH_RESPONSE → ACCEPT → SL 2.5 ATR → TP 1.5R → signal+12h → PERSISTENT_FAILURE EXIT NOW`','', '## Raw/parity',f"- metrics tail: **{metrics.index.max()}**; futures tail: **{fut.index.max()}**",f"- August FLOW parity: generated **{par['generated_aug_flow_n']}**, frozen **{par['frozen_aug_flow_n']}**, exact union-match **{par['flow_exact_match_share']:.1%}**",f"- August router overlap SHORT N=**{par['router_overlap_short_n']}**, state/router exact match **{('—' if pd.isna(par['router_state_exact_match_share']) else f'{par['router_state_exact_match_share']:.1%}')}**",'', '## Full-system results','', '| Slice | FLOW SHORT | Touch | HIGH_RESPONSE | Trades | Persistent exits | EV5 | PF | CumR | MaxDD R | DD@0.25% | EV10 |','|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
+    router_txt='—' if pd.isna(par['router_state_exact_match_share']) else f"{par['router_state_exact_match_share']:.1%}"
+    L=[f'# {LAB}','',f'**Verdict: {verdict} — {sum(gates.values())}/{len(gates)} gates**','', '## Frozen system','`FLOW SHORT → HIGH_RESPONSE → ACCEPT → SL 2.5 ATR → TP 1.5R → signal+12h → PERSISTENT_FAILURE EXIT NOW`','', '## Raw/parity',f"- metrics tail: **{metrics.index.max()}**; futures tail: **{fut.index.max()}**",f"- August FLOW parity: generated **{par['generated_aug_flow_n']}**, frozen **{par['frozen_aug_flow_n']}**, exact union-match **{par['flow_exact_match_share']:.1%}**",f"- August router overlap SHORT N=**{par['router_overlap_short_n']}**, state/router exact match **{router_txt}**",'', '## Full-system results','', '| Slice | FLOW SHORT | Touch | HIGH_RESPONSE | Trades | Persistent exits | EV5 | PF | CumR | MaxDD R | DD@0.25% | EV10 |','|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
     for _,r in sm.iterrows():
         def f(x):return '—' if pd.isna(x) else f'{x:+.3f}'
-        L.append(f"| {r['slice']} | {int(r.flow_short_n)} | {int(r.touch_short_n)} | {int(r.high_response_short_n)} | {int(r.accept_trade_n)} | {int(r.persistent_exit_n)} | {f(r.ev_5bps)} | {('—' if pd.isna(r.pf_5bps) else f'{r.pf_5bps:.3f}')} | {f(r.cum_r_5bps)} | {r.max_dd_r:.2f} | {r.dd_pct_025:.2f}% | {f(r.ev_10bps)} |")
+        pf_txt='—' if pd.isna(r.pf_5bps) else f'{r.pf_5bps:.3f}'
+        L.append(f"| {r['slice']} | {int(r.flow_short_n)} | {int(r.touch_short_n)} | {int(r.high_response_short_n)} | {int(r.accept_trade_n)} | {int(r.persistent_exit_n)} | {f(r.ev_5bps)} | {pf_txt} | {f(r.cum_r_5bps)} | {r.max_dd_r:.2f} | {r.dd_pct_025:.2f}% | {f(r.ev_10bps)} |")
     L+=['','## Fresh September note',f'- Completed-horizon fresh trades: **{fresh_trades}**.', '- If N<5, the preregistered verdict is WATCH regardless of point estimate; this prevents overclaiming from a tiny post-freeze sample.','', '## Gates']+[f"- {'PASS' if v else 'FAIL'} — `{k}`" for k,v in gates.items()]+['','## Guardrail','No threshold or management rule was changed. August is held-out/reused audit, not newly collected OOS. September is sequential fresh relative to LAB043–054 freeze, subject to raw-data/parity gates. No further tuning from these outcomes. Live allocation = **0**.']
     (OUT/'REPORT.md').write_text('\n'.join(L)+'\n')
     print(json.dumps({'verdict':verdict,'parity':par,'summary':sm.to_dict('records'),'gates':gates},indent=2,default=str))
