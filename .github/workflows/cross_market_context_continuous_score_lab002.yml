@@ -52,14 +52,17 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import re
           p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
           s=p.read_text()
-          old='d.stack'
-          count=s.count(old)
+          pattern=r'd\.stack(?![A-Za-z0-9_])'
+          count=len(re.findall(pattern,s))
           if count < 2:
-              raise SystemExit(f'Expected >=2 inherited LAB001 stack collisions; found {count}')
-          p.write_text(s.replace(old,"d['stack']"))
-          print(f'Patched {count} inherited stack-column references')
+              raise SystemExit(f'Expected >=2 exact inherited LAB001 stack collisions; found {count}')
+          patched=re.sub(pattern,"d['stack']",s)
+          compile(patched,str(p),'exec')
+          p.write_text(patched)
+          print(f'Patched {count} exact inherited stack-column references')
           PY
 
       - name: Run preregistered LAB002
