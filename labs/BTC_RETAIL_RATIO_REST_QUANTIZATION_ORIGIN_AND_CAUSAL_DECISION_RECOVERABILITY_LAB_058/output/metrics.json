@@ -1,0 +1,129 @@
+{
+  "lab": "BTC_RETAIL_RATIO_REST_QUANTIZATION_ORIGIN_AND_CAUSAL_DECISION_RECOVERABILITY_LAB_058",
+  "source_lab": "LAB057",
+  "fixed_rest_shift_minutes": -5,
+  "quantum": 0.0001,
+  "raw_n": 8637,
+  "calibration_raw_n": 4318,
+  "evaluation_raw_n": 4319,
+  "calibration_start": "2026-08-09 23:55:00+00:00",
+  "calibration_end": "2026-08-24 23:55:00+00:00",
+  "evaluation_raw_start": "2026-08-25 00:00:00+00:00",
+  "evaluation_raw_end": "2026-09-08 23:50:00+00:00",
+  "quantization_origin": {
+    "candidates": {
+      "round4": {
+        "exact_share": 0.20169040175987032,
+        "mean_abs": 0.00013454903322913052,
+        "p95_abs": 0.000300000000000189,
+        "max_abs": 0.000500000000000167
+      },
+      "floor4": {
+        "exact_share": 0.20377445872409403,
+        "mean_abs": 0.00013874030334606934,
+        "p95_abs": 0.000300000000000189,
+        "max_abs": 0.0005999999999999339
+      },
+      "ceil4": {
+        "exact_share": 0.2147736482574968,
+        "mean_abs": 0.00013850874146115457,
+        "p95_abs": 0.000300000000000189,
+        "max_abs": 0.0005999999999999339
+      }
+    },
+    "best": "ceil4",
+    "best_exact_share": 0.2147736482574968,
+    "verdict": "PURE_QUANTIZATION_REJECTED"
+  },
+  "calibration_residual": {
+    "n": 4318,
+    "min": -0.0005246900000002164,
+    "p01": -0.0004367017999998257,
+    "p05": -0.00033501449999968625,
+    "p50": -7.320000000032856e-06,
+    "p95": 0.000319940000000196,
+    "p99": 0.00042589839999977096,
+    "max": 0.0005069399999997337,
+    "mean": -5.369330708667503e-06
+  },
+  "causal_residual_envelope": {
+    "e_lo": -0.0006246900000002164,
+    "e_hi": 0.0006069399999997338,
+    "guard_quantum": 0.0001
+  },
+  "evaluation_residual_coverage": 1.0,
+  "evaluation_m15_n": 1440,
+  "evaluation_m15_start": "2026-08-25 00:00:00+00:00",
+  "evaluation_m15_end": "2026-09-08 23:45:00+00:00",
+  "transport_fresh_share": 0.9993055555555556,
+  "certainty_coverage": 0.9819444444444444,
+  "uncertain_n": 26,
+  "certain_n": 1414,
+  "certain_accuracy": 1.0,
+  "false_certain_n": 0,
+  "canonical_short_n": 162,
+  "certain_short_pred_n": 156,
+  "certain_short_precision": 1.0,
+  "canonical_short_recall": 0.9629629629629629,
+  "canonical_buy_n": 89,
+  "certain_buy_pred_n": 84,
+  "certain_buy_precision": 1.0,
+  "canonical_buy_recall": 0.9438202247191011,
+  "uncertain_threshold_distance": {
+    "n": 26,
+    "min": 3.740199999992949e-05,
+    "p01": 5.3973499999997114e-05,
+    "p05": 0.000103771000000125,
+    "p50": 0.000545123,
+    "p95": 0.0014320734999999502,
+    "p99": 0.02739434750000005,
+    "max": 0.0360456920000001,
+    "mean": 0.0019170932307691934
+  },
+  "certain_threshold_distance": {
+    "n": 1414,
+    "min": 0.0009668459999997,
+    "p01": 0.002356466119999874,
+    "p05": 0.0049148087999999,
+    "p50": 0.0274346470000002,
+    "p95": 0.044957193299999865,
+    "p99": 0.12758930601999935,
+    "max": 0.261775666,
+    "mean": 0.028376954545968842
+  },
+  "pointwise_verdict": "FAIL_CAUSAL_DECISION_RECOVERABILITY",
+  "pointwise_gates": {
+    "evaluation_m15_n_ge1000": true,
+    "eval_ratio_envelope_coverage_ge99_5pct": true,
+    "certainty_coverage_ge95pct": true,
+    "certain_accuracy_ge99_9pct": true,
+    "certain_short_precision_ge99_5pct": true,
+    "canonical_short_recall_ge98pct": false,
+    "certain_buy_precision_ge99_5pct": true,
+    "canonical_buy_recall_ge98pct": false,
+    "no_tuning": true
+  },
+  "clock_event_eval_start": "2026-08-26 00:00:00+00:00",
+  "clock_all": {
+    "archive_n": 15,
+    "recovered_n": 14,
+    "intersection_n": 11,
+    "union_n": 18,
+    "union_match": 0.6111111111111112,
+    "archive_only_n": 4,
+    "recovered_only_n": 3
+  },
+  "clock_short": {
+    "archive_n": 9,
+    "recovered_n": 8,
+    "intersection_n": 7,
+    "union_n": 10,
+    "union_match": 0.7,
+    "archive_only_n": 2,
+    "recovered_only_n": 1
+  },
+  "clock_verdict": "CLOCK_PARITY_FAIL",
+  "short_clock_verdict": "SHORT_CLOCK_PARITY_FAIL",
+  "frozen_short_v1_changed": false,
+  "live_allocation": 0
+}
