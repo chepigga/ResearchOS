@@ -23,6 +23,18 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas
+      - name: Apply runtime-only serializer hotfix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('labs/BTC_FLOW_EVENT_CLOCK_PHASE_DRIFT_AND_CANONICAL_ANCHOR_RECOVERABILITY_LAB_059/run_lab.py')
+          s = p.read_text()
+          old = "    if isinstance(x, pd.Timestamp): return x.isoformat()\n    return x\n"
+          new = "    if isinstance(x, (np.bool_,)): return bool(x)\n    if isinstance(x, pd.Timestamp): return x.isoformat()\n    if x is pd.NaT: return None\n    return str(x)\n"
+          if old not in s:
+              raise SystemExit('serializer patch target not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
       - name: Run LAB059
         run: python labs/BTC_FLOW_EVENT_CLOCK_PHASE_DRIFT_AND_CANONICAL_ANCHOR_RECOVERABILITY_LAB_059/run_lab.py
       - name: Persist outputs
