@@ -1,7 +1,7 @@
 # BTC_SHORT_V1_FROZEN_SEQUENTIAL_LIVE_TAIL_PARITY_LAB_056
 
 **Formal verdict: WATCH_POSTFREEZE_INSUFFICIENT_FRESH_TRADES**
-**Live-shadow status: SHADOW_DATA_UNAVAILABLE**
+**Live-shadow status: SHADOW_PARITY_FAIL_DO_NOT_USE**
 
 ## Frozen contract
 `FLOW SHORT → HIGH_RESPONSE → ACCEPT → SL 2.5 ATR → TP 1.5R → signal+12h → ADVERSE_FIRST monitor → 2 M15 closes > level before recovery = PERSISTENT_FAILURE EXIT NOW`
@@ -16,9 +16,9 @@ No threshold, signal, stop, target, timeout, management, cost, or sizing paramet
 Formal verdict is unchanged until complete archive-locked fresh N reaches 5.
 
 ## REST/archive parity
-- REST status: **UNAVAILABLE**
-- ratio overlap: N=0, exact share=0.000%
-- futures overlap: N=0, exact share=0.000%
+- REST status: **OK**
+- ratio overlap: N=90, exact share=0.000%
+- futures overlap: N=96, exact share=100.000%
 - persisted frozen FLOW reproduction: 100.000%
 - persisted router/state reproduction: 1.0
 - shadow usable: **False**
@@ -40,6 +40,3 @@ Formal verdict is unchanged until complete archive-locked fresh N reaches 5.
 
 ## Decision
 LIVE_SHADOW is monitoring evidence only. It cannot promote the system or modify the freeze. Live/prop allocation remains **0** until archive-locked N is larger and broker/FTMO-native parity is established.
-
-## REST error
-`RuntimeError: ratio REST unavailable: https://fapi.binance.com:451;https://fapi1.binance.com:202;https://fapi2.binance.com:202;https://fapi3.binance.com:202;https://fapi4.binance.com:202`
