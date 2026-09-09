@@ -1,0 +1,87 @@
+{
+  "lab": "CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001",
+  "verdict": "MIXED_DISCOVERY_EDGE_BUT_PROP_UTILITY_NOT_CLEAN",
+  "contamination_status": "REUSED_HISTORY_DISCOVERY_ONLY",
+  "source": {
+    "source": "Binance USD-M futures public monthly archive",
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "rows": 57696,
+    "first": "2020-01-01 00:00:00+00:00",
+    "last": "2026-07-31 23:00:00+00:00",
+    "missing_months": []
+  },
+  "baseline_n": 327,
+  "metrics": {
+    "BASELINE": {
+      "trades": 327,
+      "retention": 1.0,
+      "ev": 0.10143810372376026,
+      "pf": 1.228426136288747,
+      "cumr": 33.170259917669604,
+      "cumr_per_baseline_trade": 0.10143810372376026,
+      "maxdd_r": 9.794465415596523,
+      "dd_pct_025": 2.448616353899131,
+      "dd_pct_050": 4.897232707798262,
+      "win_rate": 0.44036697247706424,
+      "loss_streak": 8,
+      "recovery_factor": 3.38663301264507
+    },
+    "PRIMARY_PULLBACK_EXPANSION": {
+      "trades": 291,
+      "retention": 0.8899082568807339,
+      "ev": 0.10390327879398142,
+      "pf": 1.232087238953359,
+      "cumr": 30.235854129048594,
+      "cumr_per_baseline_trade": 0.09246438571574493,
+      "maxdd_r": 10.213737196029845,
+      "dd_pct_025": 2.553434299007461,
+      "dd_pct_050": 5.106868598014922,
+      "win_rate": 0.43986254295532645,
+      "loss_streak": 10,
+      "recovery_factor": 2.9603125230989393
+    },
+    "STRICT_PRIMARY_PLUS_BEAR": {
+      "trades": 92,
+      "retention": 0.28134556574923547,
+      "ev": 0.16667244817887336,
+      "pf": 1.3960145270186115,
+      "cumr": 15.33386523245635,
+      "cumr_per_baseline_trade": 0.04689255422769526,
+      "maxdd_r": 6.70420021792089,
+      "dd_pct_025": 1.6760500544802226,
+      "dd_pct_050": 3.352100108960445,
+      "win_rate": 0.45652173913043476,
+      "loss_streak": 9,
+      "recovery_factor": 2.2872027585732955
+    },
+    "NEG_CONTROL_REVERSAL_RANGE": {
+      "trades": 36,
+      "retention": 0.11009174311926606,
+      "ev": 0.08151127190613931,
+      "pf": 1.1964886845325504,
+      "cumr": 2.934405788621015,
+      "cumr_per_baseline_trade": 0.008973718008015337,
+      "maxdd_r": 3.934640640228707,
+      "dd_pct_025": 0.9836601600571767,
+      "dd_pct_050": 1.9673203201143534,
+      "win_rate": 0.4444444444444444,
+      "loss_streak": 4,
+      "recovery_factor": 0.7457874954624696
+    }
+  },
+  "gates": {
+    "primary_retention_ge_35pct": true,
+    "primary_ev_gt_baseline": true,
+    "primary_pf_gt_baseline": true,
+    "primary_recovery_gt_baseline": false,
+    "primary_dd_lt_baseline": false,
+    "primary_ev_gt_negative_control": true
+  },
+  "xau": {
+    "expected_path": "xau_historical_bars_cleaned.csv",
+    "found_expected": false,
+    "other_candidates": [],
+    "status": "BLOCKED_NATIVE_XAU_DATA_NOT_IN_REPO"
+  }
+}

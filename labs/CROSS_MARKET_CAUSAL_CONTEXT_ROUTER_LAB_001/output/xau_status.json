@@ -1,0 +1,6 @@
+{
+  "expected_path": "xau_historical_bars_cleaned.csv",
+  "found_expected": false,
+  "other_candidates": [],
+  "status": "BLOCKED_NATIVE_XAU_DATA_NOT_IN_REPO"
+}
