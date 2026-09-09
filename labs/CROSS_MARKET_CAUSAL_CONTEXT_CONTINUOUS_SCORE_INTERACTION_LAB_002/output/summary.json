@@ -1,0 +1,147 @@
+{
+  "lab": "CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002",
+  "status": "REUSED_HISTORY_DISCOVERY_INTERACTION_ONLY",
+  "verdict": "MIXED_CROSS_MARKET_CONTINUOUS_CONTEXT",
+  "preregistered_score": "(EXPANSION+PULLBACK-REVERSAL-RANGE)/200",
+  "btc": {
+    "market": "BTC",
+    "n": 327,
+    "outcome": "net_r_5bps",
+    "score_formula": "(EXPANSION+PULLBACK-REVERSAL-RANGE)/200",
+    "q5_edges": [
+      -0.35,
+      0.1,
+      0.25,
+      0.4,
+      0.525,
+      0.725
+    ],
+    "q10_edges": [
+      -0.35,
+      -0.075,
+      0.1,
+      0.175,
+      0.25,
+      0.35,
+      0.4,
+      0.475,
+      0.525,
+      0.6,
+      0.725
+    ],
+    "q5_ordered": {
+      "bins": 5,
+      "adjacent_monotone_fraction": 0.5,
+      "bin_mean_corr": 0.2232185920681829,
+      "bottom_mean": 0.0855882220680849,
+      "top_mean": 0.298603362207155,
+      "top_bottom_lift": 0.21301514013907008
+    },
+    "q10_ordered": {
+      "bins": 10,
+      "adjacent_monotone_fraction": 0.5555555555555556,
+      "bin_mean_corr": 0.16557196328953575,
+      "bottom_mean": 0.10202158218625978,
+      "top_mean": 0.37676801065538507,
+      "top_bottom_lift": 0.2747464284691253
+    },
+    "continuous_slope": 0.11544064530089562,
+    "bootstrap": {
+      "weeks": 200,
+      "draws": 3000,
+      "lift_ci_lo": -0.15493049067333475,
+      "lift_ci_hi": 0.5623502905054737,
+      "lift_p_positive": 0.8713333333333333,
+      "slope_ci_lo": -0.35660322553251317,
+      "slope_ci_hi": 0.5867113468877777,
+      "slope_p_positive": 0.69
+    },
+    "eligible_transfer_periods": 6,
+    "positive_transfer_periods": 3,
+    "required_positive_periods": 5,
+    "gates": {
+      "top_gt_bottom": true,
+      "bootstrap_lift_ci_low_gt_zero": false,
+      "continuous_slope_gt_zero": true,
+      "bootstrap_slope_ci_low_gt_zero": false,
+      "q5_adjacent_monotone_ge_075": false,
+      "time_transfer_positive_required": false
+    },
+    "verdict": "MIXED_CONTINUOUS_CONTEXT_EVIDENCE"
+  },
+  "xau": {
+    "market": "XAU",
+    "n": 266297,
+    "outcome": "excess",
+    "score_formula": "(EXPANSION+PULLBACK-REVERSAL-RANGE)/200",
+    "q5_edges": [
+      -0.55,
+      0.075,
+      0.25,
+      0.4,
+      0.55,
+      0.85
+    ],
+    "q10_edges": [
+      -0.55,
+      -0.075,
+      0.075,
+      0.175,
+      0.25,
+      0.325,
+      0.4,
+      0.475,
+      0.55,
+      0.625,
+      0.85
+    ],
+    "q5_ordered": {
+      "bins": 5,
+      "adjacent_monotone_fraction": 0.5,
+      "bin_mean_corr": 0.5468252401720015,
+      "bottom_mean": -0.02352658573556464,
+      "top_mean": -0.008139064146938923,
+      "top_bottom_lift": 0.015387521588625717
+    },
+    "q10_ordered": {
+      "bins": 10,
+      "adjacent_monotone_fraction": 0.5555555555555556,
+      "bin_mean_corr": 0.4269156204381368,
+      "bottom_mean": -0.022677845150633872,
+      "top_mean": 0.0060841327288269,
+      "top_bottom_lift": 0.028761977879460773
+    },
+    "continuous_slope": 0.015339599601736623,
+    "bootstrap": {
+      "weeks": 214,
+      "draws": 3000,
+      "lift_ci_lo": -0.00758589442538001,
+      "lift_ci_hi": 0.0393815652664051,
+      "lift_p_positive": 0.9,
+      "slope_ci_lo": -0.012427011370300861,
+      "slope_ci_hi": 0.042826130069355886,
+      "slope_p_positive": 0.8603333333333333
+    },
+    "eligible_transfer_periods": 5,
+    "positive_transfer_periods": 3,
+    "required_positive_periods": 4,
+    "gates": {
+      "top_gt_bottom": true,
+      "bootstrap_lift_ci_low_gt_zero": false,
+      "continuous_slope_gt_zero": true,
+      "bootstrap_slope_ci_low_gt_zero": false,
+      "q5_adjacent_monotone_ge_075": false,
+      "time_transfer_positive_required": false
+    },
+    "verdict": "MIXED_CONTINUOUS_CONTEXT_EVIDENCE"
+  },
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 266297
+  },
+  "promotion_authorized": false
+}
