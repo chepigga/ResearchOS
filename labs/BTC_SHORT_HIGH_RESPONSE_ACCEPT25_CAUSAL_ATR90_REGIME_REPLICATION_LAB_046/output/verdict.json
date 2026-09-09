@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "verdict": "WATCH_ATR90_REGIME_POSITIVE_PROOF_INCOMPLETE",
+    "score": 14,
+    "n": 327,
+    "coverage": 1.0,
+    "parity": 1.0,
+    "bootstrap": {
+      "point": 0.026527894284259446,
+      "clusters": 197,
+      "draws": 5000,
+      "ci_lo": -0.21033889804797254,
+      "ci_hi": 0.2639248249834997
+    }
+  },
+  "gates": {
+    "exact_formal_accept25_n_327": true,
+    "atr_rank_90d_coverage_100pct": true,
+    "frozen_lab044_payoff_entry_parity_100pct": true,
+    "high_atr_n_ge_130": true,
+    "low_atr_n_ge_130": true,
+    "high_atr_ev5_positive": true,
+    "high_atr_pf5_ge_1_20": true,
+    "low_atr_ev5_le_zero": false,
+    "high_minus_low_gap_ge_0_20r": false,
+    "cluster_boot_ci_lower_gt_zero": false,
+    "high_atr_ev10_positive": true,
+    "high_atr_dd_025_le_4pct": true,
+    "high_atr_ev_per_original475_ge_0_05": false,
+    "high_atr_captures_ge_75pct_full_cumr": false,
+    "2021_high_ev_positive": true,
+    "2022_high_ev_positive": false,
+    "2023_high_ev_positive": false,
+    "2024_high_ev_positive": false,
+    "2025h1_high_ev_positive": false,
+    "2025h2_high_ev_positive": true,
+    "2026_high_ev_positive": true,
+    "pooled_recent_high_positive_n30": true,
+    "bad_composite_high_ev_gt_low": false,
+    "august_not_used_for_selection": true
+  }
+}
