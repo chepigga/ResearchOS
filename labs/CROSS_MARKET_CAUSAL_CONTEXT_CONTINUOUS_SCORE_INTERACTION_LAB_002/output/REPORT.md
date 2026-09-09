@@ -11,7 +11,7 @@
 | Market | N | Q1 mean | Q5 mean | Lift | Slope | Lift 95% CI | Slope 95% CI | Q5 monotone | Positive transfer | Verdict |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
 | BTC | 327 | +0.0856 | +0.2986 | +0.2130 | +0.1154 | [-0.1549, +0.5624] | [-0.3566, +0.5867] | 50% | 3/5 required | MIXED_CONTINUOUS_CONTEXT_EVIDENCE |
-| XAU | 266,297 | -0.0235 | -0.0081 | +0.0154 | +0.0153 | [-0.0076, +0.0394] | [-0.0124, +0.0428] | 50% | 3/4 required | MIXED_CONTINUOUS_CONTEXT_EVIDENCE |
+| XAU | 263,405 | -0.0211 | -0.0081 | +0.0130 | +0.0122 | [-0.0112, +0.0365] | [-0.0167, +0.0407] | 50% | 3/4 required | MIXED_CONTINUOUS_CONTEXT_EVIDENCE |
 
 ## Frozen gates
 

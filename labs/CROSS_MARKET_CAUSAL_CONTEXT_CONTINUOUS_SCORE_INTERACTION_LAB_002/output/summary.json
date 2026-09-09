@@ -45,7 +45,7 @@
       "top_mean": 0.37676801065538507,
       "top_bottom_lift": 0.2747464284691253
     },
-    "continuous_slope": 0.11544064530089562,
+    "continuous_slope": 0.1154406453008956,
     "bootstrap": {
       "weeks": 200,
       "draws": 3000,
@@ -71,7 +71,7 @@
   },
   "xau": {
     "market": "XAU",
-    "n": 266297,
+    "n": 263405,
     "outcome": "excess",
     "score_formula": "(EXPANSION+PULLBACK-REVERSAL-RANGE)/200",
     "q5_edges": [
@@ -98,29 +98,29 @@
     "q5_ordered": {
       "bins": 5,
       "adjacent_monotone_fraction": 0.5,
-      "bin_mean_corr": 0.5468252401720015,
-      "bottom_mean": -0.02352658573556464,
-      "top_mean": -0.008139064146938923,
-      "top_bottom_lift": 0.015387521588625717
+      "bin_mean_corr": 0.46749833643312977,
+      "bottom_mean": -0.021075613174042877,
+      "top_mean": -0.008122082609888571,
+      "top_bottom_lift": 0.012953530564154306
     },
     "q10_ordered": {
       "bins": 10,
-      "adjacent_monotone_fraction": 0.5555555555555556,
-      "bin_mean_corr": 0.4269156204381368,
-      "bottom_mean": -0.022677845150633872,
+      "adjacent_monotone_fraction": 0.4444444444444444,
+      "bin_mean_corr": 0.36486676277102015,
+      "bottom_mean": -0.01919713448671045,
       "top_mean": 0.0060841327288269,
-      "top_bottom_lift": 0.028761977879460773
+      "top_bottom_lift": 0.02528126721553735
     },
-    "continuous_slope": 0.015339599601736623,
+    "continuous_slope": 0.012191026421064162,
     "bootstrap": {
-      "weeks": 214,
+      "weeks": 210,
       "draws": 3000,
-      "lift_ci_lo": -0.00758589442538001,
-      "lift_ci_hi": 0.0393815652664051,
-      "lift_p_positive": 0.9,
-      "slope_ci_lo": -0.012427011370300861,
-      "slope_ci_hi": 0.042826130069355886,
-      "slope_p_positive": 0.8603333333333333
+      "lift_ci_lo": -0.01121930971873998,
+      "lift_ci_hi": 0.03654805889515037,
+      "lift_p_positive": 0.8566666666666667,
+      "slope_ci_lo": -0.016747853193631715,
+      "slope_ci_hi": 0.04071539652688205,
+      "slope_p_positive": 0.8023333333333333
     },
     "eligible_transfer_periods": 5,
     "positive_transfer_periods": 3,
@@ -141,7 +141,7 @@
     "m1_start": "2022-06-01 01:05:00",
     "m1_end": "2026-07-23 23:49:00",
     "pool_finite": 266297,
-    "context_eligible": 266297
+    "context_eligible": 263405
   },
   "promotion_authorized": false
 }
