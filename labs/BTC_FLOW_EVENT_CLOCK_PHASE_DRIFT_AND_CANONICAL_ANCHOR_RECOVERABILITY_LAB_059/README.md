@@ -1,0 +1,1 @@
+LAB059 evaluates frozen 12h FLOW-clock phase drift using a causal set-valued clock over LAB058 REST uncertainty. It does not modify alpha, thresholds, cooldown, execution, management, costs, sizing, or live allocation.
