@@ -92,8 +92,61 @@ def rest_ratio_5m(start, end):
     if d.empty:
         raise RuntimeError("ratio REST returned no rows")
     d = d.sort_values("time").drop_duplicates("time", keep="last").set_index("time")
-    d = d["ratio"].resample("15min", label="left", closed="left").last().dropna().to_frame()
     return d, host
+
+def archive_ratio_raw_sep8(l55):
+    fn = "BTCUSDT-metrics-2026-09-08.zip"
+    url = "https://data.binance.vision/data/futures/um/daily/metrics/BTCUSDT/" + fn
+    r = requests.get(url, timeout=REST_TIMEOUT)
+    if r.status_code != 200:
+        raise RuntimeError(f"archive ratio raw unavailable: {r.status_code}")
+    d = l55.parse_metric_zip(r.content, fn)
+    if d is None or d.empty:
+        raise RuntimeError("archive ratio raw returned no rows")
+    return d.sort_values("time").drop_duplicates("time", keep="last").set_index("time")[["ratio"]]
+
+def align_ratio_raw(archive_raw, rest_raw):
+    tests = []
+    best = None
+    for minutes in [-15, -10, -5, 0, 5, 10, 15]:
+        r = rest_raw.copy()
+        r.index = r.index + pd.Timedelta(minutes=minutes)
+        c = archive_raw.join(r, how="inner", lsuffix="_arc", rsuffix="_rest")
+        if len(c):
+            ok = np.isclose(
+                c.ratio_arc.to_numpy(float),
+                c.ratio_rest.to_numpy(float),
+                rtol=0.0,
+                atol=1e-12,
+            )
+            share = float(ok.mean())
+            max_abs = float(
+                np.max(
+                    np.abs(
+                        c.ratio_arc.to_numpy(float)
+                        - c.ratio_rest.to_numpy(float)
+                    )
+                )
+            )
+        else:
+            share = 0.0
+            max_abs = None
+        row = {
+            "shift_minutes_applied_to_rest": minutes,
+            "n": int(len(c)),
+            "share": share,
+            "max_abs": max_abs,
+        }
+        tests.append(row)
+        score = (share, len(c), -abs(minutes))
+        if best is None or score > best[0]:
+            best = (score, row)
+    chosen = best[1]
+    aligned = rest_raw.copy()
+    aligned.index = aligned.index + pd.Timedelta(
+        minutes=chosen["shift_minutes_applied_to_rest"]
+    )
+    return aligned, {"tests": tests, "chosen": chosen}
 
 def rest_futures_15m(start, end):
     rows = []
@@ -307,12 +360,28 @@ def main():
     kp = {"n": 0, "share": 0.0, "max_rel": None}
     rest_ratio = pd.DataFrame()
     rest_fut = pd.DataFrame()
+    ratio_alignment = {"tests": [], "chosen": None}
 
     try:
-        rest_ratio, ratio_host = rest_ratio_5m(LIVE0, now)
+        rest_ratio_raw, ratio_host = rest_ratio_5m(LIVE0, now)
+        archive_ratio_raw = archive_ratio_raw_sep8(l55)
+        rest_ratio_raw, ratio_alignment = align_ratio_raw(
+            archive_ratio_raw, rest_ratio_raw
+        )
+        rest_ratio = (
+            rest_ratio_raw["ratio"]
+            .resample("15min", label="left", closed="left")
+            .last()
+            .dropna()
+            .to_frame()
+        )
         rest_fut, kline_host = rest_futures_15m(LIVE0, now)
-        rp = ratio_overlap_parity(base_metrics.loc[base_metrics.index >= LIVE0], rest_ratio)
-        kp = futures_overlap_parity(base_fut.loc[base_fut.index >= LIVE0], rest_fut)
+        rp = ratio_overlap_parity(
+            base_metrics.loc[base_metrics.index >= LIVE0], rest_ratio
+        )
+        kp = futures_overlap_parity(
+            base_fut.loc[base_fut.index >= LIVE0], rest_fut
+        )
     except Exception as e:
         rest_status = "UNAVAILABLE"
         rest_error = f"{type(e).__name__}: {e}"
@@ -387,6 +456,7 @@ def main():
         "shadow_metrics_max": str(metrics.index.max()),
         "shadow_futures_max": str(fut.index.max()),
         "eligible_signal_cutoff": str(fut.index.max() - pd.Timedelta(hours=12)),
+        "ratio_raw_alignment": ratio_alignment,
         "ratio_parity": rp,
         "futures_parity": kp,
         "persisted_reproduction": repro,
@@ -427,7 +497,9 @@ def main():
         "",
         "## REST/archive parity",
         f"- REST status: **{rest_status}**",
-        f"- ratio overlap: N={rp['n']}, exact share={rp['share']:.3%}",
+        f"- raw ratio chosen timestamp shift: **{ratio_alignment['chosen']['shift_minutes_applied_to_rest'] if ratio_alignment.get('chosen') else '—'} min**",
+        f"- raw ratio exact share after shift: **{ratio_alignment['chosen']['share'] if ratio_alignment.get('chosen') else 0:.3%}**",
+        f"- ratio M15 overlap: N={rp['n']}, exact share={rp['share']:.3%}",
         f"- futures overlap: N={kp['n']}, exact share={kp['share']:.3%}",
         f"- persisted frozen FLOW reproduction: {repro['flow_exact_share']:.3%}",
         f"- persisted router/state reproduction: {repro['router_state_exact_share'] if repro['router_state_exact_share'] is not None else '—'}",
