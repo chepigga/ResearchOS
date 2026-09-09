@@ -1,0 +1,82 @@
+{
+  "lab": "XAU_CAUSAL_CONTEXT_DIRECTION_M5_M15_VS_H1_STRUCTURAL_ASYMMETRY_LAB_004",
+  "status": "REUSED_HISTORY_PREREGISTERED_STRUCTURAL_DIAGNOSTIC",
+  "verdict": "H1_ASYMMETRY_NOT_CONFIRMED",
+  "n": 263405,
+  "high_threshold": 0.55,
+  "primary": {
+    "small": {
+      "aligned_n": 23416,
+      "opposed_n": 21222,
+      "aligned_mean": 0.01785644822628344,
+      "opposed_mean": -0.035702589565494,
+      "premium": 0.05355903779177744
+    },
+    "h1": {
+      "aligned_n": 1195,
+      "opposed_n": 966,
+      "aligned_mean": -0.06966080798101346,
+      "opposed_mean": 0.0441957407550684,
+      "premium": -0.11385654873608186
+    },
+    "asymmetry": 0.16741558652785932
+  },
+  "bootstrap": {
+    "weeks": 158,
+    "draws": 5000,
+    "ci_lo": -0.03713278562782559,
+    "ci_hi": 0.3874170403426475,
+    "p_positive": 0.9458
+  },
+  "primary_gates": {
+    "P1_asym_gt_zero": true,
+    "P2_boot_ci_lo_gt_zero": false,
+    "P3_year_4of5_positive": false,
+    "P4_loyo_4of5_positive": false
+  },
+  "primary_confirmed": false,
+  "positive_years": 3,
+  "eligible_years": 4,
+  "loyo_positive": 4,
+  "loyo_runs": 4,
+  "causes": {
+    "HORIZON_MISMATCH": false,
+    "RISK_SCALING": false,
+    "CONTEXT_STALENESS": false,
+    "MECHANIC_COMPOSITION": false
+  },
+  "active_causes": [],
+  "horizon_h1_premiums": {
+    "10": 0.2014619057503267,
+    "30": 0.33128694770949985,
+    "120": 0.7331841476632446
+  },
+  "risk_quartiles_edges": [
+    0.000257590979847599,
+    0.0009554045056625977,
+    0.0014306883536454248,
+    0.002219163778290231,
+    0.027052116955961523
+  ],
+  "risk_eligible": 1,
+  "risk_h1_nonnegative": 0,
+  "atr_ratio_edges": [
+    0.6677004790858325,
+    0.9907872650860281,
+    1.1068357794761263,
+    1.225976441030744,
+    2.232794712635787
+  ],
+  "mechanics_eligible": 7,
+  "mechanics_h1_nonnegative_fraction": 0.14285714285714285,
+  "mechanics_h1_median_premium": -0.05298417933565702,
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 263405
+  },
+  "promotion_authorized": false
+}
