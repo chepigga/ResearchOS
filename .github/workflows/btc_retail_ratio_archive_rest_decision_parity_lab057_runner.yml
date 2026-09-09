@@ -23,8 +23,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas requests
-      - name: Run LAB057
-        run: python labs/BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057/run_lab.py
+      - name: Run LAB057 with chunked REST pagination fix
+        run: python labs/BTC_RETAIL_RATIO_ARCHIVE_VS_REST_DECISION_PARITY_AND_THRESHOLD_MARGIN_LAB_057/run_lab_chunked.py
       - name: Persist outputs
         run: |
           git config user.name github-actions[bot]
