@@ -46,7 +46,7 @@ jobs:
           test -f data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv
           echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
 
-      - name: Apply inherited LAB001 stack-column runtime hotfix
+      - name: Apply frozen LAB001 runtime parity hotfixes
         shell: bash
         run: |
           set -euo pipefail
@@ -60,9 +60,18 @@ jobs:
           if count < 2:
               raise SystemExit(f'Expected >=2 exact inherited LAB001 stack collisions; found {count}')
           patched=re.sub(pattern,"d['stack']",s)
+          old="    sm = s.rolling(3,min_periods=3).mean()"
+          if old not in patched:
+              raise SystemExit('Expected LAB001 smoothing line not found')
+          warmup=(
+              "    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n"
+              "    s=s.where(ready,np.nan)\n"
+              "    sm = s.rolling(3,min_periods=3).mean()"
+          )
+          patched=patched.replace(old,warmup,1)
           compile(patched,str(p),'exec')
           p.write_text(patched)
-          print(f'Patched {count} exact inherited stack-column references')
+          print(f'Patched {count} exact stack references and restored XAU warmup mask')
           PY
 
       - name: Run preregistered LAB002
@@ -74,6 +83,16 @@ jobs:
             --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
             --xau-pool "$XAU_POOL" \
             --out "$OUTDIR"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/output/summary.json')
+          s=json.loads(p.read_text())
+          n=s['xau_meta']['context_eligible']
+          if n != 263405:
+              raise SystemExit(f'XAU frozen context parity failure: {n} != 263405')
+          print('XAU frozen context parity OK:',n)
+          PY
           cat "$OUTDIR/REPORT.md"
           cat "$OUTDIR/summary.json"
 
