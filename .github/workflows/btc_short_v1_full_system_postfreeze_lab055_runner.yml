@@ -23,6 +23,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas requests
+      - name: Computational-only UTC plumbing fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/BTC_SHORT_V1_FROZEN_FULL_SYSTEM_POSTFREEZE_REPLICATION_LAB_055/run_lab.py')
+          s=p.read_text()
+          s=s.replace("pd.date_range('2026-09-01',DAILY_END,freq='D')", "pd.date_range(pd.Timestamp('2026-09-01',tz='UTC'),DAILY_END,freq='D')")
+          p.write_text(s)
+          PY
       - name: Run frozen LAB055
         run: python labs/BTC_SHORT_V1_FROZEN_FULL_SYSTEM_POSTFREEZE_REPLICATION_LAB_055/run_lab.py
       - name: Persist outputs
