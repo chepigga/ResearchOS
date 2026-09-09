@@ -1,0 +1,157 @@
+{
+  "lab": "CROSS_MARKET_CAUSAL_CONTEXT_DIRECTION_COMPATIBILITY_INTERACTION_LAB_003",
+  "status": "REUSED_HISTORY_PREREGISTERED_INTERACTION_AUDIT",
+  "verdict": "MIXED_CROSS_MARKET_DIRECTION_CONTEXT_INTERACTION",
+  "frozen_score": "(EXPANSION+PULLBACK-REVERSAL-RANGE)/200",
+  "primary_interaction": "(HIGH_ALIGNED-HIGH_OPPOSED)-(NONHIGH_ALIGNED-NONHIGH_OPPOSED)",
+  "btc": {
+    "market": "BTC",
+    "n": 327,
+    "outcome": "net_r_5bps",
+    "high_threshold": 0.525,
+    "cells": {
+      "HIGH_ALIGNED": {
+        "n": 28,
+        "mean": 0.4176215143597962
+      },
+      "HIGH_OPPOSED": {
+        "n": 32,
+        "mean": 0.19446247907359385
+      },
+      "HIGH_NEUTRAL": {
+        "n": 0,
+        "mean": NaN
+      },
+      "NON_HIGH_ALIGNED": {
+        "n": 69,
+        "mean": 0.027721244284592227
+      },
+      "NON_HIGH_OPPOSED": {
+        "n": 93,
+        "mean": 0.018603023085783307
+      },
+      "NON_HIGH_NEUTRAL": {
+        "n": 105,
+        "mean": 0.11058296364405326
+      }
+    },
+    "high_premium": 0.22315903528620237,
+    "nonhigh_premium": 0.00911822119880892,
+    "interaction": 0.21404081408739345,
+    "bootstrap": {
+      "weeks": 152,
+      "draws": 5000,
+      "high_premium_ci_lo": -0.3446871542166756,
+      "high_premium_ci_hi": 0.7922866338281265,
+      "high_premium_p_positive": 0.7892,
+      "interaction_ci_lo": -0.44373617892704026,
+      "interaction_ci_hi": 0.8842163030654624,
+      "interaction_p_positive": 0.7498
+    },
+    "eligible_time_periods": 1,
+    "positive_time_periods": 0,
+    "positive_time_fraction": 0.0,
+    "lopo_runs": 1,
+    "lopo_both_positive_fraction": 1.0,
+    "core_pass": false,
+    "gates": {
+      "G1_high_premium_gt_zero": true,
+      "G2_boot_high_premium_ci_lo_gt_zero": false,
+      "G3_interaction_gt_zero": true,
+      "G4_boot_interaction_ci_lo_gt_zero": false,
+      "G5_time_transfer_75pct_min4": false,
+      "G6_lopo_80pct_both_positive": false
+    },
+    "extra_transfer": {},
+    "verdict": "MIXED_DIRECTION_CONTEXT_INTERACTION"
+  },
+  "xau": {
+    "market": "XAU",
+    "n": 263405,
+    "outcome": "excess",
+    "high_threshold": 0.55,
+    "cells": {
+      "HIGH_ALIGNED": {
+        "n": 24611,
+        "mean": 0.013607001996235098,
+        "mean_raw_R": 0.015271766706439982
+      },
+      "HIGH_OPPOSED": {
+        "n": 22188,
+        "mean": -0.0322240521989146,
+        "mean_raw_R": -0.18166678690535012
+      },
+      "HIGH_NEUTRAL": {
+        "n": 0,
+        "mean": NaN,
+        "mean_raw_R": NaN
+      },
+      "NON_HIGH_ALIGNED": {
+        "n": 62380,
+        "mean": -0.06184776640935658,
+        "mean_raw_R": -0.07041690818902123
+      },
+      "NON_HIGH_OPPOSED": {
+        "n": 57735,
+        "mean": 0.009151109333435424,
+        "mean_raw_R": -0.14985665120743386
+      },
+      "NON_HIGH_NEUTRAL": {
+        "n": 96491,
+        "mean": -0.029685902963169246,
+        "mean_raw_R": -0.1098825126008492
+      }
+    },
+    "high_premium": 0.0458310541951497,
+    "nonhigh_premium": -0.07099887574279201,
+    "interaction": 0.11682992993794171,
+    "bootstrap": {
+      "weeks": 192,
+      "draws": 5000,
+      "high_premium_ci_lo": -0.05094178881110778,
+      "high_premium_ci_hi": 0.13808558573329677,
+      "high_premium_p_positive": 0.8384,
+      "interaction_ci_lo": 0.008923189482552397,
+      "interaction_ci_hi": 0.2246840486291174,
+      "interaction_p_positive": 0.9826
+    },
+    "eligible_time_periods": 5,
+    "positive_time_periods": 4,
+    "positive_time_fraction": 0.8,
+    "lopo_runs": 5,
+    "lopo_both_positive_fraction": 1.0,
+    "core_pass": false,
+    "gates": {
+      "G1_high_premium_gt_zero": true,
+      "G2_boot_high_premium_ci_lo_gt_zero": false,
+      "G3_interaction_gt_zero": true,
+      "G4_boot_interaction_ci_lo_gt_zero": true,
+      "G5_time_transfer_75pct_min4": true,
+      "G6_lopo_80pct_both_positive": true,
+      "G7_xau_tf_2of3_positive": true,
+      "G8_xau_buy_sell_both_positive": true,
+      "G9_xau_mechanics_70pct_median_positive": true
+    },
+    "extra_transfer": {
+      "tf_eligible": 3,
+      "tf_positive": 2,
+      "direction_eligible": 2,
+      "direction_positive": 2,
+      "mechanics_total": 14,
+      "mechanics_eligible": 12,
+      "mechanics_positive": 12,
+      "mechanics_positive_fraction": 1.0,
+      "mechanics_median_high_premium": 0.04122823159820954
+    },
+    "verdict": "MIXED_DIRECTION_CONTEXT_INTERACTION"
+  },
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 263405
+  },
+  "promotion_authorized": false
+}
