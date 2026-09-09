@@ -119,29 +119,46 @@ def ordered_stats(table: pd.DataFrame):
 
 
 def cluster_bootstrap(df, time_col, outcome, qcol='q5'):
+    """Weekly cluster bootstrap using exact sufficient statistics.
+
+    This is mathematically identical to concatenating sampled weekly clusters, but
+    avoids materializing hundreds of millions of duplicated event rows.
+    """
     z = df.dropna(subset=[time_col, outcome, 'context_score', qcol]).copy()
     if z.empty:
         return {}
     t = pd.to_datetime(z[time_col], errors='coerce', utc=True)
     z = z.loc[t.notna()].copy(); t = t.loc[t.notna()]
     z['_week'] = t.dt.to_period('W-SUN').astype(str).values
+    z['_y'] = pd.to_numeric(z[outcome], errors='coerce')
+    z['_x'] = pd.to_numeric(z.context_score, errors='coerce')
+    z = z.dropna(subset=['_x','_y'])
     bins = sorted(int(x) for x in z[qcol].dropna().unique())
     if len(bins) < 2:
         return {}
     lo, hi = min(bins), max(bins)
-    groups = [g for _, g in z.groupby('_week', sort=True)]
-    rng = np.random.default_rng(SEED)
-    lifts, slopes = [], []
-    m = len(groups)
-    for _ in range(BOOT_N):
+
+    stats = []
+    for _, g in z.groupby('_week', sort=True):
+        x = g._x.to_numpy(float); y = g._y.to_numpy(float)
+        bot = g[g[qcol] == lo]._y.to_numpy(float)
+        top = g[g[qcol] == hi]._y.to_numpy(float)
+        stats.append([
+            len(x), x.sum(), y.sum(), np.square(x).sum(), (x*y).sum(),
+            len(bot), bot.sum(), len(top), top.sum()
+        ])
+    a = np.asarray(stats, float)
+    m = len(a); rng = np.random.default_rng(SEED)
+    lifts = np.empty(BOOT_N, float); slopes = np.empty(BOOT_N, float)
+    for k in range(BOOT_N):
         ix = rng.integers(0, m, size=m)
-        s = pd.concat([groups[i] for i in ix], ignore_index=True)
-        bot = pd.to_numeric(s.loc[s[qcol] == lo, outcome], errors='coerce').dropna()
-        top = pd.to_numeric(s.loc[s[qcol] == hi, outcome], errors='coerce').dropna()
-        if len(bot) and len(top):
-            lifts.append(float(top.mean() - bot.mean()))
-        slopes.append(slope_xy(s.context_score, pd.to_numeric(s[outcome], errors='coerce')))
-    lifts = np.asarray(lifts, float); slopes = np.asarray(slopes, float); slopes = slopes[np.isfinite(slopes)]
+        s = a[ix].sum(axis=0)
+        n, sx, sy, sxx, sxy, bn, bsum, tn, tsum = s
+        lifts[k] = (tsum/tn - bsum/bn) if bn > 0 and tn > 0 else np.nan
+        den = sxx/n - (sx/n)**2 if n > 0 else np.nan
+        num = sxy/n - (sx/n)*(sy/n) if n > 0 else np.nan
+        slopes[k] = num/den if np.isfinite(den) and den > 0 else np.nan
+    lifts = lifts[np.isfinite(lifts)]; slopes = slopes[np.isfinite(slopes)]
     return {
         'weeks': int(m), 'draws': BOOT_N,
         'lift_ci_lo': float(np.quantile(lifts,.025)) if len(lifts) else np.nan,
@@ -281,10 +298,10 @@ def main():
     btc['entry_time'] = pd.to_datetime(btc.entry_time, utc=True, errors='coerce')
     btc['net_r_5bps'] = pd.to_numeric(btc.net_r_5bps, errors='coerce')
     btc = add_continuous_fields(btc, pd.Series(-1, index=btc.index))
-    btc_eval, btc_summary = evaluate_market('BTC', btc, 'entry_time', 'net_r_5bps', 'period', BTC_PERIODS, 5, out)
+    _, btc_summary = evaluate_market('BTC', btc, 'entry_time', 'net_r_5bps', 'period', BTC_PERIODS, 5, out)
 
     xau, xau_meta = build_xau_join(Path(a.xau_m1), Path(a.xau_pool), router)
-    xau_eval, xau_summary = evaluate_market('XAU', xau, 'available_event_time', 'excess', 'year', ['2022','2023','2024','2025','2026'], 100, out, raw_col='R')
+    _, xau_summary = evaluate_market('XAU', xau, 'available_event_time', 'excess', 'year', ['2022','2023','2024','2025','2026'], 100, out, raw_col='R')
 
     cross_supported = btc_summary['verdict'] == 'CONTINUOUS_CONTEXT_SUPPORTED' and xau_summary['verdict'] == 'CONTINUOUS_CONTEXT_SUPPORTED'
     if cross_supported:
