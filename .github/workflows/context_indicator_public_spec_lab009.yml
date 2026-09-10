@@ -1,0 +1,43 @@
+name: Context Indicator Public Spec LAB009
+on:
+  push:
+    branches:
+      - lab/context-indicator-public-spec-component-parity-state-transition-audit-009
+permissions:
+  contents: write
+jobs:
+  lab009:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/context-indicator-public-spec-component-parity-state-transition-audit-009
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests
+      - name: Apply frozen router pandas compatibility hotfix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text()
+          s=s.replace('d.stack.astype(float)', "d['stack'].astype(float)")
+          s=s.replace('(~d.stack).astype(float)', "(~d['stack']).astype(float)")
+          p.write_text(s)
+          PY
+      - name: Run preregistered LAB009
+        run: |
+          python labs/CONTEXT_INDICATOR_PUBLIC_SPEC_COMPONENT_PARITY_AND_STATE_TRANSITION_AUDIT_LAB_009/run_lab.py --out labs/CONTEXT_INDICATOR_PUBLIC_SPEC_COMPONENT_PARITY_AND_STATE_TRANSITION_AUDIT_LAB_009/output
+      - name: Persist outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py
+          git add labs/CONTEXT_INDICATOR_PUBLIC_SPEC_COMPONENT_PARITY_AND_STATE_TRANSITION_AUDIT_LAB_009/output
+          git commit -m 'Persist LAB009 public-spec audit outputs' || exit 0
+          git push
+      - uses: actions/upload-artifact@v4
+        with:
+          name: context-indicator-public-spec-lab009
+          path: labs/CONTEXT_INDICATOR_PUBLIC_SPEC_COMPONENT_PARITY_AND_STATE_TRANSITION_AUDIT_LAB_009/output
