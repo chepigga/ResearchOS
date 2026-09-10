@@ -1,0 +1,5 @@
+family,status,reason
+RECENT_H4_TWO_BAR_BUY_LAB019_021,REJECT_LONG_V1,Strong 2025H2-2026 but negative historical transfer; LAB020 onset and LAB021 mechanism gates failed
+V283_TIMING_TIER_A,REMOVE_AS_MANDATORY_TIMING,U02C4 same-state random null showed Tier-A state carries most edge; v283 timing increment not proven
+B3_BUY_STATE,REJECT_LONG_V1,"U02C5 state-only periodic B3 weak, phase-sensitive and deteriorated in 2026"
+TIER_A_STATE_8H,SELECT_CORE,"U02C5 8h state-only: N163, EV~+0.689R, PF~2.18, positive 2024/2025/2026 and +4h phase positive"
