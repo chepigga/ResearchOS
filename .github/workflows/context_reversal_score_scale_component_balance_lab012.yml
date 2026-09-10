@@ -1,0 +1,52 @@
+name: Context Reversal Score Scale Component Balance LAB012
+on:
+  push:
+    branches:
+      - lab/context-reversal-score-scale-component-balance-012
+    paths:
+      - 'labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/**'
+      - '.github/workflows/context_reversal_score_scale_component_balance_lab012.yml'
+jobs:
+  lab012:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/context-reversal-score-scale-component-balance-012
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests
+      - name: Apply parent technical compatibility hotfixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text().replace('d.stack.astype(float)','d["stack"].astype(float)').replace('(~d.stack)','(~d["stack"])')
+          p.write_text(s)
+          q=Path('labs/CONTEXT_INDICATOR_PUBLIC_SPEC_GAP_CLOSURE_AND_NEXT_CONTEXT_LAB_010/run_lab.py')
+          t=q.read_text()
+          old="base=d.reset_index().rename(columns={'time':'h4_open'}).sort_values('h4_open')\n    z=pd.merge_asof(base,dc,left_on='h4_open',right_on='d1_available_time',direction='backward',allow_exact_matches=True)"
+          new="base=d.reset_index().rename(columns={'time':'h4_open'}).sort_values('h4_open')\n    base['h4_open']=pd.to_datetime(base['h4_open'],utc=True).astype('datetime64[ns, UTC]')\n    dc['d1_available_time']=pd.to_datetime(dc['d1_available_time'],utc=True).astype('datetime64[ns, UTC]')\n    z=pd.merge_asof(base,dc,left_on='h4_open',right_on='d1_available_time',direction='backward',allow_exact_matches=True)"
+          if old in t: t=t.replace(old,new)
+          t=t.replace('stack=d.stack.fillna(False)','stack=d["stack"].fillna(False)')
+          q.write_text(t)
+          PY
+      - name: Run preregistered LAB012
+        run: |
+          rm -rf labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/output
+          python labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/run_lab.py --out labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/output
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/output
+          git commit -m 'Persist Context Reversal score balance LAB012 results' || exit 0
+          git push origin HEAD:lab/context-reversal-score-scale-component-balance-012
+      - uses: actions/upload-artifact@v4
+        with:
+          name: context-reversal-score-scale-component-balance-lab012
+          path: labs/CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012/output
