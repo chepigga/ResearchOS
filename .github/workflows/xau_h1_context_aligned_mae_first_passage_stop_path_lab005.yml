@@ -35,7 +35,7 @@ jobs:
           mkdir -p data
           gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
           echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
-      - name: Apply frozen LAB001 LAB002 parity hotfixes
+      - name: Apply frozen parity and runtime-only hotfixes
         shell: bash
         run: |
           set -euo pipefail
@@ -58,14 +58,20 @@ jobs:
           new_cols="    cols = ['available_time','regime','bias','score_expansion','score_pullback','score_reversal','score_range']\n    c = ctx[cols].dropna(subset=['available_time','regime']).sort_values('available_time').reset_index(drop=False)"
           if old_cols not in qs: raise SystemExit('LAB002 frozen join anchor missing')
           qpatched=qs.replace(old_cols,new_cols,1); compile(qpatched,str(q),'exec'); q.write_text(qpatched)
-          print('Frozen router parity hotfixes applied')
+
+          r=Path('labs/XAU_H1_CONTEXT_ALIGNED_MAE_FIRST_PASSAGE_STOP_PATH_LAB_005/run_lab.py')
+          rs=r.read_text()
+          anchor="    z['risk_unit'] = 1.5 * z.signal_atr"
+          repl="    z['compat'] = z.bias_compat_label\n    z['risk_unit'] = 1.5 * z.signal_atr"
+          if anchor not in rs: raise SystemExit('LAB005 compat alias anchor missing')
+          rpatched=rs.replace(anchor,repl,1); compile(rpatched,str(r),'exec'); r.write_text(rpatched)
+          print('Frozen parity + LAB005 compat alias runtime hotfixes applied')
           PY
       - name: Run preregistered LAB005
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$OUTDIR"
-          python -m py_compile labs/XAU_H1_CONTEXT_ALIGNED_MAE_FIRST_PASSAGE_STOP_PATH_LAB_005/run_lab.py
           python labs/XAU_H1_CONTEXT_ALIGNED_MAE_FIRST_PASSAGE_STOP_PATH_LAB_005/run_lab.py \
             --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
             --xau-pool "$XAU_POOL" \
@@ -83,7 +89,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py labs/XAU_H1_CONTEXT_ALIGNED_MAE_FIRST_PASSAGE_STOP_PATH_LAB_005/run_lab.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$OUTDIR"
