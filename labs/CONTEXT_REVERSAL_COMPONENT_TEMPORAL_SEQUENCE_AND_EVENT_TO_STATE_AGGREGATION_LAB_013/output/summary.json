@@ -1,0 +1,25 @@
+{
+  "lab": "CONTEXT_REVERSAL_COMPONENT_TEMPORAL_SEQUENCE_AND_EVENT_TO_STATE_AGGREGATION_LAB_013",
+  "verdict": "SAME_BAR_MODEL_NOT_REJECTED",
+  "parent_counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "parent_parity": true,
+  "reversal_score_parity": true,
+  "causality_pass": true,
+  "causality_changed": [],
+  "reversal_transitions": 9,
+  "A1_rev_lag1": 3.0,
+  "A3_rev_lag1": 3.0,
+  "top2_W1_rev_lag1": 1.0,
+  "top2_W3_rev_lag1": 1.0,
+  "nontransition_W3_median_active": 2.5,
+  "conditions": {
+    "A3_ge_A1_plus1": false,
+    "top2_W3_ge_W1_plus15pp": false,
+    "A3_ge_background_plus1": false
+  }
+}
