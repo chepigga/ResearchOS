@@ -1,0 +1,17 @@
+{
+  "diagnostic_status": "POSTHOC_LINEAGE_ONLY_NOT_A_PROMOTION_GATE",
+  "overlap_n": 407,
+  "archive_implied_longAccount_round4_match_share": 1.0,
+  "archive_implied_shortAccount_round4_match_share": 1.0,
+  "archive_implied_both_accounts_round4_match_share": 1.0,
+  "rest_reported_ratio_equals_round4_archive_ratio_share": 0.1941031941031941,
+  "rest_reported_ratio_equals_round4_of_rest_long_short_accounts_share": 1.0,
+  "component_rounding_cell_valid_share": 1.0,
+  "archive_implied_long_fraction_inside_rest_component_rounding_cell_share": 1.0,
+  "archive_ratio_inside_rest_component_implied_ratio_interval_share": 1.0,
+  "component_implied_ratio_interval_width": {
+    "p50": 0.0005214949596918927,
+    "p95": 0.0005358367698664601,
+    "max": 0.0005469210172079908
+  }
+}

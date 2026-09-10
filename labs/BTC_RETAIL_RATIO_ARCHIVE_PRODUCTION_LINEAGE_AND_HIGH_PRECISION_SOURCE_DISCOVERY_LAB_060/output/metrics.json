@@ -1,6 +1,6 @@
 {
   "lab": "BTC_RETAIL_RATIO_ARCHIVE_PRODUCTION_LINEAGE_AND_HIGH_PRECISION_SOURCE_DISCOVERY_LAB_060",
-  "run_time_utc": "2026-09-10T07:46:13.374513+00:00",
+  "run_time_utc": "2026-09-10T07:48:28.550386+00:00",
   "canonical": {
     "latest_archive_day": "2026-09-09T00:00:00+00:00",
     "latest_archive_time": "2026-09-09T23:55:00+00:00",
@@ -33,7 +33,7 @@
       "p99": 0.00028397340000009487,
       "max": 0.00030218000000004075
     },
-    "correlation": 0.9999967291605706,
+    "correlation": 0.9999967291605703,
     "ratio_digits_ge6_share": 0.0,
     "ratio_digits_p50": 4.0,
     "family": "official_rest",
@@ -59,7 +59,7 @@
       "p99": 0.0002592778599166312,
       "max": 0.0002666748491877424
     },
-    "correlation": 0.9999968458984922,
+    "correlation": 0.9999968458984914,
     "ratio_digits_ge6_share": null,
     "ratio_digits_p50": null,
     "family": "official_reconstruction",

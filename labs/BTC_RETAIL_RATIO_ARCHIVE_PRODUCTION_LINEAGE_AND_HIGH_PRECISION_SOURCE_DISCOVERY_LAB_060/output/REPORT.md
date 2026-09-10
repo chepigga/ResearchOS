@@ -17,7 +17,7 @@
 - p99 abs error: 0.00028397340000009487
 - max abs error: 0.00030218000000004075
 - median returned decimals: 4.0
-- correlation: 0.9999967291605706
+- correlation: 0.9999967291605703
 
 ## Best component reconstruction
 - candidate: https://www.binance.com:recon_1msa

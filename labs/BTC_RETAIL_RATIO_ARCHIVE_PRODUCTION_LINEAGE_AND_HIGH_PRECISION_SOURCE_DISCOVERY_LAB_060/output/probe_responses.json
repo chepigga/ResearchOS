@@ -68,7 +68,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"path\":\"/v1/public/future/marketData/longShortRatio\",\"status\":404,\"message\":\"No message available\",\"timestamp\":1789026378153,\"error\":\"Not Found\"}",
+        "preview": "{\"error\":\"Not Found\",\"timestamp\":1789026514282,\"message\":\"No message available\",\"status\":404,\"path\":\"/v1/public/future/marketData/longShortRatio\"}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
@@ -80,7 +80,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"path\":\"/v1/public/future/marketData/longShortRatio\",\"status\":404,\"message\":\"No message available\",\"timestamp\":1789026378313,\"error\":\"Not Found\"}",
+        "preview": "{\"error\":\"Not Found\",\"timestamp\":1789026514682,\"message\":\"No message available\",\"status\":404,\"path\":\"/v1/public/future/marketData/longShortRatio\"}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
@@ -94,7 +94,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/globalLongShortAccountRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"status\":404,\"path\":\"/v1/public/future/marketData/globalLongShortAccountRatio\",\"error\":\"Not Found\",\"timestamp\":1789026378434,\"message\":\"No message available\"}",
+        "preview": "{\"message\":\"No message available\",\"timestamp\":1789026515094,\"error\":\"Not Found\",\"path\":\"/v1/public/future/marketData/globalLongShortAccountRatio\",\"status\":404}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
@@ -106,7 +106,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/globalLongShortAccountRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"error\":\"Not Found\",\"timestamp\":1789026378555,\"message\":\"No message available\",\"status\":404,\"path\":\"/v1/public/future/marketData/globalLongShortAccountRatio\"}",
+        "preview": "{\"error\":\"Not Found\",\"timestamp\":1789026515239,\"message\":\"No message available\",\"status\":404,\"path\":\"/v1/public/future/marketData/globalLongShortAccountRatio\"}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
@@ -120,7 +120,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortAccountRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"path\":\"/v1/public/future/marketData/longShortAccountRatio\",\"status\":404,\"message\":\"No message available\",\"timestamp\":1789026378675,\"error\":\"Not Found\"}",
+        "preview": "{\"timestamp\":1789026515383,\"error\":\"Not Found\",\"path\":\"/v1/public/future/marketData/longShortAccountRatio\",\"status\":404,\"message\":\"No message available\"}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
@@ -132,7 +132,7 @@
         "url": "https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortAccountRatio",
         "status": 404,
         "content_type": "application/json;charset=UTF-8",
-        "preview": "{\"status\":404,\"path\":\"/v1/public/future/marketData/longShortAccountRatio\",\"error\":\"Not Found\",\"timestamp\":1789026378796,\"message\":\"No message available\"}",
+        "preview": "{\"path\":\"/v1/public/future/marketData/longShortAccountRatio\",\"error\":\"Not Found\",\"timestamp\":1789026515530,\"message\":\"No message available\",\"status\":404}",
         "error": null,
         "params": {
           "symbol": "BTCUSDT",
