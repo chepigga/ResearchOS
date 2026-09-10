@@ -40,6 +40,9 @@ jobs:
       - name: Run LAB064
         run: python labs/BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064/run_lab.py
 
+      - name: Diagnose M5 parity mismatch without changing gates
+        run: python labs/BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064/diagnose_m5_parity.py
+
       - name: Persist LAB064 outputs
         run: |
           git config user.name github-actions[bot]
