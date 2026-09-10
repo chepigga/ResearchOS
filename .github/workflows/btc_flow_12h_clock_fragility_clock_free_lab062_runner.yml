@@ -1,0 +1,42 @@
+name: BTC FLOW 12H Clock Fragility Clock-Free LAB062 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_flow_12h_clock_fragility_clock_free_lab062_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab062:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout LAB062 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-flow-12h-first-hit-clock-fragility-clock-free-062
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy pandas requests
+      - name: Run LAB062
+        run: python labs/BTC_FLOW_12H_FIRST_HIT_CLOCK_INFORMATION_FRAGILITY_AND_CLOCK_FREE_EQUIVALENT_SELECTOR_LAB_062/run_lab.py
+      - name: Persist outputs
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_FLOW_12H_FIRST_HIT_CLOCK_INFORMATION_FRAGILITY_AND_CLOCK_FREE_EQUIVALENT_SELECTOR_LAB_062/output || true
+          git commit -m 'Persist BTC FLOW clock fragility LAB062 outputs' || true
+          git push origin HEAD:lab/btc-flow-12h-first-hit-clock-fragility-clock-free-062 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: BTC_FLOW_12H_CLOCK_FRAGILITY_CLOCK_FREE_LAB062
+          path: labs/BTC_FLOW_12H_FIRST_HIT_CLOCK_INFORMATION_FRAGILITY_AND_CLOCK_FREE_EQUIVALENT_SELECTOR_LAB_062/output
+          if-no-files-found: warn
