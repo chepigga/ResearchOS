@@ -1,0 +1,99 @@
+{
+  "lab": "BTC_LONG_V1_CLOSED_BAR_TRANSPORT_PARITY_AND_FRESH_SEQUENTIAL_CONTINUATION_LAB_065",
+  "run_started_utc": "2026-09-10 15:36:27.239343",
+  "long_freeze_timestamp_utc": "2026-09-10 14:28:51",
+  "elapsed_since_freeze_hours": 1.1267331508333334,
+  "elapsed_since_freeze_days": 0.04694721461805556,
+  "closed_bar_rule": "frozen row t eligible iff t + interval <= max_frozen_open_time; applied identically to M1/M5",
+  "frozen": {
+    "m1_max_open": "2026-08-10 05:59:00",
+    "m1_total_rows": 1371240,
+    "m1_provably_closed_rows": 1371239,
+    "m1_unproven_terminal_rows": 1,
+    "m5_max_open": "2026-08-10 21:20:00",
+    "m5_total_rows": 728106,
+    "m5_provably_closed_rows": 728105,
+    "m5_unproven_terminal_rows": 1
+  },
+  "rest": {
+    "m1_completed_end": "2026-09-10 15:35:00",
+    "m5_completed_end": "2026-09-10 15:30:00"
+  },
+  "closed_bar_price_transport_parity": {
+    "m1": {
+      "overlap_n": 3239,
+      "min_required": 250,
+      "exact_rows": 3239,
+      "exact_share": 1.0,
+      "max_abs_ohlc_diff": 0.0,
+      "pass": true
+    },
+    "m5": {
+      "overlap_n": 832,
+      "min_required": 100,
+      "exact_rows": 832,
+      "exact_share": 1.0,
+      "max_abs_ohlc_diff": 0.0,
+      "pass": true
+    },
+    "pass": true
+  },
+  "merged": {
+    "m1_end": "2026-09-10 15:35:00",
+    "m5_end": "2026-09-10 15:30:00",
+    "m1_continuity": {
+      "rows": 48456,
+      "gap_count": 0,
+      "max_gap_minutes": 1.0
+    },
+    "m5_continuity": {
+      "rows": 9691,
+      "gap_count": 0,
+      "max_gap_minutes": 5.0
+    }
+  },
+  "current_causal_state": {
+    "clock_time": "2026-09-10 12:00:00",
+    "state": "OTHER",
+    "tier_a_active": false,
+    "st_dir": -1.0,
+    "st_age": 1.0,
+    "episode_onset": null,
+    "next_signal_conditional": null
+  },
+  "fresh_long": {
+    "signals_with_entry": 0,
+    "completed": 0,
+    "open": 0,
+    "ev5": null,
+    "pf5": null,
+    "ev10": null,
+    "pf10": null,
+    "cumR5": 0.0,
+    "tp": 0,
+    "sl": 0,
+    "time": 0,
+    "additive_realized_dd_pct": 0.0,
+    "peak_concurrent_long": 0,
+    "peak_open_initial_risk_pct": 0.0
+  },
+  "gates": {
+    "closed_m1_overlap_ge250": true,
+    "closed_m1_exact_100pct": true,
+    "closed_m5_overlap_ge100": true,
+    "closed_m5_exact_100pct": true,
+    "fresh_n_ge5": false,
+    "fresh_ev5_gt0_if_n5": true,
+    "fresh_pf5_ge1_10_if_n5": true,
+    "fresh_ev10_gt0_if_n5": true,
+    "fresh_dd_le4pct_if_n5": true,
+    "peak_open_long_risk_le0_50pct": true,
+    "no_tuning": true
+  },
+  "verdict": "WATCH_POSTFREEZE_TOO_EARLY__CLOSED_BAR_TRANSPORT_CERTIFIED",
+  "broker_native_status": "REQUIRED_BEFORE_LIVE",
+  "frozen_long_v1_changed": false,
+  "frozen_short_v1_changed": false,
+  "live_allocation": 0,
+  "no_tuning": true
+}
