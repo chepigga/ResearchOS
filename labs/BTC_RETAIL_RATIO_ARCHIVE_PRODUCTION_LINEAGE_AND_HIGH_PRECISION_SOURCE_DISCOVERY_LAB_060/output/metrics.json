@@ -1,0 +1,83 @@
+{
+  "lab": "BTC_RETAIL_RATIO_ARCHIVE_PRODUCTION_LINEAGE_AND_HIGH_PRECISION_SOURCE_DISCOVERY_LAB_060",
+  "run_time_utc": "2026-09-10T07:46:13.374513+00:00",
+  "canonical": {
+    "latest_archive_day": "2026-09-09T00:00:00+00:00",
+    "latest_archive_time": "2026-09-09T23:55:00+00:00",
+    "recent_rows": 1153,
+    "archive_ratio_digits_p50": 8.0,
+    "archive_ratio_digits_ge6_share": 1.0
+  },
+  "current_day_archive_probe": {
+    "date": "2026-09-10",
+    "url": "https://data.binance.vision/data/futures/um/daily/metrics/BTCUSDT/BTCUSDT-metrics-2026-09-10.zip",
+    "status": 404,
+    "rows": 0,
+    "first": null,
+    "last": null
+  },
+  "current_day_partial_live": false,
+  "official_docs_expected_precision_example": "4 decimals",
+  "successful_official_host_n": 1,
+  "successful_bapi_path_n": 0,
+  "best_official_reported": {
+    "name": "https://www.binance.com:reported",
+    "shift_min": -5,
+    "overlap_n": 407,
+    "exact_share": 0.0,
+    "abs_error": {
+      "n": 407,
+      "mean": 0.0001284782800982854,
+      "p50": 0.00012428000000008765,
+      "p95": 0.00025813199999999973,
+      "p99": 0.00028397340000009487,
+      "max": 0.00030218000000004075
+    },
+    "correlation": 0.9999967291605706,
+    "ratio_digits_ge6_share": 0.0,
+    "ratio_digits_p50": 4.0,
+    "family": "official_rest",
+    "value_kind": "reported",
+    "overlap_ge200": true,
+    "exact_share_ge99_9": false,
+    "max_abs_error_le1e_8": false,
+    "high_precision": false,
+    "fresh_beyond_archive": true,
+    "archive_equivalent": false,
+    "archive_equivalent_live": false
+  },
+  "best_component_reconstruction": {
+    "name": "https://www.binance.com:recon_1msa",
+    "shift_min": -5,
+    "overlap_n": 407,
+    "exact_share": 0.0,
+    "abs_error": {
+      "n": 407,
+      "mean": 0.00012674497673319522,
+      "p50": 0.0001242240724761423,
+      "p95": 0.00024350335322145255,
+      "p99": 0.0002592778599166312,
+      "max": 0.0002666748491877424
+    },
+    "correlation": 0.9999968458984922,
+    "ratio_digits_ge6_share": null,
+    "ratio_digits_p50": null,
+    "family": "official_reconstruction",
+    "value_kind": "recon_1msa",
+    "overlap_ge200": true,
+    "exact_share_ge99_9": false,
+    "max_abs_error_le1e_8": false,
+    "high_precision": false,
+    "fresh_beyond_archive": true,
+    "archive_equivalent": false,
+    "archive_equivalent_live": false
+  },
+  "best_bapi": null,
+  "archive_equivalent_candidate_n": 0,
+  "archive_equivalent_live_candidate_n": 0,
+  "official_rest_lossy_near_lineage": true,
+  "verdict": "NO_HIGH_PRECISION_PUBLIC_SOURCE_FOUND_OFFICIAL_REST_IS_LOSSY_NEAR_LINEAGE",
+  "winning_source": null,
+  "frozen_short_v1_changed": false,
+  "live_allocation": 0
+}

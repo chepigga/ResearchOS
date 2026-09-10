@@ -1,0 +1,10 @@
+candidate,family,http_success,rows,first_time,last_time_raw,last_time_aligned,digits_p50,digits_ge6_share
+https://www.binance.com/futures/data/globalLongShortAccountRatio,official_rest,True,500,2026-09-08T14:10:00+00:00,2026-09-10T07:45:00+00:00,2026-09-10T07:40:00+00:00,4.0,0.0
+https://fapi.binance.com/futures/data/globalLongShortAccountRatio,official_rest,False,0,,,,,
+https://fapi1.binance.com/futures/data/globalLongShortAccountRatio,official_rest,False,0,,,,,
+https://fapi2.binance.com/futures/data/globalLongShortAccountRatio,official_rest,False,0,,,,,
+https://fapi3.binance.com/futures/data/globalLongShortAccountRatio,official_rest,False,0,,,,,
+https://fapi4.binance.com/futures/data/globalLongShortAccountRatio,official_rest,False,0,,,,,
+https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortRatio,bapi,False,0,,,,,
+https://www.binance.com/bapi/futures/v1/public/future/marketData/globalLongShortAccountRatio,bapi,False,0,,,,,
+https://www.binance.com/bapi/futures/v1/public/future/marketData/longShortAccountRatio,bapi,False,0,,,,,
