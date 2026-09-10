@@ -1,0 +1,136 @@
+{
+  "lab": "XAU_H1_CONTEXT_ALIGNED_BUY_SELL_FRESH_OOS_AND_EPISODE_INDEPENDENCE_LAB_008",
+  "status": "FRESH_OOS_PREREGISTERED_BOTH_LEGS",
+  "verdict": "FRESH_OOS_NOT_SUPPORTIVE",
+  "promotion_authorized": false,
+  "fresh_window": [
+    "2026-07-24 00:00:00",
+    "2026-08-25 23:49:59.704000"
+  ],
+  "raw_meta": {
+    "members_used": 33,
+    "raw_min": "2026-07-24 01:05:01.056000",
+    "raw_max": "2026-08-25 23:49:59.704000",
+    "m1_rows": 31395,
+    "m1_min": "2026-07-24 01:05:00",
+    "m1_max": "2026-08-25 23:49:00"
+  },
+  "historical_mechanics_parity": {
+    "stored_n": 6315,
+    "rebuilt_n": 6315,
+    "exact": true,
+    "stored_only": 0,
+    "rebuilt_only": 0
+  },
+  "fresh_spread": {
+    "median_bps": 1.0356898730244215,
+    "mean_bps": 1.0462301661820426,
+    "p95_bps": 1.2278867794002404
+  },
+  "selected_rows": 51,
+  "selected_buy": 51,
+  "selected_sell": 0,
+  "legs": {
+    "BUY": {
+      "primary": {
+        "bps": 2.0,
+        "n": 19,
+        "ev_r": -0.11170544137785675,
+        "pf": 0.8288192052970834,
+        "win_rate": 0.3684210526315789,
+        "cum_r": -2.122403386179278,
+        "max_dd_r": 5.787087021696095,
+        "recovery_factor": -0.36674813740009016,
+        "tp_rate": 0.3684210526315789,
+        "sl_rate": 0.631578947368421,
+        "time_rate": 0.0,
+        "dd_pct_at_025": 1.4467717554240238,
+        "median_hold_hours": 6.533333333333333
+      },
+      "bootstrap": {
+        "weeks": 4,
+        "draws": 5000,
+        "ci_lo": -0.6160561860922157,
+        "ci_hi": 0.3161546912204016,
+        "p_positive": 0.247
+      },
+      "fresh_directionally_positive": false,
+      "fresh_statistically_usable": false,
+      "historical_episode": {
+        "episodes": 49,
+        "positive_episode_fraction": 0.46938775510204084,
+        "median_episode_r": -0.32864890451809914,
+        "episode_order_max_dd_r": 10.894116217869346,
+        "largest_positive_episode_share": 0.1820812226720291,
+        "top3_positive_episode_share": 0.4036495778927363,
+        "top10_positive_weeks_share": 0.5593053591365219,
+        "best_positive_month_share": 0.18455290522814133,
+        "bootstrap": {
+          "weeks": 86,
+          "draws": 5000,
+          "ci_lo": -0.03076882881955758,
+          "ci_hi": 0.249987203914515,
+          "p_positive": 0.9358
+        },
+        "support": true
+      },
+      "fresh_support_for_native_replication": false,
+      "routed_n": 20,
+      "resolved_n": 19,
+      "censored_n": 1
+    },
+    "SELL": {
+      "primary": {
+        "bps": 2.0,
+        "n": 0,
+        "ev_r": NaN,
+        "pf": NaN,
+        "win_rate": NaN,
+        "cum_r": NaN,
+        "max_dd_r": NaN,
+        "recovery_factor": NaN,
+        "tp_rate": NaN,
+        "sl_rate": NaN,
+        "time_rate": NaN,
+        "dd_pct_at_025": NaN,
+        "median_hold_hours": NaN
+      },
+      "bootstrap": {
+        "weeks": 0,
+        "ci_lo": NaN,
+        "ci_hi": NaN,
+        "p_positive": NaN
+      },
+      "fresh_directionally_positive": false,
+      "fresh_statistically_usable": false,
+      "historical_episode": {
+        "episodes": 22,
+        "positive_episode_fraction": 0.3181818181818182,
+        "median_episode_r": -1.0564442154672977,
+        "episode_order_max_dd_r": 15.6658665696178,
+        "largest_positive_episode_share": 0.5128277756847075,
+        "top3_positive_episode_share": 0.7383218914155146,
+        "top10_positive_weeks_share": 1.0,
+        "best_positive_month_share": 0.29359843843665795,
+        "bootstrap": {
+          "weeks": 34,
+          "draws": 5000,
+          "ci_lo": -0.41113763136904036,
+          "ci_hi": 0.08790447223442627,
+          "p_positive": 0.1096
+        },
+        "support": false
+      },
+      "fresh_support_for_native_replication": false,
+      "routed_n": 0,
+      "resolved_n": 0,
+      "censored_n": 0
+    }
+  },
+  "fresh_buy_sell_bootstrap_diff": {
+    "weeks": 0,
+    "ci_lo": NaN,
+    "ci_hi": NaN,
+    "p_positive": NaN
+  }
+}
