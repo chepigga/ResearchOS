@@ -33,7 +33,9 @@ jobs:
           old="base=d.reset_index().rename(columns={'time':'h4_open'}).sort_values('h4_open')\n    z=pd.merge_asof(base,dc,left_on='h4_open',right_on='d1_available_time',direction='backward',allow_exact_matches=True)"
           new="base=d.reset_index().rename(columns={'time':'h4_open'}).sort_values('h4_open')\n    base['h4_open']=pd.to_datetime(base['h4_open'],utc=True).astype('datetime64[ns, UTC]')\n    dc['d1_available_time']=pd.to_datetime(dc['d1_available_time'],utc=True).astype('datetime64[ns, UTC]')\n    z=pd.merge_asof(base,dc,left_on='h4_open',right_on='d1_available_time',direction='backward',allow_exact_matches=True)"
           if old not in t: raise SystemExit('dtype hotfix target not found')
-          q.write_text(t.replace(old,new))
+          t=t.replace(old,new)
+          t=t.replace('stack=d.stack.fillna(False)','stack=d["stack"].fillna(False)')
+          q.write_text(t)
           PY
       - name: Run preregistered LAB010
         run: |
