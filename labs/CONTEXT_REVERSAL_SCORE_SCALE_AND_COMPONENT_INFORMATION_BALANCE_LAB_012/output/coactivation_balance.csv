@@ -1,0 +1,5 @@
+regime,median_active_components,p75_active_components,p90_active_components,p95_active_components,mean_active_components,max_active_components,largest_component_point_share
+EXPANSION,4.0,5.0,6.0,7.0,3.8230726566833058,8,0.3244925227034018
+PULLBACK,4.0,5.0,6.0,6.0,4.2416805324459235,7,0.32162079221944195
+REVERSAL,1.0,2.0,3.0,3.0,1.4322656683305601,6,0.27388342434321694
+RANGE,2.0,3.0,4.0,4.0,1.7515252357182474,6,0.29793831713040564

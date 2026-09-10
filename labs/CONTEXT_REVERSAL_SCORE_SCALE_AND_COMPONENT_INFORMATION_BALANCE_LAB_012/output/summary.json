@@ -1,0 +1,54 @@
+{
+  "lab": "CONTEXT_REVERSAL_SCORE_SCALE_AND_COMPONENT_INFORMATION_BALANCE_LAB_012",
+  "diagnosis": "COACTIVATION_INFORMATION_SPARSE",
+  "parent_regime_parity": true,
+  "parent_counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "decomposition_pass": true,
+  "reversal_theoretical_max": 100.0,
+  "other_theoretical_max": {
+    "EXPANSION": 100.0,
+    "PULLBACK": 95.0,
+    "RANGE": 100.0
+  },
+  "reversal_p95_attainment": 0.5,
+  "others_median_p95_attainment": 0.85,
+  "reversal_median_active_components": 1.0,
+  "others_median_of_medians_active_components": 4.0,
+  "reversal_top_components": [
+    {
+      "component": "adx_decay",
+      "activation_rate": 0.5337631724902939,
+      "mean_contribution": 5.3376317249029395
+    },
+    {
+      "component": "swing_sweep",
+      "activation_rate": 0.15065169162506933,
+      "mean_contribution": 4.51955074875208
+    },
+    {
+      "component": "rejection_wick",
+      "activation_rate": 0.44578480310593455,
+      "mean_contribution": 4.457848031059346
+    },
+    {
+      "component": "rsi_turn",
+      "activation_rate": 0.12853577371048253,
+      "mean_contribution": 2.5707154742096505
+    },
+    {
+      "component": "ema20_cross",
+      "activation_rate": 0.12014697726012202,
+      "mean_contribution": 1.8022046589018303
+    },
+    {
+      "component": "rsi_rhythm_turn",
+      "activation_rate": 0.053383250138657794,
+      "mean_contribution": 0.8007487520798668
+    }
+  ]
+}
