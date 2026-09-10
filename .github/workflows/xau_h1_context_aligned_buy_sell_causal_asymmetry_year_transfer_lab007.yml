@@ -1,0 +1,96 @@
+name: XAU H1 Context Aligned BUY SELL Causal Asymmetry Year Transfer LAB007
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_h1_context_aligned_buy_sell_causal_asymmetry_year_transfer_lab007.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab007:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LAB_BRANCH: lab/xau-h1-context-aligned-buy-sell-causal-asymmetry-year-transfer-007
+      OUTDIR: labs/XAU_H1_CONTEXT_ALIGNED_BUY_SELL_CAUSAL_ASYMMETRY_YEAR_TRANSFER_LAB_007/output
+      XAU_POOL: Projects/XAU_Pool/Results/XAU_POOL_SELECTION_LAB_001/v001/Artifacts/pool_excess.parquet
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy pyarrow requests
+      - name: Fetch canonical XAU
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
+          echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
+      - name: Apply frozen LAB001 LAB002 parity hotfixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text(); pattern=r'd\.stack(?![A-Za-z0-9_])'
+          patched=re.sub(pattern,"d['stack']",s)
+          old="    sm = s.rolling(3,min_periods=3).mean()"
+          warmup=("    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n"
+                  "    s=s.where(ready,np.nan)\n"
+                  "    sm = s.rolling(3,min_periods=3).mean()")
+          if old not in patched: raise SystemExit('LAB001 warmup anchor missing')
+          patched=patched.replace(old,warmup,1); compile(patched,str(p),'exec'); p.write_text(patched)
+
+          q=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py')
+          qs=q.read_text()
+          old_cols="    cols = ['available_time','bias','score_expansion','score_pullback','score_reversal','score_range']\n    c = ctx[cols].dropna(subset=['available_time']).sort_values('available_time').reset_index(drop=False)"
+          new_cols="    cols = ['available_time','regime','bias','score_expansion','score_pullback','score_reversal','score_range']\n    c = ctx[cols].dropna(subset=['available_time','regime']).sort_values('available_time').reset_index(drop=False)"
+          if old_cols not in qs: raise SystemExit('LAB002 frozen join anchor missing')
+          qpatched=qs.replace(old_cols,new_cols,1); compile(qpatched,str(q),'exec'); q.write_text(qpatched)
+          print('Frozen router parity hotfixes applied')
+          PY
+      - name: Run preregistered LAB007
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTDIR"
+          python -m py_compile labs/XAU_H1_CONTEXT_ALIGNED_BUY_SELL_CAUSAL_ASYMMETRY_YEAR_TRANSFER_LAB_007/run_lab.py
+          python labs/XAU_H1_CONTEXT_ALIGNED_BUY_SELL_CAUSAL_ASYMMETRY_YEAR_TRANSFER_LAB_007/run_lab.py \
+            --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
+            --xau-pool "$XAU_POOL" \
+            --out "$OUTDIR"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('labs/XAU_H1_CONTEXT_ALIGNED_BUY_SELL_CAUSAL_ASYMMETRY_YEAR_TRANSFER_LAB_007/output/summary.json').read_text())
+          assert s['xau_meta']['context_eligible']==263405, s['xau_meta']
+          assert s['aligned_rows']==1195, s['aligned_rows']
+          assert s['combined_primary_n']==488, s['combined_primary_n']
+          print('Frozen parity OK: context=263405 aligned=1195 combined=488')
+          PY
+          cat "$OUTDIR/REPORT.md"
+      - name: Persist outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/CROSS_MARKET_CAUSAL_CONTEXT_CONTINUOUS_SCORE_INTERACTION_LAB_002/run_lab.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTDIR"
+          git diff --cached --quiet || git commit -m 'Persist XAU H1 BUY SELL asymmetry LAB007 outputs'
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xau-h1-buy-sell-asymmetry-lab007
+          path: ${{ env.OUTDIR }}
