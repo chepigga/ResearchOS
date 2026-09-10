@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas requests
       - name: Run LAB061
-        run: python labs/BTC_REST_COMPONENT_ROUNDING_CELL_CAUSAL_DELTA_RECOVERY_AND_FLOW_CLOCK_PARITY_LAB_061/run_lab.py
+        run: python labs/BTC_REST_COMPONENT_ROUNDING_CELL_CAUSAL_DELTA_RECOVERY_AND_FLOW_CLOCK_PARITY_LAB_061/run_runtime.py
       - name: Persist outputs
         run: |
           git config user.name github-actions[bot]
