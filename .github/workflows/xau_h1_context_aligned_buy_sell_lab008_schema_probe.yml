@@ -1,0 +1,51 @@
+name: XAU H1 Context BUY SELL LAB008 schema probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_h1_context_aligned_buy_sell_lab008_schema_probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/xau-h1-context-aligned-buy-sell-fresh-oos-episode-independence-008
+      - name: Download sealed fresh asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download xau --repo "${GITHUB_REPOSITORY}" --pattern 'CAUSAL_XAU_RAW_XAUUSD_20260825.zip' --dir data
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/CAUSAL_XAU_RAW_XAUUSD_20260825.zip' | sha256sum -c -
+      - name: Schema only
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP=data/CAUSAL_XAU_RAW_XAUUSD_20260825.zip
+          echo '=== ARCHIVE MEMBERS ==='
+          unzip -l "$ZIP" | sed -n '1,80p'
+          echo '=== TEXT-LIKE MEMBER HEADERS ==='
+          python - <<'PY'
+          import zipfile, pathlib
+          p=pathlib.Path('data/CAUSAL_XAU_RAW_XAUUSD_20260825.zip')
+          with zipfile.ZipFile(p) as z:
+              names=[n for n in z.namelist() if n.lower().endswith(('.csv','.txt','.tsv'))]
+              print('member_count',len(z.namelist()),'text_like',len(names))
+              for n in names[:20]:
+                  info=z.getinfo(n)
+                  print('\nMEMBER',n,'size',info.file_size)
+                  with z.open(n) as f:
+                      for _ in range(3):
+                          line=f.readline(4096)
+                          if not line: break
+                          print(line.decode('utf-8','replace').rstrip()[:1000])
+          PY
