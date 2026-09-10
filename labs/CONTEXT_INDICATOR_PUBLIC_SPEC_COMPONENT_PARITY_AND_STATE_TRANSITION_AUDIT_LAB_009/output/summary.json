@@ -1,0 +1,98 @@
+{
+  "lab": "CONTEXT_INDICATOR_PUBLIC_SPEC_COMPONENT_PARITY_AND_STATE_TRANSITION_AUDIT_LAB_009",
+  "verdict": "FUNCTIONAL_PROXY_WITH_PUBLIC_SPEC_GAPS",
+  "dataset": {
+    "source": "Binance USD-M futures public monthly archive",
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "rows": 57696,
+    "first": "2020-01-01 00:00:00+00:00",
+    "last": "2026-07-31 23:00:00+00:00",
+    "missing_months": []
+  },
+  "h4_rows": 14424,
+  "checklist_total": 29,
+  "implemented_exact_n": 8,
+  "implemented_proxy_n": 14,
+  "not_implemented_n": 7,
+  "exact_components": [
+    "EMA20_50_200_structure",
+    "range24_compression",
+    "ADX14_level",
+    "ADX_decay",
+    "three_bar_smoothing",
+    "closed_HTF_availability_clock",
+    "Current_Context_output",
+    "direction_compatibility_layer"
+  ],
+  "proxy_components": [
+    "EMA_slope",
+    "ATR14_relative_volatility",
+    "BOS",
+    "liquidity_sweep_failed_sweep",
+    "relative_volume_20bar_average",
+    "Expansion_score",
+    "Pullback_score",
+    "Reversal_score",
+    "Range_score",
+    "current_mode_inertia_bonus",
+    "minimum_hold",
+    "switch_gap",
+    "low_vol_wider_gap",
+    "high_vol_shorter_hold"
+  ],
+  "missing_components": [
+    "D1_HTF_bias",
+    "daily_inside_bar",
+    "swing_pivots",
+    "RSI14_EMA9_WMA45_rhythm",
+    "session_contribution",
+    "public_TF_mapping_M1_M15_M5_H1_M15_H4_H1_D1",
+    "Next_Context_runner_up_output"
+  ],
+  "causality": {
+    "cutoff": "2024-09-26 20:00:00+00:00",
+    "rows_checked": 10386,
+    "changed_columns": [],
+    "pass": true
+  },
+  "closed_clock": {
+    "checked": 14424,
+    "pass": true,
+    "violations": 0
+  },
+  "score_activation": {
+    "score_expansion": 14052,
+    "score_pullback": 14353,
+    "score_reversal": 11866,
+    "score_range": 10445
+  },
+  "regime_counts": {
+    "PULLBACK": 9795,
+    "EXPANSION": 2909,
+    "RANGE": 1677,
+    "REVERSAL": 41
+  },
+  "score_and_regime_activation_gate": true,
+  "state_machine_reconstruction": {
+    "rows": 14424,
+    "mismatch_n": 0,
+    "pass": true
+  },
+  "sanity": {
+    "bull_bias_requires_stack_up": true,
+    "bear_bias_requires_stack_dn": true,
+    "breakout_contributes_expansion": true,
+    "sweep_contributes_reversal": true,
+    "lowvol_param_present": true,
+    "normal_param_present": true,
+    "highvol_param_present": true
+  },
+  "next_context_descriptive": {
+    "n": 858,
+    "match_rate": 0.9312354312354313,
+    "baseline": 0.7342657342657343,
+    "lift": 0.19696969696969702
+  },
+  "full_public_spec_parity": false
+}
