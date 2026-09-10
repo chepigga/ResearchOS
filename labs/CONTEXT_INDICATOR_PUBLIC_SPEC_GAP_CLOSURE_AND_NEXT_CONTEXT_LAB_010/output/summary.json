@@ -1,6 +1,6 @@
 {
   "lab": "CONTEXT_INDICATOR_PUBLIC_SPEC_GAP_CLOSURE_AND_NEXT_CONTEXT_LAB_010",
-  "verdict": "STATE_MACHINE_OR_CAUSALITY_FAILED",
+  "verdict": "PUBLIC_SPEC_COMPONENT_CLOSURE_COMPLETE_WITH_PROPRIETARY_PROXIES",
   "dataset": {
     "source": "Binance USD-M futures public monthly archive",
     "symbol": "BTCUSDT",
@@ -16,17 +16,9 @@
   "proxy_n": 16,
   "missing_n": 0,
   "causality": {
-    "pass": false,
-    "changed_columns": [
-      "score_expansion",
-      "score_pullback",
-      "score_range",
-      "atr_ratio_public",
-      "relvol20_public",
-      "rsi_ema9",
-      "rsi_wma45"
-    ],
-    "rows": 10386,
+    "pass": true,
+    "changed_columns": [],
+    "rows": 10385,
     "cutoff": "2024-09-26 21:00:00+00:00"
   },
   "d1_clock_pass": true,
@@ -52,7 +44,7 @@
     "coverage": 1.0
   },
   "gates": {
-    "G1_causality": false,
+    "G1_causality": true,
     "G2_D1_clock": true,
     "G3_swing_clock": true,
     "G4_TF_map_4of4": true,

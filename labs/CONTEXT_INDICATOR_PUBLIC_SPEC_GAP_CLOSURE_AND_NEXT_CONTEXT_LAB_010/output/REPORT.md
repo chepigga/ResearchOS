@@ -1,9 +1,9 @@
 # CONTEXT_INDICATOR_PUBLIC_SPEC_GAP_CLOSURE_AND_NEXT_CONTEXT_LAB_010
 
-**Verdict: STATE_MACHINE_OR_CAUSALITY_FAILED**
+**Verdict: PUBLIC_SPEC_COMPONENT_CLOSURE_COMPLETE_WITH_PROPRIETARY_PROXIES**
 
 - Checklist: 29/29 implemented; exact **13**, proxy **16**, missing **0**.
-- Causality: **FAIL**; changed=['score_expansion', 'score_pullback', 'score_range', 'atr_ratio_public', 'relvol20_public', 'rsi_ema9', 'rsi_wma45']
+- Causality: **PASS**; changed=[]
 - D1 closed clock: **PASS**
 - Public TF map 4/4: **PASS**
 - State-machine mismatches: **0**
