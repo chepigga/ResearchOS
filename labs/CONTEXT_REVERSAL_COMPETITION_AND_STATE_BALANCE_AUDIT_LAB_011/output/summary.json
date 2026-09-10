@@ -1,0 +1,67 @@
+{
+  "lab": "CONTEXT_REVERSAL_COMPETITION_AND_STATE_BALANCE_AUDIT_LAB_011",
+  "verdict": "SCORE_COMPETITION_DOMINANT__REVERSAL_STRUCTURALLY_RARE",
+  "dataset": {
+    "source": "Binance USD-M futures public monthly archive",
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "rows": 57696,
+    "first": "2020-01-01 00:00:00+00:00",
+    "last": "2026-07-31 23:00:00+00:00",
+    "missing_months": []
+  },
+  "h4_rows": 14424,
+  "warm_rows": 14422,
+  "parity_mismatches": 0,
+  "stage_counts": [
+    {
+      "stage": "REVERSAL_SCORE_ACTIVE",
+      "n": 12018,
+      "share": 0.8333102204964637
+    },
+    {
+      "stage": "RAW_WINNER",
+      "n": 240,
+      "share": 0.01664124254611011
+    },
+    {
+      "stage": "SMOOTH_WINNER",
+      "n": 49,
+      "share": 0.003397587019830814
+    },
+    {
+      "stage": "FULL_MACHINE_CURRENT",
+      "n": 29,
+      "share": 0.0020108168076549715
+    }
+  ],
+  "lost_score_competition_n": 11971,
+  "lost_state_machine_n": 32,
+  "score_competition_share_of_losses": 0.997333999833375,
+  "state_machine_share_of_losses": 0.00266600016662501,
+  "full_reversal_share": 0.0020108168076549715,
+  "blockers": [
+    {
+      "blocker": "INERTIA",
+      "n": 18,
+      "share": 0.5625
+    },
+    {
+      "blocker": "GAP",
+      "n": 12,
+      "share": 0.375
+    },
+    {
+      "blocker": "MIN_HOLD",
+      "n": 2,
+      "share": 0.0625
+    }
+  ],
+  "regime_counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "next_context_reversal_n": 510
+}
