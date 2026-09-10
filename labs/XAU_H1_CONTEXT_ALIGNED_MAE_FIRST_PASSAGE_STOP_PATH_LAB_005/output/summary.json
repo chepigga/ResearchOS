@@ -1,0 +1,67 @@
+{
+  "lab": "XAU_H1_CONTEXT_ALIGNED_MAE_FIRST_PASSAGE_STOP_PATH_LAB_005",
+  "status": "REUSED_HISTORY_PREREGISTERED_PATH_DIAGNOSTIC",
+  "verdict": "H1_STOP_PATH_MISMATCH_NOT_SUPPORTED",
+  "n_h1_high": 2161,
+  "aligned_n": 1195,
+  "opposed_n": 966,
+  "primary_delta_recovery": -0.049222519642748847,
+  "recovery_rates": {
+    "ALIGNED": 0.22510460251046024,
+    "OPPOSED": 0.2743271221532091
+  },
+  "bootstrap": {
+    "weeks": 127,
+    "draws": 5000,
+    "ci_lo": -0.10137328772251339,
+    "ci_hi": 0.007692125834781092,
+    "p_positive": 0.0472
+  },
+  "terminal_120h": {
+    "ALIGNED": {
+      "n": 1195,
+      "mean": 0.41213280096189436,
+      "median": 0.3826856487325213
+    },
+    "OPPOSED": {
+      "n": 966,
+      "mean": -0.32105134670135016,
+      "median": -0.1637730759601401
+    },
+    "premium": 0.7331841476632446
+  },
+  "realized_frozen_excess": {
+    "ALIGNED": {
+      "n": 1195,
+      "mean": -0.06966080798101346,
+      "median": -0.998
+    },
+    "OPPOSED": {
+      "n": 966,
+      "mean": 0.0441957407550684,
+      "median": -0.71
+    },
+    "premium": -0.11385654873608186
+  },
+  "gates": {
+    "S1_delta_recovery_gt_zero": false,
+    "S2_boot_ci_lo_gt_zero": false,
+    "S3_terminal_120h_premium_gt_zero": true,
+    "S4_realized_frozen_premium_lt_zero": true,
+    "S5_year_3of4_positive": false,
+    "S6_loyo_3of4_positive": false
+  },
+  "eligible_years": 4,
+  "positive_years": 1,
+  "loyo_runs": 4,
+  "loyo_positive": 0,
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 263405
+  },
+  "promotion_authorized": false
+}
