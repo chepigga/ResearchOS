@@ -24,11 +24,11 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -q numpy pandas requests
       - name: Run LAB061
-        run: python labs/BTC_REST_COMPONENT_ROUNDING_CELL_CAUSAL_DELTA_RECOVERY_AND_FLOW_CLOCK_PARITY_LAB_061/run_runtime.py
+        run: python labs/BTC_REST_COMPONENT_ROUNDING_CELL_CAUSAL_DELTA_RECOVERY_AND_FLOW_CLOCK_PARITY_LAB_061/run_chunked.py
       - name: Persist outputs
         run: |
           git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.email 41898282+chepigga@users.noreply.github.com
           git add labs/BTC_REST_COMPONENT_ROUNDING_CELL_CAUSAL_DELTA_RECOVERY_AND_FLOW_CLOCK_PARITY_LAB_061/output
           git commit -m 'Persist BTC REST component rounding-cell LAB061 outputs' || true
           git push origin HEAD:lab/btc-rest-component-rounding-cell-delta-flow-clock-061
