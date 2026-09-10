@@ -35,6 +35,8 @@ jobs:
           if old not in t: raise SystemExit('dtype hotfix target not found')
           t=t.replace(old,new)
           t=t.replace('stack=d.stack.fillna(False)','stack=d["stack"].fillna(False)')
+          # Causality must compare only H4 states actually available by cutoff, not an H4 bar still forming at cutoff.
+          t=t.replace("pre=common[common<=ct.floor('4h')]","pre=common[(common+pd.Timedelta(hours=4))<=ct]")
           q.write_text(t)
           PY
       - name: Run preregistered LAB010
