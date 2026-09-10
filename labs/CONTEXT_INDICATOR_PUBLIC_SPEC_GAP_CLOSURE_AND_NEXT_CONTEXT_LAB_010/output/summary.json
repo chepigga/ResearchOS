@@ -1,0 +1,67 @@
+{
+  "lab": "CONTEXT_INDICATOR_PUBLIC_SPEC_GAP_CLOSURE_AND_NEXT_CONTEXT_LAB_010",
+  "verdict": "STATE_MACHINE_OR_CAUSALITY_FAILED",
+  "dataset": {
+    "source": "Binance USD-M futures public monthly archive",
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "rows": 57696,
+    "first": "2020-01-01 00:00:00+00:00",
+    "last": "2026-07-31 23:00:00+00:00",
+    "missing_months": []
+  },
+  "h4_rows": 14424,
+  "d1_rows": 2404,
+  "exact_n": 13,
+  "proxy_n": 16,
+  "missing_n": 0,
+  "causality": {
+    "pass": false,
+    "changed_columns": [
+      "score_expansion",
+      "score_pullback",
+      "score_range",
+      "atr_ratio_public",
+      "relvol20_public",
+      "rsi_ema9",
+      "rsi_wma45"
+    ],
+    "rows": 10386,
+    "cutoff": "2024-09-26 21:00:00+00:00"
+  },
+  "d1_clock_pass": true,
+  "tf_map_pass": true,
+  "state_machine_mismatches": 0,
+  "score_activation": {
+    "EXPANSION": 14322,
+    "PULLBACK": 14391,
+    "REVERSAL": 12018,
+    "RANGE": 11189
+  },
+  "regime_counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "next_context": {
+    "n": 1118,
+    "match": 0.9302325581395349,
+    "baseline": 0.7665474060822898,
+    "lift": 0.1636851520572451,
+    "coverage": 1.0
+  },
+  "gates": {
+    "G1_causality": false,
+    "G2_D1_clock": true,
+    "G3_swing_clock": true,
+    "G4_TF_map_4of4": true,
+    "G5_missing_zero": true,
+    "G6_four_scores_four_states": true,
+    "G7_state_machine_zero_mismatch": true,
+    "G8_next_context": true
+  },
+  "old_lab009_reversal_count": 41,
+  "new_reversal_count": 29,
+  "proprietary_parity_claimed": false
+}
