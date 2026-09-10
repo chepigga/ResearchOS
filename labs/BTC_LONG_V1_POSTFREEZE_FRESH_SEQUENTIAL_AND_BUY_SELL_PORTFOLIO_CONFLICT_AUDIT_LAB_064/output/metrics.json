@@ -1,8 +1,8 @@
 {
   "lab": "BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064",
-  "run_started_utc": "2026-09-10 15:25:35.160807",
+  "run_started_utc": "2026-09-10 15:27:58.507251",
   "long_freeze_timestamp_utc": "2026-09-10 14:28:51",
-  "hours_since_long_freeze_at_run": 0.9456002241666667,
+  "hours_since_long_freeze_at_run": 0.9854186808333333,
   "windows": {
     "fresh_postfreeze_start_exclusive": "2026-09-10 14:28:51",
     "locked_transfer_start": "2026-08-11 00:00:00",
@@ -11,9 +11,9 @@
   "data": {
     "frozen_m1_end": "2026-08-10 05:59:00",
     "frozen_m5_end": "2026-08-10 21:20:00",
-    "rest_m1_end": "2026-09-10 15:23:00",
+    "rest_m1_end": "2026-09-10 15:25:00",
     "rest_m5_end": "2026-09-10 15:20:00",
-    "merged_m1_end": "2026-09-10 15:23:00",
+    "merged_m1_end": "2026-09-10 15:25:00",
     "merged_m5_end": "2026-09-10 15:20:00"
   },
   "price_transport_parity": {

@@ -4,7 +4,7 @@
 
 ## Methodological status
 
-LONG v1 freeze: 2026-09-10 14:28:51 UTC. True fresh elapsed at run: 0.946 h.
+LONG v1 freeze: 2026-09-10 14:28:51 UTC. True fresh elapsed at run: 0.985 h.
 August through 8 September is LOCKED_TRANSFER only and is not eligible for LONG promotion.
 
 ## Price transport parity
