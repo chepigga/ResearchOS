@@ -1,0 +1,84 @@
+{
+  "lab": "XAU_H1_CONTEXT_ALIGNED_EXECUTABLE_RR15_COST_YEAR_TRANSFER_LAB_006",
+  "status": "REUSED_HISTORY_PREREGISTERED_EXECUTION_DIAGNOSTIC",
+  "verdict": "POSITIVE_BUT_TRANSFER_NOT_CONFIRMED",
+  "selector": "H1 AND context_score>0.55 AND ALIGNED",
+  "sl_atr": 1.5,
+  "tp_atr": 2.25,
+  "gross_rr": 1.5,
+  "max_hours": 120,
+  "cost_model": {
+    "ftmo_metals_commission_rt_bps": 0.14,
+    "synthetic_all_in_rt_bps": [
+      1.0,
+      2.0,
+      3.0,
+      5.0
+    ],
+    "primary_bps": 2.0
+  },
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 263405
+  },
+  "frozen_aligned_rows": 1195,
+  "event_dedup_n": 1195,
+  "duplicate_rows_removed": 0,
+  "primary_n": 488,
+  "overlap_signals_skipped": 707,
+  "primary_2bps": {
+    "bps": 2.0,
+    "n": 488.0,
+    "ev_r": 0.05700063685275437,
+    "pf": 1.0976246517300505,
+    "win_rate": 0.4405737704918033,
+    "cum_r": 27.816310784144132,
+    "max_dd_r": 26.763943244476536,
+    "recovery_factor": 1.0393203471571695,
+    "tp_rate": 0.4405737704918033,
+    "sl_rate": 0.5594262295081968,
+    "time_rate": 0.0,
+    "cum_return_proxy_pct_at_025": 6.954077696036033,
+    "max_dd_proxy_pct_at_025": 6.690985811119134,
+    "median_hold_hours": 7.041666666666666
+  },
+  "stress_5bps": {
+    "bps": 5.0,
+    "n": 488.0,
+    "ev_r": -0.009650047212376367,
+    "pf": 0.9844491843698243,
+    "win_rate": 0.4405737704918033,
+    "cum_r": -4.709223039639667,
+    "max_dd_r": 31.65985811119134,
+    "recovery_factor": -0.14874428758020933,
+    "tp_rate": 0.4405737704918033,
+    "sl_rate": 0.5594262295081968,
+    "time_rate": 0.0,
+    "cum_return_proxy_pct_at_025": -1.1773057599099168,
+    "max_dd_proxy_pct_at_025": 7.914964527797835,
+    "median_hold_hours": 7.041666666666666
+  },
+  "bootstrap_2bps": {
+    "weeks": 120,
+    "draws": 5000,
+    "ci_lo": -0.07019069922171847,
+    "ci_hi": 0.18086433355372292,
+    "p_positive": 0.8052
+  },
+  "gates": {
+    "G1_2bps_ev_gt_zero": true,
+    "G2_2bps_pf_ge_1_20": false,
+    "G3_bootstrap_ci_lo_gt_zero": false,
+    "G4_all_4_years_positive_pf_gt1_n20": false,
+    "G5_loyo_4of4_ev_positive": false,
+    "G6_5bps_ev_gt_zero_pf_gt_1_05": false,
+    "G7_dd_at_025_le_4pct": false,
+    "G8_recovery_factor_ge_2": false,
+    "G9_n_ge_100": true
+  },
+  "promotion_authorized": false
+}
