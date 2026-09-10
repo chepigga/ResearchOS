@@ -1,0 +1,49 @@
+name: BTC LONG V1 Closed-Bar Transport Parity LAB065 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_long_v1_closed_bar_transport_parity_lab065_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab065:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LAB065 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-long-v1-closed-bar-transport-parity-fresh-sequential-065
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: python -m pip install -q numpy pandas requests tabulate
+
+      - name: Stage frozen BTC release data
+        run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+
+      - name: Run LAB065
+        run: python labs/BTC_LONG_V1_CLOSED_BAR_TRANSPORT_PARITY_AND_FRESH_SEQUENTIAL_CONTINUATION_LAB_065/run_lab.py
+
+      - name: Persist LAB065 outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_LONG_V1_CLOSED_BAR_TRANSPORT_PARITY_AND_FRESH_SEQUENTIAL_CONTINUATION_LAB_065/output
+          git commit -m 'Persist BTC LONG closed-bar transport LAB065 outputs' || true
+          git push origin HEAD:lab/btc-long-v1-closed-bar-transport-parity-fresh-sequential-065
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_LONG_V1_CLOSED_BAR_TRANSPORT_LAB065
+          path: labs/BTC_LONG_V1_CLOSED_BAR_TRANSPORT_PARITY_AND_FRESH_SEQUENTIAL_CONTINUATION_LAB_065/output
