@@ -1,0 +1,54 @@
+name: BTC LONG Postfreeze Sequential BUY SELL Conflict LAB064 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_long_v1_postfreeze_fresh_sequential_buy_sell_conflict_lab064_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab064:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LAB064 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-long-v1-postfreeze-fresh-sequential-buy-sell-conflict-064
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: python -m pip install -q numpy pandas requests tabulate
+
+      - name: Stage frozen BTC release data
+        run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+
+      - name: Stage canonical frozen SHORT ledger
+        run: |
+          git fetch origin lab/btc-short-v1-frozen-full-system-postfreeze-replication-055
+          git show FETCH_HEAD:labs/BTC_SHORT_V1_FROZEN_FULL_SYSTEM_POSTFREEZE_REPLICATION_LAB_055/output/execution_stream.csv > lab055_execution_stream.csv
+
+      - name: Run LAB064
+        run: python labs/BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064/run_lab.py
+
+      - name: Persist LAB064 outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064/output
+          git commit -m 'Persist BTC LONG postfreeze conflict LAB064 outputs' || true
+          git push origin HEAD:lab/btc-long-v1-postfreeze-fresh-sequential-buy-sell-conflict-064
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_LONG_V1_POSTFREEZE_BUY_SELL_CONFLICT_LAB064
+          path: labs/BTC_LONG_V1_POSTFREEZE_FRESH_SEQUENTIAL_AND_BUY_SELL_PORTFOLIO_CONFLICT_AUDIT_LAB_064/output
