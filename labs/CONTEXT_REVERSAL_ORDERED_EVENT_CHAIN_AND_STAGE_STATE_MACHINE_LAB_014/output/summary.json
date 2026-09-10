@@ -1,0 +1,23 @@
+{
+  "lab": "CONTEXT_REVERSAL_ORDERED_EVENT_CHAIN_AND_STAGE_STATE_MACHINE_LAB_014",
+  "verdict": "WEAK_ORDERED_STAGE_SIGNAL",
+  "counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "causality_changed": [],
+  "precision_ratio_chain_vs_A": 0.22479091995221026,
+  "years_with_chain": 7,
+  "gates": {
+    "G1_parent_parity": true,
+    "G2_score_reconstruction": true,
+    "G3_causality": true,
+    "G4_recall_ge_4of9": false,
+    "G5_precision_ge_5pct": false,
+    "G6_precision_ratio_ge_2x": false,
+    "G7_median_lead_le2": true,
+    "G8_years_ge5": true
+  }
+}
