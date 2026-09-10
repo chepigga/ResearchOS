@@ -1,0 +1,148 @@
+{
+  "lab": "XAU_H1_CONTEXT_ALIGNED_BUY_SELL_CAUSAL_ASYMMETRY_YEAR_TRANSFER_LAB_007",
+  "status": "REUSED_HISTORY_PREREGISTERED_DIRECTION_ASYMMETRY_DIAGNOSTIC",
+  "verdict": "BUY_SELL_ASYMMETRY_MIXED",
+  "selector": "H1 AND context_score>0.55 AND ALIGNED",
+  "sl_atr": 1.5,
+  "tp_atr": 2.25,
+  "gross_rr": 1.5,
+  "max_hours": 120,
+  "primary_bps": 2.0,
+  "stress_bps": [
+    1.0,
+    2.0,
+    3.0,
+    5.0
+  ],
+  "risk_pct_proxy": 0.25,
+  "xau_meta": {
+    "sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+    "m1_rows": 1454538,
+    "m1_start": "2022-06-01 01:05:00",
+    "m1_end": "2026-07-23 23:49:00",
+    "pool_finite": 266297,
+    "context_eligible": 263405
+  },
+  "aligned_rows": 1195,
+  "dedup_events": 1195,
+  "combined_primary_n": 488,
+  "combined_overlap_skipped": 707,
+  "attribution": {
+    "buy": {
+      "bps": 2.0,
+      "n": 385,
+      "ev_r": 0.11183603496979445,
+      "pf": 1.1994761424128582,
+      "win_rate": 0.4623376623376623,
+      "cum_r": 43.05687346337086,
+      "max_dd_r": 13.051059689376281,
+      "recovery_factor": 3.2991093817783756,
+      "tp_rate": 0.4623376623376623,
+      "sl_rate": 0.5376623376623376,
+      "time_rate": 0.0,
+      "cum_return_proxy_pct_at_025": 10.764218365842716,
+      "max_dd_proxy_pct_at_025": 3.2627649223440702,
+      "median_hold_hours": 6.783333333333333
+    },
+    "sell": {
+      "bps": 2.0,
+      "n": 103,
+      "ev_r": -0.1479666279536576,
+      "pf": 0.7793827893795148,
+      "win_rate": 0.3592233009708738,
+      "cum_r": -15.240562679226732,
+      "max_dd_r": 17.39558247325935,
+      "recovery_factor": -0.8761168361366839,
+      "tp_rate": 0.3592233009708738,
+      "sl_rate": 0.6407766990291263,
+      "time_rate": 0.0,
+      "cum_return_proxy_pct_at_025": -3.810140669806683,
+      "max_dd_proxy_pct_at_025": 4.348895618314837,
+      "median_hold_hours": 7.083333333333333
+    },
+    "ev_diff": 0.25980266292345205,
+    "bootstrap": {
+      "weeks": 120,
+      "draws": 5000,
+      "ci_lo": -0.022495678819070327,
+      "ci_hi": 0.5584880599549623,
+      "p_positive": 0.9658
+    }
+  },
+  "counterfactual": {
+    "buy_only": {
+      "bps": 2.0,
+      "n": 385,
+      "ev_r": 0.11183603496979445,
+      "pf": 1.1994761424128582,
+      "win_rate": 0.4623376623376623,
+      "cum_r": 43.05687346337086,
+      "max_dd_r": 13.051059689376281,
+      "recovery_factor": 3.2991093817783756,
+      "tp_rate": 0.4623376623376623,
+      "sl_rate": 0.5376623376623376,
+      "time_rate": 0.0,
+      "cum_return_proxy_pct_at_025": 10.764218365842716,
+      "max_dd_proxy_pct_at_025": 3.2627649223440702,
+      "median_hold_hours": 6.783333333333333
+    },
+    "sell_only": {
+      "bps": 2.0,
+      "n": 103,
+      "ev_r": -0.1479666279536576,
+      "pf": 0.7793827893795148,
+      "win_rate": 0.3592233009708738,
+      "cum_r": -15.240562679226732,
+      "max_dd_r": 17.39558247325935,
+      "recovery_factor": -0.8761168361366839,
+      "tp_rate": 0.3592233009708738,
+      "sl_rate": 0.6407766990291263,
+      "time_rate": 0.0,
+      "cum_return_proxy_pct_at_025": -3.810140669806683,
+      "max_dd_proxy_pct_at_025": 4.348895618314837,
+      "median_hold_hours": 7.083333333333333
+    },
+    "ev_diff": 0.25980266292345205,
+    "bootstrap_diff": {
+      "weeks": 120,
+      "draws": 5000,
+      "ci_lo": -0.022495678819070327,
+      "ci_hi": 0.5584880599549623,
+      "p_positive": 0.9658
+    },
+    "buy_bootstrap_ev": {
+      "weeks": 86,
+      "draws": 5000,
+      "ci_lo": -0.03418222227027163,
+      "ci_hi": 0.24757685375377095,
+      "p_positive": 0.9316
+    },
+    "buy_events": 954,
+    "sell_events": 241,
+    "buy_overlap_skipped": 569,
+    "sell_overlap_skipped": 138
+  },
+  "buy_concentration": {
+    "best_positive_year_share": 0.7408242216546871,
+    "best_positive_month_share": 0.18455290522814133,
+    "top10_positive_weeks_share": 0.5593053591365219,
+    "positive_weeks": 41,
+    "total_weeks": 86
+  },
+  "gates": {
+    "A1_attribution_ev_diff_gt_zero": true,
+    "A2_attribution_boot_ci_lo_gt_zero": false,
+    "A3_counterfactual_ev_diff_gt_zero": true,
+    "A4_counterfactual_boot_ci_lo_gt_zero": false,
+    "B1_buy_2bps_ev_gt_zero": true,
+    "B2_buy_2bps_pf_ge_1_20": false,
+    "B3_buy_boot_ci_lo_gt_zero": false,
+    "B4_buy_all4_years_positive": true,
+    "B5_buy_loyo_4of4_positive": true,
+    "B6_buy_5bps_ev_gt_zero_pf_gt_1_05": true,
+    "B7_buy_dd_at_025_le_4pct": true,
+    "B8_buy_recovery_ge_2": true,
+    "B9_buy_n_ge_100": true
+  },
+  "promotion_authorized": false
+}
