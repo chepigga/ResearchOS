@@ -1,0 +1,5 @@
+state,confirmed_horizon_h,peak_observed_horizon_h,peak_observed_effect,eligible_years_at_confirmed,positive_years_at_confirmed,time_transfer,purity_eligible_horizons,purity_positive_horizons,purity_ci_confirmed_horizons,purity_verdict
+EXPANSION,,24,0.20490125933301728,0,0,TIME_UNSTABLE,5,2,0,PURITY_NOT_CONFIRMED
+PULLBACK,,48,0.07333333333333336,0,0,TIME_UNSTABLE,0,0,0,PURITY_UNDERPOWERED
+REVERSAL,,24,0.2646464646464647,0,0,TIME_UNSTABLE,0,0,0,PURITY_UNDERPOWERED
+RANGE,,8,0.09890109890109888,0,0,TIME_UNSTABLE,0,0,0,PURITY_UNDERPOWERED

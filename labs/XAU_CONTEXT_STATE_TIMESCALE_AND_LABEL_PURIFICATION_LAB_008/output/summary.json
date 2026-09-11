@@ -1,0 +1,68 @@
+{
+  "lab": "XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008",
+  "status": "REUSED_HISTORY_PREREGISTERED_STATE_DIAGNOSTIC",
+  "verdict": "CONTEXT_LABELS_REQUIRE_REDESIGN",
+  "xau_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "m1_rows": 1454538,
+  "h4_rows": 6417,
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "confirmed_states": 0,
+  "time_transferred_states": 0,
+  "state_summary": [
+    {
+      "state": "EXPANSION",
+      "confirmed_horizon_h": null,
+      "peak_observed_horizon_h": 24,
+      "peak_observed_effect": 0.20490125933301728,
+      "eligible_years_at_confirmed": 0,
+      "positive_years_at_confirmed": 0,
+      "time_transfer": "TIME_UNSTABLE",
+      "purity_eligible_horizons": 5,
+      "purity_positive_horizons": 2,
+      "purity_ci_confirmed_horizons": 0,
+      "purity_verdict": "PURITY_NOT_CONFIRMED"
+    },
+    {
+      "state": "PULLBACK",
+      "confirmed_horizon_h": null,
+      "peak_observed_horizon_h": 48,
+      "peak_observed_effect": 0.07333333333333336,
+      "eligible_years_at_confirmed": 0,
+      "positive_years_at_confirmed": 0,
+      "time_transfer": "TIME_UNSTABLE",
+      "purity_eligible_horizons": 0,
+      "purity_positive_horizons": 0,
+      "purity_ci_confirmed_horizons": 0,
+      "purity_verdict": "PURITY_UNDERPOWERED"
+    },
+    {
+      "state": "REVERSAL",
+      "confirmed_horizon_h": null,
+      "peak_observed_horizon_h": 24,
+      "peak_observed_effect": 0.2646464646464647,
+      "eligible_years_at_confirmed": 0,
+      "positive_years_at_confirmed": 0,
+      "time_transfer": "TIME_UNSTABLE",
+      "purity_eligible_horizons": 0,
+      "purity_positive_horizons": 0,
+      "purity_ci_confirmed_horizons": 0,
+      "purity_verdict": "PURITY_UNDERPOWERED"
+    },
+    {
+      "state": "RANGE",
+      "confirmed_horizon_h": null,
+      "peak_observed_horizon_h": 8,
+      "peak_observed_effect": 0.09890109890109888,
+      "eligible_years_at_confirmed": 0,
+      "positive_years_at_confirmed": 0,
+      "time_transfer": "TIME_UNSTABLE",
+      "purity_eligible_horizons": 0,
+      "purity_positive_horizons": 0,
+      "purity_ci_confirmed_horizons": 0,
+      "purity_verdict": "PURITY_UNDERPOWERED"
+    }
+  ],
+  "promotion_authorized": false,
+  "trading_edge_tested": false
+}
