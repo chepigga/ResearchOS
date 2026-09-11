@@ -1,0 +1,112 @@
+# BTC_LONG_V1_FIRST_FRESH_TIER_A_EPISODE_AND_SEQUENTIAL_MATURITY_AUDIT_LAB_066
+
+**Verdict:** `WATCH_WAITING_FIRST_FRESH_TIER_A_EPISODE`
+
+## Transport
+
+```json
+{
+  "closed_m1": {
+    "overlap_n": 3239,
+    "min_required": 250,
+    "exact_rows": 3239,
+    "exact_share": 1.0,
+    "max_abs_ohlc_diff": 0.0,
+    "pass": true
+  },
+  "closed_m5": {
+    "overlap_n": 832,
+    "min_required": 100,
+    "exact_rows": 832,
+    "exact_share": 1.0,
+    "max_abs_ohlc_diff": 0.0,
+    "pass": true
+  },
+  "m1_continuity": {
+    "rows": 49432,
+    "gap_count": 0,
+    "max_gap_minutes": 1.0
+  },
+  "m5_continuity": {
+    "rows": 9886,
+    "gap_count": 0,
+    "max_gap_minutes": 5.0
+  },
+  "pass": true,
+  "unproven_terminal_m1_rows": 1,
+  "unproven_terminal_m5_rows": 1
+}
+```
+
+## First fresh Tier-A
+
+```json
+{
+  "observed": false,
+  "onset": null,
+  "fresh_episode_count": 0,
+  "first_frozen_slot": null,
+  "next_slot_if_currently_active": null
+}
+```
+
+## Current maturity
+
+```json
+{
+  "clock_time": "2026-09-11 04:00:00",
+  "state": "OTHER",
+  "st_dir": -1.0,
+  "st_age": 5.0,
+  "tier_a_active": false,
+  "bearish_episode_active": true,
+  "bearish_episode_onset": "2026-09-10 08:00:00",
+  "observed_duration_h": 24.0,
+  "bars_to_tier_a": 54,
+  "hours_to_tier_a_at_4h_per_bar": 216,
+  "maturity_distance_is_not_forecast": true
+}
+```
+
+## Fresh LONG
+
+```json
+{
+  "signals_with_entry": 0,
+  "completed": 0,
+  "open": 0,
+  "ev5": null,
+  "pf5": null,
+  "ev10": null,
+  "pf10": null,
+  "cumR5": 0.0,
+  "tp": 0,
+  "sl": 0,
+  "time": 0,
+  "additive_realized_dd_pct": 0.0,
+  "peak_concurrent_long": 0,
+  "peak_open_initial_risk_pct": 0.0
+}
+```
+
+## Gates
+
+```json
+{
+  "closed_m1_exact_100pct": true,
+  "closed_m5_exact_100pct": true,
+  "m1_zero_gaps": true,
+  "m5_zero_gaps": true,
+  "fresh_n_ge5": false,
+  "fresh_ev5_gt0_if_n5": true,
+  "fresh_pf5_ge1_10_if_n5": true,
+  "fresh_ev10_gt0_if_n5": true,
+  "fresh_dd_le4pct_if_n5": true,
+  "peak_open_long_risk_le0_50pct": true,
+  "no_tuning": true
+}
+```
+
+## Guardrail
+
+Maturity distance is mechanical only and is not a forecast. The bearish Supertrend direction may reset before Tier-A. No LONG v1 rule changed; no live allocation is authorized.
