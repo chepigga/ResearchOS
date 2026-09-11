@@ -34,7 +34,7 @@ jobs:
           mkdir -p data
           gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
           echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
-      - name: Apply frozen Context parity hotfixes
+      - name: Apply frozen Context parity and imported LAB008 warmup hotfixes
         shell: bash
         run: |
           set -euo pipefail
@@ -53,7 +53,19 @@ jobs:
           patched=patched.replace(old,warmup,1)
           compile(patched,str(p),'exec')
           p.write_text(patched)
-          print('Frozen router parity hotfixes applied')
+
+          q=Path('labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py')
+          qs=q.read_text()
+          oldq="    d['raw_winner'] = score_arr.idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()"
+          newq=("    valid_scores = score_arr.notna().any(axis=1)\n"
+                "    d['raw_winner'] = pd.Series(index=d.index, dtype='object')\n"
+                "    d.loc[valid_scores, 'raw_winner'] = score_arr.loc[valid_scores].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
+          if oldq not in qs:
+              raise SystemExit('LAB008 raw_winner anchor missing')
+          qpatched=qs.replace(oldq,newq,1)
+          compile(qpatched,str(q),'exec')
+          q.write_text(qpatched)
+          print('Frozen parity + imported LAB008 warmup NA hotfixes applied')
           PY
       - name: Run preregistered LAB009
         shell: bash
@@ -76,7 +88,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$OUTDIR"
