@@ -1,0 +1,39 @@
+{
+  "lab": "CONTEXT_REVERSAL_SEMANTIC_DEFINITION_AND_COMPETING_MODE_BOUNDARY_AUDIT_LAB_015",
+  "verdict": "EVENT_REVERSAL_SEMANTICS_SUPPORTED",
+  "parent_counts": {
+    "PULLBACK": 7641,
+    "EXPANSION": 4568,
+    "RANGE": 2184,
+    "REVERSAL": 29
+  },
+  "parent_parity": true,
+  "reversal_score_parity": true,
+  "causality_pass": true,
+  "causality_changed": [],
+  "reversal_transitions": 9,
+  "reversal_origin_counts": {
+    "RANGE": 4,
+    "EXPANSION": 4,
+    "PULLBACK": 1
+  },
+  "directional_origin_share": 0.5555555555555556,
+  "reversal_median_event_count": 3.0,
+  "matched_control_median_event_count": 1.0,
+  "reversal_control_change_share": 0.0,
+  "matched_control_control_change_share": 0.1549079754601227,
+  "reversal_median_winning_margin": 5.0000000000000036,
+  "other_transition_median_winning_margin": 18.33333333333333,
+  "near_miss": {
+    "near_n": 632,
+    "near_median_distance": 0.8071712311922665,
+    "broad_n": 14393,
+    "broad_median_distance": 1.3654576075067937
+  },
+  "gates": {
+    "A_event_enrichment": true,
+    "B_control_change_enrichment": false,
+    "C_boundary_margin": true,
+    "D_directional_origin": false
+  }
+}
