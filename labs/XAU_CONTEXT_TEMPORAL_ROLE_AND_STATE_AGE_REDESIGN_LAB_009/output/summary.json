@@ -1,0 +1,16 @@
+{
+  "lab": "XAU_CONTEXT_TEMPORAL_ROLE_AND_STATE_AGE_REDESIGN_LAB_009",
+  "status": "REUSED_HISTORY_PREREGISTERED_TEMPORAL_ROLE_DIAGNOSTIC",
+  "verdict": "PARTIAL_TEMPORAL_ROLE_SUPPORT",
+  "xau_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "m1_rows": 1454538,
+  "h4_rows": 6417,
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "eligible_primary_hypotheses": 5,
+  "passed_primary_hypotheses": 3,
+  "eligible_pass_fraction": 0.6,
+  "transfer_passes": 4,
+  "promotion_authorized": false,
+  "trading_edge_tested": false
+}
