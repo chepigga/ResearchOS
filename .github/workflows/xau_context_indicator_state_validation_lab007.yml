@@ -1,0 +1,90 @@
+name: XAU Context Indicator State Validation LAB007
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_context_indicator_state_validation_lab007.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab007:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LAB_BRANCH: lab/xau-context-indicator-state-validation-007
+      OUTDIR: labs/XAU_CONTEXT_INDICATOR_STATE_VALIDATION_LAB_007/output
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests
+      - name: Fetch canonical XAU
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
+          echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
+      - name: Apply frozen Context parity hotfixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text()
+          patched=re.sub(r'd\.stack(?![A-Za-z0-9_])', "d['stack']", s)
+          old="    sm = s.rolling(3,min_periods=3).mean()"
+          warmup=("    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n"
+                  "    s=s.where(ready,np.nan)\n"
+                  "    sm = s.rolling(3,min_periods=3).mean()")
+          if old not in patched:
+              raise SystemExit('Frozen router warmup anchor missing')
+          patched=patched.replace(old,warmup,1)
+          compile(patched,str(p),'exec')
+          p.write_text(patched)
+          print('Frozen Context parity hotfixes applied')
+          PY
+      - name: Run preregistered LAB007
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTDIR"
+          python -m py_compile labs/XAU_CONTEXT_INDICATOR_STATE_VALIDATION_LAB_007/run_lab.py
+          python labs/XAU_CONTEXT_INDICATOR_STATE_VALIDATION_LAB_007/run_lab.py \
+            --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
+            --out "$OUTDIR"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('labs/XAU_CONTEXT_INDICATOR_STATE_VALIDATION_LAB_007/output/summary.json')
+          s=json.loads(p.read_text())
+          assert s['canonical_sha256']=='db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b'
+          assert s['context_valid_bars'] > 1000
+          assert s['episode_onsets'] > 100
+          print('State-validation parity checks OK')
+          PY
+      - name: Persist outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTDIR"
+          git diff --cached --quiet || git commit -m 'Persist XAU Context state validation LAB007 outputs'
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xau-context-state-validation-lab007
+          path: ${{ env.OUTDIR }}
