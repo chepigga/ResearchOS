@@ -1,0 +1,49 @@
+name: BTC LONG V1 First Fresh Tier-A Maturity LAB066 Runner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/btc_long_v1_first_fresh_tier_a_maturity_lab066_runner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab066:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LAB066 branch
+        uses: actions/checkout@v4
+        with:
+          ref: lab/btc-long-v1-first-fresh-tier-a-episode-maturity-audit-066
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: python -m pip install -q numpy pandas requests tabulate
+
+      - name: Stage frozen BTC release data
+        run: |
+          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+
+      - name: Run LAB066
+        run: python labs/BTC_LONG_V1_FIRST_FRESH_TIER_A_EPISODE_AND_SEQUENTIAL_MATURITY_AUDIT_LAB_066/run_lab.py
+
+      - name: Persist LAB066 outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add labs/BTC_LONG_V1_FIRST_FRESH_TIER_A_EPISODE_AND_SEQUENTIAL_MATURITY_AUDIT_LAB_066/output
+          git commit -m 'Persist BTC LONG v1 first fresh Tier-A maturity LAB066 outputs' || true
+          git push origin HEAD:lab/btc-long-v1-first-fresh-tier-a-episode-maturity-audit-066
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_LONG_V1_FIRST_FRESH_TIER_A_MATURITY_LAB066
+          path: labs/BTC_LONG_V1_FIRST_FRESH_TIER_A_EPISODE_AND_SEQUENTIAL_MATURITY_AUDIT_LAB_066/output
