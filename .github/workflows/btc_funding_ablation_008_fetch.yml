@@ -1,0 +1,37 @@
+name: btc-buy-lab011-recover-lab020
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/btc_funding_ablation_008_fetch.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download canonical frozen lab020 event ledger
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -o lab020_events.csv \
+            https://api.github.com/repos/chepigga/ResearchOS/releases/assets/511572043
+          echo "SHA256=$(sha256sum lab020_events.csv | awk '{print $1}')"
+          test "$(sha256sum lab020_events.csv | awk '{print $1}')" = "6256b824c1e75b7170fa7f70aa4ae021cc44d4522397449eb083a2b310b6bb34"
+          python - <<'PY'
+          import pandas as pd
+          p='lab020_events.csv'
+          x=pd.read_csv(p)
+          print('rows',len(x))
+          print('columns',list(x.columns))
+          print(x.head(3).to_string(index=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical-lab020-events
+          path: lab020_events.csv
