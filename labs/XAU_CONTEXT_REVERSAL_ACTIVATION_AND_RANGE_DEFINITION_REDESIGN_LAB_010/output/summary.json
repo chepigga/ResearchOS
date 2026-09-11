@@ -1,0 +1,17 @@
+{
+  "lab": "XAU_CONTEXT_REVERSAL_ACTIVATION_AND_RANGE_DEFINITION_REDESIGN_LAB_010",
+  "status": "REUSED_HISTORY_PREREGISTERED_INDICATOR_REDESIGN_DISCOVERY",
+  "verdict": "REVERSAL_RANGE_REDESIGN_NOT_SUPPORTED",
+  "xau_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "m1_rows": 1454538,
+  "h4_rows": 6417,
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "reversal_winner": null,
+  "reversal_winner_transfer": false,
+  "range_winner": null,
+  "range_winner_transfer": false,
+  "range_winner_movement_control": false,
+  "promotion_authorized": false,
+  "trading_edge_tested": false
+}
