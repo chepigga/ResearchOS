@@ -41,7 +41,7 @@ def audit_frame(ctx,ind,ev,sms):
     x['close_above_ema20']=(ind.close>ind.ema20)
     x['close_above_ema50']=(ind.close>ind.ema50)
     x['ema20_gt_ema50']=(ind.ema20>ind.ema50)
-    x['ema50_slope']=ind.ema50_slope
+    x['ema50_slope']=(ind.ema50-ind.ema50.shift(3))/ind.atr14.replace(0,np.nan)
     x['atr_ratio']=ind.atr_ratio_public
     x['adx14']=ind.adx14
     x['range24_ratio']=ind.range24_ratio
@@ -50,7 +50,8 @@ def audit_frame(ctx,ind,ev,sms):
     x['vol_state']=np.select([x.atr_ratio<.80,x.atr_ratio>1.35],['LOW','HIGH'],default='NORMAL')
     for r in REGIMES: x[f'sm_{r}']=sms[r]
     x['rev_rank']=sms.rank(axis=1,ascending=False,method='min')['REVERSAL']
-    srt=np.sort(sms.to_numpy(dtype=float),axis=1)
+    arr=sms.to_numpy(dtype=float)
+    srt=np.sort(arr,axis=1)
     x['winner_margin']=srt[:,-1]-srt[:,-2]
     x['rev_vs_pullback']=sms.REVERSAL-sms.PULLBACK
     x['rev_vs_expansion']=sms.REVERSAL-sms.EXPANSION
@@ -77,7 +78,6 @@ def main():
     reconstructed=sum(ev[c].astype(float)*WEIGHTS[c] for c in WEIGHTS).clip(0,100)
     score_parity=bool(np.allclose(reconstructed.to_numpy(),scores.REVERSAL.to_numpy(),rtol=0,atol=1e-10,equal_nan=True))
 
-    # t-2/t-1/t0 transition characterization
     rows=[]
     for t,row in tr.iterrows():
         i=x.index.get_loc(t)
@@ -96,7 +96,6 @@ def main():
 
     rev0=detail[(detail.destination=='REVERSAL')&(detail.lag==0)].copy()
     rev_times=pd.to_datetime(rev0.transition_time,utc=True)
-    # matched same-year + same volatility-state controls
     controls=[]
     tr0=tr.copy(); tr0['year']=tr0.index.year
     for j,t in enumerate(rev_times):
@@ -112,7 +111,6 @@ def main():
     rev_margin=safe_median(rev0.winner_margin); other_margin=safe_median(others.winner_margin)
     origins=tr[tr.regime=='REVERSAL'].prev_regime.value_counts(); rev_n=int(origins.sum()); directional_origin=int(origins.get('PULLBACK',0)+origins.get('EXPANSION',0)); directional_share=directional_origin/rev_n if rev_n else np.nan
 
-    # Near-miss boundary: rank<=2, not Reversal state. Standardized distance to Reversal-transition centroid vs broad non-Reversal background.
     feats=['event_count','control_change','d1_conflict','stack_break_change','bos_against_control','atr_ratio','adx14','range24_ratio','ema_spread_atr','relvol20','rev_vs_pullback','rev_vs_expansion','rev_vs_range']
     z=x[feats].astype(float).copy(); mu=z.mean(); sd=z.std().replace(0,np.nan); zz=(z-mu)/sd
     rev_idx=tr[(tr.regime=='REVERSAL')].index
@@ -123,7 +121,6 @@ def main():
     nd={'near_n':int(len(near)),'near_median_distance':safe_median(near.semantic_distance),'broad_n':int(len(broad)),'broad_median_distance':safe_median(broad.semantic_distance)}
     pd.DataFrame([nd]).to_csv(out/'near_miss_similarity.csv',index=False)
 
-    # causality perturbation
     cut=int(len(h1)*.72); ct=h1.time.iloc[cut]; hp=h1.copy(); fut=hp.time>ct
     for c in ['open','high','low','close']: hp.loc[fut,c]=hp.loc[fut,c]*np.linspace(1.5,3.0,int(fut.sum()))
     hp.loc[fut,'volume']=hp.loc[fut,'volume']*17+12345
