@@ -121,7 +121,11 @@ A hypothesis is `ELIGIBLE` only if:
 If a role is too rare (expected especially for REVERSAL), the hypothesis is `UNDERPOWERED`, not failed. Underpowered hypotheses do not count as semantic passes or failures.
 
 ## Year transfer
-For 2023, 2024, 2025, 2026 YTD, report the sign of H2–H6 where both sides have enough observations to compute a finite effect. H1 is expected to be too sparse and is reported only.
+For 2023, 2024, 2025, 2026 YTD, report the sign of H2–H6. Per-year eligibility is frozen **before outcomes** as:
+- pairwise hypothesis: each side must have >=5 valid observations in that year;
+- one-sample H5: >=10 valid observations in that year.
+
+H1 is expected to be too sparse and is reported only.
 
 A transferable redesigned role must have the preregistered positive sign in >=3/4 calendar years when all four years are eligible. If fewer than four years are eligible, transfer is reported as underpowered and cannot pass.
 
@@ -147,3 +151,5 @@ Count only eligible H1–H6.
 
 ## Production restriction
 Even a full pass only supports a better **human-readable Context display layer on reused history**. It does not authorize automated entries, position sizing, or prop-challenge risk changes.
+
+> Pre-outcome clarification note: the per-year minimum sample thresholds above were specified after the runner skeleton was written but **before any LAB009 outcome computation or workflow run**. No hypothesis direction, age boundary, primary horizon, or verdict threshold changed.
