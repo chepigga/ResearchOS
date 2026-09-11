@@ -34,7 +34,7 @@ jobs:
           mkdir -p data
           gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
           echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
-      - name: Apply frozen Context parity and LAB008 warmup hotfixes
+      - name: Apply frozen parity and runtime-only hotfixes
         shell: bash
         run: |
           set -euo pipefail
@@ -66,7 +66,17 @@ jobs:
           qpatched=qs.replace(oldq,newq,1)
           compile(qpatched,str(q),'exec')
           q.write_text(qpatched)
-          print('Frozen parity + LAB008 warmup NA hotfixes applied')
+
+          r=Path('labs/XAU_CONTEXT_REVERSAL_ACTIVATION_AND_RANGE_DEFINITION_REDESIGN_LAB_010/run_lab.py')
+          rs=r.read_text()
+          oldr="    allbars, onset, episodes = lab8.make_episodes(ctx)"
+          newr="    allbars, onset = lab8.make_episodes(ctx)"
+          if oldr not in rs:
+              raise SystemExit('LAB010 make_episodes arity anchor missing')
+          rpatched=rs.replace(oldr,newr,1)
+          compile(rpatched,str(r),'exec')
+          r.write_text(rpatched)
+          print('Runtime-only parity/NA/arity hotfixes applied')
           PY
       - name: Run preregistered LAB010
         shell: bash
@@ -89,7 +99,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py labs/XAU_CONTEXT_REVERSAL_ACTIVATION_AND_RANGE_DEFINITION_REDESIGN_LAB_010/run_lab.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$OUTDIR"
