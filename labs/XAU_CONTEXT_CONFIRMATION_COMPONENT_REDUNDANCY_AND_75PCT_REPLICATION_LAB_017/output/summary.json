@@ -1,0 +1,40 @@
+{
+  "lab": "XAU_CONTEXT_CONFIRMATION_COMPONENT_REDUNDANCY_AND_75PCT_REPLICATION_LAB_017",
+  "verdict": "75PCT_COMPOSITION_FRAGILE",
+  "population": 397,
+  "resolved_n": 220,
+  "high75_n": 72,
+  "high75_accuracy": 0.6805555555555556,
+  "high75_ci_lo": 0.5833333333333334,
+  "high75_ci_hi": 0.78125,
+  "h1_pass": true,
+  "h2_pass": false,
+  "eligible_3of4_combinations": 2,
+  "positive_3of4_combinations": 2,
+  "critical_redundancy_pairs": 0,
+  "critical_pairs": [],
+  "collapsed_domains": [
+    [
+      "OB_CONFIRM"
+    ],
+    [
+      "IMBALANCE_CONFIRM"
+    ],
+    [
+      "LIQUIDITY_CONFIRM"
+    ],
+    [
+      "PRICE_ACTION_CONFIRM"
+    ]
+  ],
+  "h3_applicable": false,
+  "h3_n": 0,
+  "h3_accuracy": null,
+  "h3_ci_lo": null,
+  "h3_pass": null,
+  "h4_pass": false,
+  "all4_n": 8,
+  "all4_accuracy": 0.875,
+  "valid_context_bars": 6216,
+  "episode_onsets": 610
+}

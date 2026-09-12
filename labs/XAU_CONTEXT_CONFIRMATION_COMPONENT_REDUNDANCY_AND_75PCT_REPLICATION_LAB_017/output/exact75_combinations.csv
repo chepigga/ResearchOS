@@ -1,0 +1,5 @@
+combination,missing_component,n_resolved,accuracy,eligible,positive,fragile_low
+NO_OB,OB_CONFIRM,26,0.5384615384615384,True,True,False
+NO_IMBALANCE,IMBALANCE_CONFIRM,7,0.7142857142857143,False,False,False
+NO_LIQUIDITY,LIQUIDITY_CONFIRM,31,0.7419354838709677,True,True,False
+NO_PRICE_ACTION,PRICE_ACTION_CONFIRM,0,,False,False,False
