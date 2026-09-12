@@ -1,0 +1,49 @@
+name: XAU Context LAB015 Fresh Archive Inspect
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_context_lab015_inspect.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/xau-context-compression-concordance-fresh-oos-replication-015
+      - name: Fetch post-freeze XAU archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download xau --repo "${GITHUB_REPOSITORY}" --pattern 'CAUSAL_XAU_RAW_XAUUSD_20260825.zip' --dir data
+          echo '31f9548204fa99c29ce7d09e5b64e01ff75f5e8e3efab6f747cbd410cf34fd2e  data/CAUSAL_XAU_RAW_XAUUSD_20260825.zip' | sha256sum -c -
+      - name: Inspect archive schema only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          p=Path('data/CAUSAL_XAU_RAW_XAUUSD_20260825.zip')
+          with zipfile.ZipFile(p) as z:
+              infos=sorted(z.infolist(), key=lambda x:x.filename)
+              print('MEMBER_COUNT',len(infos))
+              for info in infos[:100]:
+                  print('MEMBER',info.filename,'SIZE',info.file_size,'COMP',info.compress_size)
+              candidates=[i for i in infos if not i.is_dir() and i.filename.lower().endswith(('.csv','.txt','.tsv'))]
+              print('TEXT_CANDIDATES',len(candidates))
+              for info in candidates[:20]:
+                  print('\n=== HEAD',info.filename,'===')
+                  with z.open(info) as f:
+                      raw=f.read(4096)
+                  print(raw.decode('utf-8',errors='replace')[:4000])
+          PY
