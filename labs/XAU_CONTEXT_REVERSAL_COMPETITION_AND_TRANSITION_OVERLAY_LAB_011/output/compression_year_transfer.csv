@@ -1,0 +1,9 @@
+gate,year,metric,n_a,n_b,effect,eligible,positive,strata_json
+C_H1,2023,breakout_1atr_8h,205,1121,0.17861127319407166,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 201, ""n_b"": 836, ""effect"": 0.1822704658525554}, {""state"": ""EXPANSION"", ""n_a"": 4, ""n_b"": 285, ""effect"": -0.0052631578947368585}]"
+C_H1,2024,breakout_1atr_8h,140,1040,0.12694235588972425,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 140, ""n_b"": 684, ""effect"": 0.12694235588972425}]"
+C_H1,2025,breakout_1atr_8h,159,1125,0.029668602748962308,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 150, ""n_b"": 718, ""effect"": 0.037214484679665816}, {""state"": ""EXPANSION"", ""n_a"": 9, ""n_b"": 407, ""effect"": -0.09609609609609615}]"
+C_H1,2026,breakout_1atr_8h,144,546,0.060070394436844525,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 135, ""n_b"": 374, ""effect"": 0.05490196078431375}, {""state"": ""EXPANSION"", ""n_a"": 9, ""n_b"": 172, ""effect"": 0.1375968992248061}]"
+C_H2,2023,range_atr_24h,174,955,0.24770822033832096,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 170, ""n_b"": 701, ""effect"": 0.24311337215582718}, {""state"": ""EXPANSION"", ""n_a"": 4, ""n_b"": 254, ""effect"": 0.44298926809430617}]"
+C_H2,2024,range_atr_24h,99,893,0.27029657111165273,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 99, ""n_b"": 583, ""effect"": 0.27029657111165273}]"
+C_H2,2025,range_atr_24h,137,955,0.07076400342556335,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 128, ""n_b"": 602, ""effect"": 0.10123283701142016}, {""state"": ""EXPANSION"", ""n_a"": 9, ""n_b"": 353, ""effect"": -0.36257051868440016}]"
+C_H2,2026,range_atr_24h,119,469,0.37301415706113983,True,True,"[{""state"": ""PULLBACK"", ""n_a"": 110, ""n_b"": 321, ""effect"": 0.4420982515524785}, {""state"": ""EXPANSION"", ""n_a"": 9, ""n_b"": 148, ""effect"": -0.4713469978329998}]"

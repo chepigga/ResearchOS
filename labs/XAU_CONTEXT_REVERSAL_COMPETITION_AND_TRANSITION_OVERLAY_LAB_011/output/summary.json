@@ -1,0 +1,65 @@
+{
+  "lab": "XAU_CONTEXT_REVERSAL_COMPETITION_AND_TRANSITION_OVERLAY_LAB_011",
+  "status": "REUSED_HISTORY_PREREGISTERED_OVERLAY_ARCHITECTURE_DIAGNOSTIC",
+  "verdict": "TRANSITION_OVERLAY_ARCHITECTURE_NOT_SUPPORTED",
+  "xau_sha256": "db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b",
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "r3_events": 204,
+  "suppressed_r3_events": 200,
+  "competition_counts": {
+    "SMOOTHING_SUPPRESSED": 188,
+    "HYSTERESIS_SUPPRESSED": 12,
+    "ADMITTED_REVERSAL": 4
+  },
+  "g1_main_state_bars": 789,
+  "gates": {
+    "R_H1": false,
+    "R_H2": true,
+    "C_H1": false,
+    "C_H2": false
+  },
+  "reversal_primary": {
+    "observed": 0.029188367377704902,
+    "ci_lo": -0.05755058135005939,
+    "ci_hi": 0.11854053688806497,
+    "p_positive": 0.7438,
+    "n_a": 144,
+    "n_b": 4126,
+    "weeks": 210,
+    "eligible": true,
+    "transfer": true
+  },
+  "compression_primary": [
+    {
+      "gate": "C_H1",
+      "metric": "breakout_1atr_8h",
+      "eligible": false,
+      "transfer": true,
+      "passed": false,
+      "observed": 0.09697191589286497,
+      "ci_lo": 0.05162455244463623,
+      "ci_hi": 0.14311000781780286,
+      "p_positive": 1.0,
+      "n_a": 742,
+      "n_b": 4366,
+      "weeks": 208
+    },
+    {
+      "gate": "C_H2",
+      "metric": "range_atr_24h",
+      "eligible": false,
+      "transfer": true,
+      "passed": false,
+      "observed": 0.2555919493612955,
+      "ci_lo": 0.07130419390079225,
+      "ci_hi": 0.45457883269151056,
+      "p_positive": 0.9978,
+      "n_a": 605,
+      "n_b": 3732,
+      "weeks": 208
+    }
+  ],
+  "promotion_authorized": false,
+  "trading_edge_tested": false
+}
