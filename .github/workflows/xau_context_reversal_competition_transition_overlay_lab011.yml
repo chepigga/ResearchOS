@@ -1,0 +1,98 @@
+name: XAU Context Reversal Competition Transition Overlay LAB011
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_context_reversal_competition_transition_overlay_lab011.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab011:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LAB_BRANCH: lab/xau-context-reversal-competition-transition-overlay-011
+      OUTDIR: labs/XAU_CONTEXT_REVERSAL_COMPETITION_AND_TRANSITION_OVERLAY_LAB_011/output
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests
+      - name: Fetch canonical XAU
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
+          echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
+      - name: Apply frozen parity runtime hotfixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text()
+          patched=re.sub(r'd\.stack(?![A-Za-z0-9_])', "d['stack']", s)
+          old="    sm = s.rolling(3,min_periods=3).mean()"
+          warmup=("    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n"
+                  "    s=s.where(ready,np.nan)\n"
+                  "    sm = s.rolling(3,min_periods=3).mean()")
+          if old not in patched:
+              raise SystemExit('LAB001 warmup anchor missing')
+          patched=patched.replace(old,warmup,1)
+          compile(patched,str(p),'exec'); p.write_text(patched)
+
+          q=Path('labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py')
+          qs=q.read_text()
+          oldq="    d['raw_winner'] = score_arr.idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()"
+          newq=("    valid_scores = score_arr.notna().any(axis=1)\n"
+                "    d['raw_winner'] = pd.Series(index=d.index, dtype='object')\n"
+                "    d.loc[valid_scores, 'raw_winner'] = score_arr.loc[valid_scores].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
+          if oldq not in qs:
+              raise SystemExit('LAB008 raw_winner anchor missing')
+          qpatched=qs.replace(oldq,newq,1)
+          compile(qpatched,str(q),'exec'); q.write_text(qpatched)
+          print('Frozen parity runtime hotfixes applied')
+          PY
+      - name: Run preregistered LAB011
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTDIR"
+          python -m py_compile labs/XAU_CONTEXT_REVERSAL_COMPETITION_AND_TRANSITION_OVERLAY_LAB_011/run_lab.py
+          python labs/XAU_CONTEXT_REVERSAL_COMPETITION_AND_TRANSITION_OVERLAY_LAB_011/run_lab.py \
+            --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
+            --out "$OUTDIR"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('labs/XAU_CONTEXT_REVERSAL_COMPETITION_AND_TRANSITION_OVERLAY_LAB_011/output/summary.json').read_text())
+          assert s['valid_context_bars']==6216, s['valid_context_bars']
+          assert s['episode_onsets']==610, s['episode_onsets']
+          print('LAB010 parity OK: Context bars=6216; episodes=610')
+          PY
+      - name: Persist outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTDIR"
+          git diff --cached --quiet || git commit -m 'Persist XAU Context transition overlay LAB011 outputs'
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xau-context-transition-overlay-lab011
+          path: ${{ env.OUTDIR }}
