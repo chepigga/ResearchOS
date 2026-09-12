@@ -1,0 +1,5 @@
+year,state,metric,n_a,n_b,effect,eligible,positive
+2023,PULLBACK,range_atr_24h,170,701,0.24311337215582718,True,True
+2024,PULLBACK,range_atr_24h,99,583,0.27029657111165273,True,True
+2025,PULLBACK,range_atr_24h,128,602,0.10123283701142016,True,True
+2026,PULLBACK,range_atr_24h,110,321,0.4420982515524785,True,True

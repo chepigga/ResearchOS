@@ -1,0 +1,4 @@
+state,metric,n_a,n_b,effect
+PULLBACK,momentum_flip_24h,205,2543,-0.005622320478021914
+EXPANSION,momentum_flip_24h,8,1019,-0.1372669283611384
+RANGE,momentum_flip_24h,32,463,0.1455183585313175

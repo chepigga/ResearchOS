@@ -1,0 +1,189 @@
+{
+  "lab": "XAU_CONTEXT_REVERSAL_TEMPORAL_SEQUENCE_AND_COMPRESSION_STATE_INTERACTION_LAB_012",
+  "verdict": "COMPRESSION_INTERACTION_SUPPORTED_REVERSAL_SEQUENCE_NOT_CONFIRMED",
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "sequence_overlap": {
+    "sequence_events": 330,
+    "overlap_r3": 3,
+    "overlap_r3_suppressed": 3,
+    "bull": 178,
+    "bear": 152
+  },
+  "gates": {
+    "R_H1": {
+      "eligible": true,
+      "pass": false,
+      "effect": 0.009819903461708412,
+      "ci_lo": -0.06017728371869519,
+      "ci_hi": 0.07819690878447362,
+      "transfer": true
+    },
+    "R_H2": {
+      "eligible": true,
+      "pass": false,
+      "effect": 0.046554925779607306,
+      "ci_lo": -0.13079131884302694,
+      "ci_hi": 0.2388333520568858,
+      "transfer": false
+    },
+    "C_H1": {
+      "eligible": true,
+      "pass": true,
+      "effect": 0.09920634920634913,
+      "ci_lo": 0.05496441205715809,
+      "ci_hi": 0.14525668659210833,
+      "transfer": true
+    },
+    "C_H2": {
+      "eligible": true,
+      "pass": true,
+      "effect": 0.2678298359474276,
+      "ci_lo": 0.07099064482600187,
+      "ci_hi": 0.47446430950385793,
+      "transfer": true
+    },
+    "C_H3": {
+      "eligible": true,
+      "pass": false,
+      "effect": 0.07536134175478432,
+      "ci_lo": -0.3712305960955185,
+      "ci_hi": 0.26034666611980317,
+      "transfer": null
+    }
+  },
+  "r_h1": {
+    "observed": 0.009819903461708412,
+    "ci_lo": -0.06017728371869519,
+    "ci_hi": 0.07819690878447362,
+    "p_positive": 0.6002,
+    "n_a": 245,
+    "n_b": 4025,
+    "weeks": 210,
+    "strata": [
+      {
+        "state": "PULLBACK",
+        "n_a": 205,
+        "n_b": 2543,
+        "effect": -0.005622320478021914
+      },
+      {
+        "state": "EXPANSION",
+        "n_a": 8,
+        "n_b": 1019,
+        "effect": -0.1372669283611384
+      },
+      {
+        "state": "RANGE",
+        "n_a": 32,
+        "n_b": 463,
+        "effect": 0.1455183585313175
+      }
+    ]
+  },
+  "r_h2": {
+    "observed": 0.046554925779607306,
+    "ci_lo": -0.13079131884302694,
+    "ci_hi": 0.2388333520568858,
+    "p_positive": 0.688,
+    "n": 245,
+    "weeks": 131
+  },
+  "r_state": [
+    {
+      "state": "PULLBACK",
+      "metric": "momentum_flip_24h",
+      "n_a": 205,
+      "n_b": 2543,
+      "effect": -0.005622320478021914
+    },
+    {
+      "state": "EXPANSION",
+      "metric": "momentum_flip_24h",
+      "n_a": 8,
+      "n_b": 1019,
+      "effect": -0.1372669283611384
+    },
+    {
+      "state": "RANGE",
+      "metric": "momentum_flip_24h",
+      "n_a": 32,
+      "n_b": 463,
+      "effect": 0.1455183585313175
+    }
+  ],
+  "c_h1": {
+    "observed": 0.09920634920634913,
+    "ci_lo": 0.05496441205715809,
+    "ci_hi": 0.14525668659210833,
+    "p_positive": 1.0,
+    "n_a": 720,
+    "n_b": 3024,
+    "weeks": 210,
+    "state": "PULLBACK",
+    "metric": "breakout_1atr_8h"
+  },
+  "c_h2": {
+    "observed": 0.2678298359474276,
+    "ci_lo": 0.07099064482600187,
+    "ci_hi": 0.47446430950385793,
+    "p_positive": 0.9966,
+    "n_a": 583,
+    "n_b": 2567,
+    "weeks": 210,
+    "state": "PULLBACK",
+    "metric": "range_atr_24h"
+  },
+  "c_h3": {
+    "observed": 0.07536134175478432,
+    "pullback_premium": 0.09920634920634913,
+    "expansion_premium": 0.023845007451564815,
+    "ci_lo": -0.3712305960955185,
+    "ci_hi": 0.26034666611980317,
+    "p_positive": 0.7137702946482261,
+    "weeks": 208,
+    "counts": {
+      "PULLBACK": {
+        "n_a": 720,
+        "n_b": 3024
+      },
+      "EXPANSION": {
+        "n_a": 22,
+        "n_b": 1342
+      }
+    }
+  },
+  "compression_expansion_24h": {
+    "observed": -0.0687120451712051,
+    "ci_lo": -0.3667444047490371,
+    "ci_hi": 0.2587140392969126,
+    "p_positive": 0.31876503608660783,
+    "n_a": 22,
+    "n_b": 1165,
+    "weeks": 210,
+    "state": "EXPANSION",
+    "metric": "range_atr_24h"
+  },
+  "compression_range_24h": {
+    "observed": 0.19177721426570438,
+    "ci_lo": -0.07285761266234828,
+    "ci_hi": 0.4569459706291305,
+    "p_positive": 0.9308,
+    "n_a": 260,
+    "n_b": 298,
+    "weeks": 210,
+    "state": "RANGE",
+    "metric": "range_atr_24h"
+  },
+  "compression_future_expansion_12h": {
+    "observed": -0.05935743364021868,
+    "ci_lo": -0.08517473703962959,
+    "ci_hi": -0.033137927492880616,
+    "p_positive": 0.0,
+    "n_a": 742,
+    "n_b": 3147,
+    "weeks": 210,
+    "state": "PULLBACK",
+    "metric": "FUTURE_EXPANSION_12H"
+  }
+}
