@@ -1,0 +1,5 @@
+year,n,accuracy,eligible,positive
+2023,75,0.6266666666666667,True,True
+2024,43,0.5116279069767442,True,True
+2025,35,0.6,True,True
+2026,39,0.6410256410256411,True,True

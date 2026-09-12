@@ -1,0 +1,51 @@
+{
+  "lab": "XAU_CONTEXT_COMPRESSION_DIRECTION_BIAS_TREND_CONCORDANCE_REPLICATION_LAB_014",
+  "verdict": "BIAS_TREND_CONCORDANCE_SEMANTICS_SUPPORTED_INCREMENT_NOT_CONFIRMED",
+  "valid_context_bars": 6216,
+  "episode_onsets": 610,
+  "population_pullback_g1": 767,
+  "directional_predictions": 397,
+  "coverage": 0.5176010430247718,
+  "resolved_directional_n": 220,
+  "accuracy": 0.6045454545454545,
+  "accuracy_ci_lo": 0.5278969957081545,
+  "accuracy_ci_hi": 0.6824644549763034,
+  "h1_eligible": true,
+  "h1_transfer": true,
+  "h1_pass": true,
+  "follow_n": 289,
+  "mean_signed24_atr": 0.5704056744735729,
+  "signed24_ci_lo": 0.2183966408524427,
+  "signed24_ci_hi": 0.9288710328387504,
+  "h2_transfer": true,
+  "h2_pass": true,
+  "h3_eligible": true,
+  "h3_pass": true,
+  "h4": {
+    "observed": 0.14802371541501974,
+    "ci_lo": -0.04640546809841533,
+    "ci_hi": 0.3431789683247162,
+    "p_positive": 0.934,
+    "n_concordant": 220,
+    "n_d2_no_bias": 46,
+    "weeks": 106,
+    "acc_concordant": 0.6045454545454545,
+    "acc_d2_no_bias": 0.45652173913043476
+  },
+  "h4_eligible": true,
+  "h4_pass": false,
+  "target_balance": {
+    "bull_first": 211,
+    "bear_first": 205,
+    "bull_share": 0.5072115384615384,
+    "resolved_total": 416,
+    "no_breakout": 350,
+    "ambiguous": 1
+  },
+  "resolution_counts": {
+    "NO_BREAKOUT": 350,
+    "BULL_FIRST": 211,
+    "BEAR_FIRST": 205,
+    "AMBIGUOUS": 1
+  }
+}

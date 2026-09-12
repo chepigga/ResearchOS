@@ -1,0 +1,3 @@
+class,n,median_time_to_touch_min
+CORRECT,133,222.0
+INCORRECT,87,204.0
