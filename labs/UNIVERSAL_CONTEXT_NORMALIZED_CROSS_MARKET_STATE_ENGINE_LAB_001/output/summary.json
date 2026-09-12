@@ -1,0 +1,72 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_NORMALIZED_CROSS_MARKET_STATE_ENGINE_LAB_001",
+  "verdict": "UNIVERSAL_STATE_ENGINE_NOT_SUPPORTED",
+  "h1_expansion_range_pass": false,
+  "h2_range_compression_pass": false,
+  "h3_pullback_continuation_pass": false,
+  "h4_expansion_direction_pass": true,
+  "h5_state_breadth_pass": true,
+  "primary_pass_count": 1,
+  "pool_expansion_range": {
+    "observed": 0.16964032196417778,
+    "ci_lo": 0.10602488868144422,
+    "ci_hi": 0.23642918205539656,
+    "n_state": 2333,
+    "n_other": 20427,
+    "clusters": 676
+  },
+  "pool_range_range": {
+    "observed": -0.03384356766668439,
+    "ci_lo": -0.06811359570196496,
+    "ci_hi": 0.0020479743092284564,
+    "n_state": 6448,
+    "n_other": 16312,
+    "clusters": 676
+  },
+  "pool_pullback_signed24": {
+    "observed": 0.037944991651872664,
+    "ci_lo": -0.04761295647946979,
+    "ci_hi": 0.12105457566468761,
+    "n": 6337,
+    "clusters": 531
+  },
+  "pool_expansion_signed8": {
+    "observed": 0.09665301684560346,
+    "ci_lo": 0.02643468577017883,
+    "ci_hi": 0.16354117144803088,
+    "n": 1911,
+    "clusters": 352
+  },
+  "pool_reversal_reverse12": {
+    "observed": NaN,
+    "ci_lo": NaN,
+    "ci_hi": NaN,
+    "n": 0,
+    "clusters": 0
+  },
+  "h5_by_market": [
+    {
+      "market": "BTCUSDT",
+      "pass": true,
+      "core_states_ge3pct": 3,
+      "max_core_occ": 0.32077824893988527,
+      "transition_occ": 0.3120478922424545
+    },
+    {
+      "market": "EURUSD",
+      "pass": true,
+      "core_states_ge3pct": 3,
+      "max_core_occ": 0.3026538678712592,
+      "transition_occ": 0.30058347449651796
+    },
+    {
+      "market": "XAUUSD",
+      "pass": true,
+      "core_states_ge3pct": 3,
+      "max_core_occ": 0.28104890604890603,
+      "transition_occ": 0.31981981981981983
+    }
+  ],
+  "common_window_start": "2023-06-01 00:00:00",
+  "common_window_end": "2026-07-17 23:59:59"
+}
