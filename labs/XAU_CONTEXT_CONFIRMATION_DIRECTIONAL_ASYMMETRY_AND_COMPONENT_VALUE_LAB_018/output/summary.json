@@ -1,0 +1,21 @@
+{
+  "lab": "XAU_CONTEXT_CONFIRMATION_DIRECTIONAL_ASYMMETRY_AND_COMPONENT_VALUE_LAB_018",
+  "verdict": "DIRECTIONAL_ASYMMETRY_CONFIRMED",
+  "population": 397,
+  "resolved_n": 220,
+  "high75_n": 72,
+  "h1_asymmetry_pass": true,
+  "h1_effect": 0.1952380952380952,
+  "h1_ci_lo": 0.009075052854122684,
+  "h1_ci_hi": 0.35942283298097233,
+  "h2_bull_high75_pass": true,
+  "h3_bear_high75_pass": false,
+  "bull_high75_accuracy": 0.7619047619047619,
+  "bull_high75_ci_lo": 0.625,
+  "bull_high75_n": 42,
+  "bear_high75_accuracy": 0.5666666666666667,
+  "bear_high75_ci_lo": 0.46153846153846156,
+  "bear_high75_n": 30,
+  "valid_context_bars": 6216,
+  "episode_onsets": 610
+}
