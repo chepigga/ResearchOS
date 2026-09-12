@@ -1,0 +1,114 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_STATE_GEOMETRY_AND_DIRECTION_DECOUPLING_LAB_002",
+  "verdict": "GEOMETRY_DIRECTION_DECOUPLING_NOT_SUPPORTED",
+  "h1_expansion_geometry_pass": false,
+  "h2_compression_geometry_pass": false,
+  "h3_direction_cross_market_pass": false,
+  "h4_pressure_magnitude_pass": false,
+  "h5_decoupling_cross_state_pass": false,
+  "h6_geometry_breadth_pass": true,
+  "primary_pass_count": 1,
+  "pool_expansion_range": {
+    "observed": 0.07934277798674638,
+    "ci_lo": 0.006604613936125903,
+    "ci_hi": 0.15775299308176285,
+    "n_state": 1761,
+    "n_other": 20999,
+    "clusters": 676
+  },
+  "pool_compression_range": {
+    "observed": -0.011205746782727344,
+    "ci_lo": -0.04635204611597741,
+    "ci_hi": 0.025557217808375082,
+    "n_state": 4896,
+    "n_other": 17864,
+    "clusters": 676
+  },
+  "pool_direction_signed8": {
+    "observed": 0.024168116490215354,
+    "ci_lo": 0.003238221793011741,
+    "ci_hi": 0.04484599635319004,
+    "n": 17556,
+    "clusters": 672
+  },
+  "pool_high_minus_moderate_signed8": {
+    "observed": 0.02413242819577062,
+    "ci_lo": -0.018108177471686023,
+    "ci_hi": 0.06322051686606725,
+    "n_a": 10555,
+    "n_b": 7001,
+    "clusters": 672
+  },
+  "pool_high_minus_moderate_signed24_diagnostic": {
+    "observed": 0.05017457697969255,
+    "ci_lo": -0.0624399553291391,
+    "ci_hi": 0.15922523862015742,
+    "n_a": 9799,
+    "n_b": 6543,
+    "clusters": 672
+  },
+  "h5_by_state": [
+    {
+      "state": "EXPANSION",
+      "eligible": true,
+      "pass_ci": true,
+      "observed": 0.06492506112719856,
+      "ci_lo": 0.00493385290329214,
+      "ci_hi": 0.12586806650745216,
+      "n": 1614,
+      "clusters": 332
+    },
+    {
+      "state": "RETRACEMENT",
+      "eligible": true,
+      "pass_ci": false,
+      "observed": 0.014174125054635563,
+      "ci_lo": -0.012567062383464452,
+      "ci_hi": 0.03982525081983902,
+      "n": 9293,
+      "clusters": 579
+    },
+    {
+      "state": "COMPRESSION",
+      "eligible": true,
+      "pass_ci": false,
+      "observed": 0.002030419629612718,
+      "ci_lo": -0.0620767465722009,
+      "ci_hi": 0.06631443488467804,
+      "n": 1865,
+      "clusters": 346
+    }
+  ],
+  "h6_by_market": [
+    {
+      "market": "BTCUSDT",
+      "pass": true,
+      "core_states_ge5pct": 3,
+      "max_core_occ": 0.4515673068928245,
+      "transition_occ": 0.2772096117069926
+    },
+    {
+      "market": "EURUSD",
+      "pass": true,
+      "core_states_ge5pct": 3,
+      "max_core_occ": 0.41257293431206477,
+      "transition_occ": 0.2648221343873518
+    },
+    {
+      "market": "XAUUSD",
+      "pass": true,
+      "core_states_ge5pct": 3,
+      "max_core_occ": 0.4177927927927928,
+      "transition_occ": 0.26817889317889315
+    }
+  ],
+  "reversal_overlay": {
+    "observed": -0.027282137894167027,
+    "ci_lo": -0.09158380594731404,
+    "ci_hi": 0.03984069875664804,
+    "n": 1580,
+    "clusters": 520
+  },
+  "common_window_start": "2023-06-01 00:00:00",
+  "common_window_end": "2026-07-17 23:59:59"
+}
