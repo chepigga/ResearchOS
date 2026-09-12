@@ -25,6 +25,22 @@ jobs:
         run: |
           curl -L --fail --retry 3 -o /tmp/btc_15m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_15m.zip
           echo '19acf95a3bb7a868fa1e6c8da8dbc73d4a2f7004b771e394bbee8e6c5b6e58b9  /tmp/btc_15m.zip' | sha256sum -c -
+      - name: Apply frozen Context runtime parity hotfixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text()
+          s=s.replace('d.stack.astype(float)', "d['stack'].astype(float)")
+          s=s.replace('(~d.stack).astype(float)', "(~d['stack']).astype(float)")
+          needle='    sm = s.rolling(3,min_periods=3).mean()'
+          if needle not in s:
+              needle='    sm=s.rolling(3,min_periods=3).mean()'
+          if needle in s and 'ready=d[[' not in s:
+              repl="    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n    s=s.where(ready,np.nan)\n"+needle
+              s=s.replace(needle,repl)
+          p.write_text(s)
+          PY
       - name: Run preregistered portability test
         run: |
           python labs/BTC_XAU_CONTEXT_FROZEN_PORTABILITY_LAB_001/run_lab.py \
