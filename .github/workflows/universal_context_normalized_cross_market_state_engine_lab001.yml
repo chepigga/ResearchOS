@@ -27,6 +27,16 @@ jobs:
           echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  /tmp/XAUUSD_M1.csv' | sha256sum -c -
           curl -L --fail --retry 3 -o /tmp/EURUSD_M1.csv https://github.com/chepigga/ResearchOS/releases/download/v1.0/EURUSD_M1_202301020005_202607172354.csv
           echo '09b872ae42af24ca67c525754da3266e21d96833fc9d66fe8bbdb1dac39836f5  /tmp/EURUSD_M1.csv' | sha256sum -c -
+      - name: Apply technical pandas stack-name hotfix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/UNIVERSAL_CONTEXT_NORMALIZED_CROSS_MARKET_STATE_ENGINE_LAB_001/run_lab.py')
+          s=p.read_text()
+          s=s.replace('d.stack.astype(float)', "d['stack'].astype(float)")
+          s=s.replace('(~d.stack).astype(float)', "(~d['stack']).astype(float)")
+          p.write_text(s)
+          PY
       - name: Run frozen LAB001
         run: |
           python labs/UNIVERSAL_CONTEXT_NORMALIZED_CROSS_MARKET_STATE_ENGINE_LAB_001/run_lab.py \
