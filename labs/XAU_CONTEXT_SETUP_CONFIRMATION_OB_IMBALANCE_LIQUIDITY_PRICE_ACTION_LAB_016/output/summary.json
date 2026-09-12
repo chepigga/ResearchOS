@@ -1,0 +1,38 @@
+{
+  "lab": "XAU_CONTEXT_SETUP_CONFIRMATION_OB_IMBALANCE_LIQUIDITY_PRICE_ACTION_LAB_016",
+  "verdict": "SETUP_CONFIRMATION_PARTIAL",
+  "population": 397,
+  "resolved_n": 220,
+  "score_mean": 52.015113350125944,
+  "score_median": 50.0,
+  "h1": {
+    "observed": 0.07386363636363635,
+    "ci_lo": -0.07843348728620002,
+    "ci_hi": 0.23170230263157868,
+    "n_hi": 176,
+    "n_lo": 44,
+    "weeks": 70,
+    "transfer": false,
+    "pass": false
+  },
+  "h2": {
+    "observed": -0.1965429668562868,
+    "ci_lo": -0.6941761529473804,
+    "ci_hi": 0.26912221392215785,
+    "n_hi": 233,
+    "n_lo": 56,
+    "weeks": 63,
+    "transfer": false,
+    "pass": false
+  },
+  "h3": {
+    "observed": 0.6805555555555556,
+    "ci_lo": 0.5853658536585366,
+    "ci_hi": 0.782608695652174,
+    "n": 72,
+    "weeks": 43,
+    "n_high75": 72,
+    "pass": true
+  },
+  "h4_monotonic": true
+}
