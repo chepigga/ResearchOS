@@ -53,6 +53,29 @@ jobs:
                    "    d.loc[valid_score, 'raw_winner'] = score_arr.loc[valid_score].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
               s=s.replace(old,new)
           p.write_text(s)
+
+          # Technical empty-population handling + diagnostics only. No gate/threshold change.
+          p=Path('labs/BTC_XAU_CONTEXT_FROZEN_PORTABILITY_LAB_001/run_lab.py')
+          s=p.read_text()
+          old="    return pd.DataFrame(rows).set_index('h4_index')"
+          new=("    if not rows:\n"
+               "        return pd.DataFrame(columns=['resolution','target_dir','touch_time'], index=pd.Index([],name='h4_index'))\n"
+               "    return pd.DataFrame(rows).set_index('h4_index')")
+          s=s.replace(old,new)
+          marker="    pop=d.regime.eq('PULLBACK')&d.G1_VOL_COMPRESSION.fillna(False)&d.D14_CONCORDANCE.ne(0)"
+          if marker in s and 'GATE_DIAGNOSTICS' not in s:
+              diag=(marker+"\n"
+                    "    print('GATE_DIAGNOSTICS', json.dumps({\n"
+                    "        'data_start':str(m15.index.min()),'data_end':str(m15.index.max()),'h4_rows':int(len(d)),\n"
+                    "        'pullback':int(d.regime.eq('PULLBACK').sum()),\n"
+                    "        'g1':int(d.G1_VOL_COMPRESSION.fillna(False).sum()),\n"
+                    "        'd14':int(d.D14_CONCORDANCE.ne(0).sum()),\n"
+                    "        'pullback_g1':int((d.regime.eq('PULLBACK')&d.G1_VOL_COMPRESSION.fillna(False)).sum()),\n"
+                    "        'pullback_d14':int((d.regime.eq('PULLBACK')&d.D14_CONCORDANCE.ne(0)).sum()),\n"
+                    "        'g1_d14':int((d.G1_VOL_COMPRESSION.fillna(False)&d.D14_CONCORDANCE.ne(0)).sum()),\n"
+                    "        'population':int(pop.sum())}, default=str))")
+              s=s.replace(marker,diag)
+          p.write_text(s)
           PY
       - name: Run preregistered portability test
         run: |
