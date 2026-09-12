@@ -82,3 +82,5 @@ jobs:
         with:
           name: xau-context-setup-confirmation-lab016
           path: ${{ env.OUTDIR }}
+
+# LAB016 preregistered execution trigger
