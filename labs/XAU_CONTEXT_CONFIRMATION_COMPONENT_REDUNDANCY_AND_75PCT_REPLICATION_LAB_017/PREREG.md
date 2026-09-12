@@ -69,7 +69,9 @@ H2 passes if:
 The 100% (4/4) bucket is reported separately and remains descriptive unless N_resolved >=30.
 
 ### H3 — non-duplicate-domain robustness
-If any pair is CRITICALLY_REDUNDANT, collapse that pair into one evidence domain for this diagnostic only. The collapsed score has three domains and `STRONG_COLLAPSED` means all three domains are present. H3 passes if N_resolved >=40 and accuracy >55% with weekly-cluster CI lower >50%.
+If any pair is CRITICALLY_REDUNDANT, collapse redundant components into evidence domains for this diagnostic only. If multiple critical pairs share a component, use connected components of the critical-redundancy graph; each connected component becomes one evidence domain whose value is TRUE if **any** member component is TRUE. Non-redundant components remain singleton domains. `STRONG_COLLAPSED` means all resulting evidence domains are present.
+
+H3 passes if N_resolved >=40 and accuracy >55% with weekly-cluster CI lower >50%.
 If no pair is critically redundant, H3 is `NOT_APPLICABLE` and does not penalize the verdict.
 
 ### H4 — side symmetry at HIGH75
