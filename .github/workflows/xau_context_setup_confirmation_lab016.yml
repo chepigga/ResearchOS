@@ -1,0 +1,84 @@
+name: XAU Context Setup Confirmation LAB016
+
+on:
+  push:
+    paths:
+      - '.github/workflows/xau_context_setup_confirmation_lab016.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab016:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LAB_BRANCH: lab/xau-context-setup-confirmation-ob-imbalance-liquidity-price-action-016
+      OUTDIR: labs/XAU_CONTEXT_SETUP_CONFIRMATION_OB_IMBALANCE_LIQUIDITY_PRICE_ACTION_LAB_016/output
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LAB_BRANCH }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests tabulate
+      - name: Fetch canonical XAU
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          gh release download ak47 --repo "${GITHUB_REPOSITORY}" --pattern 'XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' --dir data
+          echo 'db47a0cef1e666fdf27a67a23fcc290eee1bd2be2c651ecd8e080b99bf177b9b  data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv' | sha256sum -c -
+      - name: Apply frozen Context runtime parity hotfixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
+          s=p.read_text()
+          patched=re.sub(r'd\.stack(?![A-Za-z0-9_])', "d['stack']", s)
+          old="    sm = s.rolling(3,min_periods=3).mean()"
+          warmup=("    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n"
+                  "    s=s.where(ready,np.nan)\n"
+                  "    sm = s.rolling(3,min_periods=3).mean()")
+          if old not in patched: raise SystemExit('LAB001 warmup anchor missing')
+          patched=patched.replace(old,warmup,1); compile(patched,str(p),'exec'); p.write_text(patched)
+          q=Path('labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py')
+          qs=q.read_text()
+          oldq="    d['raw_winner'] = score_arr.idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()"
+          newq=("    valid_scores = score_arr.notna().any(axis=1)\n"
+                "    d['raw_winner'] = pd.Series(index=d.index, dtype='object')\n"
+                "    d.loc[valid_scores, 'raw_winner'] = score_arr.loc[valid_scores].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
+          if oldq not in qs: raise SystemExit('LAB008 raw_winner anchor missing')
+          qpatched=qs.replace(oldq,newq,1); compile(qpatched,str(q),'exec'); q.write_text(qpatched)
+          PY
+      - name: Run preregistered LAB016
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTDIR"
+          python -m py_compile labs/XAU_CONTEXT_SETUP_CONFIRMATION_OB_IMBALANCE_LIQUIDITY_PRICE_ACTION_LAB_016/run_lab.py
+          python labs/XAU_CONTEXT_SETUP_CONFIRMATION_OB_IMBALANCE_LIQUIDITY_PRICE_ACTION_LAB_016/run_lab.py \
+            --xau-m1 data/XAUUSD_M1_20220601_20260723_TICK_NATIVE.csv \
+            --out "$OUTDIR"
+      - name: Persist outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTDIR"
+          git diff --cached --quiet || git commit -m 'Persist XAU Context setup confirmation LAB016 outputs'
+          git push origin HEAD:"$LAB_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xau-context-setup-confirmation-lab016
+          path: ${{ env.OUTDIR }}
