@@ -29,6 +29,8 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+
+          # Frozen router runtime parity hotfixes already audited in XAU LAB lineage.
           p=Path('labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py')
           s=p.read_text()
           s=s.replace('d.stack.astype(float)', "d['stack'].astype(float)")
@@ -39,6 +41,17 @@ jobs:
           if needle in s and 'ready=d[[' not in s:
               repl="    ready=d[['ema200','atr_ratio','rsi14','adx14','range24_ratio','relvol20']].notna().all(axis=1)\n    s=s.where(ready,np.nan)\n"+needle
               s=s.replace(needle,repl)
+          p.write_text(s)
+
+          # LAB008 pandas warm-up parity hotfix: idxmax only rows with valid scores.
+          p=Path('labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py')
+          s=p.read_text()
+          old="    d['raw_winner'] = score_arr.idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()"
+          if old in s:
+              new=("    valid_score = score_arr.notna().any(axis=1)\n"
+                   "    d['raw_winner'] = pd.Series(index=d.index, dtype='object')\n"
+                   "    d.loc[valid_score, 'raw_winner'] = score_arr.loc[valid_score].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
+              s=s.replace(old,new)
           p.write_text(s)
           PY
       - name: Run preregistered portability test
