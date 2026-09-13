@@ -5,7 +5,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -77,10 +77,23 @@ def fetch_yahoo_h1(name: str, ticker: str) -> tuple[pd.DataFrame, dict]:
     for c in ['open','high','low','close']:
         d[c]=pd.to_numeric(d[c],errors='coerce')
     d=d.dropna().drop_duplicates('time').sort_values('time').reset_index(drop=True)
+
+    # Technical source hotfix only: Yahoo may return bars outside period2.
+    # Enforce the preregistered window exactly, without changing any market or model rule.
+    start_naive=pd.Timestamp(START).tz_convert(None)
+    end_naive=pd.Timestamp(END).tz_convert(None)
+    rows_before_window_clamp=len(d)
+    source_first=str(d.time.min())
+    source_last=str(d.time.max())
+    d=d[(d.time>=start_naive)&(d.time<end_naive)].copy().reset_index(drop=True)
+
     meta={
         'market':name,'ticker':ticker,'source_url':r.url,'sha256_raw_json':sha,
+        'rows_h1_raw_clean':rows_before_window_clamp,
+        'source_first_h1':source_first,'source_last_h1':source_last,
         'rows_h1':len(d),'first_h1':str(d.time.min()),'last_h1':str(d.time.max()),
         'requested_start':START,'requested_end':END,
+        'window_clamp_hotfix':True,
     }
     return d,meta
 
@@ -189,7 +202,6 @@ def evaluate(markets: dict[str,pd.DataFrame], audits: list[dict], out: Path, lab
         (out/'REPORT.md').write_text(f'# {LAB}\n**Verdict: {verdict}**\n')
         print(json.dumps(summary,indent=2)); return
 
-    # Primary A: frozen Expansion BULL.
     eb=all_df[all_df.exp_bull_signal].copy()
     eb_rows=market_metric(eb,'bull_signed8',False)
     p_eb=boot_mean(eb,'bull_signed8',SEED+1)
@@ -198,7 +210,6 @@ def evaluate(markets: dict[str,pd.DataFrame], audits: list[dict], out: Path, lab
             not (eligible_eb['mean']<-.05).any() and p_eb['n']>=250 and
             np.isfinite(p_eb['ci_lo']) and p_eb['ci_lo']>0)
 
-    # Primary B: frozen Compression BEAR.
     cb=all_df[all_df.comp_bear_signal & all_df.fp_resolved].copy()
     cb_rows=market_metric(cb,'comp_bear_correct',True)
     p_cb=boot_mean(cb,'comp_bear_correct',SEED+2)
@@ -224,10 +235,7 @@ def evaluate(markets: dict[str,pd.DataFrame], audits: list[dict], out: Path, lab
     else:
         verdict='UNSEEN_REPLICATION_NOT_SUPPORTED'
 
-    # Secondary frozen heads.
     secondary=secondary_table(all_df)
-
-    # Expansion BULL yearly stability.
     y=eb.copy(); y['year']=pd.to_datetime(y.available_time).dt.year
     yearly=[]
     for (m,yr),g in y.groupby(['market','year']):
@@ -236,6 +244,7 @@ def evaluate(markets: dict[str,pd.DataFrame], audits: list[dict], out: Path, lab
 
     summary={
         'lab':LAB,'verdict':verdict,
+        'technical_hotfix':'Yahoo response hard-clamped to preregistered [START, END) window',
         'h1_expansion_bull_replication':h1,
         'h2_compression_bear_status':h2_status,
         'h2_compression_bear_pass':h2,
@@ -258,6 +267,7 @@ def evaluate(markets: dict[str,pd.DataFrame], audits: list[dict], out: Path, lab
 
     lines=[
         f'# {LAB}',f'**Verdict: {verdict}**','',
+        '> Technical audit hotfix: Yahoo returned spillover bars beyond the preregistered end on some symbols; raw responses are preserved by SHA and all series are hard-clamped to `[2024-09-15, 2026-09-01)` before H4 resampling. No model rule changed.','',
         '## Primary gates',
         f'- H1 frozen EXPANSION_BULL unseen replication: **{"PASS" if h1 else "FAIL"}** — pooled {p_eb["observed"]:+.4f} ATR, CI [{p_eb["ci_lo"]:+.4f}, {p_eb["ci_hi"]:+.4f}], N={p_eb["n"]}.',
         f'- H2 frozen COMPRESSION_BEAR unseen replication: **{h2_status}** — pooled accuracy {100*p_cb["observed"]:.2f}%, CI [{100*p_cb["ci_lo"]:.2f}%, {100*p_cb["ci_hi"]:.2f}%], N={p_cb["n"]}.',
