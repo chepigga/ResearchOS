@@ -1,0 +1,55 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_STATE_SPECIFIC_PREDICTIVE_HEADS_LAB_003",
+  "verdict": "STATE_SPECIFIC_HEADS_NOT_SUPPORTED",
+  "h1_expansion_high_pass": false,
+  "h2_expansion_increment_pass": false,
+  "h3_retracement_continuation_pass": false,
+  "h4_retracement_reversal_pass": false,
+  "h5_compression_direction_pass": false,
+  "h6_coverage_pass": true,
+  "primary_pass_count": 1,
+  "pool_expansion_high": {
+    "observed": 0.0889446987294086,
+    "ci_lo": -0.009177098430024361,
+    "ci_hi": 0.1804289402538603,
+    "n": 695,
+    "clusters": 209
+  },
+  "pool_expansion_high_minus_nonhigh": {
+    "observed": 0.04218465189332644,
+    "ci_lo": -0.08890488540881744,
+    "ci_hi": 0.17071488272667554,
+    "n_a": 695,
+    "n_b": 919,
+    "clusters": 332
+  },
+  "pool_retracement_continuation": {
+    "observed": 0.061937484644294404,
+    "ci_lo": -0.01773951347958129,
+    "ci_hi": 0.1434289674586674,
+    "n": 6570,
+    "clusters": 533
+  },
+  "pool_retracement_reversal": {
+    "observed": -0.04166990922615542,
+    "ci_lo": -0.3341421646654409,
+    "ci_hi": 0.2615208156140028,
+    "n": 149,
+    "clusters": 125
+  },
+  "pool_compression_accuracy": {
+    "observed": 0.5143728222996515,
+    "ci_lo": 0.48228067263660573,
+    "ci_hi": 0.546769455593,
+    "n": 2296,
+    "clusters": 346
+  },
+  "compression_high_minus_moderate_accuracy": {
+    "observed": 0.03585218222363806,
+    "ci_lo": -0.063560025902929,
+    "ci_hi": 0.13152996381493365,
+    "n_a": 146,
+    "n_b": 2150,
+    "clusters": 346
+  }
+}
