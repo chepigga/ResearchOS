@@ -1,0 +1,46 @@
+[
+  {
+    "market": "USDJPY",
+    "ticker": "USDJPY=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/USDJPY=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "baa4304a7bcdd8e0a5214e1728c6d6b11c6ac61a41e3d63a5c96eae252424680",
+    "rows_h1": 11993,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-09-10 22:59:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z"
+  },
+  {
+    "market": "GBPUSD",
+    "ticker": "GBPUSD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/GBPUSD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "5c20498cce526aaf7153374a23f633e810158fc5cb4d624c54326f2fe744509f",
+    "rows_h1": 12062,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-09-10 22:59:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z"
+  },
+  {
+    "market": "AUDUSD",
+    "ticker": "AUDUSD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/AUDUSD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "a54e0ac5e79363e7508422050f09b85de02519cf3b8b64dbef1c423f7a7eb191",
+    "rows_h1": 12124,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z"
+  },
+  {
+    "market": "USDCAD",
+    "ticker": "CAD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/CAD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "670c61150b74d30b7d4037e6931f3fa1f3b8f02dff6660e9011216c0c99dbd78",
+    "rows_h1": 12125,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z"
+  }
+]

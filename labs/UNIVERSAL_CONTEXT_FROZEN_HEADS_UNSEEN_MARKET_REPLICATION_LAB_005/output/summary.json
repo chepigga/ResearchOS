@@ -1,0 +1,32 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005",
+  "verdict": "UNSEEN_REPLICATION_NOT_SUPPORTED",
+  "h1_expansion_bull_replication": false,
+  "h2_compression_bear_status": "UNDERPOWERED",
+  "h2_compression_bear_pass": false,
+  "h3_coverage_sanity": false,
+  "pool_expansion_bull": {
+    "observed": 0.005421916413205279,
+    "ci_lo": -0.12375314846658955,
+    "ci_hi": 0.12046200740510978,
+    "n": 257,
+    "clusters": 85
+  },
+  "pool_compression_bear_accuracy": {
+    "observed": 0.5862068965517241,
+    "ci_lo": 0.25902777777777786,
+    "ci_hi": 0.8333333333333334,
+    "n": 29,
+    "clusters": 15
+  },
+  "unseen_markets": [
+    "USDJPY",
+    "GBPUSD",
+    "AUDUSD",
+    "USDCAD"
+  ],
+  "data_window": [
+    "2024-09-15T00:00:00Z",
+    "2026-09-01T00:00:00Z"
+  ]
+}
