@@ -59,6 +59,17 @@ jobs:
                 "    d.loc[valid_scores, 'raw_winner'] = score_arr.loc[valid_scores].idxmax(axis=1).str.replace('score_', '', regex=False).str.upper()")
           if oldq not in qs: raise SystemExit('LAB008 raw_winner anchor missing')
           qpatched=qs.replace(oldq,newq,1); compile(qpatched,str(q),'exec'); q.write_text(qpatched)
+
+          # Technical-only Python 3.12 importlib/dataclass hotfix for LAB002 dynamic import.
+          r=Path('labs/XAU_CONTEXT_BROAD_PARENT_PERMISSION_AND_M15_OR_EXECUTION_LAB_002/run_lab.py')
+          rs=r.read_text()
+          old_import="import argparse, hashlib, importlib.util, json"
+          new_import="import argparse, hashlib, importlib.util, json, sys"
+          old_exec="    mod=importlib.util.module_from_spec(spec); assert spec.loader is not None\n    spec.loader.exec_module(mod); return mod"
+          new_exec="    mod=importlib.util.module_from_spec(spec); assert spec.loader is not None\n    sys.modules[name]=mod\n    spec.loader.exec_module(mod); return mod"
+          if old_import not in rs or old_exec not in rs: raise SystemExit('LAB002 import hotfix anchor missing')
+          rs=rs.replace(old_import,new_import,1).replace(old_exec,new_exec,1)
+          compile(rs,str(r),'exec'); r.write_text(rs)
           PY
       - name: Run frozen LAB002
         shell: bash
@@ -73,7 +84,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py
+          git checkout -- labs/CROSS_MARKET_CAUSAL_CONTEXT_ROUTER_LAB_001/run_lab.py labs/XAU_CONTEXT_STATE_TIMESCALE_AND_LABEL_PURIFICATION_LAB_008/run_lab.py labs/XAU_CONTEXT_BROAD_PARENT_PERMISSION_AND_M15_OR_EXECUTION_LAB_002/run_lab.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$OUTDIR"
