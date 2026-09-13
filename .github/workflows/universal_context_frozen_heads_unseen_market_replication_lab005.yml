@@ -1,0 +1,40 @@
+name: Universal Context Frozen Heads Unseen Market Replication LAB005
+on:
+  push:
+    branches:
+      - lab/universal-context-frozen-heads-unseen-market-replication-005
+    paths:
+      - 'labs/UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005/**'
+      - '.github/workflows/universal_context_frozen_heads_unseen_market_replication_lab005.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab005:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q pandas numpy requests tabulate
+      - name: Run frozen unseen-market LAB005
+        run: |
+          python labs/UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005/output
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist universal context unseen-market LAB005 outputs'
+            git push origin HEAD:lab/universal-context-frozen-heads-unseen-market-replication-005
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: universal-context-frozen-heads-unseen-market-replication-lab005
+          path: labs/UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPPLICATION_LAB_005/output
+          if-no-files-found: ignore
