@@ -69,6 +69,18 @@ jobs:
           new_exec="    mod=importlib.util.module_from_spec(spec); assert spec.loader is not None\n    sys.modules[name]=mod\n    spec.loader.exec_module(mod); return mod"
           if old_import not in rs or old_exec not in rs: raise SystemExit('LAB002 import hotfix anchor missing')
           rs=rs.replace(old_import,new_import,1).replace(old_exec,new_exec,1)
+
+          # Performance-only hotfix: same closed M15 history, O(log N) lookup instead of O(N) boolean scan per fill.
+          old_hist="    hist=m15[m15.index<ft].tail(8)"
+          new_hist="    pos=int(m15.index.searchsorted(ft,side='left')); hist=m15.iloc[max(0,pos-8):pos]"
+          if old_hist not in rs: raise SystemExit('LAB002 m15 lookup hotfix anchor missing')
+          rs=rs.replace(old_hist,new_hist,1)
+
+          # Performance-only hotfix: find the first exit-event M1 row vectorially, then preserve identical within-row priority.
+          old_loop="""    i=mf.left(ft); j=mf.left(deadline)\n    exit_time=None; exit_price=None; reason=None\n    for k in range(i,min(j,len(mf.t))):\n        o,h,l=float(mf.o[k]),float(mf.h[k]),float(mf.l[k]); rt=pd.Timestamp(mf.t[k])\n        if o<=sl: exit_time,exit_price,reason=rt,o,'SL_GAP'; break\n        if o>=tp: exit_time,exit_price,reason=rt,o,'TP_GAP'; break\n        hit_sl=l<=sl; hit_tp=h>=tp\n        if hit_sl and hit_tp: exit_time,exit_price,reason=rt,sl,'SL_AMBIG'; break\n        if hit_sl: exit_time,exit_price,reason=rt,sl,'SL'; break\n        if hit_tp: exit_time,exit_price,reason=rt,tp,'TP'; break\n    if exit_time is None:\n"""
+          new_loop="""    i=mf.left(ft); j=min(mf.left(deadline),len(mf.t))\n    exit_time=None; exit_price=None; reason=None\n    if i<j:\n        oo=mf.o[i:j]; hh=mf.h[i:j]; ll=mf.l[i:j]\n        evt=(oo<=sl)|(oo>=tp)|(ll<=sl)|(hh>=tp)\n        hit=np.flatnonzero(evt)\n        if len(hit):\n            k=i+int(hit[0]); o,h,l=float(mf.o[k]),float(mf.h[k]),float(mf.l[k]); rt=pd.Timestamp(mf.t[k])\n            if o<=sl: exit_time,exit_price,reason=rt,o,'SL_GAP'\n            elif o>=tp: exit_time,exit_price,reason=rt,o,'TP_GAP'\n            elif l<=sl and h>=tp: exit_time,exit_price,reason=rt,sl,'SL_AMBIG'\n            elif l<=sl: exit_time,exit_price,reason=rt,sl,'SL'\n            elif h>=tp: exit_time,exit_price,reason=rt,tp,'TP'\n    if exit_time is None:\n"""
+          if old_loop not in rs: raise SystemExit('LAB002 exit-loop hotfix anchor missing')
+          rs=rs.replace(old_loop,new_loop,1)
           compile(rs,str(r),'exec'); r.write_text(rs)
           PY
       - name: Run frozen LAB002
