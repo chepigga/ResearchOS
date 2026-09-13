@@ -1,0 +1,72 @@
+[
+  {
+    "market": "BTCUSDT",
+    "source": "Binance USD-M monthly 1h",
+    "meta": {
+      "missing_months": [],
+      "rows_h1": 48912,
+      "first": "2021-01-01 00:00:00",
+      "last": "2026-07-31 23:00:00"
+    }
+  },
+  {
+    "market": "USDJPY",
+    "ticker": "USDJPY=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/USDJPY=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "5f6867cd56964522633497449c9e8dae2a886bc61e5dce66360b68ff3b8c240c",
+    "rows_h1_raw_clean": 11993,
+    "source_first_h1": "2024-09-15 23:00:00",
+    "source_last_h1": "2026-09-10 22:59:00",
+    "rows_h1": 11992,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z",
+    "window_clamp_hotfix": true
+  },
+  {
+    "market": "GBPUSD",
+    "ticker": "GBPUSD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/GBPUSD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "6ad3f1573d25ab882d56616e2d3e654f0d6cb0fc782fc7629d8853d8a8f93302",
+    "rows_h1_raw_clean": 12062,
+    "source_first_h1": "2024-09-15 23:00:00",
+    "source_last_h1": "2026-09-10 22:59:00",
+    "rows_h1": 12061,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z",
+    "window_clamp_hotfix": true
+  },
+  {
+    "market": "AUDUSD",
+    "ticker": "AUDUSD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/AUDUSD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "6d1095eba5063c93a2a2a98506715cd6fc510f1e33a1a3420244c119fe5c8bf5",
+    "rows_h1_raw_clean": 12124,
+    "source_first_h1": "2024-09-15 23:00:00",
+    "source_last_h1": "2026-08-31 23:00:00",
+    "rows_h1": 12124,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z",
+    "window_clamp_hotfix": true
+  },
+  {
+    "market": "USDCAD",
+    "ticker": "CAD=X",
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/CAD=X?period1=1726358400&period2=1788220800&interval=1h&events=history&includeAdjustedClose=false",
+    "sha256_raw_json": "e75ec826129e466fb5662bab24c7016d76854f96ab3a64a1113e0a92e830c4d6",
+    "rows_h1_raw_clean": 12125,
+    "source_first_h1": "2024-09-15 23:00:00",
+    "source_last_h1": "2026-08-31 23:00:00",
+    "rows_h1": 12125,
+    "first_h1": "2024-09-15 23:00:00",
+    "last_h1": "2026-08-31 23:00:00",
+    "requested_start": "2024-09-15T00:00:00Z",
+    "requested_end": "2026-09-01T00:00:00Z",
+    "window_clamp_hotfix": true
+  }
+]

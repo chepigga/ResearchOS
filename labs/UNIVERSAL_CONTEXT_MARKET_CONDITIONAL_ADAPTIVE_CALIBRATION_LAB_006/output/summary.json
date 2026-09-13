@@ -1,0 +1,75 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_MARKET_CONDITIONAL_ADAPTIVE_CALIBRATION_LAB_006",
+  "verdict": "MARKET_CONDITIONAL_ADAPTIVE_CALIBRATION_NOT_SUPPORTED",
+  "h1_expansion": false,
+  "h2_retracement": false,
+  "h3_compression_status": "FAIL",
+  "h3_compression_pass": false,
+  "h4_calibration": false,
+  "h5_coverage": false,
+  "h6_adaptation_benefit": true,
+  "coverage_markets_pass": {
+    "EXPANSION": 0,
+    "RETRACEMENT": 4,
+    "COMPRESSION": 5
+  },
+  "calibration": {
+    "n": 728,
+    "brier": 0.27065003127368226,
+    "ece": 0.151102876606031,
+    "ece_n": 728
+  },
+  "pools": {
+    "EXPANSION": {
+      "observed": 0.7588130077120732,
+      "ci_lo": 0.7588130077120732,
+      "ci_hi": 0.7588130077120732,
+      "n": 3,
+      "clusters": 1
+    },
+    "RETRACEMENT": {
+      "observed": -0.06393299557253988,
+      "ci_lo": -0.3210166163280255,
+      "ci_hi": 0.17047734258394454,
+      "n": 317,
+      "clusters": 74
+    },
+    "COMPRESSION": {
+      "observed": 0.484472049689441,
+      "ci_lo": 0.4,
+      "ci_hi": 0.5669489890852978,
+      "n": 322,
+      "clusters": 77
+    }
+  },
+  "adaptive_minus_rank_baseline": {
+    "EXPANSION": {
+      "observed": 0.7194175146849042,
+      "ci_lo": 0.6221050897993705,
+      "ci_hi": 0.8093817576700658,
+      "n_a": 3,
+      "n_b": 490,
+      "clusters": 223
+    },
+    "RETRACEMENT": {
+      "observed": 0.006981649896709838,
+      "ci_lo": -0.2338158748449329,
+      "ci_hi": 0.23832949770258263,
+      "n_a": 317,
+      "n_b": 2405,
+      "clusters": 357
+    },
+    "COMPRESSION": {
+      "observed": -0.043093034537205255,
+      "ci_lo": -0.11717441167025777,
+      "ci_hi": 0.02762506792360169,
+      "n_a": 322,
+      "n_b": 1306,
+      "clusters": 252
+    }
+  },
+  "evaluation_window": [
+    "2025-06-01 00:00:00",
+    "2026-07-17 23:59:59"
+  ]
+}
