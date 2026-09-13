@@ -1,6 +1,7 @@
 {
   "lab": "UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005",
   "verdict": "UNSEEN_REPLICATION_NOT_SUPPORTED",
+  "technical_hotfix": "Yahoo response hard-clamped to preregistered [START, END) window",
   "h1_expansion_bull_replication": false,
   "h2_compression_bear_status": "UNDERPOWERED",
   "h2_compression_bear_pass": false,

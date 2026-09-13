@@ -1,6 +1,8 @@
 # UNIVERSAL_CONTEXT_FROZEN_HEADS_UNSEEN_MARKET_REPLICATION_LAB_005
 **Verdict: UNSEEN_REPLICATION_NOT_SUPPORTED**
 
+> Technical audit hotfix: Yahoo returned spillover bars beyond the preregistered end on some symbols; raw responses are preserved by SHA and all series are hard-clamped to `[2024-09-15, 2026-09-01)` before H4 resampling. No model rule changed.
+
 ## Primary gates
 - H1 frozen EXPANSION_BULL unseen replication: **FAIL** — pooled +0.0054 ATR, CI [-0.1238, +0.1205], N=257.
 - H2 frozen COMPRESSION_BEAR unseen replication: **UNDERPOWERED** — pooled accuracy 58.62%, CI [25.90%, 83.33%], N=29.
@@ -10,8 +12,8 @@
 
 | market   |   h4_rows |   ready_bars | first_h4            | last_h4             |
 |:---------|----------:|-------------:|:--------------------|:--------------------|
-| USDJPY   |      3106 |         2904 | 2024-09-15 20:00:00 | 2026-09-10 20:00:00 |
-| GBPUSD   |      3109 |         2902 | 2024-09-15 20:00:00 | 2026-09-10 20:00:00 |
+| USDJPY   |      3105 |         2904 | 2024-09-15 20:00:00 | 2026-08-31 20:00:00 |
+| GBPUSD   |      3108 |         2902 | 2024-09-15 20:00:00 | 2026-08-31 20:00:00 |
 | AUDUSD   |      3117 |         2899 | 2024-09-15 20:00:00 | 2026-08-31 20:00:00 |
 | USDCAD   |      3117 |         2906 | 2024-09-15 20:00:00 | 2026-08-31 20:00:00 |
 
