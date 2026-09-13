@@ -1,0 +1,62 @@
+{
+  "lab": "UNIVERSAL_CONTEXT_DIRECTIONAL_ASYMMETRY_AND_SEPARATE_BULL_BEAR_HEADS_LAB_004",
+  "verdict": "SEPARATE_BULL_BEAR_HEADS_NOT_SUPPORTED",
+  "h1_expansion_bull": false,
+  "h2_expansion_bear": false,
+  "h3_expansion_asymmetry": false,
+  "h4_retracement_bull": false,
+  "h5_retracement_bear": false,
+  "h6_compression_bull": false,
+  "h7_compression_bear": false,
+  "h8_coverage": false,
+  "pool_exp_bull": {
+    "observed": 0.11479098542475062,
+    "ci_lo": -0.01092963072455526,
+    "ci_hi": 0.22587162992352292,
+    "n": 488,
+    "clusters": 150
+  },
+  "pool_exp_bear": {
+    "observed": 0.11860463615318949,
+    "ci_lo": -0.06733006846012221,
+    "ci_hi": 0.281428643778505,
+    "n": 164,
+    "clusters": 65
+  },
+  "pool_exp_asymmetry": {
+    "observed": -0.0038136507284388665,
+    "ci_lo": -0.20686860030690696,
+    "ci_hi": 0.22060137684152817,
+    "n_bull": 488,
+    "n_bear": 164,
+    "clusters": 215
+  },
+  "pool_ret_bull": {
+    "observed": 0.14015437182096455,
+    "ci_lo": 0.032866168547915936,
+    "ci_hi": 0.2458370336604128,
+    "n": 4467,
+    "clusters": 312
+  },
+  "pool_ret_bear": {
+    "observed": -0.06148213995758275,
+    "ci_lo": -0.1706526454517748,
+    "ci_hi": 0.046813557592418106,
+    "n": 2771,
+    "clusters": 247
+  },
+  "pool_comp_bull_accuracy": {
+    "observed": 0.5255972696245734,
+    "ci_lo": 0.4496844034206597,
+    "ci_hi": 0.6,
+    "n": 293,
+    "clusters": 105
+  },
+  "pool_comp_bear_accuracy": {
+    "observed": 0.6410256410256411,
+    "ci_lo": 0.5,
+    "ci_hi": 0.7738191244239631,
+    "n": 78,
+    "clusters": 43
+  }
+}
