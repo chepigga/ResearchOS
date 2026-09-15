@@ -1,0 +1,54 @@
+{
+  "lab": "AMP_NATIVE_AEIF_XAU_EV_001",
+  "status": "COMPLETED_FROZEN_EXECUTION",
+  "input_exact_timestamp_candidates": 41,
+  "execution": {
+    "sl": "1.0 ATR20(M5)",
+    "atr_method": "Wilder",
+    "tp_r": 3.0,
+    "max_hold_minutes": 240,
+    "session_close_exit": true,
+    "single_position": true,
+    "be": false,
+    "partials": false,
+    "trailing": false
+  },
+  "price_only": {
+    "n": 41,
+    "ev_r": -0.14225761904944073,
+    "sum_r": -5.83256238102707,
+    "wr_pct": 21.951219512195124,
+    "pf": 0.8177324255929015,
+    "max_dd_r": 12.999999999999748,
+    "max_consecutive_losses": 10
+  },
+  "spread_diagnostic": {
+    "n": 41,
+    "ev_r": -0.1449582968885652,
+    "sum_r": -5.9432901724311735,
+    "wr_pct": 21.951219512195124,
+    "pf": 0.8142721821115232,
+    "max_dd_r": 12.999999999999748,
+    "max_consecutive_losses": 10
+  },
+  "long_price_only": {
+    "n": 19,
+    "ev_r": -0.1578947368420969,
+    "sum_r": -2.999999999999841,
+    "wr_pct": 21.052631578947366,
+    "pf": 0.8000000000000074,
+    "max_dd_r": 8.999999999999755,
+    "max_consecutive_losses": 6
+  },
+  "short_price_only": {
+    "n": 22,
+    "ev_r": -0.1287528355012377,
+    "sum_r": -2.8325623810272296,
+    "wr_pct": 22.727272727272727,
+    "pf": 0.8333786834689845,
+    "max_dd_r": 6.000000000000071,
+    "max_consecutive_losses": 6
+  },
+  "same_bar_ambiguous": 0,
+  "note": "Spread diagnostic assumes MT5 OHLC are Bid and spread points are 0.01 price units; commission/slippage excluded. No parameters optimized on AMP OOS."
+}
