@@ -1,0 +1,40 @@
+name: GC M1 Buyer Breakout Long Audit 004
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_m1_buyer_breakout_long_audit_004.py'
+      - '.github/workflows/gc_m1_buyer_breakout_long_audit_004.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy pandas
+      - name: Run audit
+        run: python research/gc/gc_m1_buyer_breakout_long_audit_004.py
+      - name: Commit results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_M1_BUYER_BREAKOUT_LONG_AUDIT_004.json \
+                  research/gc/GC_M1_BUYER_BREAKOUT_LONG_AUDIT_004.md \
+                  research/gc/GC_M1_BUYER_BREAKOUT_LONG_AUDIT_004_EVENTS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record buyer breakout LONG audit 004'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
