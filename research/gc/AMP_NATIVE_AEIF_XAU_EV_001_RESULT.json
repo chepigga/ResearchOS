@@ -1,6 +1,6 @@
 {
   "lab": "AMP_NATIVE_AEIF_XAU_EV_001",
-  "status": "COMPLETED_FROZEN_EXECUTION",
+  "status": "NOT_CERTIFIED_HISTORICAL_XAU_PARITY_FAILED",
   "input_exact_timestamp_candidates": 41,
   "execution": {
     "sl": "1.0 ATR20(M5)",
@@ -13,42 +13,57 @@
     "partials": false,
     "trailing": false
   },
-  "price_only": {
-    "n": 41,
-    "ev_r": -0.14225761904944073,
-    "sum_r": -5.83256238102707,
-    "wr_pct": 21.951219512195124,
-    "pf": 0.8177324255929015,
-    "max_dd_r": 12.999999999999748,
-    "max_consecutive_losses": 10
+  "raw_provisional_result": {
+    "price_only": {
+      "n": 41,
+      "ev_r": -0.14225761904944073,
+      "sum_r": -5.83256238102707,
+      "wr_pct": 21.951219512195124,
+      "pf": 0.8177324255929015,
+      "max_dd_r": 12.999999999999748,
+      "max_consecutive_losses": 10
+    },
+    "spread_diagnostic": {
+      "n": 41,
+      "ev_r": -0.1449582968885652,
+      "sum_r": -5.9432901724311735,
+      "wr_pct": 21.951219512195124,
+      "pf": 0.8142721821115232,
+      "max_dd_r": 12.999999999999748,
+      "max_consecutive_losses": 10
+    },
+    "long_price_only": {
+      "n": 19,
+      "ev_r": -0.1578947368420969,
+      "sum_r": -2.999999999999841
+    },
+    "short_price_only": {
+      "n": 22,
+      "ev_r": -0.1287528355012377,
+      "sum_r": -2.8325623810272296
+    }
   },
-  "spread_diagnostic": {
-    "n": 41,
-    "ev_r": -0.1449582968885652,
-    "sum_r": -5.9432901724311735,
-    "wr_pct": 21.951219512195124,
-    "pf": 0.8142721821115232,
-    "max_dd_r": 12.999999999999748,
-    "max_consecutive_losses": 10
-  },
-  "long_price_only": {
-    "n": 19,
-    "ev_r": -0.1578947368420969,
-    "sum_r": -2.999999999999841,
-    "wr_pct": 21.052631578947366,
-    "pf": 0.8000000000000074,
-    "max_dd_r": 8.999999999999755,
-    "max_consecutive_losses": 6
-  },
-  "short_price_only": {
-    "n": 22,
-    "ev_r": -0.1287528355012377,
-    "sum_r": -2.8325623810272296,
-    "wr_pct": 22.727272727272727,
-    "pf": 0.8333786834689845,
-    "max_dd_r": 6.000000000000071,
-    "max_consecutive_losses": 6
+  "validation_blocker": {
+    "xau_execution_engine_parity": {
+      "observed_single_position_n": 50,
+      "observed_ev_r": 0.03997614648339111,
+      "expected_n": 46,
+      "expected_ev_r": 0.666,
+      "pass": false
+    },
+    "historical_lab022_baseline_parity": {
+      "best_observed_ev_r": -0.15091390336136204,
+      "best_observed_sum_r": -7.696609071429464,
+      "best_observed_wr_pct": 35.294117647058826,
+      "best_observed_max_dd_r": 13.107921687431059,
+      "historical_expected_ev_r": 0.250,
+      "historical_expected_sum_r": 12.75,
+      "historical_expected_wr_pct": 54.9,
+      "historical_expected_max_dd_r": 3.24,
+      "pass": false
+    },
+    "interpretation": "The available reconstructed Rithmic confirmation ledger plus current release XAUUSD_M1_2026.csv cannot reproduce the historical LAB022/TP3 fingerprints. Therefore the provisional AMP EV cannot be used as an edge verdict. Possible unresolved causes are historical XAU price-path/source mismatch and/or non-bitwise reconstruction of historical confirmation event identities. AMP data must not be retuned to resolve this."
   },
   "same_bar_ambiguous": 0,
-  "note": "Spread diagnostic assumes MT5 OHLC are Bid and spread points are 0.01 price units; commission/slippage excluded. No parameters optimized on AMP OOS."
+  "research_decision": "DO_NOT_ACCEPT_NEGATIVE_AMP_EV_AS_VALIDATED_STRATEGY_RESULT_UNTIL_HISTORICAL_XAU_EXECUTION_PARITY_IS_RESTORED"
 }
