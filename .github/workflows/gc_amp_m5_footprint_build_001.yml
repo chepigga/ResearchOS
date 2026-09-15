@@ -1,0 +1,41 @@
+name: GC AMP M5 Footprint Build 001
+
+on:
+  push:
+    branches:
+      - gc-amp-feed-audit-001
+    paths:
+      - 'research/gc/amp_gc_m5_footprint_build_001.py'
+      - '.github/workflows/gc_amp_m5_footprint_build_001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: gc-amp-feed-audit-001
+
+      - name: Build canonical AMP GC M5 footprint
+        run: python3 research/gc/amp_gc_m5_footprint_build_001.py
+
+      - name: Commit footprint artifacts
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/gc/AMP_GC_OOS_001_M5_FOOTPRINT.csv \
+                  research/gc/AMP_GC_M5_FOOTPRINT_BUILD_001.md \
+                  research/gc/AMP_GC_OOS_001_MANIFEST.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Freeze AMP GC OOS 001 M5 footprint"
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
