@@ -1,0 +1,10 @@
+{
+  "lab": "AMP_NATIVE_AEIF_FORWARD_SHADOW_001",
+  "status": "STATIC_SAFETY_AND_FREEZE_AUDIT_PASS",
+  "zero_order_api_calls": true,
+  "sensor_sha256": "49ef1cbc42c847b9b38bc26722bae8ab5279c1b39bc8fc19492ccd0112c35b89",
+  "xau_shadow_sha256": "69fcc605ac5f615a2f24ed483e5fb0ad4c66166fc5e1d8b608e3a37b301e602b",
+  "transport": "MT5 FILE_COMMON same-machine v001",
+  "compile_status": "REQUIRES_METAEDITOR_COMPILE_ON_TARGET_WINDOWS_MT5",
+  "note": "Static audit verifies frozen tokens and absence of order APIs; it is not an MQL5 compiler."
+}
