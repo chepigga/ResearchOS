@@ -12,20 +12,20 @@
     "mechanism_transfer_same_sign": false
   },
   "auc_delta_2025": 0.02482269503546103,
-  "auc_delta_2026": 0.015306122448979609,
-  "brier_improvement_2026": -0.0015699842331488023,
-  "oos_base_cont_win_rate": 0.4431818181818182,
-  "oos_top20_cont_win_rate": 0.5151515151515151,
-  "oos_top20_lift": 0.07196969696969696,
-  "oos_top20_n": 33,
-  "oos_top20_mean_cont_return": 0.0013315364962677425,
+  "auc_delta_2026": 0.0011799410029498247,
+  "brier_improvement_2026": -0.0026386599388452114,
+  "oos_base_cont_win_rate": 0.4433497536945813,
+  "oos_top20_cont_win_rate": 0.525,
+  "oos_top20_lift": 0.08165024630541873,
+  "oos_top20_n": 40,
+  "oos_top20_mean_cont_return": 0.0030376761778014407,
   "oos_top20_mean_ci": [
-    -0.0014976604653986448,
-    0.004676259463953215
+    -0.0003059632868352976,
+    0.006577033722717766
   ],
   "inverse_bridge_n": 62,
-  "inverse_oos_n": 21,
+  "inverse_oos_n": 25,
   "inverse_bridge_mean": 0.0007491698702843314,
-  "inverse_oos_mean": 0.000179590441110494,
+  "inverse_oos_mean": 0.0009148683694359061,
   "audit_fix": "v2_primary_horizon_explicit"
 }

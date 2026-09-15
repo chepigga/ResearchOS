@@ -7,8 +7,8 @@
 ## 1. Data / causality
 
 - Binance Spot `BTCUSDT` + `PAXGUSDT`, 15m completed klines.
-- Synchronized coverage: `2021-01-01 00:00:00+00:00` → `2026-07-31 23:45:00+00:00`.
-- Synchronized bars: **195,578**.
+- Synchronized coverage: `2021-01-01 00:00:00+00:00` → `2026-08-31 23:45:00+00:00`.
+- Synchronized bars: **198,554**.
 - Impulse: completed BTC 60m |return| >= prior 30d 97.5th percentile.
 - Cooldown: **4h**.
 - Entry reference/outcomes begin at the next 15m open; PAXG is never forward-filled.
@@ -18,7 +18,7 @@
 
 - BRIDGE_2025: **301** events
 - DEV_2021_2024: **1,155** events
-- OOS_2026: **176** events
+- OOS_2026: **203** events
 
 ## 3. Primary 4h conditional response
 
@@ -44,10 +44,10 @@
 
 | PAXG state | N | continuation WR | mean signed 4h | 95% CI |
 |---|---:|---:|---:|---:|
-| ALL | 176 | 44.3% | -0.087% | [-0.311%, +0.130%] |
-| INVERSE | 21 | 47.6% | +0.018% | [-0.553%, +0.708%] |
-| NEUTRAL | 51 | 47.1% | -0.091% | [-0.414%, +0.259%] |
-| ALIGNED | 104 | 42.3% | -0.106% | [-0.390%, +0.207%] |
+| ALL | 203 | 44.3% | -0.047% | [-0.228%, +0.150%] |
+| INVERSE | 25 | 48.0% | +0.091% | [-0.444%, +0.727%] |
+| NEUTRAL | 59 | 47.5% | -0.084% | [-0.370%, +0.214%] |
+| ALIGNED | 119 | 42.0% | -0.058% | [-0.331%, +0.231%] |
 
 ## 4. Incremental model — BTC-only vs BTC+PAXG
 
@@ -57,14 +57,14 @@
 | DEV_2021_2024 | BTC_PLUS_PAXG | 1155 | 0.5878 | 0.2439 | 0.6807 |
 | BRIDGE_2025 | BTC_ONLY | 301 | 0.4782 | 0.2577 | 0.7088 |
 | BRIDGE_2025 | BTC_PLUS_PAXG | 301 | 0.5030 | 0.2596 | 0.7151 |
-| OOS_2026 | BTC_ONLY | 176 | 0.4792 | 0.2519 | 0.6973 |
-| OOS_2026 | BTC_PLUS_PAXG | 176 | 0.4945 | 0.2535 | 0.7005 |
+| OOS_2026 | BTC_ONLY | 203 | 0.4955 | 0.2507 | 0.6947 |
+| OOS_2026 | BTC_PLUS_PAXG | 203 | 0.4967 | 0.2533 | 0.7002 |
 
 - 2025 AUC delta from PAXG: **+0.0248**.
-- 2026 AUC delta from PAXG: **+0.0153**.
-- 2026 Brier improvement: **-0.00157**.
+- 2026 AUC delta from PAXG: **+0.0012**.
+- 2026 Brier improvement: **-0.00264**.
 - 2026 baseline continuation WR: **44.3%**.
-- Frozen augmented top-20%: N **33**, WR **51.5%**, lift **+7.2 pp**, mean signed 4h **+0.133%**.
+- Frozen augmented top-20%: N **40**, WR **52.5%**, lift **+8.2 pp**, mean signed 4h **+0.304%**.
 
 ## 5. Promotion gates
 

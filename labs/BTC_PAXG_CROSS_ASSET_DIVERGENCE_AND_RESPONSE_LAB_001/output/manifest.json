@@ -13,15 +13,15 @@
     "primary_horizon": "4h"
   },
   "counts": {
-    "synchronized_bars": 195578,
-    "events": 1632
+    "synchronized_bars": 198554,
+    "events": 1659
   },
   "output_sha256": {
-    "REPORT.md": "c15f0aa0d26cef9d4fd203ece9f85ea13ab9ec47c5323978666b910c91baecc3",
-    "conditional_bins.csv": "31d9797c8cd147ffd0ed1482673ac3057210c66e805c55dba91e371870bb3ae7",
-    "events.csv": "fff13e12beef280885df89bcbf76d22af6cf4aba70bd43ef76e774690d714554",
-    "manifest.json": "ed5af7258f5155f653cd056f9aa47fd3ffea332b7cc2dc66791ade7309e18fa6",
-    "model_metrics.csv": "a348f9815ddc37290d2dca91864bd110cecb94ccd42e02d88cc7c8542c93bd96",
-    "verdict.json": "562c7d571322f09439f5b1d6a024d9b6c56014fec3ea41a2b27d8682d240d220"
+    "REPORT.md": "1aad911cc63b5c883fe5fdf068b0a08403bf8b1e03fa210da34c7400ff8d7a84",
+    "conditional_bins.csv": "0332a54aa910df459e9aaa8c40e41f6f0ca34c35944e4671087ee6eb70c87dfd",
+    "events.csv": "74227bc7e4adad19e92639189507df5abd443f42d1939bca7c8e61a3e31b4081",
+    "manifest.json": "661985ec3a11962bb08c952d66a935896112f5babc7a060da5a504344e6abb25",
+    "model_metrics.csv": "b16ed4200d2224f5cebd93cfbff9044c2436d80a7d3b168fd354e74661a17ac2",
+    "verdict.json": "536c3a04f5a8054f279903e6646fb364f344d1fb1044a601367c2fa9730a3833"
   }
 }
