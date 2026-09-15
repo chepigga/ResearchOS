@@ -1,5 +1,6 @@
 name: AMP GC OOS 001 One Shot
 
+# Preregistered one-shot trigger; strategy logic is frozen in amp_gc_oos_001_one_shot.py.
 on:
   push:
     branches: [gc-amp-feed-audit-001]
