@@ -1,115 +1,145 @@
 {
   "spec_id": "AEIF_FROZEN_SPEC_001",
-  "status": "NOT_YET_FINGERPRINT_CERTIFIED",
+  "status": "CORE_FINGERPRINT_CERTIFIED_CONFIRMATION_PENDING",
   "source_lab": "RITHMIC_AEIF_FROZEN_FINGERPRINT_RECONSTRUCTION_001",
   "amp_oos_parameter_selection_forbidden": true,
+  "source_artifact": {
+    "name": "GC_RITHMIC_40D_003_GCZ6.zip",
+    "sha256": "b12465a783f36aac41b82a9f2a5c4e74bd2dcf7024ffc3636e8c41a8fd01e803",
+    "symbol": "GCZ6",
+    "coverage_utc": "2026-08-03 through 2026-09-11",
+    "raw_trade_ticks": 3949646,
+    "m5_bars_with_trades": 8231
+  },
   "working_bar": {
     "value": "M5",
-    "evidence_class": "LINEAGE_RECOVERED"
+    "clock": "UTC 5-minute bins",
+    "evidence_class": "RAW_RITHMIC_FINGERPRINT_CERTIFIED"
+  },
+  "footprint": {
+    "delta": "BUY aggressive volume - SELL aggressive volume",
+    "delta_frac": "delta / (BUY aggressive volume + SELL aggressive volume)",
+    "lower20_cut": "low + 0.20*(high-low)",
+    "upper20_cut": "high - 0.20*(high-low)",
+    "sell_lower20": "SELL volume at trade_price <= lower20_cut",
+    "buy_upper20": "BUY volume at trade_price >= upper20_cut",
+    "sell_loc": "sell_lower20/sell_volume, else 0",
+    "buy_loc": "buy_upper20/buy_volume, else 0"
+  },
+  "causal_references": {
+    "rolling_completed_m5_bars": 240,
+    "delta_long_tail": "prior-240 Q10(delta_frac)",
+    "delta_short_tail": "prior-240 Q90(delta_frac)",
+    "sell_location_threshold": "prior-240 Q75(sell_loc)",
+    "buy_location_threshold": "prior-240 Q75(buy_loc)",
+    "current_bar_excluded": true
+  },
+  "atr": {
+    "period": 14,
+    "method": "Wilder",
+    "timeframe": "M5",
+    "true_range": true
   },
   "core": {
     "long": {
-      "delta_tail": "Q10 or lower",
-      "aggressor_side": "SELL",
-      "location": "lower 20% of bar price range",
-      "location_threshold": "causal Q75 reference",
-      "impact_failure_threshold_atr_approx": 0.15
+      "delta_gate": "delta_frac <= prior Q10",
+      "location_gate": "sell_loc >= prior Q75(sell_loc)",
+      "directional_impact_atr": "max(0, open-close)/ATR14_Wilder_M5",
+      "impact_gate": "directional_impact_atr <= 0.15"
     },
     "short": {
-      "delta_tail": "Q90 or higher",
-      "aggressor_side": "BUY",
-      "location": "upper 20% of bar price range",
-      "location_threshold": "causal Q75 reference",
-      "impact_failure_threshold_atr_approx": 0.15
+      "delta_gate": "delta_frac >= prior Q90",
+      "location_gate": "buy_loc >= prior Q75(buy_loc)",
+      "directional_impact_atr": "max(0, close-open)/ATR14_Wilder_M5",
+      "impact_gate": "directional_impact_atr <= 0.15"
     },
-    "evidence_class": "LINEAGE_RECOVERED_NOT_RAW_ARTIFACT_CERTIFIED"
+    "raw_archive_fingerprint": {
+      "events": 105,
+      "long": 48,
+      "short": 57,
+      "match_status": "EXACT_COUNT_AND_SIDE_RECONSTRUCTION"
+    },
+    "evidence_class": "RAW_RITHMIC_FINGERPRINT_CERTIFIED"
+  },
+  "cooldown": {
+    "minutes": 30,
+    "scope": "global across LONG and SHORT core events",
+    "rule": "keep event only if >=30 minutes since last KEPT event",
+    "raw_archive_fingerprint": {
+      "events": 92,
+      "long": 43,
+      "short": 49,
+      "match_status": "EXACT"
+    },
+    "evidence_class": "RAW_RITHMIC_FINGERPRINT_CERTIFIED"
   },
   "confirmation": {
     "max_following_m5_bars": 2,
-    "long": "bullish body AND positive delta",
-    "short": "bearish body AND negative delta",
-    "entry": "after completed confirmation",
-    "evidence_class": "LINEAGE_RECOVERED_NOT_RAW_ARTIFACT_CERTIFIED"
+    "current_best_reconstruction": {
+      "long": "first clock-contiguous following M5 with close>open AND delta>0",
+      "short": "first clock-contiguous following M5 with close<open AND delta<0",
+      "entry": "after completed confirmation"
+    },
+    "raw_archive_result": {
+      "full_40d_confirmations": 61,
+      "through_2026-09-08_utc": 53,
+      "through_2026-09-08_long": 25,
+      "through_2026-09-08_short": 28
+    },
+    "historical_xau_transfer_fingerprint": {
+      "trades": 51,
+      "buy": 23,
+      "sell": 28
+    },
+    "status": "NOT_EXACTLY_CERTIFIED_TWO_LONG_DIFFERENCE_REMAINS",
+    "evidence_class": "HIGH_CONFIDENCE_NOT_BITWISE_CERTIFIED"
   },
-  "historical_execution_fingerprint": {
-    "baseline": {
-      "stop_r": 1.0,
-      "target_r": 1.5,
-      "max_hold_minutes": 30
-    },
-    "cooldown_minutes": 30,
-    "exit_candidate_same_sample": {
-      "stop_r": 1.0,
-      "target_r": 3.0,
-      "max_hold_minutes": 240,
-      "single_position": true
-    }
+  "historical_execution_candidate": {
+    "xau_stop": "1.0 * ATR20(M5)",
+    "target_r": 3.0,
+    "max_hold_minutes": 240,
+    "session_close_exit": true,
+    "single_position": true,
+    "break_even": false,
+    "partials": false,
+    "trailing": false,
+    "demo_risk_pct": 0.5,
+    "same_sample_exit_selection_warning": true
   },
-  "fingerprints": {
-    "rithmic_core": {
-      "n_approx": 105,
-      "ev_r_approx": 0.297
+  "historical_transfer_fingerprints": {
+    "lab022_baseline": {
+      "trades": 51,
+      "ev_r": 0.250,
+      "sum_r": 12.75,
+      "max_dd_r": 3.24,
+      "buy": 23,
+      "sell": 28
     },
-    "rithmic_core_cooldown30": {
-      "n_approx": 92,
-      "ev_r_approx": 0.244,
-      "sum_r_approx": 22.45,
-      "max_dd_r_approx": 5.0
+    "tp3_h240": {
+      "trades": 51,
+      "ev_r": 0.563,
+      "sum_r": 28.69,
+      "pf": 2.15,
+      "max_dd_r": 3.42
     },
-    "gc_to_xau_baseline": {
-      "n_approx": 51,
-      "ev_r_approx": 0.250,
-      "sum_r_approx": 12.75,
-      "max_dd_r_approx": 3.24
-    },
-    "gc_to_xau_tp3_h240": {
-      "n_approx": 51,
-      "ev_r_approx": 0.563,
-      "sum_r_approx": 28.69,
-      "pf_approx": 2.15,
-      "max_dd_r_approx": 3.42
-    },
-    "gc_to_xau_tp3_h240_single_position": {
-      "n_approx": 46,
-      "ev_r_approx": 0.666,
-      "sum_r_approx": 30.63,
-      "pf_approx": 2.33,
-      "max_dd_r_approx": 3.32,
+    "tp3_h240_single_position": {
+      "trades": 46,
+      "ev_r": 0.666,
+      "sum_r": 30.63,
+      "pf": 2.33,
+      "max_dd_r": 3.32,
       "max_consecutive_losses": 4
     }
   },
-  "verified_precursor": {
-    "m1_rolling_bars": 240,
-    "m1_min_warmup_bars": 120,
-    "delta_frac_quantiles": [0.10, 0.90],
-    "aggressor_side_volume_quantile": 0.75,
-    "atr": "ATR14 M1",
-    "failure": "weakest 20% of prior same-side A-event directional price result",
-    "response_max_bars": 2
-  },
-  "verified_negative_control_m5_transfer": {
-    "rolling_bars": 48,
-    "min_warmup_bars": 24,
-    "atr": "simple ATR3 M5",
-    "failure_min_prior_same_side_a_events": 15,
-    "promotion_status": "NEGATIVE_CONTROL_NOT_FINAL_RITHMIC_SPEC"
-  },
-  "unresolved_for_exact_certification": [
-    "final_rithmic_rolling_window_bars",
-    "final_rithmic_min_warmup_bars",
-    "final_rithmic_atr_period_and_smoothing",
-    "exact_failed_impact_numerator_formula",
-    "exact_q75_location_reference_population",
-    "rithmic_both_side_print_handling",
-    "confirmation_zero_and_gap_edge_cases",
-    "exact_entry_price_timestamp_convention"
+  "remaining_unresolved_for_full_signal_certification": [
+    "identity of the two LONG confirmations present in the reconstruction but absent from the 51-trade XAU transfer",
+    "whether those two are removed by the exact confirmation rule or by XAU transfer/eligibility/history availability",
+    "exact XAU next-eligible-entry timestamp mapping for LAB022"
   ],
-  "certification_tolerance": {
-    "event_identity": "exact if event ledger available",
-    "count": "+/-1 only with documented boundary cause",
-    "ev_r_abs": 0.01,
-    "sum_r_abs": 0.25
+  "research_discipline": {
+    "amp_oos_must_not_be_used_to_resolve_remaining_confirmation_ambiguity": true,
+    "no_threshold_retuning": true,
+    "all_changes_require_separate_lab": true
   },
-  "required_artifact": "original positive Rithmic code/config, event ledger, footprint/raw data, or complete frozen report",
-  "amp_gate": "CLOSED"
+  "amp_gate": "CLOSED_UNTIL_CONFIRMATION_TRANSFER_AMBIGUITY_IS_PREREGISTERED_OR_RESOLVED"
 }
