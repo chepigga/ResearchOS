@@ -1,0 +1,797 @@
+{
+  "release": "https://github.com/chepigga/ResearchOS/releases/tag/GC",
+  "xlsx_asset": "ReportTester-1514598162_xau.xlsx",
+  "sheets": [
+    "Sheet1"
+  ],
+  "trade_like_rows": [
+    {
+      "sheet": "Sheet1",
+      "row": 163,
+      "values": [
+        "2026.01.09 01:05:00",
+        "82",
+        "XAUUSD",
+        "buy",
+        "0.04 / 0.04",
+        "0.0",
+        "4417.29",
+        "4568.02",
+        "2026.01.09 01:05:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 164,
+      "values": [
+        "2026.01.12 02:30:42",
+        "83",
+        "XAUUSD",
+        "sell",
+        "0.04 / 0.04",
+        "0.0",
+        "2026.01.12 02:30:42",
+        "filled",
+        "tp 4568.02"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 165,
+      "values": [
+        "2026.01.16 01:05:00",
+        "84",
+        "XAUUSD",
+        "buy",
+        "0.1 / 0.1",
+        "0.0",
+        "4593.16",
+        "4657.59",
+        "2026.01.16 01:05:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 166,
+      "values": [
+        "2026.01.16 04:36:39",
+        "85",
+        "XAUUSD",
+        "sell",
+        "0.1 / 0.1",
+        "0.0",
+        "2026.01.16 04:36:39",
+        "filled",
+        "sl 4593.16"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 167,
+      "values": [
+        "2026.02.12 12:00:00",
+        "86",
+        "XAUUSD",
+        "buy",
+        "0.05 / 0.05",
+        "0.0",
+        "5024.26",
+        "5147.11",
+        "2026.02.12 12:00:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 168,
+      "values": [
+        "2026.02.12 18:11:28",
+        "87",
+        "XAUUSD",
+        "sell",
+        "0.05 / 0.05",
+        "0.0",
+        "2026.02.12 18:11:28",
+        "filled",
+        "sl 5024.26"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 169,
+      "values": [
+        "2026.02.25 01:05:00",
+        "88",
+        "XAUUSD",
+        "buy",
+        "0.06 / 0.06",
+        "0.0",
+        "5097.38",
+        "5195.26",
+        "2026.02.25 01:05:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 170,
+      "values": [
+        "2026.02.25 07:27:36",
+        "89",
+        "XAUUSD",
+        "sell",
+        "0.06 / 0.06",
+        "0.0",
+        "2026.02.25 07:27:36",
+        "filled",
+        "tp 5195.26"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 171,
+      "values": [
+        "2026.02.27 01:05:00",
+        "90",
+        "XAUUSD",
+        "buy",
+        "0.07 / 0.07",
+        "0.0",
+        "5145.47",
+        "5237.5",
+        "2026.02.27 01:05:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 172,
+      "values": [
+        "2026.02.27 15:25:41",
+        "91",
+        "XAUUSD",
+        "sell",
+        "0.07 / 0.07",
+        "0.0",
+        "2026.02.27 15:25:41",
+        "filled",
+        "tp 5237.50"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 173,
+      "values": [
+        "2026.02.27 16:00:00",
+        "92",
+        "XAUUSD",
+        "buy",
+        "0.06 / 0.06",
+        "0.0",
+        "5182.91",
+        "5283.54",
+        "2026.02.27 16:00:00",
+        "filled",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 174,
+      "values": [
+        "2026.03.02 01:05:00",
+        "93",
+        "XAUUSD",
+        "sell",
+        "0.06 / 0.06",
+        "0.0",
+        "2026.03.02 01:05:00",
+        "filled",
+        "tp 5283.54"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 175,
+      "values": [
+        "2026.03.12 16:00:00",
+        "94",
+        "XAUUSD",
+        "buy",
+        "0.06 / 0.06",
+        "0.0",
+        "5141.52",
+        "5239.9",
+        "2026.03.12 16:00:00",
+        "filled",
+        "CTX BUY E100 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 176,
+      "values": [
+        "2026.03.12 17:38:02",
+        "95",
+        "XAUUSD",
+        "sell",
+        "0.06 / 0.06",
+        "0.0",
+        "2026.03.12 17:38:02",
+        "filled",
+        "sl 5141.52"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 260,
+      "values": [
+        "2026.01.09 01:05:00",
+        "82",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.04",
+        "4477.58",
+        "82",
+        "-0.13",
+        "0.0",
+        "0.0",
+        "103472.87",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 261,
+      "values": [
+        "2026.01.12 02:30:42",
+        "83",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.04",
+        "4568.12",
+        "83",
+        "-0.13",
+        "-3.32",
+        "362.16",
+        "103831.58",
+        "tp 4568.02"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 262,
+      "values": [
+        "2026.01.16 01:05:00",
+        "84",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.1",
+        "4618.93",
+        "84",
+        "-0.32",
+        "0.0",
+        "0.0",
+        "103831.26",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 263,
+      "values": [
+        "2026.01.16 04:36:39",
+        "85",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.1",
+        "4593.16",
+        "85",
+        "-0.32",
+        "0.0",
+        "-257.7",
+        "103573.24",
+        "sl 4593.16"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 264,
+      "values": [
+        "2026.02.12 12:00:00",
+        "86",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.05",
+        "5073.4",
+        "86",
+        "-0.18",
+        "0.0",
+        "0.0",
+        "103573.06",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 265,
+      "values": [
+        "2026.02.12 18:11:28",
+        "87",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.05",
+        "5024.18",
+        "87",
+        "-0.18",
+        "0.0",
+        "-246.1",
+        "103326.78",
+        "sl 5024.26"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 266,
+      "values": [
+        "2026.02.25 01:05:00",
+        "88",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.06",
+        "5136.53",
+        "88",
+        "-0.22",
+        "0.0",
+        "0.0",
+        "103326.56",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 267,
+      "values": [
+        "2026.02.25 07:27:36",
+        "89",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.06",
+        "5195.31",
+        "89",
+        "-0.22",
+        "0.0",
+        "352.68",
+        "103679.02",
+        "tp 5195.26"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 268,
+      "values": [
+        "2026.02.27 01:05:00",
+        "90",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.07",
+        "5182.28",
+        "90",
+        "-0.25",
+        "0.0",
+        "0.0",
+        "103678.77",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 269,
+      "values": [
+        "2026.02.27 15:25:41",
+        "91",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.07",
+        "5237.54",
+        "91",
+        "-0.26",
+        "0.0",
+        "386.82",
+        "104065.33",
+        "tp 5237.50"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 270,
+      "values": [
+        "2026.02.27 16:00:00",
+        "92",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.06",
+        "5223.16",
+        "92",
+        "-0.22",
+        "0.0",
+        "0.0",
+        "104065.11",
+        "CTX BUY E75 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 271,
+      "values": [
+        "2026.03.02 01:05:00",
+        "93",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.06",
+        "5358.16",
+        "93",
+        "-0.23",
+        "-4.98",
+        "810.0",
+        "104869.9",
+        "tp 5283.54"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 272,
+      "values": [
+        "2026.03.12 16:00:00",
+        "94",
+        "XAUUSD",
+        "buy",
+        "in",
+        "0.06",
+        "5180.87",
+        "94",
+        "-0.22",
+        "0.0",
+        "0.0",
+        "104869.68",
+        "CTX BUY E100 C76"
+      ]
+    },
+    {
+      "sheet": "Sheet1",
+      "row": 273,
+      "values": [
+        "2026.03.12 17:38:02",
+        "95",
+        "XAUUSD",
+        "sell",
+        "out",
+        "0.06",
+        "5141.52",
+        "95",
+        "-0.22",
+        "0.0",
+        "-236.1",
+        "104633.36",
+        "sl 5141.52"
+      ]
+    }
+  ],
+  "mq5_scans": {
+    "REALTIME_001_Rithmic_Native_Connectivity.mq5": {
+      "bytes": 31756,
+      "hits": []
+    },
+    "REALTIME_001_Rithmic_Native_Connectivity_v002.mq5": {
+      "bytes": 31899,
+      "hits": []
+    },
+    "REALTIME_002_Rithmic_Login_GC_Stream_v001.mq5": {
+      "bytes": 56326,
+      "hits": [
+        {
+          "line": 8,
+          "text": "//|  3) Decode live trade price/size/aggressor + bid/ask.             |"
+        },
+        {
+          "line": 53,
+          "text": "input double InpGcTickSize          = 0.10;             // Used only for quote/aggressor diagnostics"
+        },
+        {
+          "line": 632,
+          "text": "#define RITHMIC_F_AGGRESSOR                   112003"
+        },
+        {
+          "line": 1105,
+          "text": "string AggressorName(const int aggressor)"
+        },
+        {
+          "line": 1107,
+          "text": "   if(aggressor==1) return \"BUY\";"
+        },
+        {
+          "line": 1108,
+          "text": "   if(aggressor==2) return \"SELL\";"
+        },
+        {
+          "line": 1123,
+          "text": "   double price=0.0; int size=0,aggressor=0,usecs=0; long ssboe=0; ulong volume=0;"
+        },
+        {
+          "line": 1132,
+          "text": "      if((field==RITHMIC_F_TRADE_SIZE || field==RITHMIC_F_AGGRESSOR || field==RITHMIC_F_TRADE_VOLUME || field==RITHMIC_F_SSBOE || field==RITHMIC_F_USECS) && wire==PB_WIRE_VARINT)"
+        },
+        {
+          "line": 1136,
+          "text": "         else if(field==RITHMIC_F_AGGRESSOR) aggressor=(int)v;"
+        },
+        {
+          "line": 1146,
+          "text": "   if(aggressor==1) { g_buy_trade_count++; if(have_size && size>0) g_buy_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1147,
+          "text": "   else if(aggressor==2) { g_sell_trade_count++; if(have_size && size>0) g_sell_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1155,
+          "text": "         if(aggressor==1) qcheck=(MathAbs(price-g_last_ask)<=tol ? \"ASK_OK\" : \"ASK_MISMATCH\");"
+        },
+        {
+          "line": 1156,
+          "text": "         else if(aggressor==2) qcheck=(MathAbs(price-g_last_bid)<=tol ? \"BID_OK\" : \"BID_MISMATCH\");"
+        },
+        {
+          "line": 1159,
+          "text": "                       symbol,exchange,TickTimestamp(ssboe,usecs),price,size,AggressorName(aggressor),"
+        }
+      ]
+    },
+    "REALTIME_002_Rithmic_Paper_GC_Stream_v002.mq5": {
+      "bytes": 57414,
+      "hits": [
+        {
+          "line": 8,
+          "text": "//|  3) Decode live trade price/size/aggressor + bid/ask.             |"
+        },
+        {
+          "line": 54,
+          "text": "input double InpGcTickSize          = 0.10;             // Used only for quote/aggressor diagnostics"
+        },
+        {
+          "line": 633,
+          "text": "#define RITHMIC_F_AGGRESSOR                   112003"
+        },
+        {
+          "line": 1110,
+          "text": "string AggressorName(const int aggressor)"
+        },
+        {
+          "line": 1112,
+          "text": "   if(aggressor==1) return \"BUY\";"
+        },
+        {
+          "line": 1113,
+          "text": "   if(aggressor==2) return \"SELL\";"
+        },
+        {
+          "line": 1128,
+          "text": "   double price=0.0; int size=0,aggressor=0,usecs=0; long ssboe=0; ulong volume=0;"
+        },
+        {
+          "line": 1137,
+          "text": "      if((field==RITHMIC_F_TRADE_SIZE || field==RITHMIC_F_AGGRESSOR || field==RITHMIC_F_TRADE_VOLUME || field==RITHMIC_F_SSBOE || field==RITHMIC_F_USECS) && wire==PB_WIRE_VARINT)"
+        },
+        {
+          "line": 1141,
+          "text": "         else if(field==RITHMIC_F_AGGRESSOR) aggressor=(int)v;"
+        },
+        {
+          "line": 1151,
+          "text": "   if(aggressor==1) { g_buy_trade_count++; if(have_size && size>0) g_buy_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1152,
+          "text": "   else if(aggressor==2) { g_sell_trade_count++; if(have_size && size>0) g_sell_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1160,
+          "text": "         if(aggressor==1) qcheck=(MathAbs(price-g_last_ask)<=tol ? \"ASK_OK\" : \"ASK_MISMATCH\");"
+        },
+        {
+          "line": 1161,
+          "text": "         else if(aggressor==2) qcheck=(MathAbs(price-g_last_bid)<=tol ? \"BID_OK\" : \"BID_MISMATCH\");"
+        },
+        {
+          "line": 1164,
+          "text": "                       symbol,exchange,TickTimestamp(ssboe,usecs),price,size,AggressorName(aggressor),"
+        }
+      ]
+    },
+    "REALTIME_002_Rithmic_Paper_GC_Stream_v003.mq5": {
+      "bytes": 59489,
+      "hits": [
+        {
+          "line": 8,
+          "text": "//|  3) Decode live trade price/size/aggressor + bid/ask.             |"
+        },
+        {
+          "line": 60,
+          "text": "input double InpGcTickSize          = 0.10;             // Used only for quote/aggressor diagnostics"
+        },
+        {
+          "line": 642,
+          "text": "#define RITHMIC_F_AGGRESSOR                   112003"
+        },
+        {
+          "line": 1157,
+          "text": "string AggressorName(const int aggressor)"
+        },
+        {
+          "line": 1159,
+          "text": "   if(aggressor==1) return \"BUY\";"
+        },
+        {
+          "line": 1160,
+          "text": "   if(aggressor==2) return \"SELL\";"
+        },
+        {
+          "line": 1175,
+          "text": "   double price=0.0; int size=0,aggressor=0,usecs=0; long ssboe=0; ulong volume=0;"
+        },
+        {
+          "line": 1184,
+          "text": "      if((field==RITHMIC_F_TRADE_SIZE || field==RITHMIC_F_AGGRESSOR || field==RITHMIC_F_TRADE_VOLUME || field==RITHMIC_F_SSBOE || field==RITHMIC_F_USECS) && wire==PB_WIRE_VARINT)"
+        },
+        {
+          "line": 1188,
+          "text": "         else if(field==RITHMIC_F_AGGRESSOR) aggressor=(int)v;"
+        },
+        {
+          "line": 1198,
+          "text": "   if(aggressor==1) { g_buy_trade_count++; if(have_size && size>0) g_buy_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1199,
+          "text": "   else if(aggressor==2) { g_sell_trade_count++; if(have_size && size>0) g_sell_volume+=(ulong)size; }"
+        },
+        {
+          "line": 1207,
+          "text": "         if(aggressor==1) qcheck=(MathAbs(price-g_last_ask)<=tol ? \"ASK_OK\" : \"ASK_MISMATCH\");"
+        },
+        {
+          "line": 1208,
+          "text": "         else if(aggressor==2) qcheck=(MathAbs(price-g_last_bid)<=tol ? \"BID_OK\" : \"BID_MISMATCH\");"
+        },
+        {
+          "line": 1211,
+          "text": "                       symbol,exchange,TickTimestamp(ssboe,usecs),price,size,AggressorName(aggressor),"
+        }
+      ]
+    },
+    "XAU_Context_EA_v0_1.mq5": {
+      "bytes": 49775,
+      "hits": [
+        {
+          "line": 26,
+          "text": "//--- Confirmation timing copied from indicator."
+        },
+        {
+          "line": 27,
+          "text": "enum ENUM_CONFIRMATION_TIMING"
+        },
+        {
+          "line": 59,
+          "text": "input ENUM_CONFIRMATION_TIMING  InpConfirmationTiming          = CONFIRM_H4_CLOSE;     // Keep H4 close for validated scope"
+        },
+        {
+          "line": 130,
+          "text": "   datetime confirmation_time;"
+        },
+        {
+          "line": 142,
+          "text": "   int      confirmation_pct;"
+        },
+        {
+          "line": 581,
+          "text": "//| M15 confirmation layer                                           |"
+        },
+        {
+          "line": 812,
+          "text": "   if(InpConfirmationTiming==CONFIRM_H4_CLOSE)"
+        },
+        {
+          "line": 813,
+          "text": "      s.confirmation_time=b.available_time;"
+        },
+        {
+          "line": 818,
+          "text": "      s.confirmation_time=m15open+PeriodSeconds(PERIOD_M15);"
+        },
+        {
+          "line": 821,
+          "text": "   s.ob=false;s.imbalance=false;s.liquidity=false;s.price_action=false;s.confirmation_pct=0;"
+        },
+        {
+          "line": 825,
+          "text": "      if(!BuildM15Window(s.confirmation_time,m)){s.error=\"M15 confirmation history unavailable\";return(false);}"
+        },
+        {
+          "line": 826,
+          "text": "      s.ob=ConfirmOrderBlock(m,s.confirmation_time,s.direction);"
+        },
+        {
+          "line": 827,
+          "text": "      s.imbalance=ConfirmImbalance(m,s.confirmation_time,s.direction);"
+        },
+        {
+          "line": 828,
+          "text": "      s.liquidity=ConfirmLiquidity(m,s.confirmation_time,s.direction);"
+        },
+        {
+          "line": 829,
+          "text": "      s.price_action=ConfirmPriceAction(m,s.confirmation_time,s.direction);"
+        },
+        {
+          "line": 830,
+          "text": "      s.confirmation_pct=25*((s.ob?1:0)+(s.imbalance?1:0)+(s.liquidity?1:0)+(s.price_action?1:0));"
+        },
+        {
+          "line": 832,
+          "text": "   s.entry_confidence_pct=EntryConfidencePct(s.direction,s.confirmation_pct,s.scope_eligible);"
+        },
+        {
+          "line": 834,
+          "text": "   s.quality=QualityFromFrozenMatrix(s.direction,s.confirmation_pct,s.scope_eligible);"
+        },
+        {
+          "line": 1058,
+          "text": "   if(!BuildM15Window(ctx.confirmation_time,m)) return(false);"
+        },
+        {
+          "line": 1064,
+          "text": "   bool haveOB=FindConfirmedOrderBlockZone(m,ctx.confirmation_time,ctx.direction,obLow,obHigh);"
+        },
+        {
+          "line": 1225,
+          "text": "   string comment=StringFormat(\"CTX %s E%d C%d\",ctx.direction>0?\"BUY\":\"SELL\",ctx.confirmation_pct,ctx.entry_confidence_pct);"
+        },
+        {
+          "line": 1260,
+          "text": "   if(ctx.confirmation_pct<InpMinEvidencePct){why=\"Evidence below threshold\";return(false);}"
+        },
+        {
+          "line": 1272,
+          "text": "                        ctx.confirmation_pct,ctx.entry_confidence_pct,ctx.scope_eligible?\"YES\":\"NO\","
+        },
+        {
+          "line": 1300,
+          "text": "   if(InpConfirmationTiming!=CONFIRM_H4_CLOSE && InpPrintDiagnostics)"
+        },
+        {
+          "line": 1359,
+          "text": "                  DirectionToString(ctx.direction),ctx.scope_eligible?\"YES\":\"NO\",ctx.confirmation_pct,"
+        }
+      ]
+    }
+  }
+}
