@@ -36,6 +36,6 @@ jobs:
             echo 'No result changes'
           else
             git commit -m 'Record GC seller breakdown XAU bear regimes LAB006'
+            git pull --rebase origin gc-amp-feed-audit-001
             git push origin HEAD:gc-amp-feed-audit-001
           fi
-# trigger-2026-09-16
