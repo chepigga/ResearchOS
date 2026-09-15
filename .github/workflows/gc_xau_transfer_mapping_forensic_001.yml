@@ -1,0 +1,138 @@
+name: GC XAU Transfer Mapping Forensic 001
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - '.github/workflows/gc_xau_transfer_mapping_forensic_001.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  forensic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - name: Download historical XAU M1 release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download GC -p 'XAUUSD_M1_2026.csv' --clobber
+
+      - name: Compare reconstructed confirmations to XAU history availability
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, re
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+
+          xau_path = Path('XAUUSD_M1_2026.csv')
+          ev_path = Path('research/gc/RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CONFIRMED_EVENTS.csv')
+
+          print('=== XAU FILE HEAD ===')
+          with xau_path.open('r', encoding='utf-8-sig', errors='replace') as f:
+              for _ in range(5):
+                  s=f.readline()
+                  if not s: break
+                  print(repr(s.rstrip('\n')))
+
+          sample=xau_path.read_text(encoding='utf-8-sig', errors='replace')[:10000]
+          try:
+              delim=csv.Sniffer().sniff(sample, delimiters=',;\t').delimiter
+          except Exception:
+              delim=','
+          print('delimiter=',repr(delim))
+
+          def parse_dt(s):
+              s=s.strip().strip('"')
+              fmts=[
+                  '%Y.%m.%d %H:%M:%S','%Y.%m.%d %H:%M','%Y-%m-%d %H:%M:%S','%Y-%m-%d %H:%M',
+                  '%Y-%m-%dT%H:%M:%S%z','%Y-%m-%dT%H:%M:%S+00:00','%Y-%m-%dT%H:%M:%S'
+              ]
+              for fmt in fmts:
+                  try:
+                      d=datetime.strptime(s,fmt)
+                      if d.tzinfo is not None: d=d.astimezone(timezone.utc).replace(tzinfo=None)
+                      return d
+                  except Exception:
+                      pass
+              try:
+                  d=datetime.fromisoformat(s.replace('Z','+00:00'))
+                  if d.tzinfo: d=d.astimezone(timezone.utc).replace(tzinfo=None)
+                  return d
+              except Exception:
+                  return None
+
+          rows=[]
+          with xau_path.open('r', encoding='utf-8-sig', errors='replace', newline='') as f:
+              r=csv.reader(f, delimiter=delim)
+              for row in r:
+                  if not row: continue
+                  dt=None; col=None
+                  for i,v in enumerate(row[:4]):
+                      dt=parse_dt(v)
+                      if dt is not None:
+                          col=i; break
+                  if dt is not None:
+                      rows.append((dt,row))
+          rows.sort(key=lambda x:x[0])
+          print('parsed_rows=',len(rows))
+          if not rows:
+              raise SystemExit('NO_PARSEABLE_XAU_ROWS')
+          print('xau_min=',rows[0][0],'xau_max=',rows[-1][0])
+
+          times=[x[0] for x in rows]
+          import bisect
+          events=[]
+          with ev_path.open(newline='',encoding='utf-8') as f:
+              for d in csv.DictReader(f):
+                  dt=datetime.fromisoformat(d['entry_eligible_utc'].replace('Z','+00:00')).astimezone(timezone.utc).replace(tzinfo=None)
+                  if dt <= datetime(2026,9,8,23,59,59):
+                      events.append((dt,d))
+          print('candidate_events_through_0908=',len(events),'LONG=',sum(d['side']=='LONG' for _,d in events),'SHORT=',sum(d['side']=='SHORT' for _,d in events))
+
+          def stats_for_offset(h):
+              exact=within1=within5=within15=within60=0
+              miss=[]
+              for dt,d in events:
+                  target=dt+timedelta(hours=h)
+                  i=bisect.bisect_left(times,target)
+                  if i>=len(times):
+                      delay=None
+                  else:
+                      delay=(times[i]-target).total_seconds()/60
+                  if delay == 0: exact += 1
+                  if delay is not None and 0 <= delay <= 1: within1 += 1
+                  if delay is not None and 0 <= delay <= 5: within5 += 1
+                  if delay is not None and 0 <= delay <= 15: within15 += 1
+                  if delay is not None and 0 <= delay <= 60: within60 += 1
+                  if delay is None or delay>5:
+                      miss.append((dt,d['side'],delay, times[i] if i<len(times) else None,d['core_bar_utc'],d['confirm_bar_utc']))
+              return exact,within1,within5,within15,within60,miss
+
+          scores=[]
+          print('=== OFFSET COVERAGE (candidate UTC + offset -> XAU file clock) ===')
+          for h in range(-12,13):
+              s=stats_for_offset(h)
+              scores.append((s[2],s[1],s[0],-abs(h),h,s))
+              print(f'offset={h:+d}h exact={s[0]:02d} <=1m={s[1]:02d} <=5m={s[2]:02d} <=15m={s[3]:02d} <=60m={s[4]:02d} misses5={len(s[5]):02d}')
+          best=max(scores)[4]
+          s=stats_for_offset(best)
+          print('BEST_OFFSET_H=',best)
+          print('=== MISSES >5 MIN AT BEST OFFSET ===')
+          for x in s[5]: print(x)
+
+          print('=== ALL LONG EVENTS WITH NEXT-XAU DELAY (BEST OFFSET) ===')
+          for dt,d in events:
+              if d['side']!='LONG': continue
+              target=dt+timedelta(hours=best)
+              i=bisect.bisect_left(times,target)
+              nxt=times[i] if i<len(times) else None
+              delay=None if nxt is None else (nxt-target).total_seconds()/60
+              prev=times[i-1] if i>0 else None
+              print(f"core={d['core_bar_utc']} confirm={d['confirm_bar_utc']} eligible_utc={d['entry_eligible_utc']} target_file={target} prev={prev} next={nxt} delay_min={delay}")
+          PY
