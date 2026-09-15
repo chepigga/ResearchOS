@@ -1,0 +1,192 @@
+{
+  "amp_bars": 7699,
+  "amp_first_bar": "2026-08-06T18:25:00+00:00",
+  "amp_footprint_sha256": "ff6e003bb58981439748051a530f7722c9edbf090b7b53740588e85611e873bd",
+  "amp_last_bar": "2026-09-15T18:25:00+00:00",
+  "bridge_policy": "EXCLUSIVE_SIDE_ONLY; BOTH BUY+SELL prints excluded from directional aggressor volume",
+  "confirmation": {
+    "long": 28,
+    "n": 55,
+    "short": 27
+  },
+  "core": {
+    "cooldown30_kept": 79,
+    "long": 38,
+    "n": 90,
+    "short": 52
+  },
+  "historical_xau_mapping": {
+    "available": true,
+    "candidate_confirmations_in_xau_history_range": 42,
+    "exact_long": 19,
+    "exact_short": 22,
+    "exact_timestamp_transfers": 41,
+    "missing_exact_timestamp": 1,
+    "xau_max_file_clock": "2026-09-08 20:03:00",
+    "xau_min_file_clock": "2026-08-03 01:05:00",
+    "xau_rows": 36489
+  },
+  "lab": "AMP_GC_OOS_001_ONE_SHOT",
+  "note": "XAU historical file ends 2026-09-08 file clock; later AMP confirmations are not scored as failed transfers.",
+  "same_date_rithmic_confirmation_parity": {
+    "amp_n": 52,
+    "amp_only": 6,
+    "amp_only_events": [
+      {
+        "side": "LONG",
+        "time": "2026-08-24T20:35:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-28T04:05:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-02T09:40:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-09-02T19:35:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-09-09T04:00:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-11T02:55:00+00:00"
+      }
+    ],
+    "exact_set_match": false,
+    "jaccard": 0.7931034482758621,
+    "matched": 46,
+    "rithmic_n": 52,
+    "rithmic_only": 6,
+    "rithmic_only_events": [
+      {
+        "side": "SHORT",
+        "time": "2026-08-07T20:40:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-12T17:55:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-24T20:20:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-31T10:35:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-06T23:05:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-07T16:00:00+00:00"
+      }
+    ],
+    "window_end": "2026-09-11T11:45:00+00:00",
+    "window_start": "2026-08-07T15:25:00+00:00"
+  },
+  "same_date_rithmic_core_parity": {
+    "amp_n": 82,
+    "amp_only": 7,
+    "amp_only_events": [
+      {
+        "side": "SHORT",
+        "time": "2026-08-10T20:50:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-19T09:35:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-24T20:35:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-02T09:40:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-09-02T19:35:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-08T22:15:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-09-09T04:00:00+00:00"
+      }
+    ],
+    "exact_set_match": false,
+    "jaccard": 0.7894736842105263,
+    "matched": 75,
+    "rithmic_n": 88,
+    "rithmic_only": 13,
+    "rithmic_only_events": [
+      {
+        "side": "SHORT",
+        "time": "2026-08-07T20:40:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-10T06:35:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-12T17:55:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-12T21:00:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-24T20:20:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-26T21:00:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-08-27T09:45:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-08-31T10:35:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-03T21:00:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-06T23:05:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-07T16:00:00+00:00"
+      },
+      {
+        "side": "LONG",
+        "time": "2026-09-08T21:00:00+00:00"
+      },
+      {
+        "side": "SHORT",
+        "time": "2026-09-10T22:35:00+00:00"
+      }
+    ],
+    "window_end": "2026-09-11T11:45:00+00:00",
+    "window_start": "2026-08-07T15:25:00+00:00"
+  },
+  "status": "COMPLETED_UNTOUCHED",
+  "strategy_parameters_optimized": false,
+  "valid_after_240bar_warmup": "2026-08-07T15:25:00+00:00"
+}
