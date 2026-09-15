@@ -1,0 +1,115 @@
+{
+  "spec_id": "AEIF_FROZEN_SPEC_001",
+  "status": "NOT_YET_FINGERPRINT_CERTIFIED",
+  "source_lab": "RITHMIC_AEIF_FROZEN_FINGERPRINT_RECONSTRUCTION_001",
+  "amp_oos_parameter_selection_forbidden": true,
+  "working_bar": {
+    "value": "M5",
+    "evidence_class": "LINEAGE_RECOVERED"
+  },
+  "core": {
+    "long": {
+      "delta_tail": "Q10 or lower",
+      "aggressor_side": "SELL",
+      "location": "lower 20% of bar price range",
+      "location_threshold": "causal Q75 reference",
+      "impact_failure_threshold_atr_approx": 0.15
+    },
+    "short": {
+      "delta_tail": "Q90 or higher",
+      "aggressor_side": "BUY",
+      "location": "upper 20% of bar price range",
+      "location_threshold": "causal Q75 reference",
+      "impact_failure_threshold_atr_approx": 0.15
+    },
+    "evidence_class": "LINEAGE_RECOVERED_NOT_RAW_ARTIFACT_CERTIFIED"
+  },
+  "confirmation": {
+    "max_following_m5_bars": 2,
+    "long": "bullish body AND positive delta",
+    "short": "bearish body AND negative delta",
+    "entry": "after completed confirmation",
+    "evidence_class": "LINEAGE_RECOVERED_NOT_RAW_ARTIFACT_CERTIFIED"
+  },
+  "historical_execution_fingerprint": {
+    "baseline": {
+      "stop_r": 1.0,
+      "target_r": 1.5,
+      "max_hold_minutes": 30
+    },
+    "cooldown_minutes": 30,
+    "exit_candidate_same_sample": {
+      "stop_r": 1.0,
+      "target_r": 3.0,
+      "max_hold_minutes": 240,
+      "single_position": true
+    }
+  },
+  "fingerprints": {
+    "rithmic_core": {
+      "n_approx": 105,
+      "ev_r_approx": 0.297
+    },
+    "rithmic_core_cooldown30": {
+      "n_approx": 92,
+      "ev_r_approx": 0.244,
+      "sum_r_approx": 22.45,
+      "max_dd_r_approx": 5.0
+    },
+    "gc_to_xau_baseline": {
+      "n_approx": 51,
+      "ev_r_approx": 0.250,
+      "sum_r_approx": 12.75,
+      "max_dd_r_approx": 3.24
+    },
+    "gc_to_xau_tp3_h240": {
+      "n_approx": 51,
+      "ev_r_approx": 0.563,
+      "sum_r_approx": 28.69,
+      "pf_approx": 2.15,
+      "max_dd_r_approx": 3.42
+    },
+    "gc_to_xau_tp3_h240_single_position": {
+      "n_approx": 46,
+      "ev_r_approx": 0.666,
+      "sum_r_approx": 30.63,
+      "pf_approx": 2.33,
+      "max_dd_r_approx": 3.32,
+      "max_consecutive_losses": 4
+    }
+  },
+  "verified_precursor": {
+    "m1_rolling_bars": 240,
+    "m1_min_warmup_bars": 120,
+    "delta_frac_quantiles": [0.10, 0.90],
+    "aggressor_side_volume_quantile": 0.75,
+    "atr": "ATR14 M1",
+    "failure": "weakest 20% of prior same-side A-event directional price result",
+    "response_max_bars": 2
+  },
+  "verified_negative_control_m5_transfer": {
+    "rolling_bars": 48,
+    "min_warmup_bars": 24,
+    "atr": "simple ATR3 M5",
+    "failure_min_prior_same_side_a_events": 15,
+    "promotion_status": "NEGATIVE_CONTROL_NOT_FINAL_RITHMIC_SPEC"
+  },
+  "unresolved_for_exact_certification": [
+    "final_rithmic_rolling_window_bars",
+    "final_rithmic_min_warmup_bars",
+    "final_rithmic_atr_period_and_smoothing",
+    "exact_failed_impact_numerator_formula",
+    "exact_q75_location_reference_population",
+    "rithmic_both_side_print_handling",
+    "confirmation_zero_and_gap_edge_cases",
+    "exact_entry_price_timestamp_convention"
+  ],
+  "certification_tolerance": {
+    "event_identity": "exact if event ledger available",
+    "count": "+/-1 only with documented boundary cause",
+    "ev_r_abs": 0.01,
+    "sum_r_abs": 0.25
+  },
+  "required_artifact": "original positive Rithmic code/config, event ledger, footprint/raw data, or complete frozen report",
+  "amp_gate": "CLOSED"
+}
