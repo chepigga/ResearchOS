@@ -1,0 +1,364 @@
+{
+  "lab": "GC_M1_BUYER_BREAKOUT_INCREMENTAL_ORDERFLOW_AUDIT_005",
+  "status": "HISTORICAL_INCREMENTAL_AUDIT_NOT_OOS",
+  "actual": {
+    "rithmic": {
+      "TRAIN": {
+        "price_n": 920,
+        "candidate_n": 147,
+        "complement_n": 773,
+        "5": {
+          "candidate_ev": 0.20019289337514468,
+          "complement_ev": 0.06416959499272222,
+          "incremental": 0.13602329838242244,
+          "incremental_day_bootstrap95": [
+            -0.0967301201486649,
+            0.37194480754570003
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.3388807191009076,
+          "complement_ev": 0.4039686151255556,
+          "incremental": -0.06508789602464798,
+          "incremental_day_bootstrap95": [
+            -0.4396950139118055,
+            0.34176954813166377
+          ]
+        }
+      },
+      "VALID": {
+        "price_n": 877,
+        "candidate_n": 115,
+        "complement_n": 762,
+        "5": {
+          "candidate_ev": 0.039042368625583426,
+          "complement_ev": -0.17111814888753382,
+          "incremental": 0.21016051751311726,
+          "incremental_day_bootstrap95": [
+            -0.19536535371916894,
+            0.6147511204281302
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.2777097140656557,
+          "complement_ev": -0.2096940928058337,
+          "incremental": 0.48740380687148943,
+          "incremental_day_bootstrap95": [
+            -0.3103183652533889,
+            1.2496534184325336
+          ]
+        }
+      },
+      "LATE": {
+        "price_n": 326,
+        "candidate_n": 40,
+        "complement_n": 286,
+        "5": {
+          "candidate_ev": 0.027668980857602943,
+          "complement_ev": -0.1534448114060597,
+          "incremental": 0.18111379226366264,
+          "incremental_day_bootstrap95": [
+            -0.514820850803313,
+            0.877185369420256
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.5607945455596635,
+          "complement_ev": 0.23813344760932167,
+          "incremental": 0.3226610979503418,
+          "incremental_day_bootstrap95": [
+            -0.06258230164167689,
+            1.0662964636412209
+          ]
+        }
+      },
+      "POST": {
+        "price_n": 15,
+        "candidate_n": 1,
+        "complement_n": 14,
+        "5": {
+          "candidate_ev": 1.2790123456788633,
+          "complement_ev": -0.27316660537048515,
+          "incremental": 1.5521789510493484,
+          "incremental_day_bootstrap95": [
+            null,
+            null
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.6913580246913115,
+          "complement_ev": -0.7933123238047546,
+          "incremental": 1.4846703484960662,
+          "incremental_day_bootstrap95": [
+            null,
+            null
+          ]
+        }
+      },
+      "PRE_DISCOVERY": {
+        "price_n": 1797,
+        "candidate_n": 262,
+        "complement_n": 1535,
+        "5": {
+          "candidate_ev": 0.1294588844201846,
+          "complement_ev": -0.052780894598053386,
+          "incremental": 0.18223977901823799,
+          "incremental_day_bootstrap95": [
+            -0.04015956864539992,
+            0.416176402695905
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.3119279774187085,
+          "complement_ev": 0.10037558679538282,
+          "incremental": 0.21155239062332565,
+          "incremental_day_bootstrap95": [
+            -0.181171601494885,
+            0.6414635254581738
+          ]
+        }
+      },
+      "FULL": {
+        "price_n": 2138,
+        "candidate_n": 303,
+        "complement_n": 1835,
+        "5": {
+          "candidate_ev": 0.11981517920155557,
+          "complement_ev": -0.07009081148811908,
+          "incremental": 0.18990599068967465,
+          "incremental_day_bootstrap95": [
+            -0.02130662686138735,
+            0.406323529712385
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.346146827660135,
+          "complement_ev": 0.11484180884967043,
+          "incremental": 0.23130501881046456,
+          "incremental_day_bootstrap95": [
+            -0.10640424857904637,
+            0.6021862187059233
+          ]
+        }
+      }
+    },
+    "amp": {
+      "TRAIN": {
+        "price_n": 659,
+        "candidate_n": 108,
+        "complement_n": 551,
+        "5": {
+          "candidate_ev": 0.23920423801593577,
+          "complement_ev": -0.07865105997912106,
+          "incremental": 0.31785529799505685,
+          "incremental_day_bootstrap95": [
+            0.06881494304751695,
+            0.5633075968158264
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.5319097808177786,
+          "complement_ev": 0.07439018868485225,
+          "incremental": 0.45751959213292637,
+          "incremental_day_bootstrap95": [
+            0.0686725079854029,
+            0.8825980907148654
+          ]
+        }
+      },
+      "VALID": {
+        "price_n": 880,
+        "candidate_n": 120,
+        "complement_n": 760,
+        "5": {
+          "candidate_ev": 0.06323129679506975,
+          "complement_ev": -0.16225456354105589,
+          "incremental": 0.22548586033612564,
+          "incremental_day_bootstrap95": [
+            -0.21203779864716224,
+            0.6318484549147088
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.3198309817992055,
+          "complement_ev": -0.20757372132468713,
+          "incremental": 0.5274047031238926,
+          "incremental_day_bootstrap95": [
+            -0.2360102265745791,
+            1.2523862599750553
+          ]
+        }
+      },
+      "LATE": {
+        "price_n": 326,
+        "candidate_n": 37,
+        "complement_n": 289,
+        "5": {
+          "candidate_ev": -0.1273424675194263,
+          "complement_ev": -0.13662825082490787,
+          "incremental": 0.009285783305481576,
+          "incremental_day_bootstrap95": [
+            -0.6796358391606732,
+            0.7228829392158689
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.3194522575360646,
+          "complement_ev": 0.2314371217409362,
+          "incremental": 0.0880151357951284,
+          "incremental_day_bootstrap95": [
+            -0.48528634676943466,
+            0.8452087017391678
+          ]
+        }
+      },
+      "POST": {
+        "price_n": 129,
+        "candidate_n": 16,
+        "complement_n": 113,
+        "5": {
+          "candidate_ev": 0.23603600955432688,
+          "complement_ev": -0.020975060902535876,
+          "incremental": 0.2570110704568628,
+          "incremental_day_bootstrap95": [
+            -0.08295923221391246,
+            1.1108739329161772
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.3033514815549868,
+          "complement_ev": -0.24358813765041545,
+          "incremental": 0.5469396192054022,
+          "incremental_day_bootstrap95": [
+            -0.020036488136361226,
+            1.3190564765530888
+          ]
+        }
+      },
+      "PRE_DISCOVERY": {
+        "price_n": 1539,
+        "candidate_n": 228,
+        "complement_n": 1311,
+        "5": {
+          "candidate_ev": 0.14658690053126944,
+          "complement_ev": -0.1271846889640786,
+          "incremental": 0.2737715894953481,
+          "incremental_day_bootstrap95": [
+            0.0074573681825141225,
+            0.5252836043439884
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.42028936028168756,
+          "complement_ev": -0.08894389375686852,
+          "incremental": 0.5092332540385561,
+          "incremental_day_bootstrap95": [
+            0.08874994177312867,
+            0.944030545296996
+          ]
+        }
+      },
+      "FULL": {
+        "price_n": 1994,
+        "candidate_n": 281,
+        "complement_n": 1713,
+        "5": {
+          "candidate_ev": 0.11561109671096044,
+          "complement_ev": -0.12172325074989354,
+          "incremental": 0.23733434746085397,
+          "incremental_day_bootstrap95": [
+            -0.001811169421440704,
+            0.475361971572532
+          ]
+        },
+        "15": {
+          "candidate_ev": 0.40104884736497837,
+          "complement_ev": -0.04528109668004799,
+          "incremental": 0.44632994404502635,
+          "incremental_day_bootstrap95": [
+            0.08315816930906379,
+            0.8247710125707806
+          ]
+        }
+      }
+    }
+  },
+  "placebo": {
+    "RITHMIC": {
+      "TRAIN": {
+        "n": 18,
+        "mean": 0.39564834566175855,
+        "max": 1.5582090265738056,
+        "positive_fraction": 0.7777777777777778
+      },
+      "VALID": {
+        "n": 18,
+        "mean": 0.6978754587896814,
+        "max": 2.522449743637334,
+        "positive_fraction": 0.7222222222222222
+      },
+      "LATE": {
+        "n": 18,
+        "mean": 0.4979356156188064,
+        "max": 2.44587922611859,
+        "positive_fraction": 0.6111111111111112
+      },
+      "POST": {
+        "n": 1,
+        "mean": -0.9056867605310858,
+        "max": -0.9056867605310858,
+        "positive_fraction": 0.0
+      },
+      "PRE_DISCOVERY": {
+        "n": 18,
+        "mean": 0.5346877316243096,
+        "max": 1.9868244073726373,
+        "positive_fraction": 0.8333333333333334
+      },
+      "FULL": {
+        "n": 18,
+        "mean": 0.534964759058974,
+        "max": 1.8997708173037888,
+        "positive_fraction": 0.7222222222222222
+      }
+    },
+    "AMP": {
+      "TRAIN": {
+        "n": 18,
+        "mean": 0.4727864202323335,
+        "max": 1.868246925343438,
+        "positive_fraction": 0.7777777777777778
+      },
+      "VALID": {
+        "n": 18,
+        "mean": 0.7308882089321949,
+        "max": 2.4527296003700614,
+        "positive_fraction": 0.7222222222222222
+      },
+      "LATE": {
+        "n": 18,
+        "mean": 0.49848025301485127,
+        "max": 1.6022209161410084,
+        "positive_fraction": 0.6666666666666666
+      },
+      "POST": {
+        "n": 18,
+        "mean": -0.20512126727017532,
+        "max": 2.3679788195677745,
+        "positive_fraction": 0.3888888888888889
+      },
+      "PRE_DISCOVERY": {
+        "n": 18,
+        "mean": 0.5996210042386916,
+        "max": 2.2127713496978743,
+        "positive_fraction": 0.7222222222222222
+      },
+      "FULL": {
+        "n": 18,
+        "mean": 0.5476851528986064,
+        "max": 1.8386198104698923,
+        "positive_fraction": 0.7222222222222222
+      }
+    }
+  }
+}
