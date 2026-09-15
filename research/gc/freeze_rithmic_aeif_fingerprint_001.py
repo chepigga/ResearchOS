@@ -160,6 +160,13 @@ def build_core_ledger(bars: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_confirmed_ledger(bars: pd.DataFrame, core: pd.DataFrame) -> pd.DataFrame:
+    """Build the strongest surviving confirmation reconstruction.
+
+    Important: this ledger is reproducible and hashed, but it is not promoted to
+    bitwise historical confirmation parity because the old XAU transfer has 51
+    eligible trades (23 LONG / 28 SHORT) while this reconstruction has 53
+    confirmations through 2026-09-08 UTC (25 LONG / 28 SHORT).
+    """
     bar_index = {timestamp: i for i, timestamp in enumerate(bars.bar)}
     rows = []
 
@@ -242,15 +249,19 @@ def main() -> None:
     if int(core.cooldown30_keep.sum()) != 92:
         raise SystemExit(f"Cooldown count fail: {int(core.cooldown30_keep.sum())} != 92")
     if len(confirmed) != 61:
-        raise SystemExit(f"Confirmation count fail: {len(confirmed)} != 61")
+        raise SystemExit(f"Confirmation reconstruction count fail: {len(confirmed)} != 61")
     if core_sha != CORE_EXPECTED_SHA256:
         raise SystemExit(f"Core ledger SHA256 fail: {core_sha}")
     if confirmed_sha != CONF_EXPECTED_SHA256:
         raise SystemExit(f"Confirmed ledger SHA256 fail: {confirmed_sha}")
 
+    cutoff = pd.Timestamp("2026-09-09T00:00:00Z")
+    confirmed_times = pd.to_datetime(confirmed.confirm_bar_utc, utc=True)
+    transfer_window = confirmed.loc[confirmed_times < cutoff]
+
     manifest = {
         "artifact_id": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001",
-        "status": "SIGNAL_FINGERPRINT_CERTIFIED",
+        "status": "CORE_FINGERPRINT_CERTIFIED_CONFIRMATION_PENDING",
         "source_release_tag": "GC",
         "source_asset": "GC_RITHMIC_40D_003_GCZ6.zip",
         "source_asset_sha256": ZIP_SHA256,
@@ -260,15 +271,22 @@ def main() -> None:
         "core_long": int(core.side.eq("LONG").sum()),
         "core_short": int(core.side.eq("SHORT").sum()),
         "cooldown30_events": int(core.cooldown30_keep.sum()),
-        "confirmed_events": len(confirmed),
-        "confirmed_long": int(confirmed.side.eq("LONG").sum()),
-        "confirmed_short": int(confirmed.side.eq("SHORT").sum()),
+        "confirmation_reconstruction_events_full_40d": len(confirmed),
+        "confirmation_reconstruction_long_full_40d": int(confirmed.side.eq("LONG").sum()),
+        "confirmation_reconstruction_short_full_40d": int(confirmed.side.eq("SHORT").sum()),
+        "confirmation_reconstruction_through_2026_09_08": int(len(transfer_window)),
+        "confirmation_reconstruction_long_through_2026_09_08": int(transfer_window.side.eq("LONG").sum()),
+        "confirmation_reconstruction_short_through_2026_09_08": int(transfer_window.side.eq("SHORT").sum()),
+        "historical_xau_transfer_trades": 51,
+        "historical_xau_transfer_long": 23,
+        "historical_xau_transfer_short": 28,
+        "remaining_ambiguity": "two additional reconstructed LONG confirmations versus historical XAU transfer; must be resolved from historical confirmation/transfer evidence, never AMP OOS",
         "core_ledger": core_path.name,
         "core_ledger_sha256": core_sha,
-        "confirmed_ledger": confirmed_path.name,
-        "confirmed_ledger_sha256": confirmed_sha,
+        "confirmation_candidate_ledger": confirmed_path.name,
+        "confirmation_candidate_ledger_sha256": confirmed_sha,
         "amp_oos_used_for_parameter_selection": False,
-        "amp_gate": "OPEN_FOR_SINGLE_UNTOUCHED_OOS_SIGNAL_REPLICATION",
+        "amp_gate": "CLOSED_UNTIL_CONFIRMATION_TRANSFER_AMBIGUITY_IS_PREREGISTERED_OR_RESOLVED",
     }
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
