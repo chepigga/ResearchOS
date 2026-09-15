@@ -1,0 +1,35 @@
+name: GC Release XAU Forensic 001
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_release_xau_forensic_001.py'
+      - '.github/workflows/gc_release_xau_forensic_001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  forensic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+          fetch-depth: 0
+      - name: Install openpyxl
+        run: python3 -m pip install --quiet openpyxl
+      - name: Analyze release XAU report and Rithmic sources
+        run: python3 research/gc/gc_release_xau_forensic_001.py
+      - name: Commit forensic outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/gc/GC_RELEASE_XAU_REPORT_FLAT.txt research/gc/GC_RELEASE_XAU_FORENSIC_001.json research/gc/GC_RELEASE_XAU_FORENSIC_001.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Add GC release XAU forensic results"
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
