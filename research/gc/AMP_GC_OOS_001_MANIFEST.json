@@ -1,0 +1,19 @@
+{
+  "aEIF_parameters_applied": false,
+  "account_server": "AMPGlobalUSA-Demo",
+  "audit_overlap_sha256": "ecf4dcebc5da59442fd989c3466d1e9eaf7f1dd45e1a62cbdd883e67b9861d8b",
+  "canonical_run": "20260806_182904__20260915_182904",
+  "dataset_id": "AMP_GC_OOS_001",
+  "first_tick_msc": 1786040949058,
+  "last_tick_msc": 1789496942280,
+  "m5_footprint_file": "research/gc/AMP_GC_OOS_001_M5_FOOTPRINT.csv",
+  "m5_footprint_sha256": "ff6e003bb58981439748051a530f7722c9edbf090b7b53740588e85611e873bd",
+  "m5_rows": 7699,
+  "notes": "M5 footprint only; no selector, quantile threshold, confirmation, or exit logic applied.",
+  "raw_rows": 3737719,
+  "raw_zip_asset": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182904__20260915_182904_TICKS.csv.zip",
+  "raw_zip_sha256": "03dbec37caf947652a52f71a1f2d4f9f25b619401982dd97d56da0054c759fc8",
+  "source_release": "https://github.com/chepigga/ResearchOS/releases/tag/GC",
+  "status": "FROZEN_RAW_AND_M5",
+  "symbol": "GCEZ26"
+}
