@@ -1,0 +1,2220 @@
+{
+  "lab": "GC_M1_AEIF_CAUSAL_EDGE_AUDIT_002",
+  "status": "COMPLETED_FIXED_RULE_NO_SWEEP",
+  "entry_rules": {
+    "B_NEXT_OPEN": "exact next clock-contiguous M1 open after completed B bar",
+    "D_NEXT_OPEN": "exact next clock-contiguous M1 open after completed first qualifying D response bar",
+    "normalization": "B uses B-bar ATR14; D uses completed response-bar ATR14",
+    "thresholds_changed": false
+  },
+  "windows": {
+    "discovery_start": "2026-09-06T22:00:00+00:00",
+    "discovery_end": "2026-09-11T12:46:00+00:00"
+  },
+  "rithmic": {
+    "B_NEXT_OPEN": {
+      "PRE_DISCOVERY": {
+        "n": 383,
+        "long": 178,
+        "short": 205,
+        "horizons": {
+          "1": {
+            "n": 383,
+            "mean_atr": 0.02745960832383433,
+            "median_atr": -0.040697674418752064,
+            "win_pct": 47.51958224543081,
+            "day_cluster_bootstrap_95": [
+              -0.026813866560658185,
+              0.07981928457421852
+            ],
+            "days": 26,
+            "positive_days": 14,
+            "median_daily_mean_atr": 0.016869011265842383,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.060026339799948675,
+                "win_pct": 50.0
+              },
+              "SHORT": {
+                "n": 205,
+                "mean_atr": -0.0008178463237186168,
+                "win_pct": 45.36585365853659
+              }
+            }
+          },
+          "3": {
+            "n": 383,
+            "mean_atr": 0.05598624747448965,
+            "median_atr": 0.09061488673131024,
+            "win_pct": 51.43603133159269,
+            "day_cluster_bootstrap_95": [
+              -0.07900860034896211,
+              0.18474362613899675
+            ],
+            "days": 26,
+            "positive_days": 15,
+            "median_daily_mean_atr": 0.15308619237296883,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.13929420943533716,
+                "win_pct": 55.0561797752809
+              },
+              "SHORT": {
+                "n": 205,
+                "mean_atr": -0.01634944632566082,
+                "win_pct": 48.292682926829265
+              }
+            }
+          },
+          "5": {
+            "n": 383,
+            "mean_atr": 0.04238636952301454,
+            "median_atr": 0.14046822742462098,
+            "win_pct": 52.74151436031331,
+            "day_cluster_bootstrap_95": [
+              -0.1424133984601736,
+              0.21600886275308379
+            ],
+            "days": 26,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.13420008565660124,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.04613091588464064,
+                "win_pct": 51.12359550561798
+              },
+              "SHORT": {
+                "n": 205,
+                "mean_atr": 0.03913500731633437,
+                "win_pct": 54.146341463414636
+              }
+            }
+          },
+          "15": {
+            "n": 378,
+            "mean_atr": 0.13877322924537866,
+            "median_atr": 0.1252708158452376,
+            "win_pct": 51.85185185185185,
+            "day_cluster_bootstrap_95": [
+              -0.21181745987633424,
+              0.4839568678669202
+            ],
+            "days": 26,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.2235807764640598,
+            "side": {
+              "LONG": {
+                "n": 175,
+                "mean_atr": 0.2549051598143079,
+                "win_pct": 53.142857142857146
+              },
+              "SHORT": {
+                "n": 203,
+                "mean_atr": 0.03865949599630173,
+                "win_pct": 50.73891625615764
+              }
+            }
+          }
+        }
+      },
+      "DISCOVERY_CLOCK": {
+        "n": 54,
+        "long": 21,
+        "short": 33,
+        "horizons": {
+          "1": {
+            "n": 54,
+            "mean_atr": -0.03852270384680462,
+            "median_atr": -0.03414634146322527,
+            "win_pct": 48.148148148148145,
+            "day_cluster_bootstrap_95": [
+              -0.1341934066079893,
+              0.0559935035063511
+            ],
+            "days": 5,
+            "positive_days": 2,
+            "median_daily_mean_atr": -0.06640569965302912,
+            "side": {
+              "LONG": {
+                "n": 21,
+                "mean_atr": 0.011569401167862349,
+                "win_pct": 52.38095238095239
+              },
+              "SHORT": {
+                "n": 33,
+                "mean_atr": -0.07039949794704725,
+                "win_pct": 45.45454545454545
+              }
+            }
+          },
+          "3": {
+            "n": 54,
+            "mean_atr": -0.03454897857137475,
+            "median_atr": 0.0,
+            "win_pct": 48.148148148148145,
+            "day_cluster_bootstrap_95": [
+              -0.23375171702256808,
+              0.18808937616819427
+            ],
+            "days": 5,
+            "positive_days": 2,
+            "median_daily_mean_atr": -0.1455363642649835,
+            "side": {
+              "LONG": {
+                "n": 21,
+                "mean_atr": 0.14705020522759446,
+                "win_pct": 52.38095238095239
+              },
+              "SHORT": {
+                "n": 33,
+                "mean_atr": -0.15011209553435517,
+                "win_pct": 45.45454545454545
+              }
+            }
+          },
+          "5": {
+            "n": 54,
+            "mean_atr": 0.16337684047566864,
+            "median_atr": 0.06331300813030971,
+            "win_pct": 55.55555555555556,
+            "day_cluster_bootstrap_95": [
+              -0.11657994084024721,
+              0.4762697137111038
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.414041638491649,
+            "side": {
+              "LONG": {
+                "n": 21,
+                "mean_atr": 0.5439825674006931,
+                "win_pct": 61.904761904761905
+              },
+              "SHORT": {
+                "n": 33,
+                "mean_atr": -0.07882680393116531,
+                "win_pct": 51.515151515151516
+              }
+            }
+          },
+          "15": {
+            "n": 54,
+            "mean_atr": 0.27096957057699705,
+            "median_atr": 0.2455533596837307,
+            "win_pct": 53.70370370370371,
+            "day_cluster_bootstrap_95": [
+              -0.3053973349007152,
+              0.8626674785527607
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.2504512437405258,
+            "side": {
+              "LONG": {
+                "n": 21,
+                "mean_atr": 0.2656979589007024,
+                "win_pct": 57.14285714285714
+              },
+              "SHORT": {
+                "n": 33,
+                "mean_atr": 0.2743242325528207,
+                "win_pct": 51.515151515151516
+              }
+            }
+          }
+        }
+      },
+      "POST_DISCOVERY": {
+        "n": 1,
+        "long": 0,
+        "short": 1,
+        "horizons": {
+          "1": {
+            "n": 1,
+            "mean_atr": -0.32727272727293344,
+            "median_atr": -0.32727272727293344,
+            "win_pct": 0.0,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 1,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.32727272727293344,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 1,
+                "mean_atr": -0.32727272727293344,
+                "win_pct": 0.0
+              }
+            }
+          },
+          "3": {
+            "n": 1,
+            "mean_atr": -2.181818181818233,
+            "median_atr": -2.181818181818233,
+            "win_pct": 0.0,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 1,
+            "positive_days": 0,
+            "median_daily_mean_atr": -2.181818181818233,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 1,
+                "mean_atr": -2.181818181818233,
+                "win_pct": 0.0
+              }
+            }
+          },
+          "5": {
+            "n": 1,
+            "mean_atr": -0.6545454545455361,
+            "median_atr": -0.6545454545455361,
+            "win_pct": 0.0,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 1,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.6545454545455361,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 1,
+                "mean_atr": -0.6545454545455361,
+                "win_pct": 0.0
+              }
+            }
+          },
+          "15": {
+            "n": 1,
+            "mean_atr": -2.472727272727397,
+            "median_atr": -2.472727272727397,
+            "win_pct": 0.0,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 1,
+            "positive_days": 0,
+            "median_daily_mean_atr": -2.472727272727397,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 1,
+                "mean_atr": -2.472727272727397,
+                "win_pct": 0.0
+              }
+            }
+          }
+        }
+      },
+      "NON_DISCOVERY": {
+        "n": 384,
+        "long": 178,
+        "short": 206,
+        "horizons": {
+          "1": {
+            "n": 384,
+            "mean_atr": 0.02653582619988441,
+            "median_atr": -0.04156095842138091,
+            "win_pct": 47.39583333333333,
+            "day_cluster_bootstrap_95": [
+              -0.02782115394673807,
+              0.07826668967921749
+            ],
+            "days": 27,
+            "positive_days": 14,
+            "median_daily_mean_atr": 0.016671639878729317,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.060026339799948675,
+                "win_pct": 50.0
+              },
+              "SHORT": {
+                "n": 206,
+                "mean_atr": -0.002402578755510922,
+                "win_pct": 45.14563106796117
+              }
+            }
+          },
+          "3": {
+            "n": 384,
+            "mean_atr": 0.050158631773206515,
+            "median_atr": 0.0899882944293774,
+            "win_pct": 51.302083333333336,
+            "day_cluster_bootstrap_95": [
+              -0.08226388941184695,
+              0.17652407960826394
+            ],
+            "days": 27,
+            "positive_days": 15,
+            "median_daily_mean_atr": 0.13404901328256066,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.13929420943533716,
+                "win_pct": 55.0561797752809
+              },
+              "SHORT": {
+                "n": 206,
+                "mean_atr": -0.026861430478537385,
+                "win_pct": 48.05825242718447
+              }
+            }
+          },
+          "5": {
+            "n": 384,
+            "mean_atr": 0.040571442897836034,
+            "median_atr": 0.13475024274450503,
+            "win_pct": 52.604166666666664,
+            "day_cluster_bootstrap_95": [
+              -0.13820564886967251,
+              0.21379660289429112
+            ],
+            "days": 27,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.11028094671934276,
+            "side": {
+              "LONG": {
+                "n": 178,
+                "mean_atr": 0.04613091588464064,
+                "win_pct": 51.12359550561798
+              },
+              "SHORT": {
+                "n": 206,
+                "mean_atr": 0.03576762643350975,
+                "win_pct": 53.883495145631066
+              }
+            }
+          },
+          "15": {
+            "n": 379,
+            "mean_atr": 0.131882726601651,
+            "median_atr": 0.1204301075269091,
+            "win_pct": 51.71503957783641,
+            "day_cluster_bootstrap_95": [
+              -0.22371257091933006,
+              0.4691701277703136
+            ],
+            "days": 27,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.13048731627429971,
+            "side": {
+              "LONG": {
+                "n": 175,
+                "mean_atr": 0.2549051598143079,
+                "win_pct": 53.142857142857146
+              },
+              "SHORT": {
+                "n": 204,
+                "mean_atr": 0.026348776541773797,
+                "win_pct": 50.49019607843137
+              }
+            }
+          }
+        }
+      },
+      "FULL": {
+        "n": 438,
+        "long": 199,
+        "short": 239,
+        "horizons": {
+          "1": {
+            "n": 438,
+            "mean_atr": 0.01851491153659398,
+            "median_atr": -0.04156095842138091,
+            "win_pct": 47.48858447488584,
+            "day_cluster_bootstrap_95": [
+              -0.031046100493465595,
+              0.06659248921554194
+            ],
+            "days": 31,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.016671639878729317,
+            "side": {
+              "LONG": {
+                "n": 199,
+                "mean_atr": 0.054912793512140574,
+                "win_pct": 50.25125628140703
+              },
+              "SHORT": {
+                "n": 239,
+                "mean_atr": -0.011791274710827648,
+                "win_pct": 45.18828451882845
+              }
+            }
+          },
+          "3": {
+            "n": 438,
+            "mean_atr": 0.03971522775812115,
+            "median_atr": 0.06469966159059895,
+            "win_pct": 50.91324200913242,
+            "day_cluster_bootstrap_95": [
+              -0.0831343874252164,
+              0.1559088352100981
+            ],
+            "days": 31,
+            "positive_days": 17,
+            "median_daily_mean_atr": 0.13404901328256066,
+            "side": {
+              "LONG": {
+                "n": 199,
+                "mean_atr": 0.14011268135311303,
+                "win_pct": 54.773869346733676
+              },
+              "SHORT": {
+                "n": 239,
+                "mean_atr": -0.04387930473310637,
+                "win_pct": 47.69874476987448
+              }
+            }
+          },
+          "5": {
+            "n": 438,
+            "mean_atr": 0.05571183438003457,
+            "median_atr": 0.12815249266859502,
+            "win_pct": 52.96803652968036,
+            "day_cluster_bootstrap_95": [
+              -0.10997565862169925,
+              0.21147719948353913
+            ],
+            "days": 31,
+            "positive_days": 19,
+            "median_daily_mean_atr": 0.15811922459385971,
+            "side": {
+              "LONG": {
+                "n": 199,
+                "mean_atr": 0.09866802483859595,
+                "win_pct": 52.26130653266332
+              },
+              "SHORT": {
+                "n": 239,
+                "mean_atr": 0.019944964500311954,
+                "win_pct": 53.55648535564853
+              }
+            }
+          },
+          "15": {
+            "n": 433,
+            "mean_atr": 0.14922843000735234,
+            "median_atr": 0.1204301075269091,
+            "win_pct": 51.96304849884527,
+            "day_cluster_bootstrap_95": [
+              -0.15568706439453772,
+              0.4627379796370337
+            ],
+            "days": 31,
+            "positive_days": 19,
+            "median_daily_mean_atr": 0.2504512437405258,
+            "side": {
+              "LONG": {
+                "n": 196,
+                "mean_atr": 0.25606153114499297,
+                "win_pct": 53.57142857142857
+              },
+              "SHORT": {
+                "n": 237,
+                "mean_atr": 0.060877004593944906,
+                "win_pct": 50.63291139240506
+              }
+            }
+          }
+        }
+      }
+    },
+    "D_NEXT_OPEN": {
+      "PRE_DISCOVERY": {
+        "n": 207,
+        "long": 104,
+        "short": 103,
+        "horizons": {
+          "1": {
+            "n": 207,
+            "mean_atr": 0.08950852442639044,
+            "median_atr": 0.0696517412933632,
+            "win_pct": 53.62318840579711,
+            "day_cluster_bootstrap_95": [
+              0.018309749003567997,
+              0.15866514930649872
+            ],
+            "days": 26,
+            "positive_days": 18,
+            "median_daily_mean_atr": 0.10871479112740556,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": 0.08933386318890017,
+                "win_pct": 52.88461538461539
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.08968488140405051,
+                "win_pct": 54.36893203883495
+              }
+            }
+          },
+          "3": {
+            "n": 207,
+            "mean_atr": -0.0017803125903803189,
+            "median_atr": 0.0,
+            "win_pct": 49.75845410628019,
+            "day_cluster_bootstrap_95": [
+              -0.14586790120022067,
+              0.14244845526882888
+            ],
+            "days": 26,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.06280279315739336,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": -0.0831780392670952,
+                "win_pct": 48.07692307692308
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.08040768327737065,
+                "win_pct": 51.45631067961165
+              }
+            }
+          },
+          "5": {
+            "n": 207,
+            "mean_atr": 0.06594359659138348,
+            "median_atr": 0.0,
+            "win_pct": 49.75845410628019,
+            "day_cluster_bootstrap_95": [
+              -0.17172738792870168,
+              0.3120017198776534
+            ],
+            "days": 26,
+            "positive_days": 14,
+            "median_daily_mean_atr": 0.05024702422950332,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": 0.030969363837766564,
+                "win_pct": 49.03846153846153
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.1012573850028025,
+                "win_pct": 50.48543689320388
+              }
+            }
+          },
+          "15": {
+            "n": 204,
+            "mean_atr": 0.12156773696762613,
+            "median_atr": 0.06677535545022636,
+            "win_pct": 50.98039215686274,
+            "day_cluster_bootstrap_95": [
+              -0.3285848217575885,
+              0.5495204029050483
+            ],
+            "days": 26,
+            "positive_days": 15,
+            "median_daily_mean_atr": 0.15503530797484455,
+            "side": {
+              "LONG": {
+                "n": 102,
+                "mean_atr": 0.2771748159700632,
+                "win_pct": 55.88235294117647
+              },
+              "SHORT": {
+                "n": 102,
+                "mean_atr": -0.034039342034811,
+                "win_pct": 46.07843137254902
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 207,
+          "mean_atr": 0.5568188643250692,
+          "median_atr": 0.5077720207259595,
+          "positive_pct": 86.95652173913044
+        }
+      },
+      "DISCOVERY_CLOCK": {
+        "n": 31,
+        "long": 10,
+        "short": 21,
+        "horizons": {
+          "1": {
+            "n": 31,
+            "mean_atr": 0.010833229101487558,
+            "median_atr": -0.12389380531018823,
+            "win_pct": 48.38709677419355,
+            "day_cluster_bootstrap_95": [
+              -0.09628465140160809,
+              0.16447227545510087
+            ],
+            "days": 5,
+            "positive_days": 2,
+            "median_daily_mean_atr": -0.0014710990974247328,
+            "side": {
+              "LONG": {
+                "n": 10,
+                "mean_atr": -0.19329193308312517,
+                "win_pct": 30.0
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": 0.1080356872846365,
+                "win_pct": 57.14285714285714
+              }
+            }
+          },
+          "3": {
+            "n": 31,
+            "mean_atr": 0.052941128152962896,
+            "median_atr": -0.13793103448263813,
+            "win_pct": 41.935483870967744,
+            "day_cluster_bootstrap_95": [
+              -0.4550112842189682,
+              0.8935911604062623
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.21646289999437476,
+            "side": {
+              "LONG": {
+                "n": 10,
+                "mean_atr": -0.006666261626286835,
+                "win_pct": 30.0
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": 0.0813255994764152,
+                "win_pct": 47.61904761904761
+              }
+            }
+          },
+          "5": {
+            "n": 31,
+            "mean_atr": 0.23711301229609066,
+            "median_atr": 0.1320754716981963,
+            "win_pct": 54.83870967741935,
+            "day_cluster_bootstrap_95": [
+              -0.08052709494662699,
+              0.8868715920517457
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.2165702594419823,
+            "side": {
+              "LONG": {
+                "n": 10,
+                "mean_atr": 0.2645957084394362,
+                "win_pct": 60.0
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": 0.22402601413259285,
+                "win_pct": 52.38095238095239
+              }
+            }
+          },
+          "15": {
+            "n": 31,
+            "mean_atr": 0.6328619384961217,
+            "median_atr": 0.6049382716047709,
+            "win_pct": 64.51612903225806,
+            "day_cluster_bootstrap_95": [
+              0.19935280594318813,
+              1.233105352800184
+            ],
+            "days": 5,
+            "positive_days": 4,
+            "median_daily_mean_atr": 0.7415939096945046,
+            "side": {
+              "LONG": {
+                "n": 10,
+                "mean_atr": 0.6999127777346661,
+                "win_pct": 70.0
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": 0.6009329674301485,
+                "win_pct": 61.904761904761905
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 31,
+          "mean_atr": 0.40724200384716985,
+          "median_atr": 0.3677298311443622,
+          "positive_pct": 80.64516129032258
+        }
+      },
+      "POST_DISCOVERY": {
+        "n": 0,
+        "long": 0,
+        "short": 0,
+        "horizons": {
+          "1": {
+            "n": 0,
+            "mean_atr": null,
+            "median_atr": null,
+            "win_pct": null,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 0,
+            "positive_days": 0,
+            "median_daily_mean_atr": null,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              }
+            }
+          },
+          "3": {
+            "n": 0,
+            "mean_atr": null,
+            "median_atr": null,
+            "win_pct": null,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 0,
+            "positive_days": 0,
+            "median_daily_mean_atr": null,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              }
+            }
+          },
+          "5": {
+            "n": 0,
+            "mean_atr": null,
+            "median_atr": null,
+            "win_pct": null,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 0,
+            "positive_days": 0,
+            "median_daily_mean_atr": null,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              }
+            }
+          },
+          "15": {
+            "n": 0,
+            "mean_atr": null,
+            "median_atr": null,
+            "win_pct": null,
+            "day_cluster_bootstrap_95": [
+              null,
+              null
+            ],
+            "days": 0,
+            "positive_days": 0,
+            "median_daily_mean_atr": null,
+            "side": {
+              "LONG": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              },
+              "SHORT": {
+                "n": 0,
+                "mean_atr": null,
+                "win_pct": null
+              }
+            }
+          }
+        }
+      },
+      "NON_DISCOVERY": {
+        "n": 207,
+        "long": 104,
+        "short": 103,
+        "horizons": {
+          "1": {
+            "n": 207,
+            "mean_atr": 0.08950852442639044,
+            "median_atr": 0.0696517412933632,
+            "win_pct": 53.62318840579711,
+            "day_cluster_bootstrap_95": [
+              0.018309749003567997,
+              0.15866514930649872
+            ],
+            "days": 26,
+            "positive_days": 18,
+            "median_daily_mean_atr": 0.10871479112740556,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": 0.08933386318890017,
+                "win_pct": 52.88461538461539
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.08968488140405051,
+                "win_pct": 54.36893203883495
+              }
+            }
+          },
+          "3": {
+            "n": 207,
+            "mean_atr": -0.0017803125903803189,
+            "median_atr": 0.0,
+            "win_pct": 49.75845410628019,
+            "day_cluster_bootstrap_95": [
+              -0.14586790120022067,
+              0.14244845526882888
+            ],
+            "days": 26,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.06280279315739336,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": -0.0831780392670952,
+                "win_pct": 48.07692307692308
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.08040768327737065,
+                "win_pct": 51.45631067961165
+              }
+            }
+          },
+          "5": {
+            "n": 207,
+            "mean_atr": 0.06594359659138348,
+            "median_atr": 0.0,
+            "win_pct": 49.75845410628019,
+            "day_cluster_bootstrap_95": [
+              -0.17172738792870168,
+              0.3120017198776534
+            ],
+            "days": 26,
+            "positive_days": 14,
+            "median_daily_mean_atr": 0.05024702422950332,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": 0.030969363837766564,
+                "win_pct": 49.03846153846153
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": 0.1012573850028025,
+                "win_pct": 50.48543689320388
+              }
+            }
+          },
+          "15": {
+            "n": 204,
+            "mean_atr": 0.12156773696762613,
+            "median_atr": 0.06677535545022636,
+            "win_pct": 50.98039215686274,
+            "day_cluster_bootstrap_95": [
+              -0.3285848217575885,
+              0.5495204029050483
+            ],
+            "days": 26,
+            "positive_days": 15,
+            "median_daily_mean_atr": 0.15503530797484455,
+            "side": {
+              "LONG": {
+                "n": 102,
+                "mean_atr": 0.2771748159700632,
+                "win_pct": 55.88235294117647
+              },
+              "SHORT": {
+                "n": 102,
+                "mean_atr": -0.034039342034811,
+                "win_pct": 46.07843137254902
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 207,
+          "mean_atr": 0.5568188643250692,
+          "median_atr": 0.5077720207259595,
+          "positive_pct": 86.95652173913044
+        }
+      },
+      "FULL": {
+        "n": 238,
+        "long": 114,
+        "short": 124,
+        "horizons": {
+          "1": {
+            "n": 238,
+            "mean_atr": 0.07926090192608798,
+            "median_atr": 0.0623858674075061,
+            "win_pct": 52.94117647058824,
+            "day_cluster_bootstrap_95": [
+              0.015355968672216693,
+              0.14245457855225285
+            ],
+            "days": 31,
+            "positive_days": 20,
+            "median_daily_mean_atr": 0.08479985361911437,
+            "side": {
+              "LONG": {
+                "n": 114,
+                "mean_atr": 0.06454212667381022,
+                "win_pct": 50.877192982456144
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.09279267917414973,
+                "win_pct": 54.83870967741935
+              }
+            }
+          },
+          "3": {
+            "n": 238,
+            "mean_atr": 0.005347270027450105,
+            "median_atr": 0.0,
+            "win_pct": 48.739495798319325,
+            "day_cluster_bootstrap_95": [
+              -0.14178762040835707,
+              0.16380802481830628
+            ],
+            "days": 31,
+            "positive_days": 19,
+            "median_daily_mean_atr": 0.06843417306642227,
+            "side": {
+              "LONG": {
+                "n": 114,
+                "mean_atr": -0.07646647982491904,
+                "win_pct": 46.49122807017544
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.08056313682720881,
+                "win_pct": 50.806451612903224
+              }
+            }
+          },
+          "5": {
+            "n": 238,
+            "mean_atr": 0.08823877258653438,
+            "median_atr": 0.043201721274327635,
+            "win_pct": 50.42016806722689,
+            "day_cluster_bootstrap_95": [
+              -0.11990705107752865,
+              0.3053696936991353
+            ],
+            "days": 31,
+            "positive_days": 17,
+            "median_daily_mean_atr": 0.08225710688634051,
+            "side": {
+              "LONG": {
+                "n": 114,
+                "mean_atr": 0.05146290283791302,
+                "win_pct": 50.0
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.12204884638768634,
+                "win_pct": 50.806451612903224
+              }
+            }
+          },
+          "15": {
+            "n": 235,
+            "mean_atr": 0.18901505716925746,
+            "median_atr": 0.08235294117601237,
+            "win_pct": 52.76595744680851,
+            "day_cluster_bootstrap_95": [
+              -0.1939151427956982,
+              0.5687258321473506
+            ],
+            "days": 31,
+            "positive_days": 19,
+            "median_daily_mean_atr": 0.22771767477367674,
+            "side": {
+              "LONG": {
+                "n": 112,
+                "mean_atr": 0.3149192768419028,
+                "win_pct": 57.14285714285714
+              },
+              "SHORT": {
+                "n": 123,
+                "mean_atr": 0.07437056445920646,
+                "win_pct": 48.78048780487805
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 238,
+          "mean_atr": 0.5373361640107209,
+          "median_atr": 0.4930887825624768,
+          "positive_pct": 86.1344537815126
+        }
+      }
+    }
+  },
+  "amp": {
+    "B_NEXT_OPEN": {
+      "PRE_DISCOVERY": {
+        "n": 341,
+        "long": 161,
+        "short": 180,
+        "horizons": {
+          "1": {
+            "n": 341,
+            "mean_atr": 0.014076030223202926,
+            "median_atr": -0.05054151624567322,
+            "win_pct": 46.62756598240469,
+            "day_cluster_bootstrap_95": [
+              -0.05163828056216897,
+              0.0742974232594698
+            ],
+            "days": 22,
+            "positive_days": 13,
+            "median_daily_mean_atr": 0.02295972278689065,
+            "side": {
+              "LONG": {
+                "n": 161,
+                "mean_atr": 0.0015138152527378683,
+                "win_pct": 44.72049689440994
+              },
+              "SHORT": {
+                "n": 180,
+                "mean_atr": 0.02531223361345222,
+                "win_pct": 48.333333333333336
+              }
+            }
+          },
+          "3": {
+            "n": 341,
+            "mean_atr": 0.020940024714349807,
+            "median_atr": 0.0,
+            "win_pct": 49.56011730205279,
+            "day_cluster_bootstrap_95": [
+              -0.13292156522349396,
+              0.17243871796250618
+            ],
+            "days": 22,
+            "positive_days": 12,
+            "median_daily_mean_atr": 0.1267755776988449,
+            "side": {
+              "LONG": {
+                "n": 161,
+                "mean_atr": 0.04619882780619165,
+                "win_pct": 49.06832298136646
+              },
+              "SHORT": {
+                "n": 180,
+                "mean_atr": -0.001652571384464273,
+                "win_pct": 50.0
+              }
+            }
+          },
+          "5": {
+            "n": 341,
+            "mean_atr": -0.023790447977758256,
+            "median_atr": 0.06140350877215517,
+            "win_pct": 50.733137829912025,
+            "day_cluster_bootstrap_95": [
+              -0.22112083934619917,
+              0.16620774150619586
+            ],
+            "days": 22,
+            "positive_days": 9,
+            "median_daily_mean_atr": -0.07471507615509629,
+            "side": {
+              "LONG": {
+                "n": 161,
+                "mean_atr": -0.10055730593069874,
+                "win_pct": 47.82608695652174
+              },
+              "SHORT": {
+                "n": 180,
+                "mean_atr": 0.04487324163570519,
+                "win_pct": 53.333333333333336
+              }
+            }
+          },
+          "15": {
+            "n": 337,
+            "mean_atr": 0.11478937646308518,
+            "median_atr": 0.17073170731692644,
+            "win_pct": 52.22551928783383,
+            "day_cluster_bootstrap_95": [
+              -0.24083777444676915,
+              0.4622204698844968
+            ],
+            "days": 22,
+            "positive_days": 11,
+            "median_daily_mean_atr": 0.05509938787458421,
+            "side": {
+              "LONG": {
+                "n": 158,
+                "mean_atr": 0.28922615535689983,
+                "win_pct": 54.43037974683544
+              },
+              "SHORT": {
+                "n": 179,
+                "mean_atr": -0.03918275239290756,
+                "win_pct": 50.27932960893855
+              }
+            }
+          }
+        }
+      },
+      "DISCOVERY_CLOCK": {
+        "n": 55,
+        "long": 24,
+        "short": 31,
+        "horizons": {
+          "1": {
+            "n": 55,
+            "mean_atr": -0.03460098105746345,
+            "median_atr": 0.10486891385805298,
+            "win_pct": 54.54545454545454,
+            "day_cluster_bootstrap_95": [
+              -0.1207161112099011,
+              0.05565682792627896
+            ],
+            "days": 5,
+            "positive_days": 2,
+            "median_daily_mean_atr": -0.06317281375878393,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.03942642913908933,
+                "win_pct": 62.5
+              },
+              "SHORT": {
+                "n": 31,
+                "mean_atr": -0.09191252443543982,
+                "win_pct": 48.38709677419355
+              }
+            }
+          },
+          "3": {
+            "n": 55,
+            "mean_atr": 0.08767065484146636,
+            "median_atr": 0.07526881720457711,
+            "win_pct": 54.54545454545454,
+            "day_cluster_bootstrap_95": [
+              -0.05972665444233422,
+              0.2615502841718999
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.05762633738240982,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.22472749932613564,
+                "win_pct": 58.333333333333336
+              },
+              "SHORT": {
+                "n": 31,
+                "mean_atr": -0.018437869920858194,
+                "win_pct": 51.61290322580645
+              }
+            }
+          },
+          "5": {
+            "n": 55,
+            "mean_atr": 0.36757524954353915,
+            "median_atr": 0.3234323432342277,
+            "win_pct": 56.36363636363636,
+            "day_cluster_bootstrap_95": [
+              0.06297609665938857,
+              0.6721744024276899
+            ],
+            "days": 5,
+            "positive_days": 4,
+            "median_daily_mean_atr": 0.4802744049514181,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.5547627761128353,
+                "win_pct": 58.333333333333336
+              },
+              "SHORT": {
+                "n": 31,
+                "mean_atr": 0.22265587413505203,
+                "win_pct": 54.83870967741935
+              }
+            }
+          },
+          "15": {
+            "n": 55,
+            "mean_atr": 0.34085217789020095,
+            "median_atr": 0.1106719367587958,
+            "win_pct": 52.72727272727272,
+            "day_cluster_bootstrap_95": [
+              -0.2101139583373182,
+              0.7678528226272477
+            ],
+            "days": 5,
+            "positive_days": 4,
+            "median_daily_mean_atr": 0.3798604477184905,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.05668132187858029,
+                "win_pct": 50.0
+              },
+              "SHORT": {
+                "n": 31,
+                "mean_atr": 0.5608554212540363,
+                "win_pct": 54.83870967741935
+              }
+            }
+          }
+        }
+      },
+      "POST_DISCOVERY": {
+        "n": 45,
+        "long": 24,
+        "short": 21,
+        "horizons": {
+          "1": {
+            "n": 45,
+            "mean_atr": -0.09952814945779677,
+            "median_atr": 0.061403508772157625,
+            "win_pct": 53.333333333333336,
+            "day_cluster_bootstrap_95": [
+              -0.5533497402244026,
+              -0.029490672530070334
+            ],
+            "days": 4,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.2553832234762469,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": -0.050388389309014375,
+                "win_pct": 54.166666666666664
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": -0.1556878753421195,
+                "win_pct": 52.38095238095239
+              }
+            }
+          },
+          "3": {
+            "n": 45,
+            "mean_atr": -0.02375051253680489,
+            "median_atr": 0.1238938053096298,
+            "win_pct": 57.77777777777777,
+            "day_cluster_bootstrap_95": [
+              -1.1062719069281652,
+              0.06453822893928536
+            ],
+            "days": 4,
+            "positive_days": 2,
+            "median_daily_mean_atr": -0.2764965931729412,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.19739703609534257,
+                "win_pct": 62.5
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": -0.276490568116402,
+                "win_pct": 52.38095238095239
+              }
+            }
+          },
+          "5": {
+            "n": 45,
+            "mean_atr": -0.08874306038898572,
+            "median_atr": -0.08092485549089554,
+            "win_pct": 42.22222222222222,
+            "day_cluster_bootstrap_95": [
+              -0.9718050065877734,
+              0.17299646780007497
+            ],
+            "days": 4,
+            "positive_days": 1,
+            "median_daily_mean_atr": -0.431845665616268,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": 0.21294901097922966,
+                "win_pct": 50.0
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": -0.4335339990955176,
+                "win_pct": 33.33333333333333
+              }
+            }
+          },
+          "15": {
+            "n": 45,
+            "mean_atr": -0.35699096351276116,
+            "median_atr": -0.651162790697702,
+            "win_pct": 37.77777777777778,
+            "day_cluster_bootstrap_95": [
+              -2.8373679369578944,
+              0.014768216864580677
+            ],
+            "days": 4,
+            "positive_days": 1,
+            "median_daily_mean_atr": -1.4413904788926186,
+            "side": {
+              "LONG": {
+                "n": 24,
+                "mean_atr": -0.23281298829558747,
+                "win_pct": 45.83333333333333
+              },
+              "SHORT": {
+                "n": 21,
+                "mean_atr": -0.4989086494752454,
+                "win_pct": 28.57142857142857
+              }
+            }
+          }
+        }
+      },
+      "NON_DISCOVERY": {
+        "n": 386,
+        "long": 185,
+        "short": 201,
+        "horizons": {
+          "1": {
+            "n": 386,
+            "mean_atr": 0.0008320196386304193,
+            "median_atr": -0.04117647058838454,
+            "win_pct": 47.40932642487047,
+            "day_cluster_bootstrap_95": [
+              -0.05917336456484939,
+              0.05722489790116888
+            ],
+            "days": 26,
+            "positive_days": 13,
+            "median_daily_mean_atr": -0.002105190343006968,
+            "side": {
+              "LONG": {
+                "n": 185,
+                "mean_atr": -0.005219443717435392,
+                "win_pct": 45.94594594594595
+              },
+              "SHORT": {
+                "n": 201,
+                "mean_atr": 0.006401774468840252,
+                "win_pct": 48.756218905472636
+              }
+            }
+          },
+          "3": {
+            "n": 386,
+            "mean_atr": 0.015729987988178918,
+            "median_atr": 0.04575991482562927,
+            "win_pct": 50.51813471502591,
+            "day_cluster_bootstrap_95": [
+              -0.12535104299173025,
+              0.1459625138654078
+            ],
+            "days": 26,
+            "positive_days": 14,
+            "median_daily_mean_atr": 0.0488140865719119,
+            "side": {
+              "LONG": {
+                "n": 185,
+                "mean_atr": 0.0658137305031626,
+                "win_pct": 50.810810810810814
+              },
+              "SHORT": {
+                "n": 201,
+                "mean_atr": -0.030366988953472698,
+                "win_pct": 50.24875621890548
+              }
+            }
+          },
+          "5": {
+            "n": 386,
+            "mean_atr": -0.03136264372518114,
+            "median_atr": 0.0,
+            "win_pct": 49.740932642487046,
+            "day_cluster_bootstrap_95": [
+              -0.20723206872876138,
+              0.13779528717390888
+            ],
+            "days": 26,
+            "positive_days": 10,
+            "median_daily_mean_atr": -0.09676347316605922,
+            "side": {
+              "LONG": {
+                "n": 185,
+                "mean_atr": -0.05988621616941074,
+                "win_pct": 48.10810810810811
+              },
+              "SHORT": {
+                "n": 201,
+                "mean_atr": -0.005109604410840463,
+                "win_pct": 51.243781094527364
+              }
+            }
+          },
+          "15": {
+            "n": 382,
+            "mean_atr": 0.05921315840310327,
+            "median_atr": 0.09416259721439409,
+            "win_pct": 50.523560209424076,
+            "day_cluster_bootstrap_95": [
+              -0.26122887875665995,
+              0.36550777730314465
+            ],
+            "days": 26,
+            "positive_days": 12,
+            "median_daily_mean_atr": -0.04081684811073401,
+            "side": {
+              "LONG": {
+                "n": 182,
+                "mean_atr": 0.22038582872140694,
+                "win_pct": 53.2967032967033
+              },
+              "SHORT": {
+                "n": 200,
+                "mean_atr": -0.08745397158655305,
+                "win_pct": 48.0
+              }
+            }
+          }
+        }
+      },
+      "FULL": {
+        "n": 441,
+        "long": 209,
+        "short": 232,
+        "horizons": {
+          "1": {
+            "n": 441,
+            "mean_atr": -0.0035870620808370695,
+            "median_atr": 0.0,
+            "win_pct": 48.29931972789115,
+            "day_cluster_bootstrap_95": [
+              -0.0579220869177932,
+              0.04759219732829798
+            ],
+            "days": 30,
+            "positive_days": 15,
+            "median_daily_mean_atr": -0.002105190343006968,
+            "side": {
+              "LONG": {
+                "n": 209,
+                "mean_atr": -9.264492051389642e-05,
+                "win_pct": 47.84688995215311
+              },
+              "SHORT": {
+                "n": 232,
+                "mean_atr": -0.006735049953714413,
+                "win_pct": 48.706896551724135
+              }
+            }
+          },
+          "3": {
+            "n": 441,
+            "mean_atr": 0.02470217999935989,
+            "median_atr": 0.048442906574570545,
+            "win_pct": 51.02040816326531,
+            "day_cluster_bootstrap_95": [
+              -0.10061135506584225,
+              0.14318757237900076
+            ],
+            "days": 30,
+            "positive_days": 17,
+            "median_daily_mean_atr": 0.06987446369449228,
+            "side": {
+              "LONG": {
+                "n": 209,
+                "mean_atr": 0.08406220156417388,
+                "win_pct": 51.674641148325364
+              },
+              "SHORT": {
+                "n": 232,
+                "mean_atr": -0.028773011841356104,
+                "win_pct": 50.43103448275862
+              }
+            }
+          },
+          "5": {
+            "n": 441,
+            "mean_atr": 0.01839151529926245,
+            "median_atr": 0.05533596837964954,
+            "win_pct": 50.56689342403629,
+            "day_cluster_bootstrap_95": [
+              -0.1450021416415887,
+              0.1842636908047657
+            ],
+            "days": 30,
+            "positive_days": 14,
+            "median_daily_mean_atr": -0.0491000735177411,
+            "side": {
+              "LONG": {
+                "n": 209,
+                "mean_atr": 0.01069548629362227,
+                "win_pct": 49.282296650717704
+              },
+              "SHORT": {
+                "n": 232,
+                "mean_atr": 0.02532457591210206,
+                "win_pct": 51.724137931034484
+              }
+            }
+          },
+          "15": {
+            "n": 437,
+            "mean_atr": 0.09465971691978603,
+            "median_atr": 0.09621993127139496,
+            "win_pct": 50.800915331807786,
+            "day_cluster_bootstrap_95": [
+              -0.1948277204848129,
+              0.3901685656011988
+            ],
+            "days": 30,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.08863080160839001,
+            "side": {
+              "LONG": {
+                "n": 206,
+                "mean_atr": 0.20131345899214556,
+                "win_pct": 52.9126213592233
+              },
+              "SHORT": {
+                "n": 231,
+                "mean_atr": -0.00045141237417959664,
+                "win_pct": 48.917748917748916
+              }
+            }
+          }
+        }
+      }
+    },
+    "D_NEXT_OPEN": {
+      "PRE_DISCOVERY": {
+        "n": 186,
+        "long": 91,
+        "short": 95,
+        "horizons": {
+          "1": {
+            "n": 186,
+            "mean_atr": 0.03066199354063132,
+            "median_atr": 0.008196721311430628,
+            "win_pct": 50.0,
+            "day_cluster_bootstrap_95": [
+              -0.04918224663240494,
+              0.1070245358642034
+            ],
+            "days": 22,
+            "positive_days": 13,
+            "median_daily_mean_atr": 0.07041837006267865,
+            "side": {
+              "LONG": {
+                "n": 91,
+                "mean_atr": 0.029367614165583887,
+                "win_pct": 49.45054945054945
+              },
+              "SHORT": {
+                "n": 95,
+                "mean_atr": 0.031901872731466226,
+                "win_pct": 50.526315789473685
+              }
+            }
+          },
+          "3": {
+            "n": 186,
+            "mean_atr": -0.05898748022509166,
+            "median_atr": -0.020527859237611117,
+            "win_pct": 47.8494623655914,
+            "day_cluster_bootstrap_95": [
+              -0.20600194075075684,
+              0.0883850300877581
+            ],
+            "days": 22,
+            "positive_days": 8,
+            "median_daily_mean_atr": -0.07313363948888792,
+            "side": {
+              "LONG": {
+                "n": 91,
+                "mean_atr": -0.16561922002354063,
+                "win_pct": 45.05494505494506
+              },
+              "SHORT": {
+                "n": 95,
+                "mean_atr": 0.04315450210815945,
+                "win_pct": 50.526315789473685
+              }
+            }
+          },
+          "5": {
+            "n": 186,
+            "mean_atr": 0.02307458142601406,
+            "median_atr": 0.0427743317087408,
+            "win_pct": 50.53763440860215,
+            "day_cluster_bootstrap_95": [
+              -0.22558983841325192,
+              0.28196301405682184
+            ],
+            "days": 22,
+            "positive_days": 9,
+            "median_daily_mean_atr": -0.07525321030859149,
+            "side": {
+              "LONG": {
+                "n": 91,
+                "mean_atr": -0.07237704867175886,
+                "win_pct": 51.64835164835166
+              },
+              "SHORT": {
+                "n": 95,
+                "mean_atr": 0.11450719551967017,
+                "win_pct": 49.473684210526315
+              }
+            }
+          },
+          "15": {
+            "n": 184,
+            "mean_atr": 0.11048662865447698,
+            "median_atr": 0.07454854144156361,
+            "win_pct": 51.08695652173913,
+            "day_cluster_bootstrap_95": [
+              -0.37161736703627823,
+              0.572647259387847
+            ],
+            "days": 22,
+            "positive_days": 12,
+            "median_daily_mean_atr": 0.025758598970693977,
+            "side": {
+              "LONG": {
+                "n": 90,
+                "mean_atr": 0.24174425654724369,
+                "win_pct": 55.55555555555556
+              },
+              "SHORT": {
+                "n": 94,
+                "mean_atr": -0.01518556826412947,
+                "win_pct": 46.808510638297875
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 186,
+          "mean_atr": 0.5475000980865974,
+          "median_atr": 0.4952430134865255,
+          "positive_pct": 84.40860215053763
+        }
+      },
+      "DISCOVERY_CLOCK": {
+        "n": 34,
+        "long": 14,
+        "short": 20,
+        "horizons": {
+          "1": {
+            "n": 34,
+            "mean_atr": 0.01747482702096937,
+            "median_atr": -0.06710066152577585,
+            "win_pct": 44.11764705882353,
+            "day_cluster_bootstrap_95": [
+              -0.1758290836180931,
+              0.172762602274554
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.05442946352077747,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": -0.1447320655690451,
+                "win_pct": 28.57142857142857
+              },
+              "SHORT": {
+                "n": 20,
+                "mean_atr": 0.1310196518339795,
+                "win_pct": 55.00000000000001
+              }
+            }
+          },
+          "3": {
+            "n": 34,
+            "mean_atr": 0.36079370797919597,
+            "median_atr": 0.18604651162794983,
+            "win_pct": 55.88235294117647,
+            "day_cluster_bootstrap_95": [
+              -0.02396218167255202,
+              0.9423008687220189
+            ],
+            "days": 5,
+            "positive_days": 3,
+            "median_daily_mean_atr": 0.45362742003348017,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": 0.2327288406878085,
+                "win_pct": 57.14285714285714
+              },
+              "SHORT": {
+                "n": 20,
+                "mean_atr": 0.45043911508316714,
+                "win_pct": 55.00000000000001
+              }
+            }
+          },
+          "5": {
+            "n": 34,
+            "mean_atr": 0.4653260994706705,
+            "median_atr": 0.17638047612324037,
+            "win_pct": 55.88235294117647,
+            "day_cluster_bootstrap_95": [
+              0.23786123777633383,
+              0.8271528134534887
+            ],
+            "days": 5,
+            "positive_days": 5,
+            "median_daily_mean_atr": 0.2727428678404907,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": 0.37268335844600076,
+                "win_pct": 57.14285714285714
+              },
+              "SHORT": {
+                "n": 20,
+                "mean_atr": 0.5301760181879394,
+                "win_pct": 55.00000000000001
+              }
+            }
+          },
+          "15": {
+            "n": 34,
+            "mean_atr": 0.8126251762432041,
+            "median_atr": 0.7520510185771053,
+            "win_pct": 64.70588235294117,
+            "day_cluster_bootstrap_95": [
+              0.16111733830590702,
+              1.5974672776147825
+            ],
+            "days": 5,
+            "positive_days": 4,
+            "median_daily_mean_atr": 0.3604904045901482,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": 1.0920066392356833,
+                "win_pct": 71.42857142857143
+              },
+              "SHORT": {
+                "n": 20,
+                "mean_atr": 0.6170581521484686,
+                "win_pct": 60.0
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 34,
+          "mean_atr": 0.4745694802941359,
+          "median_atr": 0.31456561589079546,
+          "positive_pct": 82.35294117647058
+        }
+      },
+      "POST_DISCOVERY": {
+        "n": 23,
+        "long": 14,
+        "short": 9,
+        "horizons": {
+          "1": {
+            "n": 23,
+            "mean_atr": 0.11802359134653216,
+            "median_atr": 0.1407035175878143,
+            "win_pct": 56.52173913043478,
+            "day_cluster_bootstrap_95": [
+              0.09962727303300944,
+              0.13488688313392794
+            ],
+            "days": 2,
+            "positive_days": 2,
+            "median_daily_mean_atr": 0.11725707808346872,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": 0.14816127469439372,
+                "win_pct": 64.28571428571429
+              },
+              "SHORT": {
+                "n": 9,
+                "mean_atr": 0.07114275058319192,
+                "win_pct": 44.44444444444444
+              }
+            }
+          },
+          "3": {
+            "n": 23,
+            "mean_atr": -0.20170739089790513,
+            "median_atr": 0.0,
+            "win_pct": 47.82608695652174,
+            "day_cluster_bootstrap_95": [
+              -0.3479454037951821,
+              -0.06765587907540112
+            ],
+            "days": 2,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.20780064143529162,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": -0.1397997497384486,
+                "win_pct": 42.857142857142854
+              },
+              "SHORT": {
+                "n": 9,
+                "mean_atr": -0.2980081660348373,
+                "win_pct": 55.55555555555556
+              }
+            }
+          },
+          "5": {
+            "n": 23,
+            "mean_atr": -0.5783038436859418,
+            "median_atr": -0.7734806629834875,
+            "win_pct": 39.130434782608695,
+            "day_cluster_bootstrap_95": [
+              -0.6764317971920875,
+              -0.4712551671337834
+            ],
+            "days": 2,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.5738434821629353,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": -0.42137248512519915,
+                "win_pct": 42.857142857142854
+              },
+              "SHORT": {
+                "n": 9,
+                "mean_atr": -0.8224192903359863,
+                "win_pct": 33.33333333333333
+              }
+            }
+          },
+          "15": {
+            "n": 23,
+            "mean_atr": -0.7464576352942833,
+            "median_atr": -0.7661691542290259,
+            "win_pct": 30.434782608695656,
+            "day_cluster_bootstrap_95": [
+              -1.1077138100197053,
+              -0.3523599901392775
+            ],
+            "days": 2,
+            "positive_days": 0,
+            "median_daily_mean_atr": -0.7300369000794914,
+            "side": {
+              "LONG": {
+                "n": 14,
+                "mean_atr": -1.0692714153549878,
+                "win_pct": 21.428571428571427
+              },
+              "SHORT": {
+                "n": 9,
+                "mean_atr": -0.24430286631096523,
+                "win_pct": 44.44444444444444
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 23,
+          "mean_atr": 0.5582120091235392,
+          "median_atr": 0.5761316872428156,
+          "positive_pct": 91.30434782608695
+        }
+      },
+      "NON_DISCOVERY": {
+        "n": 209,
+        "long": 105,
+        "short": 104,
+        "horizons": {
+          "1": {
+            "n": 209,
+            "mean_atr": 0.04027594928003667,
+            "median_atr": 0.04620462046221541,
+            "win_pct": 50.717703349282296,
+            "day_cluster_bootstrap_95": [
+              -0.033188020150431555,
+              0.10592280294348826
+            ],
+            "days": 24,
+            "positive_days": 15,
+            "median_daily_mean_atr": 0.10482356383999303,
+            "side": {
+              "LONG": {
+                "n": 105,
+                "mean_atr": 0.04520676890275853,
+                "win_pct": 51.42857142857142
+              },
+              "SHORT": {
+                "n": 104,
+                "mean_atr": 0.03529771793017325,
+                "win_pct": 50.0
+              }
+            }
+          },
+          "3": {
+            "n": 209,
+            "mean_atr": -0.07469349910296105,
+            "median_atr": 0.0,
+            "win_pct": 47.84688995215311,
+            "day_cluster_bootstrap_95": [
+              -0.2090123915192992,
+              0.05992023324102767
+            ],
+            "days": 24,
+            "positive_days": 8,
+            "median_daily_mean_atr": -0.07878731548264523,
+            "side": {
+              "LONG": {
+                "n": 105,
+                "mean_atr": -0.16217662398552835,
+                "win_pct": 44.761904761904766
+              },
+              "SHORT": {
+                "n": 104,
+                "mean_atr": 0.013630809672707809,
+                "win_pct": 50.96153846153846
+              }
+            }
+          },
+          "5": {
+            "n": 209,
+            "mean_atr": -0.04310581942362703,
+            "median_atr": 0.0,
+            "win_pct": 49.282296650717704,
+            "day_cluster_bootstrap_95": [
+              -0.274226655321037,
+              0.20830408822921775
+            ],
+            "days": 24,
+            "positive_days": 9,
+            "median_daily_mean_atr": -0.12127947716019295,
+            "side": {
+              "LONG": {
+                "n": 105,
+                "mean_atr": -0.11890977353221757,
+                "win_pct": 50.476190476190474
+              },
+              "SHORT": {
+                "n": 104,
+                "mean_atr": 0.03342701885908454,
+                "win_pct": 48.07692307692308
+              }
+            }
+          },
+          "15": {
+            "n": 207,
+            "mean_atr": 0.015270599326836946,
+            "median_atr": 0.0,
+            "win_pct": 48.792270531400966,
+            "day_cluster_bootstrap_95": [
+              -0.4397372310310598,
+              0.4702719852881233
+            ],
+            "days": 24,
+            "positive_days": 12,
+            "median_daily_mean_atr": -0.008162982136194773,
+            "side": {
+              "LONG": {
+                "n": 104,
+                "mean_atr": 0.06526137763732792,
+                "win_pct": 50.96153846153846
+              },
+              "SHORT": {
+                "n": 103,
+                "mean_atr": -0.035205526345891844,
+                "win_pct": 46.601941747572816
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 209,
+          "mean_atr": 0.5486789208322894,
+          "median_atr": 0.5077720207259595,
+          "positive_pct": 85.16746411483254
+        }
+      },
+      "FULL": {
+        "n": 243,
+        "long": 119,
+        "short": 124,
+        "horizons": {
+          "1": {
+            "n": 243,
+            "mean_atr": 0.03708566879934414,
+            "median_atr": 0.0,
+            "win_pct": 49.794238683127574,
+            "day_cluster_bootstrap_95": [
+              -0.03003724884794912,
+              0.09911273899489251
+            ],
+            "days": 29,
+            "positive_days": 18,
+            "median_daily_mean_atr": 0.09962727303300949,
+            "side": {
+              "LONG": {
+                "n": 119,
+                "mean_atr": 0.022861023670781626,
+                "win_pct": 48.739495798319325
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.050736739527561366,
+                "win_pct": 50.806451612903224
+              }
+            }
+          },
+          "3": {
+            "n": 243,
+            "mean_atr": -0.013761132679943206,
+            "median_atr": 0.0,
+            "win_pct": 48.971193415637856,
+            "day_cluster_bootstrap_95": [
+              -0.14758542211573838,
+              0.13315809466938866
+            ],
+            "days": 29,
+            "positive_days": 11,
+            "median_daily_mean_atr": -0.0676558790754011,
+            "side": {
+              "LONG": {
+                "n": 119,
+                "mean_atr": -0.11571715755337109,
+                "win_pct": 46.21848739495798
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.08408376215826578,
+                "win_pct": 51.61290322580645
+              }
+            }
+          },
+          "5": {
+            "n": 243,
+            "mean_atr": 0.02803280297310595,
+            "median_atr": 0.038251366120011364,
+            "win_pct": 50.20576131687243,
+            "day_cluster_bootstrap_95": [
+              -0.18525281945603556,
+              0.25965575976142763
+            ],
+            "days": 29,
+            "positive_days": 14,
+            "median_daily_mean_atr": -0.046922423504753445,
+            "side": {
+              "LONG": {
+                "n": 119,
+                "mean_atr": -0.06107528741713305,
+                "win_pct": 51.26050420168067
+              },
+              "SHORT": {
+                "n": 124,
+                "mean_atr": 0.1135478252024482,
+                "win_pct": 49.193548387096776
+              }
+            }
+          },
+          "15": {
+            "n": 241,
+            "mean_atr": 0.1277604566511377,
+            "median_atr": 0.08211143695007107,
+            "win_pct": 51.037344398340245,
+            "day_cluster_bootstrap_95": [
+              -0.29275700382848735,
+              0.544754819966687
+            ],
+            "days": 29,
+            "positive_days": 16,
+            "median_daily_mean_atr": 0.036912550462409634,
+            "side": {
+              "LONG": {
+                "n": 118,
+                "mean_atr": 0.18707861206425147,
+                "win_pct": 53.38983050847458
+              },
+              "SHORT": {
+                "n": 123,
+                "mean_atr": 0.07085360836863831,
+                "win_pct": 48.78048780487805
+              }
+            }
+          }
+        },
+        "confirmation_capture": {
+          "n": 243,
+          "mean_atr": 0.5383096986993791,
+          "median_atr": 0.498023715415336,
+          "positive_pct": 84.77366255144034
+        }
+      }
+    }
+  }
+}
