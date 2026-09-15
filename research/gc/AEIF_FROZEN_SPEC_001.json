@@ -5,6 +5,7 @@
   "amp_oos_parameter_selection_forbidden": true,
   "source_artifact": {
     "name": "GC_RITHMIC_40D_003_GCZ6.zip",
+    "release_tag": "GC",
     "sha256": "b12465a783f36aac41b82a9f2a5c4e74bd2dcf7024ffc3636e8c41a8fd01e803",
     "symbol": "GCZ6",
     "coverage_utc": "2026-08-03 through 2026-09-11",
@@ -24,7 +25,8 @@
     "sell_lower20": "SELL volume at trade_price <= lower20_cut",
     "buy_upper20": "BUY volume at trade_price >= upper20_cut",
     "sell_loc": "sell_lower20/sell_volume, else 0",
-    "buy_loc": "buy_upper20/buy_volume, else 0"
+    "buy_loc": "buy_upper20/buy_volume, else 0",
+    "boundary_rule": "lower/upper 20% endpoints inclusive"
   },
   "causal_references": {
     "rolling_completed_m5_bars": 240,
@@ -38,7 +40,8 @@
     "period": 14,
     "method": "Wilder",
     "timeframe": "M5",
-    "true_range": true
+    "true_range": true,
+    "implementation": "pandas ewm(alpha=1/14, adjust=false, min_periods=14)"
   },
   "core": {
     "long": {
@@ -59,6 +62,10 @@
       "short": 57,
       "match_status": "EXACT_COUNT_AND_SIDE_RECONSTRUCTION"
     },
+    "ledger": {
+      "file": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CORE_EVENTS.csv",
+      "sha256": "6f7bbed475cb8a627c51f5083852fb804d682d4a97b08313e51f6f918b4c011f"
+    },
     "evidence_class": "RAW_RITHMIC_FINGERPRINT_CERTIFIED"
   },
   "cooldown": {
@@ -78,10 +85,19 @@
     "current_best_reconstruction": {
       "long": "first clock-contiguous following M5 with close>open AND delta>0",
       "short": "first clock-contiguous following M5 with close<open AND delta<0",
-      "entry": "after completed confirmation"
+      "clock_contiguous_required": true,
+      "gap_rule": "expire; never jump across a missing M5 clock bar",
+      "entry": "next M5 clock time after completed confirmation"
+    },
+    "reconstruction_ledger": {
+      "file": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CONFIRMED_EVENTS.csv",
+      "sha256": "05f343268d596a56dbce880e692ea9f055b51abcafbb98020a0608ab5da1bd69",
+      "classification": "HASHED_REPRODUCIBLE_CANDIDATE_NOT_HISTORICALLY_BITWISE_CERTIFIED"
     },
     "raw_archive_result": {
       "full_40d_confirmations": 61,
+      "full_40d_long": 30,
+      "full_40d_short": 31,
       "through_2026-09-08_utc": 53,
       "through_2026-09-08_long": 25,
       "through_2026-09-08_short": 28
@@ -130,6 +146,11 @@
       "max_dd_r": 3.32,
       "max_consecutive_losses": 4
     }
+  },
+  "reconstruction_artifacts": {
+    "manifest": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_MANIFEST.json",
+    "rebuild_script": "freeze_rithmic_aeif_fingerprint_001.py",
+    "workflow": ".github/workflows/gc_rithmic_aeif_freeze_001.yml"
   },
   "remaining_unresolved_for_full_signal_certification": [
     "identity of the two LONG confirmations present in the reconstruction but absent from the 51-trade XAU transfer",
