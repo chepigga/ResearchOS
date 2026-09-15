@@ -115,7 +115,7 @@ AND delta < 0
 
 On the recovered Rithmic archive this gives:
 
-- full 40-day archive: **61 confirmations**;
+- full 40-day archive: **61 confirmations = 30 LONG / 31 SHORT**;
 - through `2026-09-08` UTC: **53 confirmations = 25 LONG / 28 SHORT**.
 
 The historical XAU transfer backlog records:
@@ -171,7 +171,27 @@ The positive Rithmic fingerprint is a different footprint implementation: **240 
 
 ---
 
-## 7. Certification status
+## 7. Frozen reproducibility artifacts
+
+The reconstruction is now stored as reproducible, hashed artifacts in ResearchOS:
+
+- `RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CORE_EVENTS.csv`
+  - 105 rows
+  - SHA256 `6f7bbed475cb8a627c51f5083852fb804d682d4a97b08313e51f6f918b4c011f`
+- `RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CONFIRMED_EVENTS.csv`
+  - 61-row **confirmation candidate ledger**
+  - SHA256 `05f343268d596a56dbce880e692ea9f055b51abcafbb98020a0608ab5da1bd69`
+- `RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_MANIFEST.json`
+- `freeze_rithmic_aeif_fingerprint_001.py`
+- `.github/workflows/gc_rithmic_aeif_freeze_001.yml`
+
+The rebuild script downloads the canonical GitHub Release asset, verifies its source SHA256, reconstructs the M5 footprint, regenerates both ledgers, and fails if the frozen event counts or ledger hashes change.
+
+The 61-row confirmation ledger is deliberately labelled a **reproducible candidate ledger**, not historical bitwise proof, because of the two-LONG transfer ambiguity above.
+
+---
+
+## 8. Certification status
 
 ```text
 RAW RITHMIC DATA               RECOVERED / HASHED
@@ -187,7 +207,7 @@ AMP_GC_OOS_001                 STILL SEALED FOR PERFORMANCE
 
 ### Current decision
 
-`AEIF_FROZEN_SPEC_001` is promoted to:
+`AEIF_FROZEN_SPEC_001` is frozen as:
 
 **`CORE_FINGERPRINT_CERTIFIED_CONFIRMATION_PENDING`**.
 
