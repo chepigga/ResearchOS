@@ -1,0 +1,22 @@
+{
+  "lab": "XAU_EXECUTION_ENGINE_PARITY_001",
+  "exact_timestamp_inputs": 51,
+  "single_position": {
+    "n": 50,
+    "ev_r": 0.03997614648339111,
+    "sum_r": 1.9988073241695554,
+    "wr_pct": 28.000000000000004,
+    "pf": 1.055522425671377,
+    "max_dd_r": 10.00000000000001,
+    "max_consecutive_losses": 10
+  },
+  "expected_historical": {
+    "n": 46,
+    "ev_r": 0.666,
+    "sum_r": 30.63,
+    "pf": 2.33,
+    "max_dd_r": 3.32
+  },
+  "parity_count": false,
+  "parity_ev": false
+}
