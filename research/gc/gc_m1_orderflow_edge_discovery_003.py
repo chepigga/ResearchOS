@@ -61,7 +61,7 @@ CANDIDATES=(
 def sha(p):
  h=hashlib.sha256()
  with p.open('rb') as f:
-  for b in iter(lambda:f.read(1024*1024),b''): h.update(b)
+  for block in iter(lambda:f.read(1024*1024),b''): h.update(block)
  return h.hexdigest()
 
 def download(url,p):
@@ -79,20 +79,21 @@ def prepare_ticks(t,feed):
  b=g.price.agg(open='first',high='max',low='min',close='last')
  b['buy_vol']=g.buy_size.sum(); b['sell_vol']=g.sell_size.sum(); b['volume']=b.buy_vol+b.sell_vol
  b['delta']=b.buy_vol-b.sell_vol
- b['delta_frac']=np.where(b.volume>0,b.delta/b.volume,0.0)
+ b['delta_frac']=b.delta/b.volume
  # current-bar price-level concentration from raw trades
  lows=t.bar_ms.map(b.low); highs=t.bar_ms.map(b.high); rng=highs-lows
  lower=lows+.20*rng; upper=highs-.20*rng
  t['sell_lower']=np.where(t.aggressor.eq('SELL')&(t.price<=lower+1e-12),t.volume,0.0)
  t['buy_upper']=np.where(t.aggressor.eq('BUY')&(t.price>=upper-1e-12),t.volume,0.0)
  b['sell_lower']=t.groupby('bar_ms').sell_lower.sum(); b['buy_upper']=t.groupby('bar_ms').buy_upper.sum()
- b['sell_loc']=np.where(b.sell_vol>0,b.sell_lower/b.sell_vol,0.0)
- b['buy_loc']=np.where(b.buy_vol>0,b.buy_upper/b.buy_vol,0.0)
+ b['sell_loc']=b.sell_lower.div(b.sell_vol.replace(0,np.nan)).fillna(0.0)
+ b['buy_loc']=b.buy_upper.div(b.buy_vol.replace(0,np.nan)).fillna(0.0)
  pc=b.close.shift(1)
  b['tr']=pd.concat([(b.high-b.low),(b.high-pc).abs(),(b.low-pc).abs()],axis=1).max(axis=1); b.iloc[0,b.columns.get_loc('tr')]=np.nan
  b['atr14']=b.tr.rolling(14,min_periods=14).mean(); b['body_atr']=(b.close-b.open)/b.atr14
  b['range_atr']=(b.high-b.low)/b.atr14
- b['close_pos']=np.where((b.high-b.low)>0,(b.close-b.low)/(b.high-b.low),.5)
+ bar_range=(b.high-b.low).replace(0,np.nan)
+ b['close_pos']=((b.close-b.low)/bar_range).fillna(.5)
  # causal bar references
  for col,q,name in [('delta_frac',.10,'q10_delta'),('delta_frac',.90,'q90_delta'),('buy_vol',.75,'q75_buy'),('sell_vol',.75,'q75_sell'),('buy_loc',.75,'q75_buyloc'),('sell_loc',.75,'q75_sellloc'),('range_atr',.75,'q75_range')]:
   b[name]=b[col].shift(1).rolling(240,min_periods=240).quantile(q)
