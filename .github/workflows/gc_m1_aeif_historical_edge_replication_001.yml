@@ -1,0 +1,41 @@
+name: GC M1 AEIF Historical Edge Replication 001
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_m1_aeif_historical_edge_replication_001.py'
+      - '.github/workflows/gc_m1_aeif_historical_edge_replication_001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Run historical M1 replication
+        run: python research/gc/gc_m1_aeif_historical_edge_replication_001.py
+      - name: Commit immutable result artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_M1_AEIF_HISTORICAL_EDGE_REPLICATION_001.json \
+                  research/gc/GC_M1_AEIF_HISTORICAL_EDGE_REPLICATION_001.md \
+                  research/gc/GC_M1_AEIF_HISTORICAL_EDGE_REPLICATION_001_EVENTS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record M1 AEIF historical edge replication 001'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
