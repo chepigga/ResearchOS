@@ -1,7 +1,8 @@
 {
   "spec_id": "AEIF_FROZEN_SPEC_001",
-  "status": "CORE_FINGERPRINT_CERTIFIED_CONFIRMATION_PENDING",
+  "status": "SIGNAL_AND_TRANSFER_FINGERPRINT_FROZEN",
   "source_lab": "RITHMIC_AEIF_FROZEN_FINGERPRINT_RECONSTRUCTION_001",
+  "canonical_backlog": "GC_AEIF_CANONICAL_BACKLOG_001.md",
   "amp_oos_parameter_selection_forbidden": true,
   "source_artifact": {
     "name": "GC_RITHMIC_40D_003_GCZ6.zip",
@@ -82,17 +83,14 @@
   },
   "confirmation": {
     "max_following_m5_bars": 2,
-    "current_best_reconstruction": {
-      "long": "first clock-contiguous following M5 with close>open AND delta>0",
-      "short": "first clock-contiguous following M5 with close<open AND delta<0",
-      "clock_contiguous_required": true,
-      "gap_rule": "expire; never jump across a missing M5 clock bar",
-      "entry": "next M5 clock time after completed confirmation"
-    },
+    "long": "first clock-contiguous following M5 with close>open AND delta>0",
+    "short": "first clock-contiguous following M5 with close<open AND delta<0",
+    "clock_contiguous_required": true,
+    "gap_rule": "expire; never jump across a missing M5 clock bar",
+    "entry_schedule": "next M5 clock time after completed confirmation",
     "reconstruction_ledger": {
       "file": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CONFIRMED_EVENTS.csv",
-      "sha256": "05f343268d596a56dbce880e692ea9f055b51abcafbb98020a0608ab5da1bd69",
-      "classification": "HASHED_REPRODUCIBLE_CANDIDATE_NOT_HISTORICALLY_BITWISE_CERTIFIED"
+      "sha256": "05f343268d596a56dbce880e692ea9f055b51abcafbb98020a0608ab5da1bd69"
     },
     "raw_archive_result": {
       "full_40d_confirmations": 61,
@@ -102,13 +100,43 @@
       "through_2026-09-08_long": 25,
       "through_2026-09-08_short": 28
     },
-    "historical_xau_transfer_fingerprint": {
+    "evidence_class": "HIGH_CONFIDENCE_FINGERPRINT_FROZEN"
+  },
+  "xau_transfer": {
+    "historical_source": "XAUUSD_M1_2026.csv",
+    "historical_source_sha256": "0e0c75fab3516fb31d3db1f3d3a7a25a848c0340b1cbd894cca66e628f3ecb18",
+    "historical_file_clock": "UTC+2",
+    "eligibility_rule": "XAU M1 row must exist at exact scheduled entry timestamp",
+    "carry_across_missing_bar": false,
+    "carry_across_session_gap": false,
+    "carry_across_weekend_reopen": false,
+    "historical_fingerprint": {
       "trades": 51,
       "buy": 23,
-      "sell": 28
+      "sell": 28,
+      "match_status": "EXACT_COUNT_AND_SIDE_FINGERPRINT"
     },
-    "status": "NOT_EXACTLY_CERTIFIED_TWO_LONG_DIFFERENCE_REMAINS",
-    "evidence_class": "HIGH_CONFIDENCE_NOT_BITWISE_CERTIFIED"
+    "resolved_discrepant_longs": [
+      {
+        "core_bar_utc": "2026-08-05T22:25:00+00:00",
+        "confirm_bar_utc": "2026-08-05T22:30:00+00:00",
+        "entry_eligible_utc": "2026-08-05T22:35:00+00:00",
+        "xau_target_file_time": "2026-08-06 00:35:00",
+        "next_xau_m1": "2026-08-06 01:05:00",
+        "reason": "NO_EXACT_XAU_ENTRY_ROW_SESSION_GAP"
+      },
+      {
+        "core_bar_utc": "2026-08-30T22:50:00+00:00",
+        "confirm_bar_utc": "2026-08-30T22:55:00+00:00",
+        "entry_eligible_utc": "2026-08-30T23:00:00+00:00",
+        "xau_target_file_time": "2026-08-31 01:00:00",
+        "next_xau_m1": "2026-08-31 01:05:00",
+        "reason": "NO_EXACT_XAU_ENTRY_ROW_WEEKEND_REOPEN"
+      }
+    ],
+    "forensic_report": "GC_XAU_TRANSFER_MAPPING_FORENSIC_001.md",
+    "evidence_class": "TRANSFER_TIMESTAMP_RULE_HIGH_CONFIDENCE_FINGERPRINT_MATCH",
+    "bitwise_historical_ledger_recovered": false
   },
   "historical_execution_candidate": {
     "xau_stop": "1.0 * ATR20(M5)",
@@ -147,20 +175,12 @@
       "max_consecutive_losses": 4
     }
   },
-  "reconstruction_artifacts": {
-    "manifest": "RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_MANIFEST.json",
-    "rebuild_script": "freeze_rithmic_aeif_fingerprint_001.py",
-    "workflow": ".github/workflows/gc_rithmic_aeif_freeze_001.yml"
-  },
-  "remaining_unresolved_for_full_signal_certification": [
-    "identity of the two LONG confirmations present in the reconstruction but absent from the 51-trade XAU transfer",
-    "whether those two are removed by the exact confirmation rule or by XAU transfer/eligibility/history availability",
-    "exact XAU next-eligible-entry timestamp mapping for LAB022"
-  ],
   "research_discipline": {
-    "amp_oos_must_not_be_used_to_resolve_remaining_confirmation_ambiguity": true,
+    "forensic_search_closed": true,
+    "reopen_only_if_new_primary_artifact_contradicts_backlog": true,
+    "amp_oos_must_not_be_used_for_retuning": true,
     "no_threshold_retuning": true,
     "all_changes_require_separate_lab": true
   },
-  "amp_gate": "CLOSED_UNTIL_CONFIRMATION_TRANSFER_AMBIGUITY_IS_PREREGISTERED_OR_RESOLVED"
+  "amp_gate": "OPEN_FOR_ONE_SHOT_UNTOUCHED_OOS_REPLICATION"
 }
