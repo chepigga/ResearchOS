@@ -1,0 +1,299 @@
+{
+  "canonical_run": "20260806_182904__20260915_182904",
+  "comparison": {
+    "exact_overlap_match": true,
+    "overlap_from_msc": 1786040949058,
+    "overlap_rows_a": 3737471,
+    "overlap_rows_b": 3737471,
+    "overlap_sha256_a": "ecf4dcebc5da59442fd989c3466d1e9eaf7f1dd45e1a62cbdd883e67b9861d8b",
+    "overlap_sha256_b": "ecf4dcebc5da59442fd989c3466d1e9eaf7f1dd45e1a62cbdd883e67b9861d8b",
+    "overlap_to_msc": 1789496634164,
+    "run_a": "20260806_182355__20260915_182355",
+    "run_b": "20260806_182904__20260915_182904"
+  },
+  "lab": "AMP_GC_FEED_AUDIT_001",
+  "overall_pass": true,
+  "release": "https://github.com/chepigga/ResearchOS/releases/tag/GC",
+  "runs": {
+    "20260806_182355__20260915_182355": {
+      "aggressor_coverage_pct": 100.0,
+      "asset_sha256": {
+        "CHUNKS.csv": "sha256:84e7e350fca0cfb3b921c24068af46528d2909953d71b4ee7a201b45457c0fcf",
+        "META.csv": "sha256:c0153907ab69b56016b7c808d3f89db0df89a04a2ef9ec8443509a7dcebbf954",
+        "TICKS.csv.zip": "sha256:81d675597368a9f6c78eee726ed547737366ffd8d8e54aa976bce50111db752b"
+      },
+      "asset_size": {
+        "CHUNKS.csv": 5380,
+        "META.csv": 1601,
+        "TICKS.csv.zip": 40019809
+      },
+      "base_pass": true,
+      "chunks": {
+        "failed_chunks": 0,
+        "first_from_msc": 1786040635000,
+        "last_to_msc": 1789496635999,
+        "nonzero_copy_errors": 0,
+        "request_gaps": 0,
+        "request_overlaps": 0,
+        "rows": 41,
+        "sum_ticks": 3737579
+      },
+      "meta": {
+        "account_server": "AMPGlobalUSA-Demo",
+        "account_trade_mode": "ACCOUNT_TRADE_MODE_DEMO",
+        "aggressor_classification_coverage_pct": "100.000000",
+        "both_buy_sell_ticks": "5609",
+        "buy_ticks": "1862531",
+        "chunk_hours": "24",
+        "chunks_file": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_CHUNKS.csv",
+        "copy_mode": "COPY_TICKS_TRADE",
+        "exact_adjacent_duplicates_preserved": "944855",
+        "exporter": "AMP_GC_HISTORY_EXPORTER_001",
+        "finished_gmt_time": "2026.09.15 18:24:39",
+        "finished_server_time": "2026.09.15 18:24:39",
+        "first_exported_tick_msc": "1786040654857",
+        "first_exported_tick_text": "2026.08.06 18:24:14",
+        "gmt_time_at_start": "2026.09.15 18:23:55",
+        "last_exported_tick_msc": "1789496634164",
+        "last_exported_tick_text": "2026.09.15 18:23:54",
+        "last_flag_ticks": "3737579",
+        "max_retries_per_chunk": "6",
+        "program_type": "MQL5_SCRIPT",
+        "requested_from_msc": "1786040635000",
+        "requested_from_text": "2026.08.06 18:23:55",
+        "requested_to_msc": "1789496635999",
+        "requested_to_text": "2026.09.15 18:23:55",
+        "research_mode": "NO_TRADING",
+        "result_code": "0",
+        "sell_ticks": "1880657",
+        "server_minus_gmt_seconds": "0",
+        "server_time_at_start": "2026.09.15 18:23:55",
+        "status": "COMPLETE",
+        "symbol": "GCEZ26",
+        "symbol_contract_size": "1.0000",
+        "symbol_digits": "1",
+        "symbol_expiration_time": "2026.12.29 23:59:00",
+        "symbol_start_time": "1970.01.01 00:00:00",
+        "symbol_tick_size": "0.1000000000",
+        "symbol_trade_mode": "SYMBOL_TRADE_MODE_FULL",
+        "symbol_volume_max": "100000.00000000",
+        "symbol_volume_min": "1.00000000",
+        "symbol_volume_step": "1.00000000",
+        "terminal_company": "MetaQuotes Ltd.",
+        "ticks_file": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_TICKS.csv",
+        "total_ticks": "3737579",
+        "unclassified_aggressor_ticks": "0",
+        "version": "1.10",
+        "volume_flag_ticks": "3737579",
+        "zero_volume_ticks": "0"
+      },
+      "ticks": {
+        "both_ticks": 5609,
+        "buy_ticks": 1862531,
+        "buy_volume": 2113090.0,
+        "delta_volume": -26857.0,
+        "exact_adj_duplicates": 944855,
+        "first_time_msc": 1786040654857,
+        "flags_top": [
+          [
+            "344",
+            1869314
+          ],
+          [
+            "312",
+            1851575
+          ],
+          [
+            "88",
+            5734
+          ],
+          [
+            "376",
+            5604
+          ],
+          [
+            "56",
+            5347
+          ],
+          [
+            "120",
+            5
+          ]
+        ],
+        "inverted_bbo": 211,
+        "last_time_msc": 1789496634164,
+        "max_last": 4755.0,
+        "min_last": 4288.0,
+        "non_monotonic": 0,
+        "none_ticks": 0,
+        "nonpositive_last": 0,
+        "rows": 3737579,
+        "same_millisecond_adjacent": 1619955,
+        "sell_ticks": 1880657,
+        "sell_volume": 2139947.0,
+        "seq_errors": 0,
+        "top_gaps_ms": [
+          176404914,
+          176402731,
+          176402367,
+          176401671,
+          176400828,
+          176400697,
+          12600490,
+          3605700,
+          3604511,
+          3603751,
+          3602618,
+          3602569,
+          3602559,
+          3601338,
+          3601333,
+          3601261,
+          3601212,
+          3600942,
+          3600834,
+          3600826
+        ],
+        "total_volume": 4247109.0,
+        "zero_volume_ticks": 0
+      }
+    },
+    "20260806_182904__20260915_182904": {
+      "aggressor_coverage_pct": 100.0,
+      "asset_sha256": {
+        "CHUNKS.csv": "sha256:e4a5143a2ba0bc361e4f48fc608892cc96fa67707df5d59baf6139f8e97e8714",
+        "META.csv": "sha256:43cdc569f0258c8e21a1aa52951eac8ff66702d9166486f14048dd81e0fb2d42",
+        "TICKS.csv.zip": "sha256:03dbec37caf947652a52f71a1f2d4f9f25b619401982dd97d56da0054c759fc8"
+      },
+      "asset_size": {
+        "CHUNKS.csv": 10419,
+        "META.csv": 1418,
+        "TICKS.csv.zip": 40022803
+      },
+      "base_pass": true,
+      "chunks": {
+        "failed_chunks": 0,
+        "first_from_msc": 1786040944000,
+        "last_to_msc": 1789496944999,
+        "nonzero_copy_errors": 0,
+        "request_gaps": 0,
+        "request_overlaps": 0,
+        "rows": 81,
+        "sum_ticks": 3737719
+      },
+      "meta": {
+        "account_server": "AMPGlobalUSA-Demo",
+        "aggressor_classification_coverage_pct": "100.000000",
+        "both_ticks": "5609",
+        "buy_ticks": "1862617",
+        "chunk_hours": "12",
+        "chunks_file": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182904__20260915_182904_CHUNKS.csv",
+        "copy_mode": "COPY_TICKS_TRADE",
+        "exact_adjacent_duplicates_preserved": "944877",
+        "exporter": "AMP_GC_HISTORY_EXPORTER_001",
+        "first_exported_tick_msc": "1786040949058",
+        "first_exported_tick_text": "2026.08.06 18:29:09",
+        "gmt_time_at_finish": "2026.09.15 18:29:23",
+        "gmt_time_at_start": "2026.09.15 18:29:04",
+        "last_exported_tick_msc": "1789496942280",
+        "last_exported_tick_text": "2026.09.15 18:29:02",
+        "max_retries": "8",
+        "meta_file": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182904__20260915_182904_META.csv",
+        "program_type": "MQL5_SCRIPT",
+        "requested_from_msc": "1786040944000",
+        "requested_from_text": "2026.08.06 18:29:04",
+        "requested_to_msc": "1789496944999",
+        "requested_to_text": "2026.09.15 18:29:04",
+        "research_mode": "NO_TRADING",
+        "retry_delay_ms": "1500",
+        "sell_ticks": "1880711",
+        "server_minus_gmt_seconds": "0",
+        "server_time_at_finish": "2026.09.15 18:29:23",
+        "server_time_at_start": "2026.09.15 18:29:04",
+        "status": "COMPLETE",
+        "symbol": "GCEZ26",
+        "symbol_contract_size": "1.0000",
+        "symbol_digits": "1",
+        "symbol_expiration_time": "1798588740",
+        "symbol_start_time": "0",
+        "symbol_tick_size": "0.1000000000",
+        "terminal_company": "MetaQuotes Ltd.",
+        "ticks_file": "AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182904__20260915_182904_TICKS.csv",
+        "total_ticks": "3737719",
+        "unclassified_ticks": "0",
+        "version": "1.20",
+        "zero_volume_ticks": "0"
+      },
+      "ticks": {
+        "both_ticks": 5609,
+        "buy_ticks": 1862617,
+        "buy_volume": 2113193.0,
+        "delta_volume": -26847.0,
+        "exact_adj_duplicates": 944877,
+        "first_time_msc": 1786040949058,
+        "flags_top": [
+          [
+            "344",
+            1869254
+          ],
+          [
+            "312",
+            1851527
+          ],
+          [
+            "88",
+            5848
+          ],
+          [
+            "376",
+            5604
+          ],
+          [
+            "56",
+            5481
+          ],
+          [
+            "120",
+            5
+          ]
+        ],
+        "inverted_bbo": 211,
+        "last_time_msc": 1789496942280,
+        "max_last": 4755.0,
+        "min_last": 4288.0,
+        "non_monotonic": 0,
+        "none_ticks": 0,
+        "nonpositive_last": 0,
+        "rows": 3737719,
+        "same_millisecond_adjacent": 1619985,
+        "sell_ticks": 1880711,
+        "sell_volume": 2140040.0,
+        "seq_errors": 0,
+        "top_gaps_ms": [
+          176404914,
+          176402731,
+          176402367,
+          176401671,
+          176400828,
+          176400697,
+          12600490,
+          3605700,
+          3604511,
+          3603751,
+          3602618,
+          3602569,
+          3602559,
+          3601338,
+          3601333,
+          3601261,
+          3601212,
+          3600942,
+          3600834,
+          3600826
+        ],
+        "total_volume": 4247305.0,
+        "zero_volume_ticks": 0
+      }
+    }
+  }
+}
