@@ -13,10 +13,10 @@
     "transfer_same_sign": false
   },
   "avg_auc_delta_bridge": -0.01300138312586438,
-  "avg_auc_delta_oos": 0.03699196459232959,
-  "avg_brier_improvement_oos": -0.0038254726930879585,
+  "avg_auc_delta_oos": 0.028803854303299348,
+  "avg_brier_improvement_oos": -0.004182610093329889,
   "bridge_top20_return_delta": 0.0059636771743154455,
-  "oos_top20_return_delta": -0.008047717691557158,
+  "oos_top20_return_delta": -0.012883387504864497,
   "bridge_top20_hit_delta": -0.03783783783783784,
-  "oos_top20_hit_delta": -0.14642857142857144
+  "oos_top20_hit_delta": -0.16524216524216523
 }
