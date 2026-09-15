@@ -1,0 +1,40 @@
+name: GC M1 AEIF Causal Edge Audit 002
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_m1_aeif_causal_edge_audit_002.py'
+      - '.github/workflows/gc_m1_aeif_causal_edge_audit_002.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy pandas
+      - name: Run causal edge audit
+        run: python research/gc/gc_m1_aeif_causal_edge_audit_002.py
+      - name: Commit result artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_M1_AEIF_CAUSAL_EDGE_AUDIT_002.json \
+                  research/gc/GC_M1_AEIF_CAUSAL_EDGE_AUDIT_002.md \
+                  research/gc/GC_M1_AEIF_CAUSAL_EDGE_AUDIT_002_EVENTS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record causal M1 AEIF edge audit 002'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
