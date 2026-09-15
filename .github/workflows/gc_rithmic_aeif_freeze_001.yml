@@ -1,0 +1,43 @@
+name: GC Rithmic AEIF Freeze 001
+
+on:
+  push:
+    branches:
+      - gc-amp-feed-audit-001
+    paths:
+      - 'research/gc/freeze_rithmic_aeif_fingerprint_001.py'
+      - '.github/workflows/gc_rithmic_aeif_freeze_001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: gc-amp-feed-audit-001
+
+      - name: Install Python dependencies
+        run: python3 -m pip install --upgrade pandas numpy
+
+      - name: Rebuild and certify frozen Rithmic AEIF ledgers
+        run: python3 research/gc/freeze_rithmic_aeif_fingerprint_001.py
+
+      - name: Commit immutable fingerprint artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/gc/RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CORE_EVENTS.csv \
+                  research/gc/RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_CONFIRMED_EVENTS.csv \
+                  research/gc/RITHMIC_AEIF_FROZEN_RECONSTRUCTION_001_MANIFEST.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Freeze certified Rithmic AEIF event ledgers"
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
