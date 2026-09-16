@@ -175,13 +175,12 @@ bool BuildAndWriteSnapshot(const ulong target_bar_ms,const ulong decision_ms)
          nb++;
       }
 
-      BarRec &b=bars[nb-1];
-      if(tk.last>b.high) b.high=tk.last;
-      if(tk.last<b.low)  b.low=tk.last;
-      b.close=tk.last;
-      if(buy) b.buy_vol+=vol;
-      else    b.sell_vol+=vol;
-      b.exclusive_ticks++;
+      if(tk.last>bars[nb-1].high) bars[nb-1].high=tk.last;
+      if(tk.last<bars[nb-1].low)  bars[nb-1].low=tk.last;
+      bars[nb-1].close=tk.last;
+      if(buy) bars[nb-1].buy_vol+=vol;
+      else    bars[nb-1].sell_vol+=vol;
+      bars[nb-1].exclusive_ticks++;
    }
 
    int cur=-1;
