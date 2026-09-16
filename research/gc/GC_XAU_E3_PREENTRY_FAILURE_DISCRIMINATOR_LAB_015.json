@@ -1,0 +1,641 @@
+{
+  "lab": "GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015",
+  "status": "NO_CAUSAL_PREENTRY_VETO_PROMOTED",
+  "baseline": {
+    "full": {
+      "signals": 279,
+      "accepted": 237,
+      "fills": 103,
+      "sum_r": 24.088734614730225,
+      "ev_r_per_signal": 0.08633955059043091,
+      "ev_r_per_fill": 0.23387120985174975,
+      "pf": 1.3799527829165632,
+      "max_dd_r": 8.400000000000006,
+      "fail_fills": 61,
+      "good_fills": 42
+    },
+    "train": {
+      "signals": 195,
+      "accepted": 161,
+      "fills": 70,
+      "sum_r": 18.364561330920246,
+      "ev_r_per_signal": 0.0941772375944628,
+      "ev_r_per_fill": 0.2623508761560035,
+      "pf": 1.4441325046660647,
+      "max_dd_r": 5.2500000000000036,
+      "fail_fills": 40,
+      "good_fills": 30
+    },
+    "valid": {
+      "signals": 84,
+      "accepted": 76,
+      "fills": 33,
+      "sum_r": 5.72417328380998,
+      "ev_r_per_signal": 0.06814492004535691,
+      "ev_r_per_fill": 0.17345979647909035,
+      "pf": 1.2595996954108832,
+      "max_dd_r": 8.399999999999999,
+      "fail_fills": 21,
+      "good_fills": 12
+    }
+  },
+  "feature_diagnostics": {
+    "delta_excess": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 0.07941873103551933,
+        "good_median": 0.09488333505385114,
+        "auc_fail_high": 0.46416666666666667,
+        "auc_direction_free": 0.5358333333333334
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 0.08078477078477081,
+        "good_median": 0.05945160304629735,
+        "auc_fail_high": 0.6190476190476191,
+        "auc_direction_free": 0.6190476190476191
+      }
+    },
+    "buy_q75_ratio": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 1.8013138686131387,
+        "good_median": 1.7604166666666665,
+        "auc_fail_high": 0.46541666666666665,
+        "auc_direction_free": 0.5345833333333334
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 1.7628865979381443,
+        "good_median": 1.7055678334640336,
+        "auc_fail_high": 0.48412698412698413,
+        "auc_direction_free": 0.5158730158730158
+      }
+    },
+    "close_pos": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 0.8749999999998817,
+        "good_median": 0.8912529550830209,
+        "auc_fail_high": 0.44916666666666666,
+        "auc_direction_free": 0.5508333333333333
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 0.9310344827586747,
+        "good_median": 0.9009803921568271,
+        "auc_fail_high": 0.6448412698412699,
+        "auc_direction_free": 0.6448412698412699
+      }
+    },
+    "body_atr": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 1.0845984112975653,
+        "good_median": 1.5109924974806832,
+        "auc_fail_high": 0.36833333333333335,
+        "auc_direction_free": 0.6316666666666666
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 1.1570247933884386,
+        "good_median": 1.1825630065009058,
+        "auc_fail_high": 0.47619047619047616,
+        "auc_direction_free": 0.5238095238095238
+      }
+    },
+    "breakout_atr": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 0.6055125725340588,
+        "good_median": 0.8224999999997842,
+        "auc_fail_high": 0.4033333333333333,
+        "auc_direction_free": 0.5966666666666667
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 0.49122807017549525,
+        "good_median": 0.9565738682885824,
+        "auc_fail_high": 0.2976190476190476,
+        "auc_direction_free": 0.7023809523809523
+      }
+    },
+    "range_atr": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 1.3631133339872503,
+        "good_median": 1.766733870967824,
+        "auc_fail_high": 0.3883333333333333,
+        "auc_direction_free": 0.6116666666666667
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 1.42058823529423,
+        "good_median": 1.5193125442945767,
+        "auc_fail_high": 0.42857142857142855,
+        "auc_direction_free": 0.5714285714285714
+      }
+    },
+    "atr_ratio_60": {
+      "train": {
+        "n": 70,
+        "fail_n": 40,
+        "good_n": 30,
+        "fail_median": 1.0698729873628487,
+        "good_median": 1.0019019890733416,
+        "auc_fail_high": 0.5566666666666666,
+        "auc_direction_free": 0.5566666666666666
+      },
+      "valid": {
+        "n": 33,
+        "fail_n": 21,
+        "good_n": 12,
+        "fail_median": 1.0665280665280332,
+        "good_median": 0.9797300388926753,
+        "auc_fail_high": 0.6904761904761905,
+        "auc_direction_free": 0.6904761904761905
+      }
+    }
+  },
+  "selected_single_feature_rules": {
+    "delta_excess": {
+      "feature": "delta_excess",
+      "side": "LOW",
+      "threshold": 0.06552623111909836,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.30000000000000004,
+      "train_sum_r_delta": 2.1863694749286964,
+      "train_ev_fill_delta": 0.15705587498377083,
+      "train_pf_delta": 0.32703006582500715,
+      "valid_sum_r_delta": -3.9480041094608036,
+      "valid_ev_fill_delta": -0.07478373123746943,
+      "valid_pf_delta": -0.10581881451485065,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 154,
+          "fills": 67,
+          "sum_r": 22.327099980198124,
+          "ev_r_per_signal": 0.08002544795769936,
+          "ev_r_per_fill": 0.3332402982119123,
+          "pf": 1.5844900034145741,
+          "max_dd_r": 5.423420557756163,
+          "fail_fills": 37,
+          "good_fills": 28
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 113,
+          "fills": 49,
+          "sum_r": 20.550930805848942,
+          "ev_r_per_signal": 0.10538938874794329,
+          "ev_r_per_fill": 0.4194067511397743,
+          "pf": 1.7711625704910718,
+          "max_dd_r": 3.150000000000002,
+          "fail_fills": 26,
+          "good_fills": 22
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 41,
+          "fills": 18,
+          "sum_r": 1.7761691743491768,
+          "ev_r_per_signal": 0.021144871123204484,
+          "ev_r_per_fill": 0.09867606524162092,
+          "pf": 1.1537808808960326,
+          "max_dd_r": 5.42342055775616,
+          "fail_fills": 11,
+          "good_fills": 6
+        }
+      }
+    },
+    "buy_q75_ratio": {
+      "feature": "buy_q75_ratio",
+      "side": "LOW",
+      "threshold": 1.2444444444444445,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.18571428571428572,
+      "train_sum_r_delta": 10.010100699348524,
+      "train_ev_fill_delta": 0.23545021209432582,
+      "train_pf_delta": 0.542836821191615,
+      "valid_sum_r_delta": -1.7007751937981785,
+      "valid_ev_fill_delta": -0.01871371609402106,
+      "valid_pf_delta": -0.02011171386256172,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 196,
+          "fills": 83,
+          "sum_r": 32.39806012028057,
+          "ev_r_per_signal": 0.11612207928415974,
+          "ev_r_per_fill": 0.3903380737383201,
+          "pf": 1.7112748402571352,
+          "max_dd_r": 7.350000000000005,
+          "fail_fills": 44,
+          "good_fills": 37
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 134,
+          "fills": 57,
+          "sum_r": 28.37466203026877,
+          "ev_r_per_signal": 0.14551108733471163,
+          "ev_r_per_fill": 0.4978010882503293,
+          "pf": 1.9869693258576797,
+          "max_dd_r": 5.2500000000000036,
+          "fail_fills": 28,
+          "good_fills": 28
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 62,
+          "fills": 26,
+          "sum_r": 4.023398090011802,
+          "ev_r_per_signal": 0.04789759630966431,
+          "ev_r_per_fill": 0.1547460803850693,
+          "pf": 1.2394879815483215,
+          "max_dd_r": 7.35,
+          "fail_fills": 16,
+          "good_fills": 9
+        }
+      }
+    },
+    "close_pos": {
+      "feature": "close_pos",
+      "side": "LOW",
+      "threshold": 0.8214141414140977,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.19999999999999996,
+      "train_sum_r_delta": 3.213567492365854,
+      "train_ev_fill_delta": 0.12297285283124837,
+      "train_pf_delta": 0.2408874579779383,
+      "valid_sum_r_delta": -4.85,
+      "valid_ev_fill_delta": -0.14432068701875767,
+      "valid_pf_delta": -0.21797239618183673,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 200,
+          "fills": 86,
+          "sum_r": 22.45230210709608,
+          "ev_r_per_signal": 0.0804742011007028,
+          "ev_r_per_fill": 0.2610732803150707,
+          "pf": 1.427662897278021,
+          "max_dd_r": 8.400000000000006,
+          "fail_fills": 50,
+          "good_fills": 36
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 131,
+          "fills": 56,
+          "sum_r": 21.5781288232861,
+          "ev_r_per_signal": 0.11065707088864667,
+          "ev_r_per_fill": 0.38532372898725187,
+          "pf": 1.685019962644003,
+          "max_dd_r": 4.200000000000003,
+          "fail_fills": 30,
+          "good_fills": 26
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 69,
+          "fills": 30,
+          "sum_r": 0.8741732838099807,
+          "ev_r_per_signal": 0.010406824807261674,
+          "ev_r_per_fill": 0.029139109460332675,
+          "pf": 1.0416272992290465,
+          "max_dd_r": 8.399999999999999,
+          "fail_fills": 20,
+          "good_fills": 10
+        }
+      }
+    },
+    "body_atr": {
+      "feature": "body_atr",
+      "side": "LOW",
+      "threshold": 0.9624082758620068,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.3142857142857143,
+      "train_sum_r_delta": 7.628917211919639,
+      "train_ev_fill_delta": 0.2791799268198275,
+      "train_pf_delta": 0.6811263067122852,
+      "valid_sum_r_delta": -0.47657944224383986,
+      "valid_ev_fill_delta": 0.04518994691949879,
+      "valid_pf_delta": 0.07358086595839497,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 163,
+          "fills": 72,
+          "sum_r": 31.241072384406024,
+          "ev_r_per_signal": 0.11197516983658073,
+          "ev_r_per_fill": 0.43390378311675043,
+          "pf": 1.8041460073206192,
+          "max_dd_r": 7.350000000000005,
+          "fail_fills": 37,
+          "good_fills": 34
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 108,
+          "fills": 48,
+          "sum_r": 25.993478542839885,
+          "ev_r_per_signal": 0.13329988996328146,
+          "ev_r_per_fill": 0.541530802975831,
+          "pf": 2.12525881137835,
+          "max_dd_r": 3.150000000000002,
+          "fail_fills": 22,
+          "good_fills": 25
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 55,
+          "fills": 24,
+          "sum_r": 5.2475938415661405,
+          "ev_r_per_signal": 0.06247135525673977,
+          "ev_r_per_fill": 0.21864974339858914,
+          "pf": 1.3331805613692782,
+          "max_dd_r": 7.35,
+          "fail_fills": 15,
+          "good_fills": 9
+        }
+      }
+    },
+    "breakout_atr": {
+      "feature": "breakout_atr",
+      "side": "LOW",
+      "threshold": 0.45587096774178054,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.30000000000000004,
+      "train_sum_r_delta": 1.5091798820443358,
+      "train_ev_fill_delta": 0.14323567921062053,
+      "train_pf_delta": 0.3016188923802561,
+      "valid_sum_r_delta": 2.381154338928754,
+      "valid_ev_fill_delta": 0.2125081855560875,
+      "valid_pf_delta": 0.3836802746477461,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 159,
+          "fills": 70,
+          "sum_r": 27.979068835703316,
+          "ev_r_per_signal": 0.10028340084481475,
+          "ev_r_per_fill": 0.3997009833671901,
+          "pf": 1.7128555113366573,
+          "max_dd_r": 5.2500000000000036,
+          "fail_fills": 38,
+          "good_fills": 30
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 109,
+          "fills": 49,
+          "sum_r": 19.873741212964582,
+          "ev_r_per_signal": 0.10191662160494658,
+          "ev_r_per_fill": 0.405586555366624,
+          "pf": 1.7457513970463208,
+          "max_dd_r": 3.1500000000000004,
+          "fail_fills": 26,
+          "good_fills": 22
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 50,
+          "fills": 21,
+          "sum_r": 8.105327622738734,
+          "ev_r_per_signal": 0.09649199550879446,
+          "ev_r_per_fill": 0.38596798203517785,
+          "pf": 1.6432799700586294,
+          "max_dd_r": 5.25,
+          "fail_fills": 12,
+          "good_fills": 8
+        }
+      }
+    },
+    "range_atr": {
+      "feature": "range_atr",
+      "side": "LOW",
+      "threshold": 1.2889866908652787,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.3142857142857143,
+      "train_sum_r_delta": 2.2246792331094234,
+      "train_ev_fill_delta": 0.1665916355946146,
+      "train_pf_delta": 0.37290085104939874,
+      "valid_sum_r_delta": -1.9481961876524618,
+      "valid_ev_fill_delta": 0.006348636671267643,
+      "valid_pf_delta": -0.002730505196086419,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 161,
+          "fills": 69,
+          "sum_r": 24.365217660187188,
+          "ev_r_per_signal": 0.08733052924798275,
+          "ev_r_per_fill": 0.353119096524452,
+          "pf": 1.6106570842152188,
+          "max_dd_r": 7.350000000000005,
+          "fail_fills": 38,
+          "good_fills": 30
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 113,
+          "fills": 48,
+          "sum_r": 20.58924056402967,
+          "ev_r_per_signal": 0.105585849046306,
+          "ev_r_per_fill": 0.4289425117506181,
+          "pf": 1.8170333557154634,
+          "max_dd_r": 4.199999999999999,
+          "fail_fills": 24,
+          "good_fills": 23
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 48,
+          "fills": 21,
+          "sum_r": 3.7759770961575185,
+          "ev_r_per_signal": 0.044952108287589505,
+          "ev_r_per_fill": 0.179808433150358,
+          "pf": 1.2568691902147968,
+          "max_dd_r": 7.35,
+          "fail_fills": 14,
+          "good_fills": 7
+        }
+      }
+    },
+    "atr_ratio_60": {
+      "feature": "atr_ratio_60",
+      "side": "HIGH",
+      "threshold": 1.1657688284518744,
+      "eligible_train": true,
+      "train_removed_fill_frac": 0.2571428571428571,
+      "train_sum_r_delta": 10.843788651388422,
+      "train_ev_fill_delta": 0.299348161965317,
+      "train_pf_delta": 0.6103477974459945,
+      "valid_sum_r_delta": 7.523420557756159,
+      "valid_ev_fill_delta": 0.3785232802528322,
+      "valid_pf_delta": 0.7109199999419469,
+      "metrics": {
+        "full": {
+          "signals": 279,
+          "accepted": 179,
+          "fills": 76,
+          "sum_r": 42.455943823874804,
+          "ev_r_per_signal": 0.1521718416626337,
+          "ev_r_per_fill": 0.5586308397878266,
+          "pf": 2.0267636851587336,
+          "max_dd_r": 5.2499999999999964,
+          "fail_fills": 40,
+          "good_fills": 36
+        },
+        "train": {
+          "signals": 195,
+          "accepted": 122,
+          "fills": 52,
+          "sum_r": 29.20834998230867,
+          "ev_r_per_signal": 0.14978641016568547,
+          "ev_r_per_fill": 0.5616990381213205,
+          "pf": 2.0544803021120592,
+          "max_dd_r": 4.200000000000003,
+          "fail_fills": 27,
+          "good_fills": 25
+        },
+        "valid": {
+          "signals": 84,
+          "accepted": 57,
+          "fills": 24,
+          "sum_r": 13.24759384156614,
+          "ev_r_per_signal": 0.157709450494835,
+          "ev_r_per_fill": 0.5519830767319226,
+          "pf": 1.9705196953528301,
+          "max_dd_r": 5.25,
+          "fail_fills": 13,
+          "good_fills": 11
+        }
+      }
+    }
+  },
+  "train_selected_top_two": [
+    {
+      "feature": "atr_ratio_60",
+      "side": "HIGH",
+      "threshold": 1.1657688284518744,
+      "train_sum_r_delta": 10.843788651388422,
+      "train_ev_fill_delta": 0.299348161965317,
+      "train_pf_delta": 0.6103477974459945
+    },
+    {
+      "feature": "buy_q75_ratio",
+      "side": "LOW",
+      "threshold": 1.2444444444444445,
+      "train_sum_r_delta": 10.010100699348524,
+      "train_ev_fill_delta": 0.23545021209432582,
+      "train_pf_delta": 0.542836821191615
+    }
+  ],
+  "chosen_challenger": {
+    "kind": "OR",
+    "rules": [
+      {
+        "feature": "atr_ratio_60",
+        "side": "HIGH",
+        "threshold": 1.1657688284518744,
+        "train_removed_fill_frac": 0.2571428571428571
+      },
+      {
+        "feature": "buy_q75_ratio",
+        "side": "LOW",
+        "threshold": 1.2444444444444445,
+        "train_removed_fill_frac": 0.18571428571428572
+      }
+    ],
+    "metrics": {
+      "full": {
+        "signals": 279,
+        "accepted": 143,
+        "fills": 58,
+        "sum_r": 48.66526932942516,
+        "ev_r_per_signal": 0.17442748863593246,
+        "ev_r_per_fill": 0.8390563677487096,
+        "pf": 2.901040209117141,
+        "max_dd_r": 4.199999999999989,
+        "fail_fills": 25,
+        "good_fills": 31
+      },
+      "train": {
+        "signals": 195,
+        "accepted": 97,
+        "fills": 39,
+        "sum_r": 39.21845068165719,
+        "ev_r_per_signal": 0.2011202599059343,
+        "ev_r_per_fill": 1.005601299529672,
+        "pf": 3.5973714482287917,
+        "max_dd_r": 2.1000000000000014,
+        "fail_fills": 15,
+        "good_fills": 23
+      },
+      "valid": {
+        "signals": 84,
+        "accepted": 46,
+        "fills": 19,
+        "sum_r": 9.446818647767964,
+        "ev_r_per_signal": 0.11246212675914243,
+        "ev_r_per_fill": 0.4972009814614717,
+        "pf": 1.8996970140731388,
+        "max_dd_r": 4.2,
+        "fail_fills": 10,
+        "good_fills": 8
+      }
+    },
+    "composition": {
+      "vetoed_raw_fill_rows": 53,
+      "sl": 42,
+      "tp": 2,
+      "negative_timeout": 0,
+      "positive_timeout": 9
+    },
+    "gates": {
+      "train_retained_fills_ge30": true,
+      "valid_retained_fills_ge15": true,
+      "train_ev_fill_improves": true,
+      "train_pf_improves": true,
+      "valid_ev_fill_improves": true,
+      "valid_pf_improves": true,
+      "valid_sum_r_ge80pct_baseline": true,
+      "full_dd_improve10pct_or_pf_plus015": true,
+      "full_retained_fills_ge65pct": false,
+      "causal_features_only": true
+    }
+  },
+  "governance": {
+    "new_market_data": false,
+    "baseline_retuned": false,
+    "independent_oos": false,
+    "post_entry_features_used": false
+  }
+}
