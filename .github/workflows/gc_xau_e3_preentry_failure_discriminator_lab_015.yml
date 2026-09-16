@@ -1,0 +1,61 @@
+name: GC XAU E3 Preentry Failure Discriminator LAB015
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_e3_preentry_failure_discriminator_lab_015.py'
+      - 'research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015_PREREG.md'
+      - '.github/workflows/gc_xau_e3_preentry_failure_discriminator_lab_015.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  lab015:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install numpy pandas
+
+      - name: Download frozen AMP GC archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/gc/_lab015
+          curl -L --fail --retry 3 \
+            'https://github.com/chepigga/ResearchOS/releases/download/GC/AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_TICKS.csv.zip' \
+            -o research/gc/_lab015/amp_gc.zip
+          echo '81d675597368a9f6c78eee726ed547737366ffd8d8e54aa976bce50111db752b  research/gc/_lab015/amp_gc.zip' | sha256sum -c -
+
+      - name: Compile check
+        run: python -m py_compile research/gc/gc_xau_e3_preentry_failure_discriminator_lab_015.py
+
+      - name: Run LAB015
+        run: python research/gc/gc_xau_e3_preentry_failure_discriminator_lab_015.py
+
+      - name: Commit LAB015 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015.json \
+                  research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015.md \
+                  research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015_FEATURES.csv \
+                  research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015_VETOES.csv \
+                  research/gc/GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015_SELECTED_TRADES.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record E3 pre-entry failure discriminator LAB015'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
