@@ -5,6 +5,7 @@ on:
     branches: [gc-amp-feed-audit-001]
     paths:
       - 'research/gc/gc_buyer_breakout_long_to_ftmo_xau_transfer_lab_006.py'
+      - 'research/gc/gc_buyer_breakout_long_to_ftmo_xau_transfer_lab_006_runner.py'
       - 'research/gc/GC_BUYER_BREAKOUT_LONG_TO_FTMO_XAU_TRANSFER_LAB_006_PREREG.md'
       - '.github/workflows/gc_buyer_breakout_long_to_ftmo_xau_transfer_lab_006.yml'
   workflow_dispatch:
@@ -88,7 +89,7 @@ jobs:
           du -sh .
 
       - name: Run frozen LAB006 transfer
-        run: python research/gc/gc_buyer_breakout_long_to_ftmo_xau_transfer_lab_006.py
+        run: python research/gc/gc_buyer_breakout_long_to_ftmo_xau_transfer_lab_006_runner.py
 
       - name: Commit LAB006 results
         run: |
