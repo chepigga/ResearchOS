@@ -1,0 +1,43 @@
+{
+  "lab": "GC_XAU_PREFILL_APPROACH_SHAPE_ACCELERATION_LAB_017",
+  "status": "HISTORICAL_CAUSAL_ACCELERATION_GATE_FAIL_NOT_OOS",
+  "population": {
+    "warning_eligible": 94,
+    "oof": 49,
+    "oof_sl": 30
+  },
+  "primary": {
+    "auc_sl": 0.5675438596491229,
+    "vetoed": 12,
+    "veto_share": 0.24489795918367346,
+    "baseline_sl_rate": 0.6122448979591837,
+    "veto_sl_rate": 0.75,
+    "veto_sl_enrichment_x": 1.2249999999999999
+  },
+  "overlay": {
+    "original_signals_oof_period": 121,
+    "baseline_sum_r": 6.243921171495771,
+    "overlay_sum_r": 10.851740539881673,
+    "baseline_ev_r_per_signal": 0.0516026543098824,
+    "overlay_ev_r_per_signal": 0.08968380611472457,
+    "baseline_maxdd_r": 8.399999999999999,
+    "overlay_maxdd_r": 6.3,
+    "late_half_baseline_ev_r": 0.048756939078852146,
+    "late_half_overlay_ev_r": 0.13766547281255967
+  },
+  "gates": {
+    "oof_auc_ge0_60": false,
+    "veto_share_10_to_40pct": true,
+    "veto_sl_enrichment_ge1_25x": false,
+    "overlay_sum_gt_baseline": true,
+    "overlay_ev_gt_baseline": true,
+    "overlay_maxdd_le_baseline": true,
+    "late_half_overlay_ev_pos": true
+  },
+  "governance": {
+    "new_market_data": false,
+    "threshold_search": false,
+    "warning_depth_search": false,
+    "reclaimed_signals_simulated": false
+  }
+}
