@@ -1,0 +1,110 @@
+name: GC XAU D1 E3 Trade Failure Discriminator LAB015
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_d1_e3_trade_failure_discriminator_lab_015.py'
+      - 'research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015_PREREG.md'
+      - '.github/workflows/gc_xau_d1_e3_trade_failure_discriminator_lab_015.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  discriminator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install numpy pandas scikit-learn gdown
+
+      - name: Download frozen AMP GC raw archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/gc/_lab015
+          curl -L --fail --retry 3 \
+            'https://github.com/chepigga/ResearchOS/releases/download/GC/AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_TICKS.csv.zip' \
+            -o research/gc/_lab015/amp_gc.zip
+          echo '81d675597368a9f6c78eee726ed547737366ffd8d8e54aa976bce50111db752b  research/gc/_lab015/amp_gc.zip' | sha256sum -c -
+
+      - name: Download frozen FTMO XAU raw tick files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/gc/_lab015_xau
+          cd research/gc/_lab015_xau
+
+          cat > files.tsv <<'EOF'
+          20260803	1WdMs_DuZGpuRcgUPyFZ4oxMxOjGW--17
+          20260804	1TwbVYZGHh3e77Z6MQh7JoumlOcII2ADz
+          20260805	1BJ4S-hcUGOe5KHZ9tcMrOPCWZLFcJpLg
+          20260806	1XxiVupqOzBpz-4BYGOA1OChyXwAOxlpo
+          20260807	1gmQOF9t-z5yU6cyaVnJlIG0BcJIncQRj
+          20260810	14vHeDnl5V3jci5HY8mBAjG23m6XzT091
+          20260811	1_gqAiA1PVxwZE-C-FJop5kD-88IwCBPh
+          20260812	1oZs9iTZCg110EeI3hp9CLVa7ac09mXlS
+          20260813	1UoDc1YuGFeghWDbrQ3QuxForZQTeM2tU
+          20260814	1Dw9j6P3ESu7EARDCa8zDOftsVDCnaFAb
+          20260817	1AJj8ljfv_cGTKNoVaE7B6q5z1K2qujCI
+          20260818	1bnCvY3VsOzVHcZYHDPCjvG2YmPEgDDV7
+          20260819	1TTTnWU0n-zlqY5oZ2mfH-YPYDfM0ZPUs
+          20260820	1ZWiJXoQISnolg8RGXCG-QK1zH0ujRJ5Q
+          20260821	164e1F70vUlBs0NfdYjuSogYJv2lI94Qr
+          20260824	1jD32o0VovNHi_ht1laoX1L0RKOrpTetW
+          20260825	1_weJFlCauopstQ_53xusPxty9whPEqqw
+          20260826	1eMcxfj6HhOx7WyikBSnb3UHUzq_pzFJi
+          20260827	10OTDJRn9MomIChDqpRA2mARh7yN8F9C7
+          20260828	1KlbF0Ud_Qo8ISYLDw1RCi7f3aaJj6sA9
+          20260831	1w3fF1d4sbogr7pyt_AX5NY3pQyvxlssz
+          20260901	1JQP4kID4sZdrWDkm2ZCxrPqwwP4HY7CH
+          20260902	1-C7SAKW5GENfzMlB0__VpHvrcKBYxmpA
+          20260903	1OsWXUEZxI8RidT62PhiXUWKg9Cu5zOo7
+          20260904	1muzuxYpAyOfhXObFkW_mHoYjhEa0qP4_
+          20260907	13Qnq3cvp3_3HpLXGXPVQlxG6q7HOEP9O
+          20260908	1KErGaEBczVmyKrANOcD4996XeS2La2tp
+          20260909	1J_ujRpRyvruRxPq45B8WCNuHQV79YQXm
+          20260910	1fRQjomXjqN-tNX26slBzuJuEOJQlSiEs
+          20260911	1euXgQquirtroEJVRkxUVU1yZmIIuQhS7
+          20260914	1fB3pTLmvBw3krrqeww1E-_eEw_qDNIjP
+          20260915	1FKhnwqgwL1Z40DtRBp8QwXC2Q4ch21_l
+          EOF
+
+          while IFS=$'\t' read -r day fid; do
+            python -m gdown "$fid" -O "XAUUSD_raw_ticks_${day}.csv"
+            test -s "XAUUSD_raw_ticks_${day}.csv"
+          done < files.tsv
+          test "$(ls XAUUSD_raw_ticks_*.csv | wc -l | tr -d ' ')" = '32'
+
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_xau_d1_e3_trade_failure_discriminator_lab_015.py
+
+      - name: Run LAB015
+        run: python research/gc/gc_xau_d1_e3_trade_failure_discriminator_lab_015.py
+
+      - name: Commit LAB015 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015.json \
+                  research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015.md \
+                  research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015_FEATURES.csv \
+                  research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015_UNIVARIATE.csv \
+                  research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015_OOF.csv \
+                  research/gc/GC_XAU_D1_E3_TRADE_FAILURE_DISCRIMINATOR_LAB_015_COEFFICIENTS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record GC XAU trade failure discriminator LAB015'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
