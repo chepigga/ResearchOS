@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Test whether the already-frozen corrected GC `BUYER_BREAKOUT_LONG_001 -> XAU D1.00 E3M` lineage contains a **causal, pre-entry/fill-time discriminator of future trade failure**.
+Test whether the already-frozen corrected GC `BUYER_BREAKOUT_LONG_001 -> XAU D1.00 E3M` lineage contains a **causal discriminator of future trade failure**.
 
 This is a bounded historical discovery lab on the already-collected AMP GC + FTMO XAU data. It is **not independent OOS** and it must not promote a production filter by itself.
 
@@ -21,11 +21,13 @@ Secondary label is diagnostic only:
 
 No post-fill information may enter any feature.
 
-## Frozen causal features
+## Two frozen information clocks
 
-All features must be known no later than the actual fill timestamp.
+### PRIMARY — `ORDER_START_DEPLOYABLE`
 
-### GC signal-bar features
+This model may use only information already known when the XAU limit order becomes actionable. It is executable without changing the resting-limit design.
+
+Primary features:
 1. `gc_delta_excess = delta_frac - q90_delta`
 2. `gc_buy_strength = buy_vol / q75_buy`
 3. `gc_body_atr = body_atr`
@@ -33,23 +35,28 @@ All features must be known no later than the actual fill timestamp.
 5. `gc_close_pos = close_pos`
 6. `gc_breakout_atr = (high - prior20_high) / atr14`
 7. `gc_buy_loc_excess = buy_loc - q75_buyloc`
+8. `xau_spread_start_atr = (ask_start - bid_start) / xau_atr14_m1`
 
-### XAU order-start / pre-fill features
-8. `fill_delay_sec`
-9. `xau_spread_start_atr = (ask_start - bid_start) / xau_atr14_m1`
+Only this model can pass the main LAB015 discriminator gates.
+
+### SECONDARY — `FILL_TIME_DIAGNOSTIC`
+
+This model is diagnostic only. These features are available by the historical fill timestamp but are **not deployable as a pre-order veto while a resting limit is already live**. If they carry edge, they can motivate a later cancel/trigger redesign LAB.
+
+It uses all primary features plus:
+9. `fill_delay_sec`
 10. `xau_spread_fill_atr = (ask_fill - bid_fill) / xau_atr14_m1`
 11. `xau_prefill_range_atr = (max(mid) - min(mid)) / xau_atr14_m1` from order start through fill
 12. `xau_fill_overshoot_atr = (limit_price - ask_fill) / xau_atr14_m1`
 13. `xau_mom_10s_atr = (mid_fill - mid_at_or_before_fill_minus_10s) / xau_atr14_m1`
 14. `xau_mom_30s_atr = (mid_fill - mid_at_or_before_fill_minus_30s) / xau_atr14_m1`
-
-### GC post-signal flow available by fill
 15. `gc_post_delta_frac` over exclusive-direction AMP trades from GC order-start UTC through XAU fill UTC.
 
-Additional diagnostic columns may be exported but may not be used by the primary classifier unless separately preregistered in a later LAB.
+Additional diagnostic columns may be exported but may not be used by either frozen classifier unless separately preregistered in a later LAB.
 
 ## Model — frozen before result
 
+Both clocks use the same fixed model:
 - Logistic regression.
 - `C = 1.0`.
 - `class_weight = balanced`.
@@ -71,7 +78,7 @@ If a test block contains only one class, block AUC is `NA`; aggregate OOF AUC is
 
 ## Frozen veto rule
 
-For each fold:
+For each fold and each information clock:
 1. Fit classifier on the expanding training window only.
 2. Compute predicted SL probability on that training window.
 3. Set threshold to the **75th percentile** of training predicted SL probability.
@@ -85,13 +92,13 @@ The overlay is deliberately conservative: vetoed baseline fills are set to `0R`,
 
 - Full 103-trade feature/label table.
 - Descriptive univariate feature separation table.
-- Walk-forward predictions and fold diagnostics.
+- Walk-forward predictions for both information clocks.
 - Baseline vs veto overlay R metrics on the OOF period.
 - Feature coefficient stability across folds.
 
-## Discovery gates
+## Main discovery gates — ORDER_START_DEPLOYABLE only
 
-A historical discriminator candidate passes only if all are true:
+A historical deployable discriminator candidate passes only if all are true:
 
 1. `OOF SL AUC >= 0.60`.
 2. OOF veto share is between `10%` and `40%`.
@@ -104,6 +111,8 @@ A historical discriminator candidate passes only if all are true:
 Status if all gates pass: `HISTORICAL_FAILURE_DISCRIMINATOR_CANDIDATE_PASS_NOT_OOS`.
 Otherwise: `HISTORICAL_FAILURE_DISCRIMINATOR_FAIL_NOT_OOS`.
 
+`FILL_TIME_DIAGNOSTIC` is reported with the same metrics but cannot change the main status or be promoted directly.
+
 ## Prohibited
 
 - No changing D1.00, E3, SL1.5, TP3, 30m hard horizon, cost stress, or corrected one-active semantics.
@@ -113,7 +122,10 @@ Otherwise: `HISTORICAL_FAILURE_DISCRIMINATOR_FAIL_NOT_OOS`.
 - No deleting losing trades or data gaps.
 - No feature subset search.
 - No using post-fill MFE/MAE, exit path, final status timing, or realized R as an input feature.
+- No presenting fill-time features as executable pre-order information.
 
 ## Governance
 
-A PASS identifies a **research candidate only**. Before changing the EA, the candidate must be frozen and re-simulated trade-by-trade with corrected one-active state transitions, including any newly recoverable signals, then subjected to dependency/Monte-Carlo stress and eventually untouched forward/OOS validation.
+A PRIMARY PASS identifies a **research candidate only**. Before changing the EA, the candidate must be frozen and re-simulated trade-by-trade with corrected one-active state transitions, including any newly recoverable signals, then subjected to dependency/Monte-Carlo stress and eventually untouched forward/OOS validation.
+
+A strong `FILL_TIME_DIAGNOSTIC` result can only justify a separate causal cancel/trigger redesign LAB.
