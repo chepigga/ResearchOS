@@ -1,0 +1,54 @@
+name: GC XAU ATR Ratio60 Threshold Stability LAB016
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_atr_ratio60_threshold_stability_lab_016.py'
+      - 'research/gc/GC_XAU_ATR_RATIO60_THRESHOLD_STABILITY_LAB_016_PREREG.md'
+      - '.github/workflows/gc_xau_atr_ratio60_threshold_stability_lab_016.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  lab016:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Download frozen AMP GC archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/gc/_lab015
+          curl -L --fail --retry 3 \
+            'https://github.com/chepigga/ResearchOS/releases/download/GC/AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_TICKS.csv.zip' \
+            -o research/gc/_lab015/amp_gc.zip
+          echo '81d675597368a9f6c78eee726ed547737366ffd8d8e54aa976bce50111db752b  research/gc/_lab015/amp_gc.zip' | sha256sum -c -
+      - name: Compile check
+        run: python -m py_compile research/gc/gc_xau_atr_ratio60_threshold_stability_lab_016.py
+      - name: Run LAB016
+        run: python research/gc/gc_xau_atr_ratio60_threshold_stability_lab_016.py
+      - name: Commit results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_ATR_RATIO60_THRESHOLD_STABILITY_LAB_016.json \
+                  research/gc/GC_XAU_ATR_RATIO60_THRESHOLD_STABILITY_LAB_016.md \
+                  research/gc/GC_XAU_ATR_RATIO60_THRESHOLD_STABILITY_LAB_016_GRID.csv \
+                  research/gc/GC_XAU_ATR_RATIO60_THRESHOLD_STABILITY_LAB_016_WEEKLY.csv
+          if git diff --cached --quiet; then
+            echo 'No changes'
+          else
+            git commit -m 'Record ATR ratio threshold stability LAB016'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
