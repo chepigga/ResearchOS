@@ -36,8 +36,8 @@ jobs:
           cd research/gc/_lab006_xau
 
           # Spot-check metadata proving FTMO-Demo / FTMO Global Markets / COPY_TICKS_ALL.
-          python -m gdown --id 1iUo4U8OdoBRwpR4WYy_NHTv_5vqNJpkV -O XAUUSD_raw_ticks_20260803.meta.csv
-          python -m gdown --id 1gmggWBEowp0iJsrthyaES12svyULgKl1 -O XAUUSD_raw_ticks_20260915.meta.csv
+          python -m gdown 1iUo4U8OdoBRwpR4WYy_NHTv_5vqNJpkV -O XAUUSD_raw_ticks_20260803.meta.csv
+          python -m gdown 1gmggWBEowp0iJsrthyaES12svyULgKl1 -O XAUUSD_raw_ticks_20260915.meta.csv
           grep -q 'FTMO-Demo' XAUUSD_raw_ticks_20260803.meta.csv
           grep -q 'COPY_TICKS_ALL' XAUUSD_raw_ticks_20260803.meta.csv
           grep -q 'FTMO-Demo' XAUUSD_raw_ticks_20260915.meta.csv
@@ -80,7 +80,7 @@ jobs:
 
           while IFS=$'\t' read -r day fid; do
             echo "Downloading XAU $day"
-            python -m gdown --id "$fid" -O "XAUUSD_raw_ticks_${day}.csv"
+            python -m gdown "$fid" -O "XAUUSD_raw_ticks_${day}.csv"
             test -s "XAUUSD_raw_ticks_${day}.csv"
           done < files.tsv
 
