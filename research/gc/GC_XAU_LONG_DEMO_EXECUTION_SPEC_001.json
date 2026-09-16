@@ -1,0 +1,70 @@
+{
+  "spec": "GC_XAU_LONG_DEMO_EXECUTION_SPEC_001",
+  "scope": "FTMO Demo shadow only",
+  "sensor": {
+    "venue": "AMP Futures / GC futures feed",
+    "symbol_lineage": "GCEZ26 historical; live front/active GC contract must be explicitly selected and logged",
+    "bar": "M1 completed bars only",
+    "signal": "BUYER_BREAKOUT_LONG_001",
+    "aggressor_semantics": "BUY only is_buy=1,is_sell=0; SELL only is_sell=1,is_buy=0; dual flags excluded",
+    "causal_quantiles": "prior 240 completed M1 bars, shifted one bar",
+    "conditions": [
+      "delta_frac >= prior240 Q90",
+      "buy_vol >= prior240 Q75",
+      "high >= prior20_high",
+      "bullish body / positive buyer impact",
+      "close_pos >= 0.75"
+    ]
+  },
+  "execution": {
+    "broker": "FTMO-Demo",
+    "symbol": "XAUUSD",
+    "direction": "BUY only",
+    "order_start": "first executable XAU quote in the next M1 after completed GC signal information",
+    "entry": "BUY LIMIT at order_start Ask - 1.00 * ATR14(XAU M1)",
+    "expiry": "order_start + 3 minutes",
+    "fill_semantics": "Ask touches/crosses limit; research fill price is limit price",
+    "sl": "1.50 * entry ATR below fill",
+    "tp": "3R = 4.50 * entry ATR above fill",
+    "exit_path": "Bid for LONG SL/TP/timeout evaluation",
+    "hard_timeout": "original GC signal clock + 30 minutes",
+    "one_active": true,
+    "unfilled_busy_until": "order_start + 3 minutes",
+    "filled_busy_until": "actual position exit",
+    "cost_reference_r_per_fill": 0.05
+  },
+  "clock": {
+    "canonical": "UTC event ledger",
+    "historical_ftmo_broker_offset_minutes": 180,
+    "live_rule": "derive/log broker-server-to-UTC mapping and disable new orders if mapping differs from configured/verified mapping",
+    "no_lookahead": true
+  },
+  "risk": {
+    "risk_percent_equity_per_trade": 0.25,
+    "hard_stop_required": true,
+    "martingale": false,
+    "grid": false,
+    "simultaneous_positions_max": 1
+  },
+  "demo_logging_required": [
+    "GC signal UTC timestamp and frozen feature values",
+    "XAU order-start timestamp, bid, ask, ATR, limit",
+    "pending-order submit/ack/cancel timestamps",
+    "fill timestamp and price",
+    "spread at order start and fill",
+    "SL/TP/timeout exit timestamp and price",
+    "slippage versus frozen research semantics",
+    "server UTC offset and symbol trading constraints",
+    "all rejected/failed trade operations with error code"
+  ],
+  "forbidden_demo_changes": [
+    "signal retuning",
+    "D1 depth change",
+    "E3 expiry change",
+    "SL/TP change",
+    "new post-hoc indicator gate",
+    "new spread threshold selected from demo outcomes",
+    "risk increase above 0.25% before separate approval"
+  ],
+  "promotion": "Demo is forward/OOS implementation validation, not live/funded authorization"
+}
