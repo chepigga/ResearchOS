@@ -1,0 +1,113 @@
+{
+  "lab": "GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H",
+  "status": "CORRECTED_HISTORICAL_ROBUSTNESS_PASS_NOT_OOS",
+  "candidate": {
+    "sensor": "BUYER_BREAKOUT_LONG_001",
+    "execution": "D1.00_E3M",
+    "cost_r_per_fill": 0.05,
+    "one_active_clock": "order_start_plus_expiry_for_unfilled"
+  },
+  "detail": {
+    "COMMON_CLOCK": {
+      "signals": 245,
+      "accepted_signals": 208,
+      "busy_skips": 37,
+      "accepted_fills": 88,
+      "observed_ev_r_per_signal": 0.08376351562851785,
+      "observed_sum_r": 20.522061328986872,
+      "observed_max_dd_r": 8.400000000000006,
+      "days": 30,
+      "weeks": 6,
+      "positive_days": 14,
+      "positive_weeks": 5,
+      "max_positive_day_share": 0.20482547665590217,
+      "leave_one_day_out_min_ev": 0.0571379180177499,
+      "leave_one_day_out_max_ev": 0.10656060917666753,
+      "leave_one_week_out_min_ev": 0.07170145416406928,
+      "leave_one_week_out_max_ev": 0.09856107911576768,
+      "bootstrap_p_ev_gt_0": 0.9604,
+      "bootstrap_ev_median": 0.0827928642637478,
+      "bootstrap_ev_ci95": [
+        -0.009879461806822129,
+        0.18430723941497487
+      ],
+      "bootstrap_dd_median_r": 7.550000000000004,
+      "bootstrap_dd_p95_r": 14.049301041860813,
+      "bootstrap_dd_p99_r": 17.850026469066847,
+      "bootstrap_dd_p95_pct_at_025risk": 3.5123252604652033,
+      "bootstrap_dd_p95_pct_at_050risk": 7.024650520930407
+    },
+    "AMP_ALL": {
+      "signals": 279,
+      "accepted_signals": 237,
+      "busy_skips": 42,
+      "accepted_fills": 103,
+      "observed_ev_r_per_signal": 0.08633955059043148,
+      "observed_sum_r": 24.088734614730384,
+      "observed_max_dd_r": 8.400000000000006,
+      "days": 33,
+      "weeks": 7,
+      "positive_days": 14,
+      "positive_weeks": 6,
+      "max_positive_day_share": 0.16907743334774175,
+      "leave_one_day_out_min_ev": 0.06317503353128157,
+      "leave_one_day_out_max_ev": 0.10634862637116685,
+      "leave_one_week_out_min_ev": 0.07497318137026392,
+      "leave_one_week_out_max_ev": 0.09988663892557015,
+      "bootstrap_p_ev_gt_0": 0.9631,
+      "bootstrap_ev_median": 0.0843134430506707,
+      "bootstrap_ev_ci95": [
+        -0.008623505357171653,
+        0.18515096790602054
+      ],
+      "bootstrap_dd_median_r": 8.460859573279262,
+      "bootstrap_dd_p95_r": 15.576191642093534,
+      "bootstrap_dd_p99_r": 20.140003757867785,
+      "bootstrap_dd_p95_pct_at_025risk": 3.8940479105233834,
+      "bootstrap_dd_p95_pct_at_050risk": 7.788095821046767
+    }
+  },
+  "delta_vs_frozen_lab010": {
+    "COMMON_CLOCK": {
+      "observed_ev_r_per_signal": 0.008571428571428591,
+      "observed_sum_r": 2.100000000000005,
+      "observed_max_dd_r": 0.0,
+      "bootstrap_p_ev_gt_0": 0.018900000000000028,
+      "leave_one_week_out_min_ev": 0.010243902439024392,
+      "max_positive_day_share": -0.010368654690888907,
+      "bootstrap_dd_p95_r": -0.6910075984074666,
+      "bootstrap_dd_p95_pct_at_025risk": -0.17275189960186665,
+      "bootstrap_dd_p95_pct_at_050risk": -0.3455037992037333
+    },
+    "AMP_ALL": {
+      "observed_ev_r_per_signal": 0.007526881720430104,
+      "observed_sum_r": 2.1000000000000014,
+      "observed_max_dd_r": 0.0,
+      "bootstrap_p_ev_gt_0": 0.01529999999999998,
+      "leave_one_week_out_min_ev": 0.007924528301886807,
+      "max_positive_day_share": -0.007003346485075473,
+      "bootstrap_dd_p95_r": -0.7245612148563758,
+      "bootstrap_dd_p95_pct_at_025risk": -0.18114030371409395,
+      "bootstrap_dd_p95_pct_at_050risk": -0.3622806074281879
+    }
+  },
+  "gates": {
+    "common_boot_p_ev_gt0_ge80pct": true,
+    "amp_boot_p_ev_gt0_ge80pct": true,
+    "common_loo_week_min_ev_pos": true,
+    "amp_loo_week_min_ev_pos": true,
+    "common_max_positive_day_share_lt50pct": true,
+    "common_boot_p95_dd_025risk_lt5pct": true,
+    "amp_boot_p95_dd_025risk_lt5pct": true
+  },
+  "diagnostic_050risk": {
+    "common_boot_p95_dd_050risk_lt5pct": false,
+    "amp_boot_p95_dd_050risk_lt5pct": false
+  },
+  "governance": {
+    "parameter_search": false,
+    "new_market_data": false,
+    "independent_oos": false,
+    "defect_correction_only": true
+  }
+}
