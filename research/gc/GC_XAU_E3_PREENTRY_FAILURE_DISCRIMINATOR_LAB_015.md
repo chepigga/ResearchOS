@@ -1,8 +1,8 @@
 # GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015
 
-**Status: NO_CAUSAL_PREENTRY_VETO_PROMOTED**
+**Status: CAUSAL_PREENTRY_VETO_CHALLENGER_PASS_NOT_OOS**
 
-Existing frozen AMP GC + LAB013H E3 outcomes only. Baseline geometry is unchanged; every veto is replayed through corrected one-active state.
+Existing frozen AMP GC + LAB013H E3 outcomes only. Baseline geometry unchanged; every veto is replayed through corrected one-active state.
 
 ## Corrected E3 baseline
 
@@ -24,24 +24,19 @@ Existing frozen AMP GC + LAB013H E3 outcomes only. Baseline geometry is unchange
 | range_atr | +1.3631 / +1.7667 | 0.612 | +1.4206 / +1.5193 | 0.571 |
 | atr_ratio_60 | +1.0699 / +1.0019 | 0.557 | +1.0665 / +0.9797 | 0.690 |
 
-`AUC* = max(AUC, 1-AUC)`: direction-free separation; 0.5 means no separation.
+`AUC* = max(AUC, 1-AUC)`: 0.5 means no separation.
 
-## TRAIN-selected rules
+## TRAIN-selected top single
 
-- `atr_ratio_60 HIGH 1.16577` — TRAIN ΔSumR +10.844, ΔEV/fill +0.299, ΔPF +0.610.
-- `buy_q75_ratio LOW 1.24444` — TRAIN ΔSumR +10.010, ΔEV/fill +0.235, ΔPF +0.543.
-
-## Frozen challenger validation
-
-Selected on TRAIN only: **OR** — atr_ratio_60 HIGH 1.16577; buy_q75_ratio LOW 1.24444.
+Frozen from TRAIN: **atr_ratio_60 HIGH 1.16577**.
 
 | Period | Fills | Sum R | EV/fill | PF | MaxDD R |
 |---|---:|---:|---:|---:|---:|
-| TRAIN | 39 | +39.218 | +1.006 | 3.597 | 2.100 |
-| VALID | 19 | +9.447 | +0.497 | 1.900 | 4.200 |
-| FULL | 58 | +48.665 | +0.839 | 2.901 | 4.200 |
+| TRAIN | 52 | +29.208 | +0.562 | 2.054 | 4.200 |
+| VALID | 24 | +13.248 | +0.552 | 1.971 | 5.250 |
+| FULL | 76 | +42.456 | +0.559 | 2.027 | 5.250 |
 
-### Promotion gates
+### Top-single promotion gates
 
 - PASS — `train_retained_fills_ge30`
 - PASS — `valid_retained_fills_ge15`
@@ -51,11 +46,25 @@ Selected on TRAIN only: **OR** — atr_ratio_60 HIGH 1.16577; buy_q75_ratio LOW 
 - PASS — `valid_pf_improves`
 - PASS — `valid_sum_r_ge80pct_baseline`
 - PASS — `full_dd_improve10pct_or_pf_plus015`
-- FAIL — `full_retained_fills_ge65pct`
+- PASS — `full_retained_fills_ge65pct`
 - PASS — `causal_features_only`
 
-Diagnostic vetoed raw-fill composition: SL 42, TP 2, negative TIMEOUT 0, positive TIMEOUT 9.
+## TRAIN-selected composite diagnostic
+
+Composite: **OR** — atr_ratio_60 HIGH 1.16577; buy_q75_ratio LOW 1.24444.
+
+| Period | Fills | Sum R | EV/fill | PF | MaxDD R |
+|---|---:|---:|---:|---:|---:|
+| TRAIN | 39 | +39.218 | +1.006 | 3.597 | 2.100 |
+| VALID | 19 | +9.447 | +0.497 | 1.900 | 4.200 |
+| FULL | 58 | +48.665 | +0.839 | 2.901 | 4.200 |
+
+Composite promotion: **FAIL**.
+
+## Research selection
+
+Historical challenger selected for further robustness work: **TOP_SINGLE** — atr_ratio_60 HIGH 1.16577.
 
 ## Governance
 
-A passing challenger remains historical/post-discovery. A failure means no causal pre-entry veto is adopted from this bounded search.
+This is still historical/post-discovery evidence, not independent OOS certification. No production logic is changed by LAB015 alone.

@@ -1,6 +1,6 @@
 {
   "lab": "GC_XAU_E3_PREENTRY_FAILURE_DISCRIMINATOR_LAB_015",
-  "status": "NO_CAUSAL_PREENTRY_VETO_PROMOTED",
+  "status": "CAUSAL_PREENTRY_VETO_CHALLENGER_PASS_NOT_OOS",
   "baseline": {
     "full": {
       "signals": 279,
@@ -558,7 +558,76 @@
       "train_pf_delta": 0.542836821191615
     }
   ],
-  "chosen_challenger": {
+  "primary_train_selected_single": {
+    "kind": "TOP_SINGLE",
+    "rules": [
+      {
+        "feature": "atr_ratio_60",
+        "side": "HIGH",
+        "threshold": 1.1657688284518744,
+        "train_removed_fill_frac": 0.2571428571428571
+      }
+    ],
+    "metrics": {
+      "full": {
+        "signals": 279,
+        "accepted": 179,
+        "fills": 76,
+        "sum_r": 42.455943823874804,
+        "ev_r_per_signal": 0.1521718416626337,
+        "ev_r_per_fill": 0.5586308397878266,
+        "pf": 2.0267636851587336,
+        "max_dd_r": 5.2499999999999964,
+        "fail_fills": 40,
+        "good_fills": 36
+      },
+      "train": {
+        "signals": 195,
+        "accepted": 122,
+        "fills": 52,
+        "sum_r": 29.20834998230867,
+        "ev_r_per_signal": 0.14978641016568547,
+        "ev_r_per_fill": 0.5616990381213205,
+        "pf": 2.0544803021120592,
+        "max_dd_r": 4.200000000000003,
+        "fail_fills": 27,
+        "good_fills": 25
+      },
+      "valid": {
+        "signals": 84,
+        "accepted": 57,
+        "fills": 24,
+        "sum_r": 13.24759384156614,
+        "ev_r_per_signal": 0.157709450494835,
+        "ev_r_per_fill": 0.5519830767319226,
+        "pf": 1.9705196953528301,
+        "max_dd_r": 5.25,
+        "fail_fills": 13,
+        "good_fills": 11
+      }
+    },
+    "composition": {
+      "vetoed_raw_fill_rows": 32,
+      "sl": 26,
+      "tp": 0,
+      "negative_timeout": 0,
+      "positive_timeout": 6
+    },
+    "gates": {
+      "train_retained_fills_ge30": true,
+      "valid_retained_fills_ge15": true,
+      "train_ev_fill_improves": true,
+      "train_pf_improves": true,
+      "valid_ev_fill_improves": true,
+      "valid_pf_improves": true,
+      "valid_sum_r_ge80pct_baseline": true,
+      "full_dd_improve10pct_or_pf_plus015": true,
+      "full_retained_fills_ge65pct": true,
+      "causal_features_only": true
+    },
+    "passed": true
+  },
+  "train_selected_composite": {
     "kind": "OR",
     "rules": [
       {
@@ -630,12 +699,83 @@
       "full_dd_improve10pct_or_pf_plus015": true,
       "full_retained_fills_ge65pct": false,
       "causal_features_only": true
-    }
+    },
+    "passed": false
+  },
+  "selected_for_research": {
+    "kind": "TOP_SINGLE",
+    "rules": [
+      {
+        "feature": "atr_ratio_60",
+        "side": "HIGH",
+        "threshold": 1.1657688284518744,
+        "train_removed_fill_frac": 0.2571428571428571
+      }
+    ],
+    "metrics": {
+      "full": {
+        "signals": 279,
+        "accepted": 179,
+        "fills": 76,
+        "sum_r": 42.455943823874804,
+        "ev_r_per_signal": 0.1521718416626337,
+        "ev_r_per_fill": 0.5586308397878266,
+        "pf": 2.0267636851587336,
+        "max_dd_r": 5.2499999999999964,
+        "fail_fills": 40,
+        "good_fills": 36
+      },
+      "train": {
+        "signals": 195,
+        "accepted": 122,
+        "fills": 52,
+        "sum_r": 29.20834998230867,
+        "ev_r_per_signal": 0.14978641016568547,
+        "ev_r_per_fill": 0.5616990381213205,
+        "pf": 2.0544803021120592,
+        "max_dd_r": 4.200000000000003,
+        "fail_fills": 27,
+        "good_fills": 25
+      },
+      "valid": {
+        "signals": 84,
+        "accepted": 57,
+        "fills": 24,
+        "sum_r": 13.24759384156614,
+        "ev_r_per_signal": 0.157709450494835,
+        "ev_r_per_fill": 0.5519830767319226,
+        "pf": 1.9705196953528301,
+        "max_dd_r": 5.25,
+        "fail_fills": 13,
+        "good_fills": 11
+      }
+    },
+    "composition": {
+      "vetoed_raw_fill_rows": 32,
+      "sl": 26,
+      "tp": 0,
+      "negative_timeout": 0,
+      "positive_timeout": 6
+    },
+    "gates": {
+      "train_retained_fills_ge30": true,
+      "valid_retained_fills_ge15": true,
+      "train_ev_fill_improves": true,
+      "train_pf_improves": true,
+      "valid_ev_fill_improves": true,
+      "valid_pf_improves": true,
+      "valid_sum_r_ge80pct_baseline": true,
+      "full_dd_improve10pct_or_pf_plus015": true,
+      "full_retained_fills_ge65pct": true,
+      "causal_features_only": true
+    },
+    "passed": true
   },
   "governance": {
     "new_market_data": false,
     "baseline_retuned": false,
     "independent_oos": false,
-    "post_entry_features_used": false
+    "post_entry_features_used": false,
+    "selection_fix": "Top TRAIN-ranked single and TRAIN-ranked composite are independent preregistered challenger classes; composite failure does not erase a passing top single."
   }
 }
