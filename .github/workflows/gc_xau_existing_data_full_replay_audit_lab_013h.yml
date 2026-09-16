@@ -6,6 +6,7 @@ on:
     branches: [gc-amp-feed-audit-001]
     paths:
       - 'research/gc/gc_xau_existing_data_full_replay_audit_lab_013h.py'
+      - 'research/gc/gc_xau_existing_data_full_replay_audit_lab_013h_runner.py'
       - 'research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H_PREREG.md'
       - '.github/workflows/gc_xau_existing_data_full_replay_audit_lab_013h.yml'
 
@@ -94,10 +95,12 @@ jobs:
           test "$(ls XAUUSD_raw_ticks_*.csv | grep -v meta | wc -l | tr -d ' ')" = '32'
 
       - name: Compile-check audit
-        run: python -m py_compile research/gc/gc_xau_existing_data_full_replay_audit_lab_013h.py
+        run: |
+          python -m py_compile research/gc/gc_xau_existing_data_full_replay_audit_lab_013h.py
+          python -m py_compile research/gc/gc_xau_existing_data_full_replay_audit_lab_013h_runner.py
 
-      - name: Run LAB013H
-        run: python research/gc/gc_xau_existing_data_full_replay_audit_lab_013h.py
+      - name: Run LAB013H hardened replay
+        run: python research/gc/gc_xau_existing_data_full_replay_audit_lab_013h_runner.py
 
       - name: Commit LAB013H results
         run: |
@@ -106,7 +109,8 @@ jobs:
           git add research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H.json \
                   research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H.md \
                   research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H_GC_DIFF.csv \
-                  research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H_E1_E3.csv
+                  research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H_E1_E3.csv \
+                  research/gc/GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H_ONEACTIVE_SEMANTIC.csv
           if git diff --cached --quiet; then
             echo 'No result changes'
           else
