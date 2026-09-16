@@ -1,0 +1,52 @@
+name: GC XAU E1 vs E3 Forward Shadow LAB012
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_d1_e1_vs_e3_forward_shadow_lab_012.py'
+      - 'research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012_PREREG.md'
+      - 'research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012_LEDGER.csv'
+      - '.github/workflows/gc_xau_d1_e1_vs_e3_forward_shadow_lab_012.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate-forward-shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install numpy pandas
+
+      - name: Compile frozen evaluator
+        run: python -m py_compile research/gc/gc_xau_d1_e1_vs_e3_forward_shadow_lab_012.py
+
+      - name: Evaluate append-only forward ledger
+        run: python research/gc/gc_xau_d1_e1_vs_e3_forward_shadow_lab_012.py
+
+      - name: Commit LAB012 status/results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012.json \
+                  research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012.md
+          if [ -f research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012_PAIRED.csv ]; then
+            git add research/gc/GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012_PAIRED.csv
+          fi
+          if git diff --cached --quiet; then
+            echo 'No LAB012 result changes'
+          else
+            git commit -m 'Update GC XAU E1 vs E3 forward shadow LAB012'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
