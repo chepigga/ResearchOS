@@ -1,0 +1,43 @@
+name: GC XAU Prefill Approach Shape Acceleration LAB017
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_prefill_approach_shape_acceleration_lab_017.py'
+      - 'research/gc/GC_XAU_PREFILL_APPROACH_SHAPE_ACCELERATION_LAB_017_PREREG.md'
+      - '.github/workflows/gc_xau_prefill_approach_shape_acceleration_lab_017.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  acceleration-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas scikit-learn
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_xau_prefill_approach_shape_acceleration_lab_017.py
+      - name: Run LAB017
+        run: python research/gc/gc_xau_prefill_approach_shape_acceleration_lab_017.py
+      - name: Commit LAB017 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_PREFILL_APPROACH_SHAPE_ACCELERATION_LAB_017.json \
+                  research/gc/GC_XAU_PREFILL_APPROACH_SHAPE_ACCELERATION_LAB_017.md \
+                  research/gc/GC_XAU_PREFILL_APPROACH_SHAPE_ACCELERATION_LAB_017_OOF.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record GC XAU prefill acceleration LAB017'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
