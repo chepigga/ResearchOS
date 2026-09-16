@@ -1,0 +1,2473 @@
+{
+  "lab": "GC_XAU_LIMIT_ORDER_DEPTH_EXPIRY_STABILITY_LAB_008",
+  "status": "POST_DISCOVERY_LIMIT_STABILITY_MAP_NOT_OOS",
+  "frozen_exit": {
+    "stop_atr": 1.5,
+    "rr": 3.0,
+    "hard_horizon_min_from_signal": 30
+  },
+  "grid": {
+    "depth_atr": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5
+    ],
+    "expiry_min": [
+      3,
+      5,
+      10,
+      15
+    ],
+    "n_geometries": 20
+  },
+  "cohorts": {
+    "raw_common_signal_times": 247,
+    "common_executable": 245,
+    "amp_executable": 279
+  },
+  "source": {
+    "raw_xau_files": 32,
+    "quote_valid_ticks": 8236717
+  },
+  "stable_candidates": [
+    {
+      "key": "D1.00_E5M",
+      "depth_atr": 1.0,
+      "expiry_min": 5,
+      "common_ev": 0.08209965925255829,
+      "amp_ev": 0.07960687014139038,
+      "common_pf": 1.2592810109966848,
+      "common_fill": 51.42857142857142,
+      "common_early_ev": 0.10389979952181565,
+      "common_late_ev": 0.025355176492873614,
+      "positive_neighbors": 4,
+      "gates": {
+        "common_full_pos": true,
+        "amp_full_pos": true,
+        "common_early_pos": true,
+        "common_late_pos": true,
+        "common_fill_ge40": true,
+        "common_pf_gt1": true,
+        "positive_adjacent_neighbor": true
+      }
+    },
+    {
+      "key": "D1.00_E3M",
+      "depth_atr": 1.0,
+      "expiry_min": 3,
+      "common_ev": 0.07226963171330857,
+      "amp_ev": 0.07963489374320697,
+      "common_pf": 1.2839817631639603,
+      "common_fill": 41.224489795918366,
+      "common_early_ev": 0.061314847669836504,
+      "common_late_ev": 0.10078429017940493,
+      "positive_neighbors": 3,
+      "gates": {
+        "common_full_pos": true,
+        "amp_full_pos": true,
+        "common_early_pos": true,
+        "common_late_pos": true,
+        "common_fill_ge40": true,
+        "common_pf_gt1": true,
+        "positive_adjacent_neighbor": true
+      }
+    },
+    {
+      "key": "D0.75_E5M",
+      "depth_atr": 0.75,
+      "expiry_min": 5,
+      "common_ev": 0.06164937096277877,
+      "amp_ev": 0.06630204700314994,
+      "common_pf": 1.1581721728168661,
+      "common_fill": 60.0,
+      "common_early_ev": 0.08183942371085637,
+      "common_late_ev": 0.00909585130969441,
+      "positive_neighbors": 3,
+      "gates": {
+        "common_full_pos": true,
+        "amp_full_pos": true,
+        "common_early_pos": true,
+        "common_late_pos": true,
+        "common_fill_ge40": true,
+        "common_pf_gt1": true,
+        "positive_adjacent_neighbor": true
+      }
+    },
+    {
+      "key": "D0.75_E3M",
+      "depth_atr": 0.75,
+      "expiry_min": 3,
+      "common_ev": 0.04980734787615162,
+      "amp_ev": 0.061576406653565924,
+      "common_pf": 1.1494466592547192,
+      "common_fill": 50.61224489795918,
+      "common_early_ev": 0.05624351757013317,
+      "common_late_ev": 0.03305437676093494,
+      "positive_neighbors": 2,
+      "gates": {
+        "common_full_pos": true,
+        "amp_full_pos": true,
+        "common_early_pos": true,
+        "common_late_pos": true,
+        "common_fill_ge40": true,
+        "common_pf_gt1": true,
+        "positive_adjacent_neighbor": true
+      }
+    }
+  ],
+  "selected_descriptive_candidate": {
+    "key": "D1.00_E5M",
+    "depth_atr": 1.0,
+    "expiry_min": 5,
+    "common_ev": 0.08209965925255829,
+    "amp_ev": 0.07960687014139038,
+    "common_pf": 1.2592810109966848,
+    "common_fill": 51.42857142857142,
+    "common_early_ev": 0.10389979952181565,
+    "common_late_ev": 0.025355176492873614,
+    "positive_neighbors": 4,
+    "gates": {
+      "common_full_pos": true,
+      "amp_full_pos": true,
+      "common_early_pos": true,
+      "common_late_pos": true,
+      "common_fill_ge40": true,
+      "common_pf_gt1": true,
+      "positive_adjacent_neighbor": true
+    }
+  },
+  "detail": {
+    "COMMON_CLOCK": {
+      "D0.50_E3M": {
+        "depth_atr": 0.5,
+        "expiry_min": 3,
+        "full": {
+          "signals": 245,
+          "filled": 158,
+          "fill_rate_pct": 64.48979591836735,
+          "tp": 25,
+          "sl": 112,
+          "timeout": 21,
+          "ev_r_per_signal": -0.05773218629639579,
+          "ev_r_per_filled": -0.0895214281178289,
+          "wr_filled_pct": 29.11392405063291,
+          "pf": 0.8737108424766342,
+          "max_dd_r": 33.9181252577567,
+          "median_fill_delay_sec": 41.9315,
+          "day_ci95_r_per_signal": [
+            -0.2514586481235467,
+            0.147585306566591
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 111,
+          "fill_rate_pct": 62.71186440677966,
+          "tp": 20,
+          "sl": 76,
+          "timeout": 15,
+          "ev_r_per_signal": -0.003570268269505183,
+          "ev_r_per_filled": -0.00569313048380561,
+          "wr_filled_pct": 31.53153153153153,
+          "pf": 0.9916850331091788,
+          "max_dd_r": 17.396321803352905,
+          "median_fill_delay_sec": 42.458,
+          "day_ci95_r_per_signal": [
+            -0.23741863682279016,
+            0.24945008546331005
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 47,
+          "fill_rate_pct": 69.11764705882352,
+          "tp": 5,
+          "sl": 36,
+          "timeout": 6,
+          "ev_r_per_signal": -0.19871247292521388,
+          "ev_r_per_filled": -0.28749889699818176,
+          "wr_filled_pct": 23.404255319148938,
+          "pf": 0.6246542178079293,
+          "max_dd_r": 17.41958985015413,
+          "median_fill_delay_sec": 38.403,
+          "day_ci95_r_per_signal": [
+            -0.5106285374747912,
+            0.13980531030659624
+          ]
+        }
+      },
+      "D0.50_E5M": {
+        "depth_atr": 0.5,
+        "expiry_min": 5,
+        "full": {
+          "signals": 245,
+          "filled": 175,
+          "fill_rate_pct": 71.42857142857143,
+          "tp": 26,
+          "sl": 126,
+          "timeout": 23,
+          "ev_r_per_signal": -0.10130843538201736,
+          "ev_r_per_filled": -0.14183180953482427,
+          "wr_filled_pct": 27.42857142857143,
+          "pf": 0.8034928445512204,
+          "max_dd_r": 40.2268421689016,
+          "median_fill_delay_sec": 47.701,
+          "day_ci95_r_per_signal": [
+            -0.30071648390974254,
+            0.1110486668115709
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 124,
+          "fill_rate_pct": 70.05649717514125,
+          "tp": 21,
+          "sl": 86,
+          "timeout": 17,
+          "ev_r_per_signal": -0.04128880513943337,
+          "ev_r_per_filled": -0.058936439594191196,
+          "wr_filled_pct": 29.838709677419356,
+          "pf": 0.9153258353127479,
+          "max_dd_r": 21.76378591818529,
+          "median_fill_delay_sec": 48.009,
+          "day_ci95_r_per_signal": [
+            -0.2826846349235944,
+            0.22149105987399134
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 51,
+          "fill_rate_pct": 75.0,
+          "tp": 5,
+          "sl": 40,
+          "timeout": 6,
+          "ev_r_per_signal": -0.2575360023369786,
+          "ev_r_per_filled": -0.3433813364493048,
+          "wr_filled_pct": 21.568627450980394,
+          "pf": 0.5621887960271363,
+          "max_dd_r": 20.41958985015413,
+          "median_fill_delay_sec": 45.61,
+          "day_ci95_r_per_signal": [
+            -0.5761994627598496,
+            0.08186519555829308
+          ]
+        }
+      },
+      "D0.50_E10M": {
+        "depth_atr": 0.5,
+        "expiry_min": 10,
+        "full": {
+          "signals": 245,
+          "filled": 192,
+          "fill_rate_pct": 78.36734693877551,
+          "tp": 29,
+          "sl": 139,
+          "timeout": 24,
+          "ev_r_per_signal": -0.1185120193034417,
+          "ev_r_per_filled": -0.1512262746319959,
+          "wr_filled_pct": 26.5625,
+          "pf": 0.7918958099152176,
+          "max_dd_r": 42.2268421689016,
+          "median_fill_delay_sec": 52.207,
+          "day_ci95_r_per_signal": [
+            -0.3279463710090917,
+            0.10363956953841377
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 136,
+          "fill_rate_pct": 76.8361581920904,
+          "tp": 23,
+          "sl": 95,
+          "timeout": 18,
+          "ev_r_per_signal": -0.05945195802502072,
+          "ev_r_per_filled": -0.07737497478256374,
+          "wr_filled_pct": 28.676470588235293,
+          "pf": 0.889838771525246,
+          "max_dd_r": 24.978663978934254,
+          "median_fill_delay_sec": 54.0815,
+          "day_ci95_r_per_signal": [
+            -0.31635248267257277,
+            0.21592270491762888
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 56,
+          "fill_rate_pct": 82.35294117647058,
+          "tp": 6,
+          "sl": 44,
+          "timeout": 6,
+          "ev_r_per_signal": -0.2722418846899198,
+          "ev_r_per_filled": -0.3305794314091883,
+          "wr_filled_pct": 21.428571428571427,
+          "pf": 0.5792625418428513,
+          "max_dd_r": 21.419589850154125,
+          "median_fill_delay_sec": 49.882,
+          "day_ci95_r_per_signal": [
+            -0.584562182808517,
+            0.06226958847853943
+          ]
+        }
+      },
+      "D0.50_E15M": {
+        "depth_atr": 0.5,
+        "expiry_min": 15,
+        "full": {
+          "signals": 245,
+          "filled": 198,
+          "fill_rate_pct": 80.81632653061224,
+          "tp": 29,
+          "sl": 143,
+          "timeout": 26,
+          "ev_r_per_signal": -0.1254361159887247,
+          "ev_r_per_filled": -0.15521135564261393,
+          "wr_filled_pct": 26.767676767676768,
+          "pf": 0.7858759848981225,
+          "max_dd_r": 44.2268421689016,
+          "median_fill_delay_sec": 55.132999999999996,
+          "day_ci95_r_per_signal": [
+            -0.3406118990582374,
+            0.10034664546328924
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 141,
+          "fill_rate_pct": 79.66101694915254,
+          "tp": 23,
+          "sl": 98,
+          "timeout": 20,
+          "ev_r_per_signal": -0.06338644213741813,
+          "ev_r_per_filled": -0.0795702145980355,
+          "wr_filled_pct": 29.078014184397162,
+          "pf": 0.8861247373126854,
+          "max_dd_r": 24.257474387856735,
+          "median_fill_delay_sec": 60.757,
+          "day_ci95_r_per_signal": [
+            -0.32605404697090357,
+            0.21914251776902924
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 57,
+          "fill_rate_pct": 83.82352941176471,
+          "tp": 6,
+          "sl": 45,
+          "timeout": 6,
+          "ev_r_per_signal": -0.28694776704286096,
+          "ev_r_per_filled": -0.3423236519107815,
+          "wr_filled_pct": 21.052631578947366,
+          "pf": 0.5663900409130102,
+          "max_dd_r": 22.419589850154125,
+          "median_fill_delay_sec": 51.159,
+          "day_ci95_r_per_signal": [
+            -0.6177882804548527,
+            0.0536139960877592
+          ]
+        }
+      },
+      "D0.75_E3M": {
+        "depth_atr": 0.75,
+        "expiry_min": 3,
+        "full": {
+          "signals": 245,
+          "filled": 124,
+          "fill_rate_pct": 50.61224489795918,
+          "tp": 25,
+          "sl": 81,
+          "timeout": 18,
+          "ev_r_per_signal": 0.04980734787615162,
+          "ev_r_per_filled": 0.09840967927142859,
+          "wr_filled_pct": 33.064516129032256,
+          "pf": 1.1494466592547192,
+          "max_dd_r": 9.757309214614512,
+          "median_fill_delay_sec": 54.155,
+          "day_ci95_r_per_signal": [
+            -0.06339319866743302,
+            0.16640794982413984
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 90,
+          "fill_rate_pct": 50.847457627118644,
+          "tp": 19,
+          "sl": 58,
+          "timeout": 13,
+          "ev_r_per_signal": 0.05624351757013317,
+          "ev_r_per_filled": 0.11061225122126185,
+          "wr_filled_pct": 33.33333333333333,
+          "pf": 1.1697281653746447,
+          "max_dd_r": 9.757309214614512,
+          "median_fill_delay_sec": 50.1785,
+          "day_ci95_r_per_signal": [
+            -0.07265934402858408,
+            0.18810326639190855
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 34,
+          "fill_rate_pct": 50.0,
+          "tp": 6,
+          "sl": 23,
+          "timeout": 5,
+          "ev_r_per_signal": 0.03305437676093494,
+          "ev_r_per_filled": 0.06610875352186991,
+          "wr_filled_pct": 32.35294117647059,
+          "pf": 1.0977259834671118,
+          "max_dd_r": 8.0,
+          "median_fill_delay_sec": 57.832,
+          "day_ci95_r_per_signal": [
+            -0.18031534100020793,
+            0.29166202858444634
+          ]
+        }
+      },
+      "D0.75_E5M": {
+        "depth_atr": 0.75,
+        "expiry_min": 5,
+        "full": {
+          "signals": 245,
+          "filled": 147,
+          "fill_rate_pct": 60.0,
+          "tp": 29,
+          "sl": 94,
+          "timeout": 24,
+          "ev_r_per_signal": 0.06164937096277877,
+          "ev_r_per_filled": 0.10274895160463128,
+          "wr_filled_pct": 32.6530612244898,
+          "pf": 1.1581721728168661,
+          "max_dd_r": 10.065373564087235,
+          "median_fill_delay_sec": 72.453,
+          "day_ci95_r_per_signal": [
+            -0.06748773758621794,
+            0.19442681480304655
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 103,
+          "fill_rate_pct": 58.19209039548022,
+          "tp": 22,
+          "sl": 65,
+          "timeout": 16,
+          "ev_r_per_signal": 0.08183942371085637,
+          "ev_r_per_filled": 0.14063667958079198,
+          "wr_filled_pct": 33.980582524271846,
+          "pf": 1.2201614036825486,
+          "max_dd_r": 8.883986135062525,
+          "median_fill_delay_sec": 72.453,
+          "day_ci95_r_per_signal": [
+            -0.05885970690131737,
+            0.23776817652230983
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 44,
+          "fill_rate_pct": 64.70588235294117,
+          "tp": 7,
+          "sl": 29,
+          "timeout": 8,
+          "ev_r_per_signal": 0.00909585130969441,
+          "ev_r_per_filled": 0.014057224751345904,
+          "wr_filled_pct": 29.545454545454547,
+          "pf": 1.0208281683563083,
+          "max_dd_r": 8.403494917587965,
+          "median_fill_delay_sec": 72.2295,
+          "day_ci95_r_per_signal": [
+            -0.25115444256791086,
+            0.27015908645517495
+          ]
+        }
+      },
+      "D0.75_E10M": {
+        "depth_atr": 0.75,
+        "expiry_min": 10,
+        "full": {
+          "signals": 245,
+          "filled": 180,
+          "fill_rate_pct": 73.46938775510205,
+          "tp": 34,
+          "sl": 116,
+          "timeout": 30,
+          "ev_r_per_signal": 0.047390142707585216,
+          "ev_r_per_filled": 0.06450324979643542,
+          "wr_filled_pct": 32.22222222222222,
+          "pf": 1.0987801158541077,
+          "max_dd_r": 12.474566084530345,
+          "median_fill_delay_sec": 87.9805,
+          "day_ci95_r_per_signal": [
+            -0.11703675728681799,
+            0.21444817641177252
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 126,
+          "fill_rate_pct": 71.1864406779661,
+          "tp": 26,
+          "sl": 80,
+          "timeout": 20,
+          "ev_r_per_signal": 0.07245261565037696,
+          "ev_r_per_filled": 0.10177867436600574,
+          "wr_filled_pct": 33.33333333333333,
+          "pf": 1.1586289144277857,
+          "max_dd_r": 12.474566084530345,
+          "median_fill_delay_sec": 89.2555,
+          "day_ci95_r_per_signal": [
+            -0.11217645980956405,
+            0.2598614480292393
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 54,
+          "fill_rate_pct": 79.41176470588235,
+          "tp": 8,
+          "sl": 36,
+          "timeout": 10,
+          "ev_r_per_signal": -0.01784600009938736,
+          "ev_r_per_filled": -0.022472740865895176,
+          "wr_filled_pct": 29.629629629629626,
+          "pf": 0.9669304365400425,
+          "max_dd_r": 9.448075111503917,
+          "median_fill_delay_sec": 86.107,
+          "day_ci95_r_per_signal": [
+            -0.3254043211187322,
+            0.3007963651772235
+          ]
+        }
+      },
+      "D0.75_E15M": {
+        "depth_atr": 0.75,
+        "expiry_min": 15,
+        "full": {
+          "signals": 245,
+          "filled": 187,
+          "fill_rate_pct": 76.32653061224491,
+          "tp": 34,
+          "sl": 121,
+          "timeout": 32,
+          "ev_r_per_signal": 0.03055124561816283,
+          "ev_r_per_filled": 0.040027033029143816,
+          "wr_filled_pct": 32.0855614973262,
+          "pf": 1.0610826965673361,
+          "max_dd_r": 13.53617146029824,
+          "median_fill_delay_sec": 91.804,
+          "day_ci95_r_per_signal": [
+            -0.14097518538077217,
+            0.20624671411717188
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 131,
+          "fill_rate_pct": 74.01129943502825,
+          "tp": 26,
+          "sl": 83,
+          "timeout": 22,
+          "ev_r_per_signal": 0.06044397278648719,
+          "ev_r_per_filled": 0.08166857391762011,
+          "wr_filled_pct": 33.587786259541986,
+          "pf": 1.1276018551006293,
+          "max_dd_r": 13.474566084530345,
+          "median_fill_delay_sec": 91.804,
+          "day_ci95_r_per_signal": [
+            -0.13338147375899065,
+            0.25484888505838016
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 56,
+          "fill_rate_pct": 82.35294117647058,
+          "tp": 8,
+          "sl": 38,
+          "timeout": 10,
+          "ev_r_per_signal": -0.04725776480526969,
+          "ev_r_per_filled": -0.05738442869211318,
+          "wr_filled_pct": 28.57142857142857,
+          "pf": 0.916954991221518,
+          "max_dd_r": 9.448075111503917,
+          "median_fill_delay_sec": 92.7055,
+          "day_ci95_r_per_signal": [
+            -0.39224490840963,
+            0.297704952780615
+          ]
+        }
+      },
+      "D1.00_E3M": {
+        "depth_atr": 1.0,
+        "expiry_min": 3,
+        "full": {
+          "signals": 245,
+          "filled": 101,
+          "fill_rate_pct": 41.224489795918366,
+          "tp": 20,
+          "sl": 62,
+          "timeout": 19,
+          "ev_r_per_signal": 0.07226963171330857,
+          "ev_r_per_filled": 0.17530752247287726,
+          "wr_filled_pct": 37.62376237623762,
+          "pf": 1.2839817631639603,
+          "max_dd_r": 8.0,
+          "median_fill_delay_sec": 72.006,
+          "day_ci95_r_per_signal": [
+            -0.02549611967530934,
+            0.17911124017037183
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 74,
+          "fill_rate_pct": 41.80790960451977,
+          "tp": 14,
+          "sl": 45,
+          "timeout": 15,
+          "ev_r_per_signal": 0.061314847669836504,
+          "ev_r_per_filled": 0.14665848699406844,
+          "wr_filled_pct": 37.83783783783784,
+          "pf": 1.2393142060735973,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 69.382,
+          "day_ci95_r_per_signal": [
+            -0.04021573849899757,
+            0.1765081212459839
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 27,
+          "fill_rate_pct": 39.705882352941174,
+          "tp": 6,
+          "sl": 17,
+          "timeout": 4,
+          "ev_r_per_signal": 0.10078429017940493,
+          "ev_r_per_filled": 0.2538271011925754,
+          "wr_filled_pct": 37.03703703703704,
+          "pf": 1.40313716071762,
+          "max_dd_r": 8.0,
+          "median_fill_delay_sec": 72.908,
+          "day_ci95_r_per_signal": [
+            -0.13286406056703232,
+            0.35986773659465626
+          ]
+        }
+      },
+      "D1.00_E5M": {
+        "depth_atr": 1.0,
+        "expiry_min": 5,
+        "full": {
+          "signals": 245,
+          "filled": 126,
+          "fill_rate_pct": 51.42857142857142,
+          "tp": 24,
+          "sl": 76,
+          "timeout": 26,
+          "ev_r_per_signal": 0.08209965925255829,
+          "ev_r_per_filled": 0.15963822632441885,
+          "wr_filled_pct": 36.507936507936506,
+          "pf": 1.2592810109966848,
+          "max_dd_r": 9.2378972520908,
+          "median_fill_delay_sec": 88.582,
+          "day_ci95_r_per_signal": [
+            -0.04497402208769352,
+            0.2228031669569863
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 89,
+          "fill_rate_pct": 50.282485875706215,
+          "tp": 18,
+          "sl": 52,
+          "timeout": 19,
+          "ev_r_per_signal": 0.10389979952181565,
+          "ev_r_per_filled": 0.20663218556585808,
+          "wr_filled_pct": 39.325842696629216,
+          "pf": 1.3455856425555597,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 87.457,
+          "day_ci95_r_per_signal": [
+            -0.029660710940712477,
+            0.26433538327306016
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 37,
+          "fill_rate_pct": 54.41176470588235,
+          "tp": 6,
+          "sl": 24,
+          "timeout": 7,
+          "ev_r_per_signal": 0.025355176492873614,
+          "ev_r_per_filled": 0.04659870274365964,
+          "wr_filled_pct": 29.72972972972973,
+          "pf": 1.0707696078608069,
+          "max_dd_r": 9.0,
+          "median_fill_delay_sec": 91.358,
+          "day_ci95_r_per_signal": [
+            -0.24582718876011056,
+            0.3405262686908121
+          ]
+        }
+      },
+      "D1.00_E10M": {
+        "depth_atr": 1.0,
+        "expiry_min": 10,
+        "full": {
+          "signals": 245,
+          "filled": 157,
+          "fill_rate_pct": 64.08163265306122,
+          "tp": 28,
+          "sl": 98,
+          "timeout": 31,
+          "ev_r_per_signal": 0.05369281764522999,
+          "ev_r_per_filled": 0.08378815492408499,
+          "wr_filled_pct": 34.394904458598724,
+          "pf": 1.1318590584091,
+          "max_dd_r": 12.0,
+          "median_fill_delay_sec": 112.805,
+          "day_ci95_r_per_signal": [
+            -0.09829022413876747,
+            0.2209884061025551
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 110,
+          "fill_rate_pct": 62.14689265536724,
+          "tp": 21,
+          "sl": 67,
+          "timeout": 22,
+          "ev_r_per_signal": 0.07689047039646639,
+          "ev_r_per_filled": 0.12372375691067775,
+          "wr_filled_pct": 37.27272727272727,
+          "pf": 1.199511204578656,
+          "max_dd_r": 7.527859421681985,
+          "median_fill_delay_sec": 109.805,
+          "day_ci95_r_per_signal": [
+            -0.08331227317132822,
+            0.25535435559754716
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 47,
+          "fill_rate_pct": 69.11764705882352,
+          "tp": 7,
+          "sl": 31,
+          "timeout": 9,
+          "ev_r_per_signal": -0.006689307898429488,
+          "ev_r_per_filled": -0.009678147597727761,
+          "wr_filled_pct": 27.659574468085108,
+          "pf": 0.9855819549186257,
+          "max_dd_r": 10.0,
+          "median_fill_delay_sec": 128.409,
+          "day_ci95_r_per_signal": [
+            -0.33308514908519576,
+            0.3787711331358133
+          ]
+        }
+      },
+      "D1.00_E15M": {
+        "depth_atr": 1.0,
+        "expiry_min": 15,
+        "full": {
+          "signals": 245,
+          "filled": 170,
+          "fill_rate_pct": 69.38775510204081,
+          "tp": 28,
+          "sl": 106,
+          "timeout": 36,
+          "ev_r_per_signal": 0.03839144867099254,
+          "ev_r_per_filled": 0.05532885249643044,
+          "wr_filled_pct": 34.705882352941174,
+          "pf": 1.087282727905008,
+          "max_dd_r": 12.21414710485115,
+          "median_fill_delay_sec": 125.03049999999999,
+          "day_ci95_r_per_signal": [
+            -0.11590428905321273,
+            0.20361348007291735
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 118,
+          "fill_rate_pct": 66.66666666666666,
+          "tp": 21,
+          "sl": 72,
+          "timeout": 25,
+          "ev_r_per_signal": 0.05990547854095031,
+          "ev_r_per_filled": 0.08985821781142547,
+          "wr_filled_pct": 37.28813559322034,
+          "pf": 1.1448241661113858,
+          "max_dd_r": 8.527859421681985,
+          "median_fill_delay_sec": 116.416,
+          "day_ci95_r_per_signal": [
+            -0.1072496957538871,
+            0.24129604695626247
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 52,
+          "fill_rate_pct": 76.47058823529412,
+          "tp": 7,
+          "sl": 34,
+          "timeout": 11,
+          "ev_r_per_signal": -0.017608305549338683,
+          "ev_r_per_filled": -0.02302624571836596,
+          "wr_filled_pct": 28.846153846153843,
+          "pf": 0.9653428606926552,
+          "max_dd_r": 8.742491840261826,
+          "median_fill_delay_sec": 153.3795,
+          "day_ci95_r_per_signal": [
+            -0.34973004252173806,
+            0.320828546533889
+          ]
+        }
+      },
+      "D1.25_E3M": {
+        "depth_atr": 1.25,
+        "expiry_min": 3,
+        "full": {
+          "signals": 245,
+          "filled": 75,
+          "fill_rate_pct": 30.612244897959183,
+          "tp": 15,
+          "sl": 49,
+          "timeout": 11,
+          "ev_r_per_signal": 0.018743009877660845,
+          "ev_r_per_filled": 0.06122716560035876,
+          "wr_filled_pct": 32.0,
+          "pf": 1.0922249959166241,
+          "max_dd_r": 11.382007048147026,
+          "median_fill_delay_sec": 105.456,
+          "day_ci95_r_per_signal": [
+            -0.06817044367176513,
+            0.1118807121942858
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 57,
+          "fill_rate_pct": 32.20338983050847,
+          "tp": 9,
+          "sl": 37,
+          "timeout": 11,
+          "ev_r_per_signal": -0.00795459084730561,
+          "ev_r_per_filled": -0.02470109789426479,
+          "wr_filled_pct": 31.57894736842105,
+          "pf": 0.9627441117703266,
+          "max_dd_r": 8.382007048147026,
+          "median_fill_delay_sec": 105.456,
+          "day_ci95_r_per_signal": [
+            -0.09169879478415174,
+            0.0791453390243529
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 18,
+          "fill_rate_pct": 26.47058823529412,
+          "tp": 6,
+          "sl": 12,
+          "timeout": 0,
+          "ev_r_per_signal": 0.08823529411764706,
+          "ev_r_per_filled": 0.3333333333333333,
+          "wr_filled_pct": 33.33333333333333,
+          "pf": 1.5,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 104.78,
+          "day_ci95_r_per_signal": [
+            -0.11940298507462686,
+            0.3333333333333333
+          ]
+        }
+      },
+      "D1.25_E5M": {
+        "depth_atr": 1.25,
+        "expiry_min": 5,
+        "full": {
+          "signals": 245,
+          "filled": 102,
+          "fill_rate_pct": 41.63265306122449,
+          "tp": 19,
+          "sl": 67,
+          "timeout": 16,
+          "ev_r_per_signal": 0.015577286019140935,
+          "ev_r_per_filled": 0.037416030144015,
+          "wr_filled_pct": 31.372549019607842,
+          "pf": 1.0562374216076558,
+          "max_dd_r": 11.071230585424303,
+          "median_fill_delay_sec": 122.854,
+          "day_ci95_r_per_signal": [
+            -0.08047038444268109,
+            0.11781323387006994
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 77,
+          "fill_rate_pct": 43.50282485875706,
+          "tp": 13,
+          "sl": 49,
+          "timeout": 15,
+          "ev_r_per_signal": 0.021964212769004704,
+          "ev_r_per_filled": 0.050489164417062755,
+          "wr_filled_pct": 33.76623376623377,
+          "pf": 1.0780786210638278,
+          "max_dd_r": 5.855497332063691,
+          "median_fill_delay_sec": 121.955,
+          "day_ci95_r_per_signal": [
+            -0.07544163831552998,
+            0.12708999076831706
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 25,
+          "fill_rate_pct": 36.76470588235294,
+          "tp": 6,
+          "sl": 18,
+          "timeout": 1,
+          "ev_r_per_signal": -0.0010475086091809485,
+          "ev_r_per_filled": -0.0028492234169721618,
+          "wr_filled_pct": 24.0,
+          "pf": 0.9960583433935177,
+          "max_dd_r": 8.071230585424304,
+          "median_fill_delay_sec": 128.409,
+          "day_ci95_r_per_signal": [
+            -0.22390155961764213,
+            0.26404523920052075
+          ]
+        }
+      },
+      "D1.25_E10M": {
+        "depth_atr": 1.25,
+        "expiry_min": 10,
+        "full": {
+          "signals": 245,
+          "filled": 134,
+          "fill_rate_pct": 54.69387755102041,
+          "tp": 24,
+          "sl": 86,
+          "timeout": 24,
+          "ev_r_per_signal": 0.01855676728317351,
+          "ev_r_per_filled": 0.03392841779386201,
+          "wr_filled_pct": 30.597014925373134,
+          "pf": 1.0516601511659707,
+          "max_dd_r": 14.792189463574786,
+          "median_fill_delay_sec": 151.5065,
+          "day_ci95_r_per_signal": [
+            -0.12331319288362393,
+            0.1720127969323965
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 96,
+          "fill_rate_pct": 54.23728813559322,
+          "tp": 16,
+          "sl": 60,
+          "timeout": 20,
+          "ev_r_per_signal": 0.011965623321555565,
+          "ev_r_per_filled": 0.0220616179991181,
+          "wr_filled_pct": 32.29166666666667,
+          "pf": 1.0342065164024827,
+          "max_dd_r": 8.904654181793834,
+          "median_fill_delay_sec": 145.80399999999997,
+          "day_ci95_r_per_signal": [
+            -0.1190251875790605,
+            0.16271159484127515
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 38,
+          "fill_rate_pct": 55.88235294117647,
+          "tp": 8,
+          "sl": 26,
+          "timeout": 4,
+          "ev_r_per_signal": 0.035713127300914305,
+          "ev_r_per_filled": 0.06390770148584665,
+          "wr_filled_pct": 26.31578947368421,
+          "pf": 1.0930794328993831,
+          "max_dd_r": 9.071230585424304,
+          "median_fill_delay_sec": 190.35399999999998,
+          "day_ci95_r_per_signal": [
+            -0.33398371586011794,
+            0.4700416593050379
+          ]
+        }
+      },
+      "D1.25_E15M": {
+        "depth_atr": 1.25,
+        "expiry_min": 15,
+        "full": {
+          "signals": 245,
+          "filled": 151,
+          "fill_rate_pct": 61.63265306122449,
+          "tp": 24,
+          "sl": 98,
+          "timeout": 29,
+          "ev_r_per_signal": -0.013667716893517357,
+          "ev_r_per_filled": -0.022176096946435464,
+          "wr_filled_pct": 30.4635761589404,
+          "pf": 0.9665161332414856,
+          "max_dd_r": 15.909831486014209,
+          "median_fill_delay_sec": 181.056,
+          "day_ci95_r_per_signal": [
+            -0.1581930316190722,
+            0.14127576830549152
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 106,
+          "fill_rate_pct": 59.887005649717516,
+          "tp": 16,
+          "sl": 67,
+          "timeout": 23,
+          "ev_r_per_signal": -0.01552880245211333,
+          "ev_r_per_filled": -0.025930170132302473,
+          "wr_filled_pct": 32.075471698113205,
+          "pf": 0.9601164327318983,
+          "max_dd_r": 10.0,
+          "median_fill_delay_sec": 160.35750000000002,
+          "day_ci95_r_per_signal": [
+            -0.15414446694443337,
+            0.14086892197868436
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 45,
+          "fill_rate_pct": 66.17647058823529,
+          "tp": 8,
+          "sl": 31,
+          "timeout": 6,
+          "ev_r_per_signal": -0.008823420660113135,
+          "ev_r_per_filled": -0.013333168997504311,
+          "wr_filled_pct": 26.666666666666668,
+          "pf": 0.9807017630725617,
+          "max_dd_r": 10.141392169678962,
+          "median_fill_delay_sec": 253.807,
+          "day_ci95_r_per_signal": [
+            -0.39408567000942896,
+            0.39832755088205696
+          ]
+        }
+      },
+      "D1.50_E3M": {
+        "depth_atr": 1.5,
+        "expiry_min": 3,
+        "full": {
+          "signals": 245,
+          "filled": 54,
+          "fill_rate_pct": 22.040816326530614,
+          "tp": 12,
+          "sl": 37,
+          "timeout": 5,
+          "ev_r_per_signal": 0.01765123253461241,
+          "ev_r_per_filled": 0.08008429575888965,
+          "wr_filled_pct": 29.629629629629626,
+          "pf": 1.1168294160818077,
+          "max_dd_r": 12.161048169996612,
+          "median_fill_delay_sec": 121.05850000000001,
+          "day_ci95_r_per_signal": [
+            -0.07593422960087313,
+            0.11728030902102843
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 38,
+          "fill_rate_pct": 21.468926553672315,
+          "tp": 5,
+          "sl": 28,
+          "timeout": 5,
+          "ev_r_per_signal": -0.04336411315830485,
+          "ev_r_per_filled": -0.2019854744478937,
+          "wr_filled_pct": 23.684210526315788,
+          "pf": 0.7260329317817332,
+          "max_dd_r": 12.161048169996612,
+          "median_fill_delay_sec": 118.27950000000001,
+          "day_ci95_r_per_signal": [
+            -0.14400706266815771,
+            0.052784292782729225
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 16,
+          "fill_rate_pct": 23.52941176470588,
+          "tp": 7,
+          "sl": 9,
+          "timeout": 0,
+          "ev_r_per_signal": 0.17647058823529413,
+          "ev_r_per_filled": 0.75,
+          "wr_filled_pct": 43.75,
+          "pf": 2.3333333333333335,
+          "max_dd_r": 4.0,
+          "median_fill_delay_sec": 123.384,
+          "day_ci95_r_per_signal": [
+            -0.02564102564102564,
+            0.40298507462686567
+          ]
+        }
+      },
+      "D1.50_E5M": {
+        "depth_atr": 1.5,
+        "expiry_min": 5,
+        "full": {
+          "signals": 245,
+          "filled": 75,
+          "fill_rate_pct": 30.612244897959183,
+          "tp": 14,
+          "sl": 53,
+          "timeout": 8,
+          "ev_r_per_signal": -0.015951890841043728,
+          "ev_r_per_filled": -0.05210951008074285,
+          "wr_filled_pct": 28.000000000000004,
+          "pf": 0.9262823138423802,
+          "max_dd_r": 15.125815782906887,
+          "median_fill_delay_sec": 131.256,
+          "day_ci95_r_per_signal": [
+            -0.1133866817453795,
+            0.09737266978127114
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 53,
+          "fill_rate_pct": 29.943502824858758,
+          "tp": 7,
+          "sl": 39,
+          "timeout": 7,
+          "ev_r_per_signal": -0.062167510380215535,
+          "ev_r_per_filled": -0.20761602523204056,
+          "wr_filled_pct": 24.528301886792452,
+          "pf": 0.7179704971172218,
+          "max_dd_r": 15.125815782906887,
+          "median_fill_delay_sec": 127.807,
+          "day_ci95_r_per_signal": [
+            -0.1703573933079951,
+            0.054153180173817025
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 22,
+          "fill_rate_pct": 32.35294117647059,
+          "tp": 7,
+          "sl": 14,
+          "timeout": 1,
+          "ev_r_per_signal": 0.10434464825356524,
+          "ev_r_per_filled": 0.32251982187465617,
+          "wr_filled_pct": 36.36363636363637,
+          "pf": 1.5068168629458882,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 147.0075,
+          "day_ci95_r_per_signal": [
+            -0.11322545975638881,
+            0.35482849457937016
+          ]
+        }
+      },
+      "D1.50_E10M": {
+        "depth_atr": 1.5,
+        "expiry_min": 10,
+        "full": {
+          "signals": 245,
+          "filled": 109,
+          "fill_rate_pct": 44.48979591836735,
+          "tp": 20,
+          "sl": 74,
+          "timeout": 15,
+          "ev_r_per_signal": -0.02229644930998252,
+          "ev_r_per_filled": -0.0501158723022543,
+          "wr_filled_pct": 28.440366972477065,
+          "pf": 0.927239988620016,
+          "max_dd_r": 17.58140730768966,
+          "median_fill_delay_sec": 181.954,
+          "day_ci95_r_per_signal": [
+            -0.14428678319525054,
+            0.10708273191663285
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 78,
+          "fill_rate_pct": 44.06779661016949,
+          "tp": 13,
+          "sl": 53,
+          "timeout": 12,
+          "ev_r_per_signal": -0.029860273962130198,
+          "ev_r_per_filled": -0.06775985245252622,
+          "wr_filled_pct": 28.205128205128204,
+          "pf": 0.9014993829687169,
+          "max_dd_r": 15.111591436423286,
+          "median_fill_delay_sec": 182.40550000000002,
+          "day_ci95_r_per_signal": [
+            -0.1768868323014945,
+            0.1219276865184571
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 31,
+          "fill_rate_pct": 45.588235294117645,
+          "tp": 7,
+          "sl": 21,
+          "timeout": 3,
+          "ev_r_per_signal": -0.0026082586713040063,
+          "ev_r_per_filled": -0.005721341601570079,
+          "wr_filled_pct": 29.03225806451613,
+          "pf": 0.9917198736737557,
+          "max_dd_r": 7.0,
+          "median_fill_delay_sec": 179.562,
+          "day_ci95_r_per_signal": [
+            -0.22826367975945103,
+            0.2578221182398554
+          ]
+        }
+      },
+      "D1.50_E15M": {
+        "depth_atr": 1.5,
+        "expiry_min": 15,
+        "full": {
+          "signals": 245,
+          "filled": 133,
+          "fill_rate_pct": 54.285714285714285,
+          "tp": 23,
+          "sl": 87,
+          "timeout": 23,
+          "ev_r_per_signal": -0.004043226927638623,
+          "ev_r_per_filled": -0.007448049603544838,
+          "wr_filled_pct": 31.57894736842105,
+          "pf": 0.9887531765486609,
+          "max_dd_r": 13.03838760942558,
+          "median_fill_delay_sec": 242.854,
+          "day_ci95_r_per_signal": [
+            -0.13435839596565788,
+            0.13128291853388227
+          ]
+        },
+        "early": {
+          "signals": 177,
+          "filled": 92,
+          "fill_rate_pct": 51.9774011299435,
+          "tp": 14,
+          "sl": 60,
+          "timeout": 18,
+          "ev_r_per_signal": -0.01761625468704126,
+          "ev_r_per_filled": -0.033892142169633724,
+          "wr_filled_pct": 31.521739130434785,
+          "pf": 0.9485951138172571,
+          "max_dd_r": 12.038029673914831,
+          "median_fill_delay_sec": 245.858,
+          "day_ci95_r_per_signal": [
+            -0.1656500890611298,
+            0.1264694555730637
+          ]
+        },
+        "late": {
+          "signals": 68,
+          "filled": 41,
+          "fill_rate_pct": 60.29411764705882,
+          "tp": 9,
+          "sl": 27,
+          "timeout": 5,
+          "ev_r_per_signal": 0.03128656591668881,
+          "ev_r_per_filled": 0.0518899142032888,
+          "wr_filled_pct": 31.70731707317073,
+          "pf": 1.0775884191510787,
+          "max_dd_r": 9.0,
+          "median_fill_delay_sec": 242.854,
+          "day_ci95_r_per_signal": [
+            -0.27163995066574187,
+            0.3517292223011628
+          ]
+        }
+      }
+    },
+    "AMP_ALL": {
+      "D0.50_E3M": {
+        "depth_atr": 0.5,
+        "expiry_min": 3,
+        "full": {
+          "signals": 279,
+          "filled": 182,
+          "fill_rate_pct": 65.23297491039428,
+          "tp": 29,
+          "sl": 128,
+          "timeout": 25,
+          "ev_r_per_signal": -0.05243561462680947,
+          "ev_r_per_filled": -0.08038206857626287,
+          "wr_filled_pct": 29.67032967032967,
+          "pf": 0.8857067462431263,
+          "max_dd_r": 38.93836362069804,
+          "median_fill_delay_sec": 38.7805,
+          "day_ci95_r_per_signal": [
+            -0.23600776509452662,
+            0.13600115996904685
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 124,
+          "fill_rate_pct": 63.589743589743584,
+          "tp": 23,
+          "sl": 84,
+          "timeout": 17,
+          "ev_r_per_signal": 0.0113024344857478,
+          "ev_r_per_filled": 0.017773989715490504,
+          "wr_filled_pct": 32.25806451612903,
+          "pf": 1.0262377943419143,
+          "max_dd_r": 20.518773770543913,
+          "median_fill_delay_sec": 42.156499999999994,
+          "day_ci95_r_per_signal": [
+            -0.21912697957910865,
+            0.2541796154265581
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 58,
+          "fill_rate_pct": 69.04761904761905,
+          "tp": 6,
+          "sl": 44,
+          "timeout": 8,
+          "ev_r_per_signal": -0.20039894292381735,
+          "ev_r_per_filled": -0.2902329518207009,
+          "wr_filled_pct": 24.137931034482758,
+          "pf": 0.6174201998727123,
+          "max_dd_r": 18.41958985015413,
+          "median_fill_delay_sec": 35.181,
+          "day_ci95_r_per_signal": [
+            -0.4627507873710499,
+            0.07544192413942362
+          ]
+        }
+      },
+      "D0.50_E5M": {
+        "depth_atr": 0.5,
+        "expiry_min": 5,
+        "full": {
+          "signals": 279,
+          "filled": 202,
+          "fill_rate_pct": 72.40143369175627,
+          "tp": 30,
+          "sl": 145,
+          "timeout": 27,
+          "ev_r_per_signal": -0.10145418461239113,
+          "ev_r_per_filled": -0.14012731439038184,
+          "wr_filled_pct": 27.722772277227726,
+          "pf": 0.8052028941652148,
+          "max_dd_r": 48.08944750595977,
+          "median_fill_delay_sec": 45.8305,
+          "day_ci95_r_per_signal": [
+            -0.28985677147726485,
+            0.09373303761113928
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 139,
+          "fill_rate_pct": 71.28205128205128,
+          "tp": 24,
+          "sl": 96,
+          "timeout": 19,
+          "ev_r_per_signal": -0.03319080154490496,
+          "ev_r_per_filled": -0.046562635260837905,
+          "wr_filled_pct": 30.215827338129497,
+          "pf": 0.9327972948987809,
+          "max_dd_r": 25.827490681688815,
+          "median_fill_delay_sec": 47.858,
+          "day_ci95_r_per_signal": [
+            -0.2740542245568581,
+            0.22267324787098974
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 63,
+          "fill_rate_pct": 75.0,
+          "tp": 6,
+          "sl": 49,
+          "timeout": 8,
+          "ev_r_per_signal": -0.25992275244762686,
+          "ev_r_per_filled": -0.3465636699301692,
+          "wr_filled_pct": 22.22222222222222,
+          "pf": 0.554418138661211,
+          "max_dd_r": 22.261956824270953,
+          "median_fill_delay_sec": 38.403,
+          "day_ci95_r_per_signal": [
+            -0.5305295025571974,
+            0.021579871304037594
+          ]
+        }
+      },
+      "D0.50_E10M": {
+        "depth_atr": 0.5,
+        "expiry_min": 10,
+        "full": {
+          "signals": 279,
+          "filled": 220,
+          "fill_rate_pct": 78.85304659498208,
+          "tp": 33,
+          "sl": 159,
+          "timeout": 28,
+          "ev_r_per_signal": -0.12014550382654511,
+          "ev_r_per_filled": -0.15236634348911862,
+          "wr_filled_pct": 26.81818181818182,
+          "pf": 0.789870610842791,
+          "max_dd_r": 51.089447505959775,
+          "median_fill_delay_sec": 50.106,
+          "day_ci95_r_per_signal": [
+            -0.3157693028219076,
+            0.08392571244009217
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 151,
+          "fill_rate_pct": 77.43589743589745,
+          "tp": 26,
+          "sl": 105,
+          "timeout": 20,
+          "ev_r_per_signal": -0.04967735570259194,
+          "ev_r_per_filled": -0.06415287656957237,
+          "wr_filled_pct": 29.13907284768212,
+          "pf": 0.9081998261660288,
+          "max_dd_r": 26.827490681688815,
+          "median_fill_delay_sec": 51.155,
+          "day_ci95_r_per_signal": [
+            -0.2999615653955135,
+            0.21664678445851546
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 69,
+          "fill_rate_pct": 82.14285714285714,
+          "tp": 7,
+          "sl": 54,
+          "timeout": 8,
+          "ev_r_per_signal": -0.2837322762571507,
+          "ev_r_per_filled": -0.34541320587827035,
+          "wr_filled_pct": 21.73913043478261,
+          "pf": 0.5586386813777656,
+          "max_dd_r": 24.261956824270953,
+          "median_fill_delay_sec": 47.701,
+          "day_ci95_r_per_signal": [
+            -0.5419751779538596,
+            -0.007341178828743258
+          ]
+        }
+      },
+      "D0.50_E15M": {
+        "depth_atr": 0.5,
+        "expiry_min": 15,
+        "full": {
+          "signals": 279,
+          "filled": 226,
+          "fill_rate_pct": 81.00358422939068,
+          "tp": 33,
+          "sl": 163,
+          "timeout": 30,
+          "ev_r_per_signal": -0.12622580378315565,
+          "ev_r_per_filled": -0.1558274303340727,
+          "wr_filled_pct": 26.991150442477874,
+          "pf": 0.7846365886124663,
+          "max_dd_r": 53.08944750595978,
+          "median_fill_delay_sec": 50.931,
+          "day_ci95_r_per_signal": [
+            -0.329709502204997,
+            0.0848055516626789
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 156,
+          "fill_rate_pct": 80.0,
+          "tp": 26,
+          "sl": 108,
+          "timeout": 22,
+          "ev_r_per_signal": -0.05324865666615267,
+          "ev_r_per_filled": -0.06656082083269083,
+          "wr_filled_pct": 29.48717948717949,
+          "pf": 0.9043204562787573,
+          "max_dd_r": 27.827490681688815,
+          "median_fill_delay_sec": 55.8075,
+          "day_ci95_r_per_signal": [
+            -0.3108877615997187,
+            0.21984833932333325
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 70,
+          "fill_rate_pct": 83.33333333333334,
+          "tp": 7,
+          "sl": 55,
+          "timeout": 8,
+          "ev_r_per_signal": -0.2956370381619126,
+          "ev_r_per_filled": -0.3547644457942951,
+          "wr_filled_pct": 21.428571428571427,
+          "pf": 0.5484816144436244,
+          "max_dd_r": 25.261956824270953,
+          "median_fill_delay_sec": 48.153,
+          "day_ci95_r_per_signal": [
+            -0.5682226452573802,
+            -0.014042572850670842
+          ]
+        }
+      },
+      "D0.75_E3M": {
+        "depth_atr": 0.75,
+        "expiry_min": 3,
+        "full": {
+          "signals": 279,
+          "filled": 143,
+          "fill_rate_pct": 51.25448028673835,
+          "tp": 30,
+          "sl": 93,
+          "timeout": 20,
+          "ev_r_per_signal": 0.061576406653565924,
+          "ev_r_per_filled": 0.12013858361080344,
+          "wr_filled_pct": 33.56643356643357,
+          "pf": 1.183440765155872,
+          "max_dd_r": 11.065373564087235,
+          "median_fill_delay_sec": 52.058,
+          "day_ci95_r_per_signal": [
+            -0.03556342978341368,
+            0.16257857364188985
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 100,
+          "fill_rate_pct": 51.28205128205128,
+          "tp": 22,
+          "sl": 63,
+          "timeout": 15,
+          "ev_r_per_signal": 0.08170317864923753,
+          "ev_r_per_filled": 0.15932119836601313,
+          "wr_filled_pct": 35.0,
+          "pf": 1.250295602280572,
+          "max_dd_r": 8.065373564087235,
+          "median_fill_delay_sec": 49.732,
+          "day_ci95_r_per_signal": [
+            -0.030422500043331288,
+            0.1965245314886742
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 43,
+          "fill_rate_pct": 51.19047619047619,
+          "tp": 8,
+          "sl": 30,
+          "timeout": 5,
+          "ev_r_per_signal": 0.01485354309218543,
+          "ev_r_per_filled": 0.029016223714966885,
+          "wr_filled_pct": 30.23255813953488,
+          "pf": 1.0415899206581192,
+          "max_dd_r": 9.759524975427214,
+          "median_fill_delay_sec": 55.808,
+          "day_ci95_r_per_signal": [
+            -0.1702072008246408,
+            0.22429791641556796
+          ]
+        }
+      },
+      "D0.75_E5M": {
+        "depth_atr": 0.75,
+        "expiry_min": 5,
+        "full": {
+          "signals": 279,
+          "filled": 170,
+          "fill_rate_pct": 60.93189964157706,
+          "tp": 34,
+          "sl": 109,
+          "timeout": 27,
+          "ev_r_per_signal": 0.06630204700314994,
+          "ev_r_per_filled": 0.1088133594934049,
+          "wr_filled_pct": 32.94117647058823,
+          "pf": 1.1674180674032817,
+          "max_dd_r": 14.065373564087235,
+          "median_fill_delay_sec": 71.1805,
+          "day_ci95_r_per_signal": [
+            -0.05269968852036721,
+            0.18550661042707123
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 115,
+          "fill_rate_pct": 58.97435897435898,
+          "tp": 25,
+          "sl": 72,
+          "timeout": 18,
+          "ev_r_per_signal": 0.09467997550517601,
+          "ev_r_per_filled": 0.1605443062913854,
+          "wr_filled_pct": 34.78260869565217,
+          "pf": 1.2536235716669635,
+          "max_dd_r": 9.065373564087235,
+          "median_fill_delay_sec": 70.802,
+          "day_ci95_r_per_signal": [
+            -0.04215879214433327,
+            0.23789102451836752
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 55,
+          "fill_rate_pct": 65.47619047619048,
+          "tp": 9,
+          "sl": 37,
+          "timeout": 9,
+          "ev_r_per_signal": 0.0004247129805894156,
+          "ev_r_per_filled": 0.0006486525521729175,
+          "wr_filled_pct": 29.09090909090909,
+          "pf": 1.0009464049575827,
+          "max_dd_r": 8.616029215686357,
+          "median_fill_delay_sec": 71.559,
+          "day_ci95_r_per_signal": [
+            -0.22983696128763298,
+            0.2106165449421607
+          ]
+        }
+      },
+      "D0.75_E10M": {
+        "depth_atr": 0.75,
+        "expiry_min": 10,
+        "full": {
+          "signals": 279,
+          "filled": 204,
+          "fill_rate_pct": 73.11827956989248,
+          "tp": 39,
+          "sl": 132,
+          "timeout": 33,
+          "ev_r_per_signal": 0.05019627308729897,
+          "ev_r_per_filled": 0.06865078525174717,
+          "wr_filled_pct": 32.35294117647059,
+          "pf": 1.1048733854054784,
+          "max_dd_r": 15.536171460298242,
+          "median_fill_delay_sec": 82.6625,
+          "day_ci95_r_per_signal": [
+            -0.10252746014624849,
+            0.19886309310287198
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 139,
+          "fill_rate_pct": 71.28205128205128,
+          "tp": 29,
+          "sl": 88,
+          "timeout": 22,
+          "ev_r_per_signal": 0.08103143690668957,
+          "ev_r_per_filled": 0.11367719566046378,
+          "wr_filled_pct": 33.81294964028777,
+          "pf": 1.1778535775315333,
+          "max_dd_r": 9.567762711436377,
+          "median_fill_delay_sec": 88.057,
+          "day_ci95_r_per_signal": [
+            -0.1020085463676166,
+            0.2563003413530153
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 65,
+          "fill_rate_pct": 77.38095238095238,
+          "tp": 10,
+          "sl": 44,
+          "timeout": 11,
+          "ev_r_per_signal": -0.021385357207714888,
+          "ev_r_per_filled": -0.027636461622277727,
+          "wr_filled_pct": 29.230769230769234,
+          "pf": 0.95980935371932,
+          "max_dd_r": 10.448075111503917,
+          "median_fill_delay_sec": 80.256,
+          "day_ci95_r_per_signal": [
+            -0.29923967739116003,
+            0.24042951674432264
+          ]
+        }
+      },
+      "D0.75_E15M": {
+        "depth_atr": 0.75,
+        "expiry_min": 15,
+        "full": {
+          "signals": 279,
+          "filled": 213,
+          "fill_rate_pct": 76.34408602150538,
+          "tp": 39,
+          "sl": 138,
+          "timeout": 36,
+          "ev_r_per_signal": 0.03395821752611127,
+          "ev_r_per_filled": 0.04448048211166685,
+          "wr_filled_pct": 32.3943661971831,
+          "pf": 1.0678971134456448,
+          "max_dd_r": 19.56826076369063,
+          "median_fill_delay_sec": 90.454,
+          "day_ci95_r_per_signal": [
+            -0.12580317320237921,
+            0.18662202200607772
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 144,
+          "fill_rate_pct": 73.84615384615385,
+          "tp": 29,
+          "sl": 91,
+          "timeout": 24,
+          "ev_r_per_signal": 0.07013128415331273,
+          "ev_r_per_filled": 0.09496944729094431,
+          "wr_filled_pct": 34.02777777777778,
+          "pf": 1.1489011618465428,
+          "max_dd_r": 11.35473275693229,
+          "median_fill_delay_sec": 91.4305,
+          "day_ci95_r_per_signal": [
+            -0.1127151142307691,
+            0.24917151159962383
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 69,
+          "fill_rate_pct": 82.14285714285714,
+          "tp": 10,
+          "sl": 47,
+          "timeout": 12,
+          "ev_r_per_signal": -0.05001497285846355,
+          "ev_r_per_filled": -0.06088779304508611,
+          "wr_filled_pct": 28.985507246376812,
+          "pf": 0.9119163397379326,
+          "max_dd_r": 11.20760008693113,
+          "median_fill_delay_sec": 84.31,
+          "day_ci95_r_per_signal": [
+            -0.35055043904849403,
+            0.2297427549410802
+          ]
+        }
+      },
+      "D1.00_E3M": {
+        "depth_atr": 1.0,
+        "expiry_min": 3,
+        "full": {
+          "signals": 279,
+          "filled": 117,
+          "fill_rate_pct": 41.935483870967744,
+          "tp": 23,
+          "sl": 71,
+          "timeout": 23,
+          "ev_r_per_signal": 0.07963489374320697,
+          "ev_r_per_filled": 0.18989859277226276,
+          "wr_filled_pct": 38.46153846153847,
+          "pf": 1.3113995533684635,
+          "max_dd_r": 8.0,
+          "median_fill_delay_sec": 71.259,
+          "day_ci95_r_per_signal": [
+            -0.0157539171517613,
+            0.1791601441378896
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 82,
+          "fill_rate_pct": 42.05128205128205,
+          "tp": 15,
+          "sl": 49,
+          "timeout": 18,
+          "ev_r_per_signal": 0.06586647215663982,
+          "ev_r_per_filled": 0.15663368378713122,
+          "wr_filled_pct": 39.02439024390244,
+          "pf": 1.260266428933331,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 69.382,
+          "day_ci95_r_per_signal": [
+            -0.03449206442169284,
+            0.17458277054184249
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 35,
+          "fill_rate_pct": 41.66666666666667,
+          "tp": 8,
+          "sl": 22,
+          "timeout": 5,
+          "ev_r_per_signal": 0.11159730099773786,
+          "ev_r_per_filled": 0.26783352239457087,
+          "wr_filled_pct": 37.142857142857146,
+          "pf": 1.4260987856277265,
+          "max_dd_r": 8.0,
+          "median_fill_delay_sec": 71.259,
+          "day_ci95_r_per_signal": [
+            -0.10496227332433693,
+            0.3586304728942373
+          ]
+        }
+      },
+      "D1.00_E5M": {
+        "depth_atr": 1.0,
+        "expiry_min": 5,
+        "full": {
+          "signals": 279,
+          "filled": 147,
+          "fill_rate_pct": 52.68817204301075,
+          "tp": 27,
+          "sl": 89,
+          "timeout": 31,
+          "ev_r_per_signal": 0.07960687014139038,
+          "ev_r_per_filled": 0.15109059026835317,
+          "wr_filled_pct": 36.734693877551024,
+          "pf": 1.2452074219898166,
+          "max_dd_r": 9.379038134574955,
+          "median_fill_delay_sec": 88.506,
+          "day_ci95_r_per_signal": [
+            -0.04184861527639165,
+            0.21189208324882847
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 99,
+          "fill_rate_pct": 50.76923076923077,
+          "tp": 19,
+          "sl": 58,
+          "timeout": 22,
+          "ev_r_per_signal": 0.09426409511971831,
+          "ev_r_per_filled": 0.18567170250853604,
+          "wr_filled_pct": 39.39393939393939,
+          "pf": 1.3104207772334402,
+          "max_dd_r": 6.666369313113158,
+          "median_fill_delay_sec": 88.506,
+          "day_ci95_r_per_signal": [
+            -0.04126752639120948,
+            0.2515242487217818
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 48,
+          "fill_rate_pct": 57.14285714285714,
+          "tp": 8,
+          "sl": 31,
+          "timeout": 9,
+          "ev_r_per_signal": 0.045581169298843406,
+          "ev_r_per_filled": 0.07976704627297598,
+          "wr_filled_pct": 31.25,
+          "pf": 1.122081176658273,
+          "max_dd_r": 9.0,
+          "median_fill_delay_sec": 88.5815,
+          "day_ci95_r_per_signal": [
+            -0.21029623804981062,
+            0.3087297904198912
+          ]
+        }
+      },
+      "D1.00_E10M": {
+        "depth_atr": 1.0,
+        "expiry_min": 10,
+        "full": {
+          "signals": 279,
+          "filled": 179,
+          "fill_rate_pct": 64.15770609318996,
+          "tp": 31,
+          "sl": 112,
+          "timeout": 36,
+          "ev_r_per_signal": 0.051077564787284896,
+          "ev_r_per_filled": 0.07961251718241613,
+          "wr_filled_pct": 34.63687150837989,
+          "pf": 1.125265330125693,
+          "max_dd_r": 14.141140882484155,
+          "median_fill_delay_sec": 108.904,
+          "day_ci95_r_per_signal": [
+            -0.09611548380756113,
+            0.20686226005400454
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 121,
+          "fill_rate_pct": 62.05128205128205,
+          "tp": 22,
+          "sl": 74,
+          "timeout": 25,
+          "ev_r_per_signal": 0.06461972970850385,
+          "ev_r_per_filled": 0.10413923382775413,
+          "wr_filled_pct": 37.1900826446281,
+          "pf": 1.1675315279007286,
+          "max_dd_r": 8.141140882484155,
+          "median_fill_delay_sec": 108.456,
+          "day_ci95_r_per_signal": [
+            -0.09999501379348498,
+            0.24164829269425023
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 58,
+          "fill_rate_pct": 69.04761904761905,
+          "tp": 9,
+          "sl": 38,
+          "timeout": 11,
+          "ev_r_per_signal": 0.019640396220169463,
+          "ev_r_per_filled": 0.028444711767141983,
+          "wr_filled_pct": 29.310344827586203,
+          "pf": 1.0427974557504138,
+          "max_dd_r": 10.0,
+          "median_fill_delay_sec": 111.456,
+          "day_ci95_r_per_signal": [
+            -0.27586084809035033,
+            0.3332150962153553
+          ]
+        }
+      },
+      "D1.00_E15M": {
+        "depth_atr": 1.0,
+        "expiry_min": 15,
+        "full": {
+          "signals": 279,
+          "filled": 194,
+          "fill_rate_pct": 69.53405017921148,
+          "tp": 31,
+          "sl": 121,
+          "timeout": 42,
+          "ev_r_per_signal": 0.03678703988877388,
+          "ev_r_per_filled": 0.052905072829731496,
+          "wr_filled_pct": 35.051546391752574,
+          "pf": 1.0836044262940898,
+          "max_dd_r": 14.355287987335307,
+          "median_fill_delay_sec": 119.1055,
+          "day_ci95_r_per_signal": [
+            -0.10974212471739501,
+            0.18669456951730934
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 129,
+          "fill_rate_pct": 66.15384615384615,
+          "tp": 22,
+          "sl": 79,
+          "timeout": 28,
+          "ev_r_per_signal": 0.04920258325503541,
+          "ev_r_per_filled": 0.07437599794365815,
+          "wr_filled_pct": 37.2093023255814,
+          "pf": 1.1196101707878374,
+          "max_dd_r": 7.66636931311316,
+          "median_fill_delay_sec": 114.009,
+          "day_ci95_r_per_signal": [
+            -0.11797166690022941,
+            0.2288880578158459
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 65,
+          "fill_rate_pct": 77.38095238095238,
+          "tp": 9,
+          "sl": 42,
+          "timeout": 14,
+          "ev_r_per_signal": 0.007965242788523917,
+          "ev_r_per_filled": 0.01029354452670786,
+          "wr_filled_pct": 30.76923076923077,
+          "pf": 1.0157249885950959,
+          "max_dd_r": 10.192483776924977,
+          "median_fill_delay_sec": 148.053,
+          "day_ci95_r_per_signal": [
+            -0.2798650618906461,
+            0.28160105950058273
+          ]
+        }
+      },
+      "D1.25_E3M": {
+        "depth_atr": 1.25,
+        "expiry_min": 3,
+        "full": {
+          "signals": 279,
+          "filled": 86,
+          "fill_rate_pct": 30.824372759856633,
+          "tp": 16,
+          "sl": 56,
+          "timeout": 14,
+          "ev_r_per_signal": 0.015823043368900797,
+          "ev_r_per_filled": 0.05133289651073629,
+          "wr_filled_pct": 32.55813953488372,
+          "pf": 1.077733730617215,
+          "max_dd_r": 12.534456908517306,
+          "median_fill_delay_sec": 104.11,
+          "day_ci95_r_per_signal": [
+            -0.062459573148065106,
+            0.10028775413861198
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 62,
+          "fill_rate_pct": 31.794871794871792,
+          "tp": 9,
+          "sl": 40,
+          "timeout": 13,
+          "ev_r_per_signal": -0.011655790350532559,
+          "ev_r_per_filled": -0.036659340618610474,
+          "wr_filled_pct": 32.25806451612903,
+          "pf": 0.9442808151707369,
+          "max_dd_r": 9.534456908517306,
+          "median_fill_delay_sec": 102.5355,
+          "day_ci95_r_per_signal": [
+            -0.09042608826914833,
+            0.06943275041059559
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 24,
+          "fill_rate_pct": 28.57142857142857,
+          "tp": 7,
+          "sl": 16,
+          "timeout": 1,
+          "ev_r_per_signal": 0.07961319307472821,
+          "ev_r_per_filled": 0.27864617576154876,
+          "wr_filled_pct": 33.33333333333333,
+          "pf": 1.4179692636423231,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 109.80449999999999,
+          "day_ci95_r_per_signal": [
+            -0.10347241443111871,
+            0.2728761868523187
+          ]
+        }
+      },
+      "D1.25_E5M": {
+        "depth_atr": 1.25,
+        "expiry_min": 5,
+        "full": {
+          "signals": 279,
+          "filled": 114,
+          "fill_rate_pct": 40.86021505376344,
+          "tp": 20,
+          "sl": 75,
+          "timeout": 19,
+          "ev_r_per_signal": 0.009458877256580442,
+          "ev_r_per_filled": 0.02314935749636795,
+          "wr_filled_pct": 31.57894736842105,
+          "pf": 1.0347867852499784,
+          "max_dd_r": 11.071230585424303,
+          "median_fill_delay_sec": 120.608,
+          "day_ci95_r_per_signal": [
+            -0.08021546073948178,
+            0.10117855077430638
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 82,
+          "fill_rate_pct": 42.05128205128205,
+          "tp": 13,
+          "sl": 52,
+          "timeout": 17,
+          "ev_r_per_signal": 0.015501277547349115,
+          "ev_r_per_filled": 0.03686279416747656,
+          "wr_filled_pct": 34.146341463414636,
+          "pf": 1.057258059638834,
+          "max_dd_r": 6.792776804278067,
+          "median_fill_delay_sec": 119.93350000000001,
+          "day_ci95_r_per_signal": [
+            -0.07601967876714466,
+            0.11653793440721202
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 32,
+          "fill_rate_pct": 38.095238095238095,
+          "tp": 7,
+          "sl": 23,
+          "timeout": 2,
+          "ev_r_per_signal": -0.004568123418418259,
+          "ev_r_per_filled": -0.0119913239733479,
+          "wr_filled_pct": 25.0,
+          "pf": 0.9833679280467356,
+          "max_dd_r": 8.31249178172283,
+          "median_fill_delay_sec": 124.6585,
+          "day_ci95_r_per_signal": [
+            -0.20117217406871593,
+            0.20330374661809741
+          ]
+        }
+      },
+      "D1.25_E10M": {
+        "depth_atr": 1.25,
+        "expiry_min": 10,
+        "full": {
+          "signals": 279,
+          "filled": 152,
+          "fill_rate_pct": 54.48028673835126,
+          "tp": 25,
+          "sl": 99,
+          "timeout": 28,
+          "ev_r_per_signal": -0.00223818066262457,
+          "ev_r_per_filled": -0.004108239505738529,
+          "wr_filled_pct": 30.263157894736842,
+          "pf": 0.9938176757825055,
+          "max_dd_r": 14.938091393091245,
+          "median_fill_delay_sec": 150.00549999999998,
+          "day_ci95_r_per_signal": [
+            -0.13096539601358653,
+            0.13097053497369598
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 105,
+          "fill_rate_pct": 53.84615384615385,
+          "tp": 16,
+          "sl": 66,
+          "timeout": 23,
+          "ev_r_per_signal": -0.003797196305700511,
+          "ev_r_per_filled": -0.00705193599630097,
+          "wr_filled_pct": 32.38095238095238,
+          "pf": 0.9890974414067184,
+          "max_dd_r": 9.904654181793834,
+          "median_fill_delay_sec": 145.355,
+          "day_ci95_r_per_signal": [
+            -0.12949018354343816,
+            0.14295847666976136
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 47,
+          "fill_rate_pct": 55.952380952380956,
+          "tp": 9,
+          "sl": 33,
+          "timeout": 5,
+          "ev_r_per_signal": 0.0013809627945159967,
+          "ev_r_per_filled": 0.002468103717858396,
+          "wr_filled_pct": 25.53191489361702,
+          "pf": 1.0035055600526679,
+          "max_dd_r": 12.31249178172283,
+          "median_fill_delay_sec": 177.457,
+          "day_ci95_r_per_signal": [
+            -0.3082489547190052,
+            0.33650842313032986
+          ]
+        }
+      },
+      "D1.25_E15M": {
+        "depth_atr": 1.25,
+        "expiry_min": 15,
+        "full": {
+          "signals": 279,
+          "filled": 170,
+          "fill_rate_pct": 60.93189964157706,
+          "tp": 25,
+          "sl": 112,
+          "timeout": 33,
+          "ev_r_per_signal": -0.034119896158285014,
+          "ev_r_per_filled": -0.0559967707538913,
+          "wr_filled_pct": 30.0,
+          "pf": 0.9165005052565803,
+          "max_dd_r": 18.033866309059793,
+          "median_fill_delay_sec": 176.3315,
+          "day_ci95_r_per_signal": [
+            -0.16665092825971656,
+            0.10364042049086027
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 115,
+          "fill_rate_pct": 58.97435897435898,
+          "tp": 16,
+          "sl": 73,
+          "timeout": 26,
+          "ev_r_per_signal": -0.02875367508487689,
+          "ev_r_per_filled": -0.04875623166566084,
+          "wr_filled_pct": 32.17391304347826,
+          "pf": 0.9251561721248955,
+          "max_dd_r": 12.499702646446472,
+          "median_fill_delay_sec": 157.06,
+          "day_ci95_r_per_signal": [
+            -0.16392791114275093,
+            0.12449251317903968
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 55,
+          "fill_rate_pct": 65.47619047619048,
+          "tp": 9,
+          "sl": 39,
+          "timeout": 7,
+          "ev_r_per_signal": -0.04657719507869672,
+          "ev_r_per_filled": -0.07113607975655496,
+          "wr_filled_pct": 25.454545454545453,
+          "pf": 0.8999122447989097,
+          "max_dd_r": 14.31249178172283,
+          "median_fill_delay_sec": 240.158,
+          "day_ci95_r_per_signal": [
+            -0.3603652482248522,
+            0.2660106730036541
+          ]
+        }
+      },
+      "D1.50_E3M": {
+        "depth_atr": 1.5,
+        "expiry_min": 3,
+        "full": {
+          "signals": 279,
+          "filled": 63,
+          "fill_rate_pct": 22.58064516129032,
+          "tp": 12,
+          "sl": 43,
+          "timeout": 8,
+          "ev_r_per_signal": 0.014653043757699222,
+          "ev_r_per_filled": 0.0648920509269537,
+          "wr_filled_pct": 30.158730158730158,
+          "pf": 1.095039144526749,
+          "max_dd_r": 14.161048169996612,
+          "median_fill_delay_sec": 116.565,
+          "day_ci95_r_per_signal": [
+            -0.07447922681179611,
+            0.10972166876494036
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 42,
+          "fill_rate_pct": 21.53846153846154,
+          "tp": 5,
+          "sl": 31,
+          "timeout": 6,
+          "ev_r_per_signal": -0.04728845148904526,
+          "ev_r_per_filled": -0.21955352477056728,
+          "wr_filled_pct": 23.809523809523807,
+          "pf": 0.7026933669007993,
+          "max_dd_r": 14.161048169996612,
+          "median_fill_delay_sec": 105.2345,
+          "day_ci95_r_per_signal": [
+            -0.14216154012906027,
+            0.04478247393693347
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 21,
+          "fill_rate_pct": 25.0,
+          "tp": 7,
+          "sl": 12,
+          "timeout": 2,
+          "ev_r_per_signal": 0.1584458005804989,
+          "ev_r_per_filled": 0.6337832023219956,
+          "wr_filled_pct": 42.857142857142854,
+          "pf": 2.1091206040634924,
+          "max_dd_r": 4.0,
+          "median_fill_delay_sec": 121.208,
+          "day_ci95_r_per_signal": [
+            -0.029567097311989282,
+            0.3879012516639758
+          ]
+        }
+      },
+      "D1.50_E5M": {
+        "depth_atr": 1.5,
+        "expiry_min": 5,
+        "full": {
+          "signals": 279,
+          "filled": 87,
+          "fill_rate_pct": 31.182795698924732,
+          "tp": 15,
+          "sl": 60,
+          "timeout": 12,
+          "ev_r_per_signal": -0.0040514308686076346,
+          "ev_r_per_filled": -0.012992519682086541,
+          "wr_filled_pct": 29.88505747126437,
+          "pf": 0.9811658535992318,
+          "max_dd_r": 15.611415923883538,
+          "median_fill_delay_sec": 128.257,
+          "day_ci95_r_per_signal": [
+            -0.09369407104468337,
+            0.09567699897024554
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 58,
+          "fill_rate_pct": 29.743589743589745,
+          "tp": 7,
+          "sl": 42,
+          "timeout": 9,
+          "ev_r_per_signal": -0.059155038678696786,
+          "ev_r_per_filled": -0.1988833196956185,
+          "wr_filled_pct": 25.862068965517242,
+          "pf": 0.7254558757459837,
+          "max_dd_r": 15.611415923883538,
+          "median_fill_delay_sec": 126.46000000000001,
+          "day_ci95_r_per_signal": [
+            -0.15676128511827575,
+            0.047406979080309115
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 29,
+          "fill_rate_pct": 34.523809523809526,
+          "tp": 8,
+          "sl": 18,
+          "timeout": 3,
+          "ev_r_per_signal": 0.1238676586905279,
+          "ev_r_per_filled": 0.35878908034497736,
+          "wr_filled_pct": 37.93103448275862,
+          "pf": 1.5780490738891304,
+          "max_dd_r": 6.0,
+          "median_fill_delay_sec": 145.956,
+          "day_ci95_r_per_signal": [
+            -0.07521940030496867,
+            0.3550032537348852
+          ]
+        }
+      },
+      "D1.50_E10M": {
+        "depth_atr": 1.5,
+        "expiry_min": 10,
+        "full": {
+          "signals": 279,
+          "filled": 127,
+          "fill_rate_pct": 45.51971326164875,
+          "tp": 21,
+          "sl": 85,
+          "timeout": 21,
+          "ev_r_per_signal": -0.017776405773597136,
+          "ev_r_per_filled": -0.03905210402231183,
+          "wr_filled_pct": 29.92125984251969,
+          "pf": 0.9423818666764521,
+          "max_dd_r": 20.393975903873056,
+          "median_fill_delay_sec": 181.954,
+          "day_ci95_r_per_signal": [
+            -0.13363458126890432,
+            0.10435253681469864
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 87,
+          "fill_rate_pct": 44.61538461538462,
+          "tp": 13,
+          "sl": 59,
+          "timeout": 15,
+          "ev_r_per_signal": -0.03919813896832978,
+          "ev_r_per_filled": -0.08785789768763572,
+          "wr_filled_pct": 28.735632183908045,
+          "pf": 0.8718740477283925,
+          "max_dd_r": 18.11159143642329,
+          "median_fill_delay_sec": 182.857,
+          "day_ci95_r_per_signal": [
+            -0.18367593161375878,
+            0.11149349438343459
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 40,
+          "fill_rate_pct": 47.61904761904761,
+          "tp": 8,
+          "sl": 26,
+          "timeout": 6,
+          "ev_r_per_signal": 0.03195261771417506,
+          "ev_r_per_filled": 0.06710049719976766,
+          "wr_filled_pct": 32.5,
+          "pf": 1.1015898613786759,
+          "max_dd_r": 7.0,
+          "median_fill_delay_sec": 179.187,
+          "day_ci95_r_per_signal": [
+            -0.1741085477844504,
+            0.2618822099666489
+          ]
+        }
+      },
+      "D1.50_E15M": {
+        "depth_atr": 1.5,
+        "expiry_min": 15,
+        "full": {
+          "signals": 279,
+          "filled": 152,
+          "fill_rate_pct": 54.48028673835126,
+          "tp": 24,
+          "sl": 99,
+          "timeout": 29,
+          "ev_r_per_signal": -0.005331819810606988,
+          "ev_r_per_filled": -0.009786695573416784,
+          "wr_filled_pct": 32.23684210526316,
+          "pf": 0.9851357227812119,
+          "max_dd_r": 15.850956205608977,
+          "median_fill_delay_sec": 235.958,
+          "day_ci95_r_per_signal": [
+            -0.12872505793361788,
+            0.12319081661464193
+          ]
+        },
+        "early": {
+          "signals": 195,
+          "filled": 101,
+          "fill_rate_pct": 51.7948717948718,
+          "tp": 14,
+          "sl": 66,
+          "timeout": 21,
+          "ev_r_per_signal": -0.028084336857095212,
+          "ev_r_per_filled": -0.054222234526074935,
+          "wr_filled_pct": 31.683168316831683,
+          "pf": 0.9178416630116409,
+          "max_dd_r": 15.03802967391483,
+          "median_fill_delay_sec": 241.807,
+          "day_ci95_r_per_signal": [
+            -0.17237606932240399,
+            0.11406711989786829
+          ]
+        },
+        "late": {
+          "signals": 84,
+          "filled": 51,
+          "fill_rate_pct": 60.71428571428571,
+          "tp": 10,
+          "sl": 33,
+          "timeout": 8,
+          "ev_r_per_signal": 0.04748652333302639,
+          "ev_r_per_filled": 0.07821309725439636,
+          "wr_filled_pct": 33.33333333333333,
+          "pf": 1.1193551602423168,
+          "max_dd_r": 9.0,
+          "median_fill_delay_sec": 233.258,
+          "day_ci95_r_per_signal": [
+            -0.20703541113033758,
+            0.31311782009799105
+          ]
+        }
+      }
+    }
+  },
+  "governance": {
+    "gc_signal_changed": false,
+    "exit_swept": false,
+    "limit_grid_bounded_and_preregistered": true,
+    "independent_oos": false
+  }
+}
