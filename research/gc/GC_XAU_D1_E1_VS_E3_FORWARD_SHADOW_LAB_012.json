@@ -1,0 +1,8 @@
+{
+  "lab": "GC_XAU_D1_E1_VS_E3_FORWARD_SHADOW_LAB_012",
+  "status": "INSUFFICIENT_FRESH_FORWARD_SAMPLE",
+  "reason": "Ledger schema is frozen, but no post-freeze shadow observations have been appended yet.",
+  "freeze_commit": "a8c74b568b85d6a4d195f6558860256a72a7319b",
+  "freeze_utc": "2026-09-16T19:29:45+00:00",
+  "governance": "forward-only; no historical retuning; shadow only"
+}
