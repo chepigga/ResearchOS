@@ -1,0 +1,47 @@
+name: GC XAU Limit D1 E3 Dependency Monte Carlo LAB010
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_limit_d1_e3_dependency_monte_carlo_lab_010.py'
+      - 'research/gc/GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010_PREREG.md'
+      - '.github/workflows/gc_xau_limit_d1_e3_dependency_monte_carlo_lab_010.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  robustness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install numpy pandas
+
+      - name: Run preregistered LAB010 dependency and Monte Carlo
+        run: python research/gc/gc_xau_limit_d1_e3_dependency_monte_carlo_lab_010.py
+
+      - name: Commit LAB010 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010.json \
+                  research/gc/GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010.md \
+                  research/gc/GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010_DAYS.csv \
+                  research/gc/GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010_BOOTSTRAP.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record GC XAU D1 E3 dependency Monte Carlo LAB010'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
