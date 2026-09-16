@@ -1,0 +1,1 @@
+record_version,logger_version,freeze_commit,symbol,bar_time_utc_ms,decision_time_utc_ms,warmup_ok,open,high,low,close,buy_vol,sell_vol,volume,delta,delta_frac,atr14,body_atr,close_pos,q90_delta,q75_buy,prior20_high,a_buy,signal_bool,raw_tick_count,exclusive_tick_count,dual_flag_count,excluded_flag_count,void_record
