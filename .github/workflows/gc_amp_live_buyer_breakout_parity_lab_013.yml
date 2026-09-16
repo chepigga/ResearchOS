@@ -1,0 +1,83 @@
+name: GC AMP Live Buyer Breakout Parity LAB013
+
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot_url:
+        description: 'URL to AMP_GC_LIVE_SNAPSHOTS.csv or .zip'
+        required: false
+        type: string
+      raw_ticks_url:
+        description: 'URL to AMP raw tick CSV or ZIP with time_msc/last/volume/volume_real/is_buy/is_sell'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install numpy pandas
+
+      - name: Prepare LAB013 inputs
+        shell: bash
+        env:
+          SNAPSHOT_URL: ${{ inputs.snapshot_url }}
+          RAW_URL: ${{ inputs.raw_ticks_url }}
+        run: |
+          set -euo pipefail
+          mkdir -p research/gc/_lab013_inputs
+          if [[ -n "${SNAPSHOT_URL:-}" ]]; then
+            ext="csv"
+            [[ "$SNAPSHOT_URL" == *.zip* ]] && ext="zip"
+            curl -fL --retry 3 "$SNAPSHOT_URL" -o "research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS.${ext}"
+            if [[ "$ext" == "zip" ]]; then
+              mv "research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS.zip" "research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS_INPUT.zip"
+            fi
+          fi
+          if [[ -n "${RAW_URL:-}" ]]; then
+            ext="csv"
+            [[ "$RAW_URL" == *.zip* ]] && ext="zip"
+            curl -fL --retry 3 "$RAW_URL" -o "research/gc/_lab013_inputs/AMP_GC_LIVE_RAW_TICKS.${ext}"
+          fi
+
+      - name: Run LAB013 evaluator
+        shell: bash
+        run: |
+          set -euo pipefail
+          SNAP="research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS.csv"
+          RAW="research/gc/_lab013_inputs/AMP_GC_LIVE_RAW_TICKS.csv"
+          [[ -f research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS_INPUT.zip ]] && SNAP="research/gc/_lab013_inputs/AMP_GC_LIVE_SNAPSHOTS_INPUT.zip"
+          [[ -f research/gc/_lab013_inputs/AMP_GC_LIVE_RAW_TICKS.zip ]] && RAW="research/gc/_lab013_inputs/AMP_GC_LIVE_RAW_TICKS.zip"
+          python research/gc/gc_amp_live_buyer_breakout_parity_lab_013.py --snapshot "$SNAP" --raw "$RAW"
+
+      - name: Commit LAB013 report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for f in \
+            research/gc/GC_AMP_LIVE_BUYER_BREAKOUT_PARITY_LAB_013.json \
+            research/gc/GC_AMP_LIVE_BUYER_BREAKOUT_PARITY_LAB_013.md \
+            research/gc/GC_AMP_LIVE_BUYER_BREAKOUT_PARITY_LAB_013_PAIRS.csv; do
+            [[ -f "$f" ]] && git add "$f"
+          done
+          if git diff --cached --quiet; then
+            echo 'No LAB013 report changes'
+          else
+            git commit -m 'Record GC AMP live buyer breakout parity LAB013'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
