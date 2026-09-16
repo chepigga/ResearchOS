@@ -1,0 +1,74 @@
+{
+  "lab": "GC_XAU_LIMIT_D1_E3_DEPENDENCY_MONTE_CARLO_LAB_010",
+  "status": "HISTORICAL_ROBUSTNESS_FAIL_NOT_OOS",
+  "frozen_candidate": {
+    "candidate": "D1.00_E3M",
+    "extra_cost_r_per_fill": 0.05
+  },
+  "detail": {
+    "COMMON_CLOCK": {
+      "signals": 245,
+      "observed_ev_r_per_signal": 0.07519208705708925,
+      "observed_sum_r": 18.422061328986867,
+      "observed_max_dd_r": 8.400000000000006,
+      "days": 30,
+      "weeks": 6,
+      "positive_days": 13,
+      "positive_weeks": 4,
+      "max_positive_day_share": 0.21519413134679108,
+      "leave_one_day_out_min_ev": 0.04820174780498394,
+      "leave_one_day_out_max_ev": 0.09750888503873649,
+      "leave_one_week_out_min_ev": 0.06145755172504489,
+      "leave_one_week_out_max_ev": 0.09341402029223829,
+      "bootstrap_p_ev_gt_0": 0.9415,
+      "bootstrap_ev_median": 0.07412367021923327,
+      "bootstrap_ev_ci95": [
+        -0.018558921922603156,
+        0.17667657079255197
+      ],
+      "bootstrap_dd_median_r": 8.135827630106075,
+      "bootstrap_dd_p95_r": 14.74030864026828,
+      "bootstrap_dd_p99_r": 18.742879556362155,
+      "bootstrap_dd_p95_pct_at_025risk": 3.68507716006707,
+      "bootstrap_dd_p95_pct_at_050risk": 7.37015432013414
+    },
+    "AMP_ALL": {
+      "signals": 279,
+      "observed_ev_r_per_signal": 0.07881266887000138,
+      "observed_sum_r": 21.988734614730383,
+      "observed_max_dd_r": 8.400000000000006,
+      "days": 33,
+      "weeks": 7,
+      "positive_days": 13,
+      "positive_weeks": 5,
+      "max_positive_day_share": 0.17608077983281722,
+      "leave_one_day_out_min_ev": 0.05536834208146743,
+      "leave_one_day_out_max_ev": 0.09845388952906158,
+      "leave_one_week_out_min_ev": 0.06704865306837711,
+      "leave_one_week_out_max_ev": 0.09545625917873471,
+      "bootstrap_p_ev_gt_0": 0.9478,
+      "bootstrap_ev_median": 0.07695950839017199,
+      "bootstrap_ev_ci95": [
+        -0.01591333900746769,
+        0.17791555519859353
+      ],
+      "bootstrap_dd_median_r": 8.831066525690051,
+      "bootstrap_dd_p95_r": 16.30075285694991,
+      "bootstrap_dd_p99_r": 20.991229473659335,
+      "bootstrap_dd_p95_pct_at_025risk": 4.075188214237477,
+      "bootstrap_dd_p95_pct_at_050risk": 8.150376428474955
+    }
+  },
+  "gates": {
+    "common_boot_p_ev_gt0_ge80pct": true,
+    "amp_boot_p_ev_gt0_ge80pct": true,
+    "common_loo_week_min_ev_pos": true,
+    "amp_loo_week_min_ev_pos": true,
+    "common_max_positive_day_share_lt50pct": true,
+    "common_boot_p95_dd_050risk_lt5pct": false
+  },
+  "governance": {
+    "parameter_search": false,
+    "independent_oos": false
+  }
+}
