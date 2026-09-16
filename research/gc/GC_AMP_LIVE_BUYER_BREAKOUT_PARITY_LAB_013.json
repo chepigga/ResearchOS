@@ -1,0 +1,9 @@
+{
+  "lab": "GC_AMP_LIVE_BUYER_BREAKOUT_PARITY_LAB_013",
+  "sensor": "BUYER_BREAKOUT_LONG_001",
+  "status": "INSUFFICIENT_FRESH_PARITY_SAMPLE",
+  "reason": "Realtime post-freeze snapshot and matching raw AMP/CQG tick files have not yet been supplied to the frozen LAB013 evaluator.",
+  "freeze_commit": "80334cb9550682a1d2e440f73ee4b70033f052e9",
+  "freeze_utc": "2026-09-16T21:06:12+00:00",
+  "governance": "forward-only implementation parity; no retuning"
+}
