@@ -1,0 +1,41 @@
+name: GC XAU LONG Demo Readiness LAB018
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_long_demo_readiness_lab_018.py'
+      - 'research/gc/GC_XAU_LONG_DEMO_READINESS_FREEZE_001.md'
+      - 'research/gc/GC_XAU_LONG_DEMO_EXECUTION_SPEC_001.json'
+      - '.github/workflows/gc_xau_long_demo_readiness_lab_018.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_xau_long_demo_readiness_lab_018.py
+      - name: Run LAB018
+        run: python research/gc/gc_xau_long_demo_readiness_lab_018.py
+      - name: Commit LAB018 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_LONG_DEMO_READINESS_LAB_018.json \
+                  research/gc/GC_XAU_LONG_DEMO_READINESS_LAB_018.md
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record GC XAU LONG demo readiness LAB018'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
