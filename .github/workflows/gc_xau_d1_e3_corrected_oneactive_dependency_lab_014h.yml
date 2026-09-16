@@ -1,0 +1,45 @@
+name: GC XAU Corrected One-Active Dependency LAB014H
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_d1_e3_corrected_oneactive_dependency_lab_014h.py'
+      - 'research/gc/GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H_PREREG.md'
+      - '.github/workflows/gc_xau_d1_e3_corrected_oneactive_dependency_lab_014h.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_xau_d1_e3_corrected_oneactive_dependency_lab_014h.py
+      - name: Run LAB014H
+        run: python research/gc/gc_xau_d1_e3_corrected_oneactive_dependency_lab_014h.py
+      - name: Commit results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H.json \
+                  research/gc/GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H.md \
+                  research/gc/GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H_SEQUENCES.csv \
+                  research/gc/GC_XAU_D1_E3_CORRECTED_ONEACTIVE_DEPENDENCY_LAB_014H_BOOTSTRAP.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record corrected one-active robustness LAB014H'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
