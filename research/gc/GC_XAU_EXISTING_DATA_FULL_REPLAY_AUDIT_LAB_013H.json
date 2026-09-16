@@ -1,0 +1,415 @@
+{
+  "lab": "GC_XAU_EXISTING_DATA_FULL_REPLAY_AUDIT_LAB_013H",
+  "status": "HISTORICAL_REPLAY_PASS",
+  "governance": "Historical internal reproducibility only; not independent OOS.",
+  "amp_source_sha": "81d675597368a9f6c78eee726ed547737366ffd8d8e54aa976bce50111db752b",
+  "amp_raw_audit": {
+    "raw_rows": 3737579,
+    "dual_flag_rows": 5609,
+    "neither_flag_rows": 0,
+    "positive_trade_rows": 3737579,
+    "excluded_direction_rows_after_price_volume_filter": 5609,
+    "exclusive_direction_rows": 3731970,
+    "reconstructed_m1_bars": 38464
+  },
+  "gc_parity": {
+    "canonical_bars": 38464,
+    "independent_bars": 38464,
+    "paired_bars": 38464,
+    "canonical_only_bars": 0,
+    "independent_only_bars": 0,
+    "numeric": {
+      "open": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "high": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "low": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "close": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "buy_vol": {
+        "tolerance": 1e-08,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "sell_vol": {
+        "tolerance": 1e-08,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "delta_frac": {
+        "tolerance": 1e-12,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "atr14": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "body_atr": {
+        "tolerance": 1e-12,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "close_pos": {
+        "tolerance": 1e-12,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "q90_delta": {
+        "tolerance": 1e-12,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "q75_buy": {
+        "tolerance": 1e-08,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      },
+      "prior20_high": {
+        "tolerance": 1e-10,
+        "mismatch": 0,
+        "max_abs_error": 0.0
+      }
+    },
+    "a_buy_mismatch": 0,
+    "a_buy_true_canonical": 1184,
+    "a_buy_true_independent": 1184,
+    "signal_bool_mismatch": 0,
+    "signal_bool_true_canonical": 281,
+    "signal_bool_true_independent": 281
+  },
+  "lab004_reproduction": {
+    "lab004_amp_events": 281,
+    "replay_amp_events": 281,
+    "timestamp_matches": 281,
+    "lab004_only": 0,
+    "replay_only": 0,
+    "returns": {
+      "5": {
+        "paired_finite": 281,
+        "max_abs_error": 1.7763568394002505e-15,
+        "mismatch_gt_1e-12": 0
+      },
+      "15": {
+        "paired_finite": 279,
+        "max_abs_error": 1.7763568394002505e-15,
+        "mismatch_gt_1e-12": 0
+      }
+    }
+  },
+  "xau_raw_audit": {
+    "nonempty_files": 32,
+    "quote_valid_rows_before_dedup": 8236717,
+    "rows_after_price_dedup": 8236717,
+    "first_time_msc": 1785719100005,
+    "last_time_msc": 1789516199707,
+    "per_file_monotonic": true,
+    "crossed_quote_rows": 0,
+    "expected": {
+      "files": 32,
+      "quote_valid_rows": 8236717,
+      "first": 1785719100005,
+      "last": 1789516199707
+    }
+  },
+  "clock_calibration": {
+    "best_offset_min": 180,
+    "grid": [
+      {
+        "offset_min": -240,
+        "n_common": 34057,
+        "corr": -0.01093676413305754
+      },
+      {
+        "offset_min": -210,
+        "n_common": 34237,
+        "corr": 0.003022940567089117
+      },
+      {
+        "offset_min": -180,
+        "n_common": 34415,
+        "corr": -0.0020362493153184254
+      },
+      {
+        "offset_min": -150,
+        "n_common": 34595,
+        "corr": 0.003966758760200496
+      },
+      {
+        "offset_min": -120,
+        "n_common": 34775,
+        "corr": -0.002091154087599686
+      },
+      {
+        "offset_min": -90,
+        "n_common": 34956,
+        "corr": 0.00028026453381935635
+      },
+      {
+        "offset_min": -60,
+        "n_common": 35137,
+        "corr": 0.0005916726422294216
+      },
+      {
+        "offset_min": -30,
+        "n_common": 35320,
+        "corr": -0.007819398676353666
+      },
+      {
+        "offset_min": 0,
+        "n_common": 35536,
+        "corr": -0.004495280763716021
+      },
+      {
+        "offset_min": 30,
+        "n_common": 35754,
+        "corr": 0.006564094877446979
+      },
+      {
+        "offset_min": 60,
+        "n_common": 35966,
+        "corr": -0.0018961525913858185
+      },
+      {
+        "offset_min": 90,
+        "n_common": 36172,
+        "corr": 0.005779134522590482
+      },
+      {
+        "offset_min": 120,
+        "n_common": 36600,
+        "corr": 0.005080567955132775
+      },
+      {
+        "offset_min": 150,
+        "n_common": 37432,
+        "corr": 0.009873981979638121
+      },
+      {
+        "offset_min": 180,
+        "n_common": 38000,
+        "corr": 0.9869174815478382
+      },
+      {
+        "offset_min": 210,
+        "n_common": 37302,
+        "corr": 0.01087332304651788
+      },
+      {
+        "offset_min": 240,
+        "n_common": 36470,
+        "corr": 0.004783242028328904
+      }
+    ]
+  },
+  "executable_amp_events": 279,
+  "d1_e3_replay": {
+    "original_signals": 279,
+    "accepted_signals": 241,
+    "fills": 105,
+    "fill_rate_original_pct": 37.634408602150536,
+    "ev_r_per_original_signal": 0.07881266887000081,
+    "ev_r_per_accepted_signal": 0.09123956271672293,
+    "ev_r_per_fill": 0.20941652014028794,
+    "pf": 1.3357095386997284,
+    "max_dd_r": 8.400000000000006,
+    "early_ev_r_per_original_signal": 0.08340800682523203,
+    "late_ev_r_per_original_signal": 0.06814492004535692
+  },
+  "d1_e1_historical_diagnostic": {
+    "original_signals": 279,
+    "accepted_signals": 268,
+    "fills": 51,
+    "fill_rate_original_pct": 18.27956989247312,
+    "ev_r_per_original_signal": 0.060878794319955166,
+    "ev_r_per_accepted_signal": 0.06337755080323691,
+    "ev_r_per_fill": 0.33304281598563706,
+    "pf": 1.5505859808821745,
+    "max_dd_r": 4.200000000000003,
+    "early_ev_r_per_original_signal": 0.09340688237772846,
+    "late_ev_r_per_original_signal": -0.014632838671304235
+  },
+  "lab009_d1e3_comparison": {
+    "original_signals": {
+      "frozen": 279,
+      "replay": 279,
+      "diff": 0,
+      "pass": true
+    },
+    "accepted_signals": {
+      "frozen": 241,
+      "replay": 241,
+      "diff": 0,
+      "pass": true
+    },
+    "fills": {
+      "frozen": 105,
+      "replay": 105,
+      "diff": 0,
+      "pass": true
+    },
+    "fill_rate_original_pct": {
+      "frozen": 37.634408602150536,
+      "replay": 37.634408602150536,
+      "diff": 0.0,
+      "pass": true
+    },
+    "ev_r_per_original_signal": {
+      "frozen": 0.07881266887000138,
+      "replay": 0.07881266887000081,
+      "diff": -5.689893001203927e-16,
+      "pass": true
+    },
+    "ev_r_per_accepted_signal": {
+      "frozen": 0.09123956271672358,
+      "replay": 0.09123956271672293,
+      "diff": -6.522560269672795e-16,
+      "pass": true
+    },
+    "ev_r_per_fill": {
+      "frozen": 0.20941652014028936,
+      "replay": 0.20941652014028794,
+      "diff": -1.4155343563970746e-15,
+      "pass": true
+    },
+    "pf": {
+      "frozen": 1.3357095386997306,
+      "replay": 1.3357095386997284,
+      "diff": -2.220446049250313e-15,
+      "pass": true
+    },
+    "max_dd_r": {
+      "frozen": 8.400000000000006,
+      "replay": 8.400000000000006,
+      "diff": 0.0,
+      "pass": true
+    },
+    "early_ev_r_per_original_signal": {
+      "frozen": 0.08340800682523282,
+      "replay": 0.08340800682523203,
+      "diff": -7.91033905045424e-16,
+      "pass": true
+    },
+    "late_ev_r_per_original_signal": {
+      "frozen": 0.06814492004535692,
+      "replay": 0.06814492004535692,
+      "diff": 0.0,
+      "pass": true
+    },
+    "all_pass": true
+  },
+  "gates": {
+    "amp_sha_exact": true,
+    "gc_bar_timestamp_parity": true,
+    "gc_numeric_parity": true,
+    "gc_a_buy_parity": true,
+    "gc_signal_parity": true,
+    "lab004_event_timestamp_parity": true,
+    "lab004_return_parity": true,
+    "xau_frozen_inventory_exact": true,
+    "clock_offset_reproduced": true,
+    "lab009_d1e3_metrics_reproduced": true
+  },
+  "one_active_semantic_diagnostic": {
+    "issue": "LAB009 unfilled busy expiry used signal-bar left edge rather than actionable order-start clock",
+    "classification": "execution_semantic_defect_diagnostic_not_retuning",
+    "detail": {
+      "D1.00_E1M": {
+        "frozen_signal_left_edge_busy_clock": {
+          "original_signals": 279,
+          "accepted_signals": 268,
+          "fills": 51,
+          "fill_rate_original_pct": 18.27956989247312,
+          "ev_r_per_original_signal": 0.060878794319955166,
+          "ev_r_per_accepted_signal": 0.06337755080323691,
+          "ev_r_per_fill": 0.33304281598563706,
+          "pf": 1.5505859808821745,
+          "max_dd_r": 4.200000000000003,
+          "early_ev_r_per_original_signal": 0.09340688237772846,
+          "late_ev_r_per_original_signal": -0.014632838671304235
+        },
+        "corrected_order_start_busy_clock": {
+          "original_signals": 279,
+          "accepted_signals": 261,
+          "fills": 49,
+          "fill_rate_original_pct": 17.562724014336915,
+          "ev_r_per_original_signal": 0.06201141639603498,
+          "ev_r_per_accepted_signal": 0.06628806580265809,
+          "ev_r_per_fill": 0.3530854117243625,
+          "pf": 1.5805906219823567,
+          "max_dd_r": 4.587625544817293,
+          "early_ev_r_per_original_signal": 0.09502740319427341,
+          "late_ev_r_per_original_signal": -0.014632838671304235
+        },
+        "delta": {
+          "original_signals": 0,
+          "accepted_signals": -7,
+          "fills": -2,
+          "fill_rate_original_pct": -0.7168458781362048,
+          "ev_r_per_original_signal": 0.0011326220760798159,
+          "ev_r_per_accepted_signal": 0.0029105149994211738,
+          "ev_r_per_fill": 0.02004259573872541,
+          "pf": 0.030004641100182194,
+          "max_dd_r": 0.38762554481728984,
+          "early_ev_r_per_original_signal": 0.001620520816544957,
+          "late_ev_r_per_original_signal": 0.0
+        }
+      },
+      "D1.00_E3M": {
+        "frozen_signal_left_edge_busy_clock": {
+          "original_signals": 279,
+          "accepted_signals": 241,
+          "fills": 105,
+          "fill_rate_original_pct": 37.634408602150536,
+          "ev_r_per_original_signal": 0.07881266887000081,
+          "ev_r_per_accepted_signal": 0.09123956271672293,
+          "ev_r_per_fill": 0.20941652014028794,
+          "pf": 1.3357095386997284,
+          "max_dd_r": 8.400000000000006,
+          "early_ev_r_per_original_signal": 0.08340800682523203,
+          "late_ev_r_per_original_signal": 0.06814492004535692
+        },
+        "corrected_order_start_busy_clock": {
+          "original_signals": 279,
+          "accepted_signals": 237,
+          "fills": 103,
+          "fill_rate_original_pct": 36.91756272401434,
+          "ev_r_per_original_signal": 0.08633955059043093,
+          "ev_r_per_accepted_signal": 0.1016402304418997,
+          "ev_r_per_fill": 0.23387120985174975,
+          "pf": 1.3799527829165632,
+          "max_dd_r": 8.400000000000006,
+          "early_ev_r_per_original_signal": 0.0941772375944628,
+          "late_ev_r_per_original_signal": 0.06814492004535692
+        },
+        "delta": {
+          "original_signals": 0,
+          "accepted_signals": -4,
+          "fills": -2,
+          "fill_rate_original_pct": -0.7168458781361977,
+          "ev_r_per_original_signal": 0.0075268817204301175,
+          "ev_r_per_accepted_signal": 0.010400667725176768,
+          "ev_r_per_fill": 0.024454689711461808,
+          "pf": 0.04424324421683479,
+          "max_dd_r": 0.0,
+          "early_ev_r_per_original_signal": 0.010769230769230767,
+          "late_ev_r_per_original_signal": 0.0
+        }
+      }
+    }
+  }
+}
