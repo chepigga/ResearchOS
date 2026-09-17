@@ -103,7 +103,7 @@ def transfer_row(r, times, bids, asks, offset_min, atr_map, lt):
         if j is None or j < i:
             continue
         xask = float(asks[j])
-        diff = ebid - xask  # executable SHORT: sell Bid, buy back Ask
+        diff = ebid - xask
         out[f"exit_{h}m_ask"] = xask
         out[f"ret_{h}m_bps"] = diff / ebid * 10000.0
         if np.isfinite(atr) and atr > 0:
@@ -164,7 +164,6 @@ def main():
     summary = {feed: summarize_feed(ev[ev.feed.eq(feed)].copy()) for feed in sorted(ev.feed.unique())}
     rfeed = "RITHMIC_RAW"; afeed = "AMP_CQG_RAW_EXCLUSIVE"
 
-    # Exact-common selected GC seeds, counted once using Rithmic row where both feeds selected same seed_time.
     rs = set(ev[(ev.feed.eq(rfeed)) & ev.selected].seed_time)
     aps = set(ev[(ev.feed.eq(afeed)) & ev.selected].seed_time)
     common = rs & aps
@@ -226,8 +225,11 @@ def main():
             for h in HORIZONS:
                 s = summary.get(feed, {}).get(group, {}).get(str(h), {})
                 wr = s.get("wr_pct")
-                lines.append(f"| {feed} | {group} | {h}m | {s.get('n',0)} | {fnum(s.get('ev_bps'))} | {fnum(s.get('ev_atr'))} | {'NA' if wr is None else f'{wr:.1f}%'} |")
-    lines += ["", "## Exact-common selected subset", "", f"Common selected seed-times: **{len(common)}**; XAU 10m EV **{fnum(common_stats['10']['ev_bps'])} bps**; WR **{'NA' if common_stats['10']['wr_pct'] is None else f'{common_stats['10']['wr_pct']:.1f}%'}**.", "", "## Frozen gates", ""]
+                wr_txt = "NA" if wr is None else f"{wr:.1f}%"
+                lines.append(f"| {feed} | {group} | {h}m | {s.get('n',0)} | {fnum(s.get('ev_bps'))} | {fnum(s.get('ev_atr'))} | {wr_txt} |")
+    common_wr = common_stats["10"]["wr_pct"]
+    common_wr_txt = "NA" if common_wr is None else f"{common_wr:.1f}%"
+    lines += ["", "## Exact-common selected subset", "", f"Common selected seed-times: **{len(common)}**; XAU 10m EV **{fnum(common_stats['10']['ev_bps'])} bps**; WR **{common_wr_txt}**.", "", "## Frozen gates", ""]
     for k, v in gates.items():
         if k != "pass":
             lines.append(f"- {'PASS' if v else 'FAIL'} — `{k}`")
