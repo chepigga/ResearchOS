@@ -23,7 +23,7 @@ jobs:
           mkdir -p labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect
           cd labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect
           curl -L --fail --retry 3 -o BTCUSDT_sec.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
-          echo '067eb8571e69cc5ed1085436203cfc69fe5ead935c602555bcd472f0a740a8b2  BTCUSDT_sec.csv.zip' | sha256sum -c -
+          echo '067eb5716cd0f6b2268d988c3e12eca65cd2b271cc211f2b3ba9cbc60eece37a  BTCUSDT_sec.csv.zip' | sha256sum -c -
           unzip -l BTCUSDT_sec.csv.zip > ZIP_LIST.txt
           MEMBER=$(unzip -Z1 BTCUSDT_sec.csv.zip | head -n 1)
           unzip -p BTCUSDT_sec.csv.zip "$MEMBER" | head -n 6 > HEAD.txt || true
