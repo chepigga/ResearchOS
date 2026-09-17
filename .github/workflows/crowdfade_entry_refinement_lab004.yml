@@ -1,0 +1,40 @@
+name: crowdfade-entry-refinement-lab004
+on:
+  push:
+    branches: [lab/crowdfade-confirmation-entry-refinement-004]
+    paths:
+      - 'labs/CROWDFADE_CONFIRMATION_ENTRY_REFINEMENT_LAB_004/**'
+      - '.github/workflows/crowdfade_entry_refinement_lab004.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-confirmation-entry-refinement-004
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download frozen BTC release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p labs/CROWDFADE_CONFIRMATION_ENTRY_REFINEMENT_LAB_004/data
+          gh release download btc --repo chepigga/ResearchOS \
+            --pattern 'BTCUSDT_sec.csv.zip' \
+            --pattern 'BTCUSDT_flow_2021-01-2026-08.csv.zip' \
+            --dir labs/CROWDFADE_CONFIRMATION_ENTRY_REFINEMENT_LAB_004/data --clobber
+      - name: Run LAB004
+        run: python labs/CROWDFADE_CONFIRMATION_ENTRY_REFINEMENT_LAB_004/run_lab.py
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_CONFIRMATION_ENTRY_REFINEMENT_LAB_004/output
+          git commit -m 'research(CrowdFade): persist LAB004 outputs' || true
+          git push origin HEAD:lab/crowdfade-confirmation-entry-refinement-004
