@@ -1,0 +1,3566 @@
+[
+  {
+    "zip": "BTCUSDT_flow_2021-01-2026-08.csv.zip",
+    "members": [
+      "BTCUSDT_flow.csv"
+    ],
+    "n_members": 1
+  },
+  {
+    "zip": "btc_5m.zip",
+    "members": [
+      "btc_5m/",
+      "btc_5m/BTCUSDT-5m-2025-03.csv",
+      "btc_5m/BTCUSDT-5m-2025-02.csv",
+      "btc_5m/BTCUSDT-5m-2022-09.csv",
+      "btc_5m/BTCUSDT-5m-2025-01.csv",
+      "btc_5m/BTCUSDT-5m-2022-08.csv",
+      "btc_5m/BTCUSDT-5m-2025-05.csv",
+      "btc_5m/BTCUSDT-5m-2025-11.csv",
+      "btc_5m/BTCUSDT-5m-2020-09.csv",
+      "btc_5m/BTCUSDT-5m-2020-08.csv",
+      "btc_5m/BTCUSDT-5m-2025-10.csv",
+      "btc_5m/BTCUSDT-5m-2025-04.csv",
+      "btc_5m/BTCUSDT-5m-2025-12.csv",
+      "btc_5m/BTCUSDT-5m-2025-06.csv",
+      "btc_5m/BTCUSDT-5m-2025-07.csv",
+      "btc_5m/BTCUSDT-5m-2021-10.csv",
+      "btc_5m/BTCUSDT-5m-2021-04.csv",
+      "btc_5m/BTCUSDT-5m-2023-01.csv",
+      "btc_5m/BTCUSDT-5m-2024-08.csv",
+      "btc_5m/BTCUSDT-5m-2024-09.csv"
+    ],
+    "n_members": 93
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/BTCUSDT_flow_2021-01-2026-08.csv_unz/BTCUSDT_flow.csv",
+    "columns": [
+      "create_time",
+      "symbol",
+      "sum_open_interest",
+      "sum_open_interest_value",
+      "count_toptrader_long_short_ratio",
+      "sum_toptrader_long_short_ratio",
+      "count_long_short_ratio",
+      "sum_taker_long_short_vol_ratio"
+    ],
+    "sample": [
+      {
+        "create_time": "2021-01-01 00:00:00",
+        "symbol": "BTCUSDT",
+        "sum_open_interest": 34935.881,
+        "sum_open_interest_value": 1011332738.1474944,
+        "count_toptrader_long_short_ratio": 1.5904118,
+        "sum_toptrader_long_short_ratio": 1.2206118,
+        "count_long_short_ratio": 1.60088917,
+        "sum_taker_long_short_vol_ratio": 0.44027971
+      },
+      {
+        "create_time": "2021-01-01 00:00:00",
+        "symbol": "BTCUSDT",
+        "sum_open_interest": 34935.881,
+        "sum_open_interest_value": 1011332738.1474944,
+        "count_toptrader_long_short_ratio": 1.5904118,
+        "sum_toptrader_long_short_ratio": 1.2206118,
+        "count_long_short_ratio": 1.60088917,
+        "sum_taker_long_short_vol_ratio": 0.44027971
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.08 17:55",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.002,
+        "trades": 2,
+        "taker_ratio": 0.5,
+        "avg_trade": 0.001
+      },
+      {
+        "time": "2019.09.08 18:00",
+        "open": 10000,
+        "high": 10000,
+        "low": 10000,
+        "close": 10000,
+        "volume": 0.0,
+        "trades": 0,
+        "taker_ratio": 0.0,
+        "avg_trade": 0.0
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.09.30 21:00",
+        "open": 8209.67,
+        "high": 8216.9,
+        "low": 8209.22,
+        "close": 8215.0,
+        "volume": 8.947,
+        "trades": 118,
+        "taker_ratio": 0.67844,
+        "avg_trade": 0.07582
+      },
+      {
+        "time": "2019.09.30 21:05",
+        "open": 8214.99,
+        "high": 8223.01,
+        "low": 8212.61,
+        "close": 8221.83,
+        "volume": 26.386,
+        "trades": 146,
+        "taker_ratio": 0.31937,
+        "avg_trade": 0.18073
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.10.31 22:00",
+        "open": 9134.2,
+        "high": 9162.0,
+        "low": 9133.22,
+        "close": 9145.63,
+        "volume": 288.499,
+        "trades": 954,
+        "taker_ratio": 0.51333,
+        "avg_trade": 0.30241
+      },
+      {
+        "time": "2019.10.31 22:05",
+        "open": 9145.63,
+        "high": 9157.36,
+        "low": 9131.46,
+        "close": 9132.38,
+        "volume": 148.172,
+        "trades": 779,
+        "taker_ratio": 0.42488,
+        "avg_trade": 0.19021
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2019-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2019.11.30 22:00",
+        "open": 7539.96,
+        "high": 7561.89,
+        "low": 7539.73,
+        "close": 7557.67,
+        "volume": 827.92,
+        "trades": 1949,
+        "taker_ratio": 0.64597,
+        "avg_trade": 0.42479
+      },
+      {
+        "time": "2019.11.30 22:05",
+        "open": 7557.65,
+        "high": 7558.52,
+        "low": 7533.92,
+        "close": 7537.3,
+        "volume": 596.002,
+        "trades": 1035,
+        "taker_ratio": 0.35594,
+        "avg_trade": 0.57585
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.01.01 00:00",
+        "open": 7189.43,
+        "high": 7190.52,
+        "low": 7172.94,
+        "close": 7175.25,
+        "volume": 583.119,
+        "trades": 921,
+        "taker_ratio": 0.30161,
+        "avg_trade": 0.63314
+      },
+      {
+        "time": "2020.01.01 00:05",
+        "open": 7174.71,
+        "high": 7186.69,
+        "low": 7173.28,
+        "close": 7186.69,
+        "volume": 163.86,
+        "trades": 345,
+        "taker_ratio": 0.77749,
+        "avg_trade": 0.47496
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.02.01 00:00",
+        "open": 9364.5,
+        "high": 9385.37,
+        "low": 9357.42,
+        "close": 9361.2,
+        "volume": 665.32,
+        "trades": 1582,
+        "taker_ratio": 0.48891,
+        "avg_trade": 0.42056
+      },
+      {
+        "time": "2020.02.01 00:05",
+        "open": 9361.2,
+        "high": 9369.54,
+        "low": 9357.79,
+        "close": 9367.17,
+        "volume": 389.24,
+        "trades": 634,
+        "taker_ratio": 0.48812,
+        "avg_trade": 0.61394
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.03.01 00:00",
+        "open": 8532.5,
+        "high": 8585.13,
+        "low": 8526.0,
+        "close": 8584.58,
+        "volume": 1499.508,
+        "trades": 3132,
+        "taker_ratio": 0.6158,
+        "avg_trade": 0.47877
+      },
+      {
+        "time": "2020.03.01 00:05",
+        "open": 8584.93,
+        "high": 8618.47,
+        "low": 8571.05,
+        "close": 8607.18,
+        "volume": 936.708,
+        "trades": 2381,
+        "taker_ratio": 0.62584,
+        "avg_trade": 0.39341
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.04.01 00:00",
+        "open": 6407.1,
+        "high": 6422.82,
+        "low": 6407.1,
+        "close": 6412.93,
+        "volume": 865.038,
+        "trades": 2362,
+        "taker_ratio": 0.54584,
+        "avg_trade": 0.36623
+      },
+      {
+        "time": "2020.04.01 00:05",
+        "open": 6412.99,
+        "high": 6419.2,
+        "low": 6407.21,
+        "close": 6412.72,
+        "volume": 462.515,
+        "trades": 1648,
+        "taker_ratio": 0.59914,
+        "avg_trade": 0.28065
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.05.01 00:00",
+        "open": 8623.61,
+        "high": 8678.79,
+        "low": 8619.84,
+        "close": 8640.65,
+        "volume": 2212.032,
+        "trades": 6787,
+        "taker_ratio": 0.54815,
+        "avg_trade": 0.32592
+      },
+      {
+        "time": "2020.05.01 00:05",
+        "open": 8640.87,
+        "high": 8682.89,
+        "low": 8640.87,
+        "close": 8676.98,
+        "volume": 2030.853,
+        "trades": 5876,
+        "taker_ratio": 0.57845,
+        "avg_trade": 0.34562
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.06.01 00:00",
+        "open": 9446.49,
+        "high": 9448.97,
+        "low": 9420.85,
+        "close": 9431.95,
+        "volume": 1654.293,
+        "trades": 4697,
+        "taker_ratio": 0.42397,
+        "avg_trade": 0.3522
+      },
+      {
+        "time": "2020.06.01 00:05",
+        "open": 9431.95,
+        "high": 9476.47,
+        "low": 9428.61,
+        "close": 9473.29,
+        "volume": 1592.075,
+        "trades": 4196,
+        "taker_ratio": 0.64665,
+        "avg_trade": 0.37943
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.07.01 00:00",
+        "open": 9138.88,
+        "high": 9138.88,
+        "low": 9101.0,
+        "close": 9118.88,
+        "volume": 2176.33,
+        "trades": 5691,
+        "taker_ratio": 0.41025,
+        "avg_trade": 0.38242
+      },
+      {
+        "time": "2020.07.01 00:05",
+        "open": 9118.97,
+        "high": 9129.69,
+        "low": 9103.81,
+        "close": 9128.13,
+        "volume": 991.071,
+        "trades": 2630,
+        "taker_ratio": 0.51667,
+        "avg_trade": 0.37683
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.08.01 00:00",
+        "open": 11343.67,
+        "high": 11397.23,
+        "low": 11336.8,
+        "close": 11384.96,
+        "volume": 1941.448,
+        "trades": 5086,
+        "taker_ratio": 0.45561,
+        "avg_trade": 0.38172
+      },
+      {
+        "time": "2020.08.01 00:05",
+        "open": 11384.96,
+        "high": 11387.83,
+        "low": 11371.0,
+        "close": 11373.01,
+        "volume": 630.521,
+        "trades": 1956,
+        "taker_ratio": 0.39758,
+        "avg_trade": 0.32235
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.09.01 00:00",
+        "open": 11658.11,
+        "high": 11675.0,
+        "low": 11644.25,
+        "close": 11653.57,
+        "volume": 899.792,
+        "trades": 2766,
+        "taker_ratio": 0.45964,
+        "avg_trade": 0.3253
+      },
+      {
+        "time": "2020.09.01 00:05",
+        "open": 11653.57,
+        "high": 11656.81,
+        "low": 11634.67,
+        "close": 11642.91,
+        "volume": 1058.897,
+        "trades": 3269,
+        "taker_ratio": 0.52639,
+        "avg_trade": 0.32392
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.10.01 00:00",
+        "open": 10773.0,
+        "high": 10827.0,
+        "low": 10773.0,
+        "close": 10808.68,
+        "volume": 2889.623,
+        "trades": 7330,
+        "taker_ratio": 0.66977,
+        "avg_trade": 0.39422
+      },
+      {
+        "time": "2020.10.01 00:05",
+        "open": 10808.6,
+        "high": 10826.0,
+        "low": 10804.0,
+        "close": 10811.36,
+        "volume": 1052.491,
+        "trades": 3687,
+        "taker_ratio": 0.53902,
+        "avg_trade": 0.28546
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.11.01 00:00",
+        "open": 13783.73,
+        "high": 13797.2,
+        "low": 13689.99,
+        "close": 13794.04,
+        "volume": 4790.887,
+        "trades": 14646,
+        "taker_ratio": 0.39944,
+        "avg_trade": 0.32711
+      },
+      {
+        "time": "2020.11.01 00:05",
+        "open": 13794.89,
+        "high": 13891.52,
+        "low": 13787.34,
+        "close": 13883.38,
+        "volume": 3456.573,
+        "trades": 12380,
+        "taker_ratio": 0.55893,
+        "avg_trade": 0.27921
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2020-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2020.12.01 00:00",
+        "open": 19722.09,
+        "high": 19748.43,
+        "low": 19610.64,
+        "close": 19636.89,
+        "volume": 3115.722,
+        "trades": 10618,
+        "taker_ratio": 0.40141,
+        "avg_trade": 0.29344
+      },
+      {
+        "time": "2020.12.01 00:05",
+        "open": 19637.22,
+        "high": 19638.69,
+        "low": 19543.05,
+        "close": 19567.78,
+        "volume": 3903.476,
+        "trades": 13832,
+        "taker_ratio": 0.40559,
+        "avg_trade": 0.28221
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.01.01 00:00",
+        "open": 28948.19,
+        "high": 29045.93,
+        "low": 28935.3,
+        "close": 29000.0,
+        "volume": 658.624,
+        "trades": 5658,
+        "taker_ratio": 0.67043,
+        "avg_trade": 0.11641
+      },
+      {
+        "time": "2021.01.01 00:05",
+        "open": 29000.01,
+        "high": 29000.01,
+        "low": 28865.66,
+        "close": 28882.61,
+        "volume": 579.144,
+        "trades": 6018,
+        "taker_ratio": 0.29748,
+        "avg_trade": 0.09624
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.02.01 00:00",
+        "open": 33125.11,
+        "high": 33140.03,
+        "low": 32826.26,
+        "close": 32917.31,
+        "volume": 1523.431,
+        "trades": 14796,
+        "taker_ratio": 0.37008,
+        "avg_trade": 0.10296
+      },
+      {
+        "time": "2021.02.01 00:05",
+        "open": 32916.15,
+        "high": 32916.15,
+        "low": 32520.9,
+        "close": 32624.6,
+        "volume": 2086.66,
+        "trades": 20347,
+        "taker_ratio": 0.4531,
+        "avg_trade": 0.10255
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.03.01 00:00",
+        "open": 45162.64,
+        "high": 45389.0,
+        "low": 45011.49,
+        "close": 45054.74,
+        "volume": 1661.369,
+        "trades": 17259,
+        "taker_ratio": 0.50822,
+        "avg_trade": 0.09626
+      },
+      {
+        "time": "2021.03.01 00:05",
+        "open": 45054.75,
+        "high": 45332.1,
+        "low": 44972.49,
+        "close": 45292.87,
+        "volume": 1245.018,
+        "trades": 14228,
+        "taker_ratio": 0.59282,
+        "avg_trade": 0.0875
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.04.01 00:00",
+        "open": 58810.99,
+        "high": 59178.15,
+        "low": 58799.23,
+        "close": 59173.75,
+        "volume": 1557.025,
+        "trades": 16404,
+        "taker_ratio": 0.59699,
+        "avg_trade": 0.09492
+      },
+      {
+        "time": "2021.04.01 00:05",
+        "open": 59172.53,
+        "high": 59180.0,
+        "low": 59071.98,
+        "close": 59117.27,
+        "volume": 704.37,
+        "trades": 7873,
+        "taker_ratio": 0.54982,
+        "avg_trade": 0.08947
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.05.01 00:00",
+        "open": 57688.29,
+        "high": 57790.04,
+        "low": 57410.0,
+        "close": 57784.85,
+        "volume": 2546.303,
+        "trades": 23886,
+        "taker_ratio": 0.50485,
+        "avg_trade": 0.1066
+      },
+      {
+        "time": "2021.05.01 00:05",
+        "open": 57784.85,
+        "high": 57914.62,
+        "low": 57712.26,
+        "close": 57859.15,
+        "volume": 1282.477,
+        "trades": 12749,
+        "taker_ratio": 0.49815,
+        "avg_trade": 0.10059
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.06.01 00:00",
+        "open": 37244.36,
+        "high": 37650.0,
+        "low": 37100.0,
+        "close": 37609.05,
+        "volume": 6849.282,
+        "trades": 55435,
+        "taker_ratio": 0.58667,
+        "avg_trade": 0.12356
+      },
+      {
+        "time": "2021.06.01 00:05",
+        "open": 37609.05,
+        "high": 37660.0,
+        "low": 37492.85,
+        "close": 37538.46,
+        "volume": 3171.271,
+        "trades": 25203,
+        "taker_ratio": 0.46964,
+        "avg_trade": 0.12583
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.07.01 00:00",
+        "open": 35031.39,
+        "high": 35044.98,
+        "low": 34900.0,
+        "close": 34947.06,
+        "volume": 3383.41,
+        "trades": 24232,
+        "taker_ratio": 0.42672,
+        "avg_trade": 0.13963
+      },
+      {
+        "time": "2021.07.01 00:05",
+        "open": 34947.05,
+        "high": 34948.92,
+        "low": 34811.89,
+        "close": 34825.19,
+        "volume": 2840.675,
+        "trades": 20543,
+        "taker_ratio": 0.43358,
+        "avg_trade": 0.13828
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.08.01 00:00",
+        "open": 41448.1,
+        "high": 41478.2,
+        "low": 41091.77,
+        "close": 41350.0,
+        "volume": 8306.121,
+        "trades": 61059,
+        "taker_ratio": 0.44999,
+        "avg_trade": 0.13603
+      },
+      {
+        "time": "2021.08.01 00:05",
+        "open": 41350.0,
+        "high": 41549.95,
+        "low": 41341.68,
+        "close": 41479.34,
+        "volume": 3320.727,
+        "trades": 27814,
+        "taker_ratio": 0.55182,
+        "avg_trade": 0.11939
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.09.01 00:00",
+        "open": 47150.32,
+        "high": 47173.55,
+        "low": 46900.0,
+        "close": 47098.49,
+        "volume": 2971.705,
+        "trades": 22130,
+        "taker_ratio": 0.42218,
+        "avg_trade": 0.13428
+      },
+      {
+        "time": "2021.09.01 00:05",
+        "open": 47098.53,
+        "high": 47392.56,
+        "low": 47098.53,
+        "close": 47255.12,
+        "volume": 3436.726,
+        "trades": 25514,
+        "taker_ratio": 0.54639,
+        "avg_trade": 0.1347
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.10.01 00:00",
+        "open": 43799.49,
+        "high": 43968.0,
+        "low": 43759.64,
+        "close": 43951.81,
+        "volume": 2599.949,
+        "trades": 22124,
+        "taker_ratio": 0.58677,
+        "avg_trade": 0.11752
+      },
+      {
+        "time": "2021.10.01 00:05",
+        "open": 43951.81,
+        "high": 43964.92,
+        "low": 43694.42,
+        "close": 43763.29,
+        "volume": 1541.843,
+        "trades": 15759,
+        "taker_ratio": 0.42432,
+        "avg_trade": 0.09784
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.11.01 00:00",
+        "open": 61347.14,
+        "high": 61447.27,
+        "low": 61129.9,
+        "close": 61290.31,
+        "volume": 1705.548,
+        "trades": 14001,
+        "taker_ratio": 0.37447,
+        "avg_trade": 0.12182
+      },
+      {
+        "time": "2021.11.01 00:05",
+        "open": 61290.32,
+        "high": 61463.79,
+        "low": 61286.8,
+        "close": 61447.96,
+        "volume": 628.579,
+        "trades": 6338,
+        "taker_ratio": 0.71176,
+        "avg_trade": 0.09918
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2021-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2021.12.01 00:00",
+        "open": 56978.06,
+        "high": 57044.67,
+        "low": 56669.49,
+        "close": 56856.33,
+        "volume": 1964.666,
+        "trades": 21109,
+        "taker_ratio": 0.45244,
+        "avg_trade": 0.09307
+      },
+      {
+        "time": "2021.12.01 00:05",
+        "open": 56856.32,
+        "high": 57285.2,
+        "low": 56814.58,
+        "close": 57160.01,
+        "volume": 1689.603,
+        "trades": 16918,
+        "taker_ratio": 0.62891,
+        "avg_trade": 0.09987
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.01.01 00:00",
+        "open": 46210.57,
+        "high": 46390.83,
+        "low": 46210.55,
+        "close": 46316.17,
+        "volume": 1081.09,
+        "trades": 9513,
+        "taker_ratio": 0.5629,
+        "avg_trade": 0.11364
+      },
+      {
+        "time": "2022.01.01 00:05",
+        "open": 46316.17,
+        "high": 46530.99,
+        "low": 46275.0,
+        "close": 46372.32,
+        "volume": 1260.156,
+        "trades": 11538,
+        "taker_ratio": 0.45668,
+        "avg_trade": 0.10922
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.02.01 00:00",
+        "open": 38439.04,
+        "high": 38442.44,
+        "low": 38269.88,
+        "close": 38411.11,
+        "volume": 1619.625,
+        "trades": 14712,
+        "taker_ratio": 0.46587,
+        "avg_trade": 0.11009
+      },
+      {
+        "time": "2022.02.01 00:05",
+        "open": 38411.11,
+        "high": 38611.57,
+        "low": 38392.0,
+        "close": 38567.47,
+        "volume": 1814.59,
+        "trades": 14340,
+        "taker_ratio": 0.68209,
+        "avg_trade": 0.12654
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.03.01 00:00",
+        "open": 43155.0,
+        "high": 43549.3,
+        "low": 43150.3,
+        "close": 43407.5,
+        "volume": 4542.005,
+        "trades": 40216,
+        "taker_ratio": 0.58775,
+        "avg_trade": 0.11294
+      },
+      {
+        "time": "2022.03.01 00:05",
+        "open": 43408.0,
+        "high": 43449.5,
+        "low": 43200.0,
+        "close": 43411.6,
+        "volume": 1936.95,
+        "trades": 20908,
+        "taker_ratio": 0.45794,
+        "avg_trade": 0.09264
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.04.01 00:00",
+        "open": 45505.9,
+        "high": 45565.0,
+        "low": 45411.2,
+        "close": 45549.2,
+        "volume": 1675.835,
+        "trades": 13970,
+        "taker_ratio": 0.46187,
+        "avg_trade": 0.11996
+      },
+      {
+        "time": "2022.04.01 00:05",
+        "open": 45549.2,
+        "high": 45591.7,
+        "low": 45524.2,
+        "close": 45590.3,
+        "volume": 827.442,
+        "trades": 8623,
+        "taker_ratio": 0.57032,
+        "avg_trade": 0.09596
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.05.01 00:00",
+        "open": 37614.4,
+        "high": 37724.3,
+        "low": 37584.0,
+        "close": 37699.9,
+        "volume": 1877.399,
+        "trades": 21786,
+        "taker_ratio": 0.62343,
+        "avg_trade": 0.08617
+      },
+      {
+        "time": "2022.05.01 00:05",
+        "open": 37700.0,
+        "high": 37754.0,
+        "low": 37663.6,
+        "close": 37731.9,
+        "volume": 1067.249,
+        "trades": 14292,
+        "taker_ratio": 0.51582,
+        "avg_trade": 0.07467
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.06.01 00:00",
+        "open": 31797.9,
+        "high": 31850.0,
+        "low": 31794.6,
+        "close": 31831.7,
+        "volume": 694.024,
+        "trades": 8029,
+        "taker_ratio": 0.53497,
+        "avg_trade": 0.08644
+      },
+      {
+        "time": "2022.06.01 00:05",
+        "open": 31831.7,
+        "high": 31880.0,
+        "low": 31822.6,
+        "close": 31822.6,
+        "volume": 591.928,
+        "trades": 6864,
+        "taker_ratio": 0.56405,
+        "avg_trade": 0.08624
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.07.01 00:00",
+        "open": 19923.3,
+        "high": 19958.4,
+        "low": 19668.5,
+        "close": 19708.9,
+        "volume": 14308.415,
+        "trades": 74923,
+        "taker_ratio": 0.39039,
+        "avg_trade": 0.19097
+      },
+      {
+        "time": "2022.07.01 00:05",
+        "open": 19708.9,
+        "high": 19814.8,
+        "low": 19649.5,
+        "close": 19763.4,
+        "volume": 7977.037,
+        "trades": 51553,
+        "taker_ratio": 0.55417,
+        "avg_trade": 0.15473
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.08.01 00:00",
+        "open": 23290.1,
+        "high": 23305.7,
+        "low": 23258.8,
+        "close": 23269.5,
+        "volume": 2300.562,
+        "trades": 24665,
+        "taker_ratio": 0.43743,
+        "avg_trade": 0.09327
+      },
+      {
+        "time": "2022.08.01 00:05",
+        "open": 23269.6,
+        "high": 23275.0,
+        "low": 23251.0,
+        "close": 23267.9,
+        "volume": 1271.636,
+        "trades": 15331,
+        "taker_ratio": 0.47558,
+        "avg_trade": 0.08295
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.09.01 00:00",
+        "open": 20041.4,
+        "high": 20108.6,
+        "low": 19999.0,
+        "close": 20103.6,
+        "volume": 4584.505,
+        "trades": 24018,
+        "taker_ratio": 0.55025,
+        "avg_trade": 0.19088
+      },
+      {
+        "time": "2022.09.01 00:05",
+        "open": 20103.5,
+        "high": 20126.2,
+        "low": 20080.1,
+        "close": 20125.7,
+        "volume": 2088.559,
+        "trades": 14082,
+        "taker_ratio": 0.50883,
+        "avg_trade": 0.14831
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.10.01 00:00",
+        "open": 19411.6,
+        "high": 19413.3,
+        "low": 19398.2,
+        "close": 19413.2,
+        "volume": 1511.685,
+        "trades": 8842,
+        "taker_ratio": 0.44486,
+        "avg_trade": 0.17097
+      },
+      {
+        "time": "2022.10.01 00:05",
+        "open": 19413.2,
+        "high": 19449.5,
+        "low": 19411.6,
+        "close": 19433.8,
+        "volume": 1804.25,
+        "trades": 10079,
+        "taker_ratio": 0.65193,
+        "avg_trade": 0.17901
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.11.01 00:00",
+        "open": 20482.1,
+        "high": 20486.9,
+        "low": 20451.0,
+        "close": 20469.3,
+        "volume": 1700.745,
+        "trades": 10919,
+        "taker_ratio": 0.44696,
+        "avg_trade": 0.15576
+      },
+      {
+        "time": "2022.11.01 00:05",
+        "open": 20469.2,
+        "high": 20471.0,
+        "low": 20442.1,
+        "close": 20460.1,
+        "volume": 721.407,
+        "trades": 6361,
+        "taker_ratio": 0.44684,
+        "avg_trade": 0.11341
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2022-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2022.12.01 00:00",
+        "open": 17153.4,
+        "high": 17168.3,
+        "low": 17145.9,
+        "close": 17154.9,
+        "volume": 1819.19,
+        "trades": 10411,
+        "taker_ratio": 0.50376,
+        "avg_trade": 0.17474
+      },
+      {
+        "time": "2022.12.01 00:05",
+        "open": 17155.0,
+        "high": 17171.4,
+        "low": 17125.0,
+        "close": 17159.3,
+        "volume": 3034.846,
+        "trades": 15791,
+        "taker_ratio": 0.43801,
+        "avg_trade": 0.19219
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.01.01 00:00",
+        "open": 16537.5,
+        "high": 16538.0,
+        "low": 16523.0,
+        "close": 16529.2,
+        "volume": 844.251,
+        "trades": 4065,
+        "taker_ratio": 0.35877,
+        "avg_trade": 0.20769
+      },
+      {
+        "time": "2023.01.01 00:05",
+        "open": 16529.2,
+        "high": 16533.6,
+        "low": 16519.0,
+        "close": 16521.5,
+        "volume": 321.527,
+        "trades": 2465,
+        "taker_ratio": 0.36615,
+        "avg_trade": 0.13044
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.02.01 00:00",
+        "open": 23119.5,
+        "high": 23161.4,
+        "low": 23117.4,
+        "close": 23126.8,
+        "volume": 1824.814,
+        "trades": 12293,
+        "taker_ratio": 0.55867,
+        "avg_trade": 0.14844
+      },
+      {
+        "time": "2023.02.01 00:05",
+        "open": 23126.8,
+        "high": 23129.0,
+        "low": 23051.3,
+        "close": 23063.2,
+        "volume": 3383.69,
+        "trades": 20164,
+        "taker_ratio": 0.38617,
+        "avg_trade": 0.16781
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.03.01 00:00",
+        "open": 23129.7,
+        "high": 23169.0,
+        "low": 23120.3,
+        "close": 23169.0,
+        "volume": 2153.736,
+        "trades": 12297,
+        "taker_ratio": 0.66331,
+        "avg_trade": 0.17514
+      },
+      {
+        "time": "2023.03.01 00:05",
+        "open": 23168.9,
+        "high": 23169.5,
+        "low": 23108.4,
+        "close": 23108.5,
+        "volume": 1366.442,
+        "trades": 9753,
+        "taker_ratio": 0.28648,
+        "avg_trade": 0.1401
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.04.01 00:00",
+        "open": 28454.8,
+        "high": 28477.3,
+        "low": 28438.0,
+        "close": 28442.5,
+        "volume": 1558.971,
+        "trades": 13729,
+        "taker_ratio": 0.45801,
+        "avg_trade": 0.11355
+      },
+      {
+        "time": "2023.04.01 00:05",
+        "open": 28442.5,
+        "high": 28487.3,
+        "low": 28439.6,
+        "close": 28484.1,
+        "volume": 787.301,
+        "trades": 8383,
+        "taker_ratio": 0.68498,
+        "avg_trade": 0.09392
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.05.01 00:00",
+        "open": 29223.0,
+        "high": 29287.4,
+        "low": 29198.2,
+        "close": 29287.4,
+        "volume": 5229.563,
+        "trades": 39272,
+        "taker_ratio": 0.56657,
+        "avg_trade": 0.13316
+      },
+      {
+        "time": "2023.05.01 00:05",
+        "open": 29287.3,
+        "high": 29313.2,
+        "low": 29266.2,
+        "close": 29299.7,
+        "volume": 2380.142,
+        "trades": 21623,
+        "taker_ratio": 0.65114,
+        "avg_trade": 0.11007
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.06.01 00:00",
+        "open": 27201.1,
+        "high": 27228.9,
+        "low": 27200.0,
+        "close": 27225.1,
+        "volume": 1504.105,
+        "trades": 10866,
+        "taker_ratio": 0.5977,
+        "avg_trade": 0.13842
+      },
+      {
+        "time": "2023.06.01 00:05",
+        "open": 27225.0,
+        "high": 27236.2,
+        "low": 27183.4,
+        "close": 27234.1,
+        "volume": 1791.135,
+        "trades": 12529,
+        "taker_ratio": 0.46126,
+        "avg_trade": 0.14296
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.07.01 00:00",
+        "open": 30460.2,
+        "high": 30485.7,
+        "low": 30446.3,
+        "close": 30482.5,
+        "volume": 799.801,
+        "trades": 8511,
+        "taker_ratio": 0.48097,
+        "avg_trade": 0.09397
+      },
+      {
+        "time": "2023.07.01 00:05",
+        "open": 30482.4,
+        "high": 30501.3,
+        "low": 30467.7,
+        "close": 30498.0,
+        "volume": 468.449,
+        "trades": 6918,
+        "taker_ratio": 0.49625,
+        "avg_trade": 0.06771
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.08.01 00:00",
+        "open": 29220.8,
+        "high": 29220.9,
+        "low": 29213.8,
+        "close": 29220.6,
+        "volume": 297.356,
+        "trades": 3729,
+        "taker_ratio": 0.35639,
+        "avg_trade": 0.07974
+      },
+      {
+        "time": "2023.08.01 00:05",
+        "open": 29220.7,
+        "high": 29220.7,
+        "low": 29200.9,
+        "close": 29202.4,
+        "volume": 534.443,
+        "trades": 5195,
+        "taker_ratio": 0.48556,
+        "avg_trade": 0.10288
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.09.01 00:00",
+        "open": 25928.0,
+        "high": 25956.6,
+        "low": 25918.9,
+        "close": 25956.6,
+        "volume": 1335.335,
+        "trades": 12136,
+        "taker_ratio": 0.72539,
+        "avg_trade": 0.11003
+      },
+      {
+        "time": "2023.09.01 00:05",
+        "open": 25956.5,
+        "high": 25965.6,
+        "low": 25951.3,
+        "close": 25965.6,
+        "volume": 665.156,
+        "trades": 6663,
+        "taker_ratio": 0.70442,
+        "avg_trade": 0.09983
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.10.01 00:00",
+        "open": 26951.0,
+        "high": 26956.3,
+        "low": 26942.0,
+        "close": 26956.3,
+        "volume": 375.108,
+        "trades": 4363,
+        "taker_ratio": 0.37915,
+        "avg_trade": 0.08597
+      },
+      {
+        "time": "2023.10.01 00:05",
+        "open": 26956.2,
+        "high": 26961.4,
+        "low": 26954.0,
+        "close": 26960.1,
+        "volume": 194.58,
+        "trades": 3094,
+        "taker_ratio": 0.66366,
+        "avg_trade": 0.06289
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.11.01 00:00",
+        "open": 34651.4,
+        "high": 34684.0,
+        "low": 34592.0,
+        "close": 34615.4,
+        "volume": 2006.01,
+        "trades": 22117,
+        "taker_ratio": 0.40152,
+        "avg_trade": 0.0907
+      },
+      {
+        "time": "2023.11.01 00:05",
+        "open": 34615.4,
+        "high": 34673.1,
+        "low": 34594.3,
+        "close": 34611.6,
+        "volume": 1518.841,
+        "trades": 19658,
+        "taker_ratio": 0.38276,
+        "avg_trade": 0.07726
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2023-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2023.12.01 00:00",
+        "open": 37716.9,
+        "high": 37734.6,
+        "low": 37677.7,
+        "close": 37677.8,
+        "volume": 615.082,
+        "trades": 6387,
+        "taker_ratio": 0.31379,
+        "avg_trade": 0.0963
+      },
+      {
+        "time": "2023.12.01 00:05",
+        "open": 37677.8,
+        "high": 37690.4,
+        "low": 37667.4,
+        "close": 37669.9,
+        "volume": 262.928,
+        "trades": 3725,
+        "taker_ratio": 0.34544,
+        "avg_trade": 0.07058
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.01.01 00:00",
+        "open": 42314.0,
+        "high": 42437.2,
+        "low": 42289.6,
+        "close": 42437.1,
+        "volume": 1724.21,
+        "trades": 15368,
+        "taker_ratio": 0.73939,
+        "avg_trade": 0.11219
+      },
+      {
+        "time": "2024.01.01 00:05",
+        "open": 42437.2,
+        "high": 42474.1,
+        "low": 42420.5,
+        "close": 42446.8,
+        "volume": 994.003,
+        "trades": 9626,
+        "taker_ratio": 0.54908,
+        "avg_trade": 0.10326
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.02.01 00:00",
+        "open": 42560.5,
+        "high": 42674.9,
+        "low": 42560.5,
+        "close": 42595.6,
+        "volume": 1227.347,
+        "trades": 14001,
+        "taker_ratio": 0.63521,
+        "avg_trade": 0.08766
+      },
+      {
+        "time": "2024.02.01 00:05",
+        "open": 42595.7,
+        "high": 42612.9,
+        "low": 42569.5,
+        "close": 42588.1,
+        "volume": 526.111,
+        "trades": 8170,
+        "taker_ratio": 0.56152,
+        "avg_trade": 0.0644
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.03.01 00:00",
+        "open": 61203.3,
+        "high": 61300.8,
+        "low": 61199.4,
+        "close": 61200.1,
+        "volume": 1039.5,
+        "trades": 15502,
+        "taker_ratio": 0.53216,
+        "avg_trade": 0.06706
+      },
+      {
+        "time": "2024.03.01 00:05",
+        "open": 61200.0,
+        "high": 61404.6,
+        "low": 61200.0,
+        "close": 61367.6,
+        "volume": 560.291,
+        "trades": 10843,
+        "taker_ratio": 0.64221,
+        "avg_trade": 0.05167
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.04.01 00:00",
+        "open": 71363.0,
+        "high": 71388.0,
+        "low": 71200.0,
+        "close": 71323.7,
+        "volume": 1551.338,
+        "trades": 21436,
+        "taker_ratio": 0.37169,
+        "avg_trade": 0.07237
+      },
+      {
+        "time": "2024.04.01 00:05",
+        "open": 71323.6,
+        "high": 71339.7,
+        "low": 71193.2,
+        "close": 71295.3,
+        "volume": 630.072,
+        "trades": 11151,
+        "taker_ratio": 0.32022,
+        "avg_trade": 0.0565
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.05.01 00:00",
+        "open": 60651.2,
+        "high": 60757.7,
+        "low": 60622.7,
+        "close": 60652.2,
+        "volume": 988.137,
+        "trades": 18894,
+        "taker_ratio": 0.54155,
+        "avg_trade": 0.0523
+      },
+      {
+        "time": "2024.05.01 00:05",
+        "open": 60652.2,
+        "high": 60782.1,
+        "low": 60632.2,
+        "close": 60735.5,
+        "volume": 563.616,
+        "trades": 12346,
+        "taker_ratio": 0.49468,
+        "avg_trade": 0.04565
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.06.01 00:00",
+        "open": 67577.9,
+        "high": 67680.7,
+        "low": 67572.0,
+        "close": 67680.4,
+        "volume": 464.748,
+        "trades": 6933,
+        "taker_ratio": 0.62399,
+        "avg_trade": 0.06703
+      },
+      {
+        "time": "2024.06.01 00:05",
+        "open": 67680.4,
+        "high": 67727.8,
+        "low": 67641.6,
+        "close": 67641.6,
+        "volume": 418.752,
+        "trades": 7167,
+        "taker_ratio": 0.47067,
+        "avg_trade": 0.05843
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.07.01 00:00",
+        "open": 62766.1,
+        "high": 62809.5,
+        "low": 62714.4,
+        "close": 62714.5,
+        "volume": 880.89,
+        "trades": 11067,
+        "taker_ratio": 0.39939,
+        "avg_trade": 0.0796
+      },
+      {
+        "time": "2024.07.01 00:05",
+        "open": 62714.4,
+        "high": 62795.6,
+        "low": 62635.3,
+        "close": 62635.4,
+        "volume": 1073.053,
+        "trades": 13132,
+        "taker_ratio": 0.33464,
+        "avg_trade": 0.08171
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.08.01 00:00",
+        "open": 64601.8,
+        "high": 64689.8,
+        "low": 64577.0,
+        "close": 64655.9,
+        "volume": 1201.624,
+        "trades": 14201,
+        "taker_ratio": 0.60623,
+        "avg_trade": 0.08462
+      },
+      {
+        "time": "2024.08.01 00:05",
+        "open": 64655.9,
+        "high": 64770.5,
+        "low": 64655.8,
+        "close": 64761.5,
+        "volume": 625.362,
+        "trades": 8671,
+        "taker_ratio": 0.68647,
+        "avg_trade": 0.07212
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.09.01 00:00",
+        "open": 58941.9,
+        "high": 58951.4,
+        "low": 58925.2,
+        "close": 58951.4,
+        "volume": 95.907,
+        "trades": 2605,
+        "taker_ratio": 0.46255,
+        "avg_trade": 0.03682
+      },
+      {
+        "time": "2024.09.01 00:05",
+        "open": 58951.4,
+        "high": 59011.6,
+        "low": 58943.7,
+        "close": 59004.5,
+        "volume": 202.985,
+        "trades": 3658,
+        "taker_ratio": 0.77244,
+        "avg_trade": 0.05549
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.10.01 00:00",
+        "open": 63309.0,
+        "high": 63491.1,
+        "low": 63260.1,
+        "close": 63315.2,
+        "volume": 2172.993,
+        "trades": 25815,
+        "taker_ratio": 0.59396,
+        "avg_trade": 0.08418
+      },
+      {
+        "time": "2024.10.01 00:05",
+        "open": 63315.3,
+        "high": 63383.0,
+        "low": 63275.4,
+        "close": 63317.0,
+        "volume": 757.703,
+        "trades": 12190,
+        "taker_ratio": 0.53525,
+        "avg_trade": 0.06216
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.11.01 00:00",
+        "open": 70321.9,
+        "high": 70388.7,
+        "low": 70288.5,
+        "close": 70378.2,
+        "volume": 885.545,
+        "trades": 14898,
+        "taker_ratio": 0.66884,
+        "avg_trade": 0.05944
+      },
+      {
+        "time": "2024.11.01 00:05",
+        "open": 70378.1,
+        "high": 70473.1,
+        "low": 70378.1,
+        "close": 70408.1,
+        "volume": 389.474,
+        "trades": 7939,
+        "taker_ratio": 0.66085,
+        "avg_trade": 0.04906
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2024-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2024.12.01 00:00",
+        "open": 96475.2,
+        "high": 96594.8,
+        "low": 96402.6,
+        "close": 96576.2,
+        "volume": 348.573,
+        "trades": 6698,
+        "taker_ratio": 0.69314,
+        "avg_trade": 0.05204
+      },
+      {
+        "time": "2024.12.01 00:05",
+        "open": 96576.2,
+        "high": 96614.1,
+        "low": 96547.6,
+        "close": 96614.1,
+        "volume": 221.751,
+        "trades": 4404,
+        "taker_ratio": 0.6603,
+        "avg_trade": 0.05035
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.01.01 00:00",
+        "open": 93548.8,
+        "high": 93690.0,
+        "low": 93514.2,
+        "close": 93648.4,
+        "volume": 341.604,
+        "trades": 8176,
+        "taker_ratio": 0.43418,
+        "avg_trade": 0.04178
+      },
+      {
+        "time": "2025.01.01 00:05",
+        "open": 93648.3,
+        "high": 93666.7,
+        "low": 93576.9,
+        "close": 93585.9,
+        "volume": 166.341,
+        "trades": 4688,
+        "taker_ratio": 0.49614,
+        "avg_trade": 0.03548
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.02.01 00:00",
+        "open": 102379.8,
+        "high": 102379.8,
+        "low": 102222.0,
+        "close": 102275.5,
+        "volume": 288.539,
+        "trades": 10167,
+        "taker_ratio": 0.33957,
+        "avg_trade": 0.02838
+      },
+      {
+        "time": "2025.02.01 00:05",
+        "open": 102275.4,
+        "high": 102466.0,
+        "low": 102264.5,
+        "close": 102466.0,
+        "volume": 247.134,
+        "trades": 6830,
+        "taker_ratio": 0.67418,
+        "avg_trade": 0.03618
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.03.01 00:00",
+        "open": 84299.6,
+        "high": 84335.5,
+        "low": 84206.9,
+        "close": 84242.0,
+        "volume": 275.297,
+        "trades": 6915,
+        "taker_ratio": 0.51704,
+        "avg_trade": 0.03981
+      },
+      {
+        "time": "2025.03.01 00:05",
+        "open": 84242.0,
+        "high": 84367.0,
+        "low": 84242.0,
+        "close": 84340.0,
+        "volume": 246.218,
+        "trades": 6395,
+        "taker_ratio": 0.62568,
+        "avg_trade": 0.0385
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.04.01 00:00",
+        "open": 82517.5,
+        "high": 82587.1,
+        "low": 82443.7,
+        "close": 82587.1,
+        "volume": 681.625,
+        "trades": 9553,
+        "taker_ratio": 0.3921,
+        "avg_trade": 0.07135
+      },
+      {
+        "time": "2025.04.01 00:05",
+        "open": 82587.2,
+        "high": 82676.2,
+        "low": 82573.3,
+        "close": 82626.3,
+        "volume": 528.57,
+        "trades": 8713,
+        "taker_ratio": 0.55805,
+        "avg_trade": 0.06066
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.05.01 00:00",
+        "open": 94125.2,
+        "high": 94190.4,
+        "low": 94086.7,
+        "close": 94190.3,
+        "volume": 221.954,
+        "trades": 5083,
+        "taker_ratio": 0.52578,
+        "avg_trade": 0.04367
+      },
+      {
+        "time": "2025.05.01 00:05",
+        "open": 94190.3,
+        "high": 94257.0,
+        "low": 94119.6,
+        "close": 94257.0,
+        "volume": 381.956,
+        "trades": 6741,
+        "taker_ratio": 0.44769,
+        "avg_trade": 0.05666
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.06.01 00:00",
+        "open": 104544.6,
+        "high": 104599.6,
+        "low": 104476.7,
+        "close": 104476.8,
+        "volume": 418.297,
+        "trades": 8524,
+        "taker_ratio": 0.35535,
+        "avg_trade": 0.04907
+      },
+      {
+        "time": "2025.06.01 00:05",
+        "open": 104476.8,
+        "high": 104516.3,
+        "low": 104450.8,
+        "close": 104496.5,
+        "volume": 250.157,
+        "trades": 5639,
+        "taker_ratio": 0.53798,
+        "avg_trade": 0.04436
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.07.01 00:00",
+        "open": 107087.3,
+        "high": 107114.1,
+        "low": 107061.7,
+        "close": 107084.8,
+        "volume": 246.416,
+        "trades": 4778,
+        "taker_ratio": 0.50442,
+        "avg_trade": 0.05157
+      },
+      {
+        "time": "2025.07.01 00:05",
+        "open": 107084.8,
+        "high": 107197.3,
+        "low": 107036.7,
+        "close": 107197.3,
+        "volume": 180.109,
+        "trades": 5279,
+        "taker_ratio": 0.6633,
+        "avg_trade": 0.03412
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.08.01 00:00",
+        "open": 115697.3,
+        "high": 115755.0,
+        "low": 115624.2,
+        "close": 115713.4,
+        "volume": 738.39,
+        "trades": 15152,
+        "taker_ratio": 0.57217,
+        "avg_trade": 0.04873
+      },
+      {
+        "time": "2025.08.01 00:05",
+        "open": 115713.3,
+        "high": 115772.6,
+        "low": 115647.8,
+        "close": 115647.8,
+        "volume": 455.413,
+        "trades": 12206,
+        "taker_ratio": 0.65375,
+        "avg_trade": 0.03731
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-09.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.09.01 00:00",
+        "open": 108208.4,
+        "high": 108295.8,
+        "low": 108056.9,
+        "close": 108056.9,
+        "volume": 475.249,
+        "trades": 11079,
+        "taker_ratio": 0.3864,
+        "avg_trade": 0.0429
+      },
+      {
+        "time": "2025.09.01 00:05",
+        "open": 108057.0,
+        "high": 108121.2,
+        "low": 107926.2,
+        "close": 107953.1,
+        "volume": 1556.386,
+        "trades": 23362,
+        "taker_ratio": 0.31899,
+        "avg_trade": 0.06662
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-10.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.10.01 00:00",
+        "open": 113988.7,
+        "high": 114166.8,
+        "low": 113988.7,
+        "close": 114166.8,
+        "volume": 713.415,
+        "trades": 11532,
+        "taker_ratio": 0.63791,
+        "avg_trade": 0.06186
+      },
+      {
+        "time": "2025.10.01 00:05",
+        "open": 114166.8,
+        "high": 114246.0,
+        "low": 114126.3,
+        "close": 114187.9,
+        "volume": 677.59,
+        "trades": 9349,
+        "taker_ratio": 0.49169,
+        "avg_trade": 0.07248
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-11.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.11.01 00:00",
+        "open": 109557.2,
+        "high": 109600.0,
+        "low": 109395.0,
+        "close": 109405.1,
+        "volume": 275.588,
+        "trades": 10060,
+        "taker_ratio": 0.31399,
+        "avg_trade": 0.02739
+      },
+      {
+        "time": "2025.11.01 00:05",
+        "open": 109405.0,
+        "high": 109410.3,
+        "low": 109368.4,
+        "close": 109399.9,
+        "volume": 162.132,
+        "trades": 6132,
+        "taker_ratio": 0.42494,
+        "avg_trade": 0.02644
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2025-12.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2025.12.01 00:00",
+        "open": 90320.5,
+        "high": 90396.9,
+        "low": 89228.0,
+        "close": 89771.4,
+        "volume": 5804.585,
+        "trades": 81147,
+        "taker_ratio": 0.35213,
+        "avg_trade": 0.07153
+      },
+      {
+        "time": "2025.12.01 00:05",
+        "open": 89771.3,
+        "high": 89783.6,
+        "low": 88900.0,
+        "close": 89101.0,
+        "volume": 5855.894,
+        "trades": 115396,
+        "taker_ratio": 0.41211,
+        "avg_trade": 0.05075
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-01.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.01.01 00:00",
+        "open": 87608.3,
+        "high": 87671.7,
+        "low": 87600.0,
+        "close": 87671.6,
+        "volume": 289.166,
+        "trades": 3820,
+        "taker_ratio": 0.46246,
+        "avg_trade": 0.0757
+      },
+      {
+        "time": "2026.01.01 00:05",
+        "open": 87671.6,
+        "high": 87791.9,
+        "low": 87671.6,
+        "close": 87734.5,
+        "volume": 367.823,
+        "trades": 9253,
+        "taker_ratio": 0.696,
+        "avg_trade": 0.03975
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-02.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.02.01 00:00",
+        "open": 78706.7,
+        "high": 78902.3,
+        "low": 78600.2,
+        "close": 78892.9,
+        "volume": 584.698,
+        "trades": 27433,
+        "taker_ratio": 0.60742,
+        "avg_trade": 0.02131
+      },
+      {
+        "time": "2026.02.01 00:05",
+        "open": 78892.9,
+        "high": 79124.9,
+        "low": 78860.0,
+        "close": 79124.9,
+        "volume": 609.012,
+        "trades": 25366,
+        "taker_ratio": 0.62067,
+        "avg_trade": 0.02401
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-03.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.03.01 00:00",
+        "open": 66937.0,
+        "high": 67089.6,
+        "low": 66915.6,
+        "close": 67000.0,
+        "volume": 703.392,
+        "trades": 21951,
+        "taker_ratio": 0.48396,
+        "avg_trade": 0.03204
+      },
+      {
+        "time": "2026.03.01 00:05",
+        "open": 67000.0,
+        "high": 67011.2,
+        "low": 66763.3,
+        "close": 66789.3,
+        "volume": 554.621,
+        "trades": 20779,
+        "taker_ratio": 0.37363,
+        "avg_trade": 0.02669
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-04.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.04.01 00:00",
+        "open": 68241.4,
+        "high": 68241.5,
+        "low": 68072.5,
+        "close": 68166.0,
+        "volume": 610.896,
+        "trades": 18422,
+        "taker_ratio": 0.35164,
+        "avg_trade": 0.03316
+      },
+      {
+        "time": "2026.04.01 00:05",
+        "open": 68166.0,
+        "high": 68188.8,
+        "low": 68100.0,
+        "close": 68125.8,
+        "volume": 208.536,
+        "trades": 9803,
+        "taker_ratio": 0.39417,
+        "avg_trade": 0.02127
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-05.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.05.01 00:00",
+        "open": 76305.4,
+        "high": 76444.0,
+        "low": 76265.4,
+        "close": 76442.8,
+        "volume": 461.165,
+        "trades": 11377,
+        "taker_ratio": 0.59717,
+        "avg_trade": 0.04053
+      },
+      {
+        "time": "2026.05.01 00:05",
+        "open": 76442.8,
+        "high": 76472.8,
+        "low": 76402.1,
+        "close": 76457.0,
+        "volume": 260.999,
+        "trades": 6856,
+        "taker_ratio": 0.63932,
+        "avg_trade": 0.03807
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-06.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.06.01 00:00",
+        "open": 73653.2,
+        "high": 73849.8,
+        "low": 73620.0,
+        "close": 73840.2,
+        "volume": 430.186,
+        "trades": 17231,
+        "taker_ratio": 0.57788,
+        "avg_trade": 0.02497
+      },
+      {
+        "time": "2026.06.01 00:05",
+        "open": 73840.2,
+        "high": 73861.5,
+        "low": 73696.0,
+        "close": 73719.9,
+        "volume": 353.155,
+        "trades": 13470,
+        "taker_ratio": 0.38425,
+        "avg_trade": 0.02622
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-07.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.07.01 00:00",
+        "open": 58605.4,
+        "high": 58700.0,
+        "low": 58605.4,
+        "close": 58699.9,
+        "volume": 415.91,
+        "trades": 13746,
+        "taker_ratio": 0.56534,
+        "avg_trade": 0.03026
+      },
+      {
+        "time": "2026.07.01 00:05",
+        "open": 58700.0,
+        "high": 58720.0,
+        "low": 58626.6,
+        "close": 58633.1,
+        "volume": 198.832,
+        "trades": 8741,
+        "taker_ratio": 0.3956,
+        "avg_trade": 0.02275
+      }
+    ]
+  },
+  {
+    "file": "labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/data/btc_5m_unz/btc_5m/BTCUSDT-5m-2026-08.csv",
+    "columns": [
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "trades",
+      "taker_ratio",
+      "avg_trade"
+    ],
+    "sample": [
+      {
+        "time": "2026.07.31 21:00",
+        "open": 62928.7,
+        "high": 62928.7,
+        "low": 62814.1,
+        "close": 62883.6,
+        "volume": 580.349,
+        "trades": 9903,
+        "taker_ratio": 0.36068,
+        "avg_trade": 0.0586
+      },
+      {
+        "time": "2026.07.31 21:05",
+        "open": 62883.6,
+        "high": 62939.3,
+        "low": 62883.5,
+        "close": 62939.2,
+        "volume": 204.358,
+        "trades": 3771,
+        "taker_ratio": 0.72473,
+        "avg_trade": 0.05419
+      }
+    ]
+  }
+]
