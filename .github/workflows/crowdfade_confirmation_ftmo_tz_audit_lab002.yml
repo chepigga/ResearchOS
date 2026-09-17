@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -q numpy pandas
-      - name: Download May FTMO ticks and Binance M1
+      - name: Download May FTMO ticks and Binance seconds
         shell: bash
         run: |
           set -euo pipefail
@@ -29,8 +29,8 @@ jobs:
           cd labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/tz_data
           curl -L --fail --retry 3 -o TickExport_BTCUSD_2026-05.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_2026-05.csv.zip
           echo '0443ecc176737a8e4df71ee96d24d4a2ada0f74205260a5597423a0ec7d612e8  TickExport_BTCUSD_2026-05.csv.zip' | sha256sum -c -
-          curl -L --fail --retry 3 -o btc_1m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_1m.zip
-          echo '4339abbd8d23a0ee84afa4187a41be2fd41d219060e1751053b152757be9a7ea  btc_1m.zip' | sha256sum -c -
+          curl -L --fail --retry 3 -o BTCUSDT_sec.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
+          echo '067eb5716cd0f6b2268d988c3e12eca65cd2b271cc211f2b3ba9cbc60eece37a  BTCUSDT_sec.csv.zip' | sha256sum -c -
       - name: Run FTMO UTC alignment audit
         run: python labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/run_ftmo_time_alignment.py
       - name: Persist TZ outputs
