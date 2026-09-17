@@ -1,0 +1,6 @@
+Archive:  ticks.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+173086443  2026-08-14 18:36   TickExport_BTCUSD_2026-08.csv
+---------                     -------
+173086443                     1 file
