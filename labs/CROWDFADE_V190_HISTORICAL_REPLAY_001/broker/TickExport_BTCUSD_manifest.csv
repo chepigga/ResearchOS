@@ -1,0 +1,32 @@
+key,value
+timestamp_kind,MT5_SERVER_HISTORY_TIME_MSC
+broker,FTMO Global Markets Ltd
+server,FTMO-Demo
+symbol,BTCUSD
+requested_from,2026.05.01 00:00:00
+requested_from_msc,1777593600000
+requested_to_exclusive,2026.08.08 00:00:00
+requested_to_exclusive_msc,1786147200000
+processed_to_exclusive,2026.08.08 00:00:00
+first_tick_msc,1777593900309
+first_tick_server,2026.05.01 00:05:00.309
+last_tick_msc,1786146894161
+last_tick_server,2026.08.07 23:54:54.161
+total_ticks,31089340
+completed_nonempty_chunks,99
+empty_chunks,0
+failed_chunks,0
+backward_time_count,0
+same_millisecond_count,23
+max_gap_msc,57600130
+gap_gt_1s_count,1174735
+gap_gt_5s_count,59643
+gap_gt_60s_count,347
+digits,2
+point,0.01
+status,COMPLETE
+monthly_file,tick_count,first_tick_msc,last_tick_msc
+TickExport_BTCUSD_2026-05.csv,8541093,1777593900309,1780271699784
+TickExport_BTCUSD_2026-06.csv,11770523,1780272300913,1782863699407
+TickExport_BTCUSD_2026-07.csv,9175074,1782864300203,1785542099933
+TickExport_BTCUSD_2026-08.csv,1602650,1785542722984,1786146894161
