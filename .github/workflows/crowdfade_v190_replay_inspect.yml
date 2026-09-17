@@ -1,0 +1,34 @@
+name: CrowdFade v1.90 Replay Inspect
+on:
+  push:
+    branches:
+      - lab/crowdfade-v190-historical-replay-001
+    paths:
+      - '.github/workflows/crowdfade_v190_replay_inspect.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-v190-historical-replay-001
+          fetch-depth: 0
+      - name: Download frozen CrowdFade research helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor
+          curl -L --fail --retry 3 -o labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor/sim_v180.py https://github.com/chepigga/ResearchOS/releases/download/btc/sim.py
+          curl -L --fail --retry 3 -o labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor/CROWDFADE_SPEC_v180.md https://github.com/chepigga/ResearchOS/releases/download/btc/CROWDFADE_SPEC_v180_2026-09-16.md
+          sha256sum labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor/* > labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor/SHA256SUMS.txt
+      - name: Persist inspected helpers
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/vendor
+          git commit -m 'research(CrowdFade): vendor frozen v180 replay helpers for v190 audit' || true
+          git push origin HEAD:lab/crowdfade-v190-historical-replay-001
