@@ -1,0 +1,49 @@
+name: GC SHORT Failed Reclaim Discovery LAB001
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'research/gc/gc_short_failed_reclaim_discovery_lab_001.py'
+      - 'research/gc/GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001_PREREG.md'
+      - '.github/workflows/gc_short_failed_reclaim_discovery_lab_001.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  short-discovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy
+
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_failed_reclaim_discovery_lab_001.py
+
+      - name: Run LAB001
+        run: python research/gc/gc_short_failed_reclaim_discovery_lab_001.py
+
+      - name: Commit LAB001 results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/gc/GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001.json \
+                  research/gc/GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001.md \
+                  research/gc/GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001_EVENTS.csv \
+                  research/gc/GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001_METRICS.csv
+          if git diff --cached --quiet; then
+            echo "No result changes"
+          else
+            git commit -m "Record GC SHORT failed-reclaim discovery LAB001"
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
