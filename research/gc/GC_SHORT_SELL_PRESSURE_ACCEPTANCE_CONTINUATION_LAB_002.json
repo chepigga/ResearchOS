@@ -1,0 +1,293 @@
+{
+  "lab": "GC_SHORT_SELL_PRESSURE_ACCEPTANCE_CONTINUATION_LAB_002",
+  "status": "HISTORICAL_SHORT_ACCEPTANCE_REJECT_NOT_OOS",
+  "mechanism": "extreme sell pressure -> break/close below prior20 low -> next M1 accepts below -> SHORT at following M1 open",
+  "rithmic": {
+    "TRAIN": {
+      "5": {
+        "n": 41,
+        "ev": 0.32635934098768,
+        "median": 0.392523364486226,
+        "wr": 58.536585365853654,
+        "days": 14,
+        "positive_days": 11
+      },
+      "15": {
+        "n": 41,
+        "ev": 0.12152725431952617,
+        "median": -0.07106598984797165,
+        "wr": 48.78048780487805,
+        "days": 14,
+        "positive_days": 6
+      },
+      "30": {
+        "n": 40,
+        "ev": 1.028767133947491,
+        "median": 0.37762557077635706,
+        "wr": 52.5,
+        "days": 14,
+        "positive_days": 9
+      }
+    },
+    "VALID": {
+      "5": {
+        "n": 24,
+        "ev": 0.04706127346775261,
+        "median": 0.16353017521075697,
+        "wr": 54.166666666666664,
+        "days": 11,
+        "positive_days": 6
+      },
+      "15": {
+        "n": 24,
+        "ev": -0.07236724799297917,
+        "median": 0.1526329858328662,
+        "wr": 50.0,
+        "days": 11,
+        "positive_days": 6
+      },
+      "30": {
+        "n": 24,
+        "ev": -0.39045137657928725,
+        "median": 0.13221852928967856,
+        "wr": 54.166666666666664,
+        "days": 11,
+        "positive_days": 5
+      }
+    },
+    "LATE_CHECK": {
+      "5": {
+        "n": 15,
+        "ev": -0.19198611573211047,
+        "median": 0.22399999999978812,
+        "wr": 53.333333333333336,
+        "days": 5,
+        "positive_days": 2
+      },
+      "15": {
+        "n": 15,
+        "ev": -0.49227494295352214,
+        "median": 0.25250501001994446,
+        "wr": 53.333333333333336,
+        "days": 5,
+        "positive_days": 2
+      },
+      "30": {
+        "n": 15,
+        "ev": -0.25147086338983227,
+        "median": 0.06511627906940935,
+        "wr": 53.333333333333336,
+        "days": 5,
+        "positive_days": 2
+      }
+    },
+    "POST_CHECK": {
+      "5": {
+        "n": 0,
+        "ev": null,
+        "median": null,
+        "wr": null,
+        "days": 0,
+        "positive_days": 0
+      },
+      "15": {
+        "n": 0,
+        "ev": null,
+        "median": null,
+        "wr": null,
+        "days": 0,
+        "positive_days": 0
+      },
+      "30": {
+        "n": 0,
+        "ev": null,
+        "median": null,
+        "wr": null,
+        "days": 0,
+        "positive_days": 0
+      }
+    },
+    "FULL": {
+      "5": {
+        "n": 80,
+        "ev": 0.14538014759674106,
+        "median": 0.23373913043457076,
+        "wr": 56.25,
+        "days": 30,
+        "positive_days": 19
+      },
+      "15": {
+        "n": 80,
+        "ev": -0.05172900836292197,
+        "median": 0.010671625538018079,
+        "wr": 50.0,
+        "days": 30,
+        "positive_days": 14
+      },
+      "30": {
+        "n": 79,
+        "ev": 0.3545289793563199,
+        "median": 0.1379310344832777,
+        "wr": 53.16455696202531,
+        "days": 30,
+        "positive_days": 16
+      }
+    }
+  },
+  "amp": {
+    "TRAIN": {
+      "5": {
+        "n": 29,
+        "ev": -0.09951221871181372,
+        "median": -0.13725490196065582,
+        "wr": 48.275862068965516,
+        "days": 10,
+        "positive_days": 6
+      },
+      "15": {
+        "n": 29,
+        "ev": 0.08967280416555568,
+        "median": 0.09180327868843835,
+        "wr": 51.724137931034484,
+        "days": 10,
+        "positive_days": 4
+      },
+      "30": {
+        "n": 29,
+        "ev": 0.5619249731338342,
+        "median": -0.09003215434075043,
+        "wr": 48.275862068965516,
+        "days": 10,
+        "positive_days": 7
+      }
+    },
+    "VALID": {
+      "5": {
+        "n": 26,
+        "ev": 0.07907547717359267,
+        "median": 0.25263441827005734,
+        "wr": 53.84615384615385,
+        "days": 11,
+        "positive_days": 6
+      },
+      "15": {
+        "n": 26,
+        "ev": -0.27456959916590956,
+        "median": 0.15786048932825592,
+        "wr": 50.0,
+        "days": 11,
+        "positive_days": 5
+      },
+      "30": {
+        "n": 26,
+        "ev": -0.6587431624043075,
+        "median": 0.13221852928967856,
+        "wr": 53.84615384615385,
+        "days": 11,
+        "positive_days": 5
+      }
+    },
+    "LATE_CHECK": {
+      "5": {
+        "n": 13,
+        "ev": -0.043901358532405135,
+        "median": 0.3949843260186649,
+        "wr": 61.53846153846154,
+        "days": 5,
+        "positive_days": 3
+      },
+      "15": {
+        "n": 13,
+        "ev": -0.27880451054106226,
+        "median": 0.2550607287448474,
+        "wr": 53.84615384615385,
+        "days": 5,
+        "positive_days": 3
+      },
+      "30": {
+        "n": 13,
+        "ev": -0.3543604926545237,
+        "median": 0.06511627906940935,
+        "wr": 53.84615384615385,
+        "days": 5,
+        "positive_days": 3
+      }
+    },
+    "POST_CHECK": {
+      "5": {
+        "n": 7,
+        "ev": 0.5190297900919555,
+        "median": 0.8936170212764516,
+        "wr": 71.42857142857143,
+        "days": 2,
+        "positive_days": 2
+      },
+      "15": {
+        "n": 7,
+        "ev": 2.1360009576165937,
+        "median": 2.1256544502616754,
+        "wr": 85.71428571428571,
+        "days": 2,
+        "positive_days": 2
+      },
+      "30": {
+        "n": 7,
+        "ev": 2.36956926395319,
+        "median": 1.0710382513657781,
+        "wr": 71.42857142857143,
+        "days": 2,
+        "positive_days": 2
+      }
+    },
+    "FULL": {
+      "5": {
+        "n": 75,
+        "ev": 0.029767985781243064,
+        "median": 0.26415094339598844,
+        "wr": 54.666666666666664,
+        "days": 28,
+        "positive_days": 17
+      },
+      "15": {
+        "n": 75,
+        "ev": 0.09052333078359748,
+        "median": 0.27450980392131163,
+        "wr": 54.666666666666664,
+        "days": 28,
+        "positive_days": 14
+      },
+      "30": {
+        "n": 75,
+        "ev": 0.14865067255376962,
+        "median": 0.1379310344832777,
+        "wr": 53.333333333333336,
+        "days": 28,
+        "positive_days": 17
+      }
+    }
+  },
+  "gates": {
+    "rithmic_full_n15_ge25": true,
+    "rithmic_train_n15_ge12": true,
+    "rithmic_valid_n15_ge8": true,
+    "rithmic_train_ev15_pos": true,
+    "rithmic_train_ev30_pos": true,
+    "rithmic_valid_ev15_pos": false,
+    "rithmic_valid_ev30_pos": false,
+    "rithmic_full_ev15_pos": false,
+    "rithmic_full_ev30_pos": true,
+    "rithmic_late_conditional_positive": false,
+    "amp_valid_ev15_pos": false,
+    "amp_valid_ev30_pos": false,
+    "pass": false
+  },
+  "event_counts": {
+    "rithmic": 80,
+    "amp": 75
+  },
+  "notes": [
+    "Historical bounded discovery only; not independent OOS.",
+    "No XAU execution tuning in this lab.",
+    "AMP is supportive/feed-parity evidence, not independent market OOS."
+  ]
+}
