@@ -18,21 +18,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python -m pip install -q numpy pandas
-      - name: Download frozen BTC release assets
+      - run: python -m pip install -q numpy pandas numba
+      - name: Download frozen flow and Binance Vision 5m history
         run: |
-          mkdir -p labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/data
-          cd labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/data
-          wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          ROOT=labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/data
+          mkdir -p "$ROOT/klines" "$ROOT/../output"
+          cd "$ROOT"
           wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
-          echo '13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd  btc_5m.zip' | sha256sum -c -
           echo 'b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d  BTCUSDT_flow_2021-01-2026-08.csv.zip' | sha256sum -c -
+          cd klines
+          for Y in 2021 2022 2023 2024 2025; do
+            for M in $(seq -w 1 12); do
+              F=BTCUSDT-5m-${Y}-${M}.zip
+              wget -q "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/5m/$F" -O "$F"
+            done
+          done
+          sha256sum BTCUSDT-5m-*.zip > ../kline_sha256_manifest.txt
+          wc -l ../kline_sha256_manifest.txt
       - name: Run LAB005 broad execution search
-        run: python labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/run_search.py
-      - name: Persist outputs
+        run: python labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/run_search_v2.py
+      - name: Persist outputs and manifest
         run: |
+          cp labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/data/kline_sha256_manifest.txt labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/output/
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/output
-          git commit -m 'research(CrowdFade): persist LAB005 execution search outputs' || exit 0
+          git commit -m 'research(CrowdFade): persist LAB005 5y execution search outputs' || exit 0
           git push
