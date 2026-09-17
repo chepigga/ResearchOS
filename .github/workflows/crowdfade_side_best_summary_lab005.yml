@@ -1,0 +1,24 @@
+name: crowdfade-side-best-summary-lab005
+on:
+  push:
+    branches: [ lab/crowdfade-execution-5y-positive-005 ]
+    paths:
+      - 'labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/summarize_side_best.py'
+      - '.github/workflows/crowdfade_side_best_summary_lab005.yml'
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+      - run: python labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/summarize_side_best.py
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+chepigga@users.noreply.github.com'
+          git add labs/CROWDFADE_EXECUTION_5Y_POSITIVE_LAB_005/output/side_best_summary.json
+          git commit -m 'research(CrowdFade): persist side execution leaders' || exit 0
+          git push
