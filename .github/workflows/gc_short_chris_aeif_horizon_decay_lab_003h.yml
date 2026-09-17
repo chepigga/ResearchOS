@@ -1,0 +1,37 @@
+name: GC SHORT Chris AEIF Horizon Decay LAB003H
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/GC_SHORT_CHRIS_AEIF_HORIZON_DECAY_LAB_003H_PREREG.md'
+      - 'research/gc/gc_short_chris_aeif_horizon_decay_lab_003h.py'
+      - '.github/workflows/gc_short_chris_aeif_horizon_decay_lab_003h.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  horizon-decay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_chris_aeif_horizon_decay_lab_003h.py
+      - name: Run LAB003H
+        run: python research/gc/gc_short_chris_aeif_horizon_decay_lab_003h.py
+      - name: Commit LAB003H results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_SHORT_CHRIS_AEIF_HORIZON_DECAY_LAB_003H.json \
+                  research/gc/GC_SHORT_CHRIS_AEIF_HORIZON_DECAY_LAB_003H.md \
+                  research/gc/GC_SHORT_CHRIS_AEIF_HORIZON_DECAY_LAB_003H_EVENTS.csv
+          git commit -m 'Add GC SHORT Chris AEIF horizon decay LAB003H results' || exit 0
+          git push
