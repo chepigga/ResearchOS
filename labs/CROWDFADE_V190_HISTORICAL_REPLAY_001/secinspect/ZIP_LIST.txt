@@ -1,0 +1,6 @@
+Archive:  BTCUSDT_sec.csv.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+1305720129  2026-09-16 17:40   BTCUSDT_sec.csv
+---------                     -------
+1305720129                     1 file
