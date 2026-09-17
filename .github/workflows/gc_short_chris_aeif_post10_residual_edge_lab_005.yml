@@ -1,0 +1,34 @@
+name: GC SHORT Chris AEIF Post10 Residual Edge LAB005
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/GC_SHORT_CHRIS_AEIF_POST10_RESIDUAL_EDGE_LAB_005_PREREG.md'
+      - 'research/gc/gc_short_chris_aeif_post10_residual_edge_lab_005.py'
+      - '.github/workflows/gc_short_chris_aeif_post10_residual_edge_lab_005.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  post10-residual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install numpy pandas scipy scikit-learn
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_chris_aeif_post10_residual_edge_lab_005.py
+      - name: Run LAB005
+        run: python research/gc/gc_short_chris_aeif_post10_residual_edge_lab_005.py
+      - name: Commit LAB005 results
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add research/gc/GC_SHORT_CHRIS_AEIF_POST10_RESIDUAL_EDGE_LAB_005.json research/gc/GC_SHORT_CHRIS_AEIF_POST10_RESIDUAL_EDGE_LAB_005.md research/gc/GC_SHORT_CHRIS_AEIF_POST10_RESIDUAL_EDGE_LAB_005_UNIVARIATE.csv
+          git commit -m 'Add GC SHORT Chris AEIF post10 residual edge LAB005 results' || exit 0
+          git push
