@@ -1,0 +1,32 @@
+name: CrowdFade v1.90 Broker Manifest Inspect
+on:
+  push:
+    branches:
+      - lab/crowdfade-v190-historical-replay-001
+    paths:
+      - '.github/workflows/crowdfade_v190_broker_manifest.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-v190-historical-replay-001
+          fetch-depth: 0
+      - name: Download broker tick manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/broker
+          curl -L --fail --retry 3 -o labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/broker/TickExport_BTCUSD_manifest.csv https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_manifest.csv
+          cat labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/broker/TickExport_BTCUSD_manifest.csv
+      - name: Persist manifest
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/broker/TickExport_BTCUSD_manifest.csv
+          git commit -m 'research(CrowdFade): persist BTCUSD broker tick manifest' || true
+          git push origin HEAD:lab/crowdfade-v190-historical-replay-001
