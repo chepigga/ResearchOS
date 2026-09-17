@@ -1,0 +1,225 @@
+{
+  "status": "HISTORICAL_DELAYED_RESOLUTION_PATH_SIGNAL_NOT_OOS",
+  "event_counts": {
+    "AMP_CQG_RAW_EXCLUSIVE": 23,
+    "RITHMIC_RAW": 22
+  },
+  "evidence_candidates": [
+    {
+      "feature": "cp10_bear_frac",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.8166666666666667,
+      "amp_full_auc": 0.9848484848484849
+    },
+    {
+      "feature": "cp10_bear_frac",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.8708333333333332,
+      "amp_full_auc": 0.923076923076923
+    },
+    {
+      "feature": "cp10_closepos",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": -1,
+      "rith_full_auc": 0.7833333333333334,
+      "amp_full_auc": 0.9015151515151515
+    },
+    {
+      "feature": "cp10_closepos",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": -1,
+      "rith_full_auc": 0.8333333333333333,
+      "amp_full_auc": 0.9153846153846155
+    },
+    {
+      "feature": "cp10_cum_body",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.825,
+      "amp_full_auc": 1.0
+    },
+    {
+      "feature": "cp10_cum_body",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.8916666666666667,
+      "amp_full_auc": 0.9230769230769231
+    },
+    {
+      "feature": "cp10_dist_seed_close",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.85,
+      "amp_full_auc": 0.9848484848484849
+    },
+    {
+      "feature": "cp10_dist_seed_close",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.875,
+      "amp_full_auc": 0.9076923076923077
+    },
+    {
+      "feature": "cp10_dist_seed_high",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.85,
+      "amp_full_auc": 1.0
+    },
+    {
+      "feature": "cp10_dist_seed_high",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.8916666666666667,
+      "amp_full_auc": 0.9230769230769231
+    },
+    {
+      "feature": "cp10_mae",
+      "target": "winner15",
+      "rith_valid_auc": 0.8400000000000001,
+      "amp_valid_auc": 0.8400000000000001,
+      "orientation": -1,
+      "rith_full_auc": 0.7166666666666667,
+      "amp_full_auc": 0.9015151515151515
+    },
+    {
+      "feature": "cp10_mae",
+      "target": "winner30",
+      "rith_valid_auc": 0.8400000000000001,
+      "amp_valid_auc": 0.8400000000000001,
+      "orientation": -1,
+      "rith_full_auc": 0.8333333333333334,
+      "amp_full_auc": 0.8384615384615385
+    },
+    {
+      "feature": "cp10_mfe",
+      "target": "winner15",
+      "rith_valid_auc": 0.8800000000000001,
+      "amp_valid_auc": 0.8800000000000001,
+      "orientation": 1,
+      "rith_full_auc": 0.7416666666666666,
+      "amp_full_auc": 0.9318181818181819
+    },
+    {
+      "feature": "cp10_mfe",
+      "target": "winner30",
+      "rith_valid_auc": 0.8800000000000001,
+      "amp_valid_auc": 0.8800000000000001,
+      "orientation": 1,
+      "rith_full_auc": 0.8166666666666667,
+      "amp_full_auc": 0.8538461538461539
+    },
+    {
+      "feature": "cp10_ret",
+      "target": "winner15",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.85,
+      "amp_full_auc": 1.0
+    },
+    {
+      "feature": "cp10_ret",
+      "target": "winner30",
+      "rith_valid_auc": 1.0,
+      "amp_valid_auc": 1.0,
+      "orientation": 1,
+      "rith_full_auc": 0.8833333333333333,
+      "amp_full_auc": 0.9230769230769231
+    },
+    {
+      "feature": "cp1_bear_frac",
+      "target": "winner30",
+      "rith_valid_auc": 0.7000000000000001,
+      "amp_valid_auc": 0.7000000000000001,
+      "orientation": 1,
+      "rith_full_auc": 0.6,
+      "amp_full_auc": 0.5307692307692308
+    },
+    {
+      "feature": "cp1_closepos",
+      "target": "winner30",
+      "rith_valid_auc": 0.76,
+      "amp_valid_auc": 0.76,
+      "orientation": -1,
+      "rith_full_auc": 0.5833333333333333,
+      "amp_full_auc": 0.5461538461538461
+    },
+    {
+      "feature": "cp3_bear_frac",
+      "target": "winner30",
+      "rith_valid_auc": 0.6799999999999999,
+      "amp_valid_auc": 0.6799999999999999,
+      "orientation": 1,
+      "rith_full_auc": 0.5583333333333333,
+      "amp_full_auc": 0.6153846153846154
+    },
+    {
+      "feature": "cp3_dist_seed_close",
+      "target": "winner30",
+      "rith_valid_auc": 0.6799999999999999,
+      "amp_valid_auc": 0.6799999999999999,
+      "orientation": -1,
+      "rith_full_auc": 0.6666666666666666,
+      "amp_full_auc": 0.5384615384615384
+    },
+    {
+      "feature": "cp3_dist_seed_high",
+      "target": "winner30",
+      "rith_valid_auc": 0.8,
+      "amp_valid_auc": 0.8,
+      "orientation": -1,
+      "rith_full_auc": 0.7333333333333334,
+      "amp_full_auc": 0.5846153846153845
+    },
+    {
+      "feature": "cp5_cum_body",
+      "target": "winner15",
+      "rith_valid_auc": 0.68,
+      "amp_valid_auc": 0.68,
+      "orientation": 1,
+      "rith_full_auc": 0.5,
+      "amp_full_auc": 0.7727272727272727
+    },
+    {
+      "feature": "cp5_cum_body",
+      "target": "winner30",
+      "rith_valid_auc": 0.68,
+      "amp_valid_auc": 0.68,
+      "orientation": 1,
+      "rith_full_auc": 0.6166666666666667,
+      "amp_full_auc": 0.6923076923076923
+    },
+    {
+      "feature": "cp5_mfe",
+      "target": "winner30",
+      "rith_valid_auc": 0.68,
+      "amp_valid_auc": 0.68,
+      "orientation": 1,
+      "rith_full_auc": 0.5833333333333334,
+      "amp_full_auc": 0.5692307692307692
+    }
+  ]
+}
