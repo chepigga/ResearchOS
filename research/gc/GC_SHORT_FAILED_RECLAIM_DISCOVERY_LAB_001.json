@@ -1,0 +1,503 @@
+{
+  "lab": "GC_SHORT_FAILED_RECLAIM_DISCOVERY_LAB_001",
+  "status": "HISTORICAL_SHORT_MECHANISM_REJECT_NOT_OOS",
+  "primary": {
+    "RITHMIC": {
+      "TRAIN": {
+        "5": {
+          "n": 27,
+          "ev_atr": -0.5351957005288644,
+          "median_atr": 0.1824104234526093,
+          "wr_pct": 55.55555555555556,
+          "days": 11,
+          "positive_days": 7
+        },
+        "15": {
+          "n": 27,
+          "ev_atr": -0.9127201751454201,
+          "median_atr": -0.07179487179512964,
+          "wr_pct": 44.44444444444444,
+          "days": 11,
+          "positive_days": 6
+        },
+        "30": {
+          "n": 27,
+          "ev_atr": -0.6261937939361614,
+          "median_atr": -0.4197002141326467,
+          "wr_pct": 44.44444444444444,
+          "days": 11,
+          "positive_days": 4
+        }
+      },
+      "VALID": {
+        "5": {
+          "n": 18,
+          "ev_atr": 0.5795559138910701,
+          "median_atr": 0.621167204507038,
+          "wr_pct": 61.111111111111114,
+          "days": 10,
+          "positive_days": 6
+        },
+        "15": {
+          "n": 18,
+          "ev_atr": 0.3482993781613431,
+          "median_atr": 0.11067193675879183,
+          "wr_pct": 50.0,
+          "days": 10,
+          "positive_days": 4
+        },
+        "30": {
+          "n": 18,
+          "ev_atr": 0.7479852507364193,
+          "median_atr": 2.678450494378813,
+          "wr_pct": 61.111111111111114,
+          "days": 10,
+          "positive_days": 6
+        }
+      },
+      "LATE_CHECK": {
+        "5": {
+          "n": 4,
+          "ev_atr": 0.29394286788729496,
+          "median_atr": 0.4452424016739263,
+          "wr_pct": 75.0,
+          "days": 3,
+          "positive_days": 2
+        },
+        "15": {
+          "n": 4,
+          "ev_atr": 2.189590357743398,
+          "median_atr": 1.9756002411605489,
+          "wr_pct": 75.0,
+          "days": 3,
+          "positive_days": 2
+        },
+        "30": {
+          "n": 4,
+          "ev_atr": 1.5334130692406618,
+          "median_atr": 1.7116442413471702,
+          "wr_pct": 75.0,
+          "days": 3,
+          "positive_days": 2
+        }
+      },
+      "FULL": {
+        "5": {
+          "n": 49,
+          "ev_atr": -0.05801032638144687,
+          "median_atr": 0.23236514522799215,
+          "wr_pct": 59.183673469387756,
+          "days": 24,
+          "positive_days": 15
+        },
+        "15": {
+          "n": 49,
+          "ev_atr": -0.196238663082624,
+          "median_atr": 0.0,
+          "wr_pct": 48.97959183673469,
+          "days": 24,
+          "positive_days": 12
+        },
+        "30": {
+          "n": 49,
+          "ev_atr": 0.05490110926411918,
+          "median_atr": 0.3867403314917049,
+          "wr_pct": 53.06122448979592,
+          "days": 24,
+          "positive_days": 12
+        }
+      }
+    },
+    "AMP": {
+      "TRAIN": {
+        "5": {
+          "n": 19,
+          "ev_atr": -0.8930518842289352,
+          "median_atr": 0.23430962343125883,
+          "wr_pct": 52.63157894736842,
+          "days": 7,
+          "positive_days": 3
+        },
+        "15": {
+          "n": 19,
+          "ev_atr": -1.530197023836778,
+          "median_atr": 0.0,
+          "wr_pct": 42.10526315789473,
+          "days": 7,
+          "positive_days": 3
+        },
+        "30": {
+          "n": 19,
+          "ev_atr": -0.9762164295392172,
+          "median_atr": -0.4197002141326467,
+          "wr_pct": 47.368421052631575,
+          "days": 7,
+          "positive_days": 3
+        }
+      },
+      "VALID": {
+        "5": {
+          "n": 16,
+          "ev_atr": 0.6977195452334601,
+          "median_atr": 0.9605099046223654,
+          "wr_pct": 62.5,
+          "days": 8,
+          "positive_days": 5
+        },
+        "15": {
+          "n": 16,
+          "ev_atr": 0.8177940883219359,
+          "median_atr": 0.5572695035462545,
+          "wr_pct": 56.25,
+          "days": 8,
+          "positive_days": 4
+        },
+        "30": {
+          "n": 16,
+          "ev_atr": 1.5673607575896862,
+          "median_atr": 3.142920711974085,
+          "wr_pct": 68.75,
+          "days": 8,
+          "positive_days": 6
+        }
+      },
+      "LATE_CHECK": {
+        "5": {
+          "n": 6,
+          "ev_atr": -0.3851644272346668,
+          "median_atr": 0.4452424016739263,
+          "wr_pct": 66.66666666666666,
+          "days": 3,
+          "positive_days": 2
+        },
+        "15": {
+          "n": 6,
+          "ev_atr": 2.5319344754978617,
+          "median_atr": 2.27350427350465,
+          "wr_pct": 100.0,
+          "days": 3,
+          "positive_days": 3
+        },
+        "30": {
+          "n": 5,
+          "ev_atr": 2.1116449025207804,
+          "median_atr": 2.4529914529916135,
+          "wr_pct": 80.0,
+          "days": 3,
+          "positive_days": 2
+        }
+      },
+      "POST_CHECK": {
+        "5": {
+          "n": 1,
+          "ev_atr": 0.7971530249106983,
+          "median_atr": 0.7971530249106983,
+          "wr_pct": 100.0,
+          "days": 1,
+          "positive_days": 1
+        },
+        "15": {
+          "n": 1,
+          "ev_atr": -0.7971530249111514,
+          "median_atr": -0.7971530249111514,
+          "wr_pct": 0.0,
+          "days": 1,
+          "positive_days": 0
+        },
+        "30": {
+          "n": 1,
+          "ev_atr": 3.637010676156392,
+          "median_atr": 3.637010676156392,
+          "wr_pct": 100.0,
+          "days": 1,
+          "positive_days": 1
+        }
+      },
+      "FULL": {
+        "5": {
+          "n": 42,
+          "ev_atr": -0.1742453955978979,
+          "median_atr": 0.30047544731979325,
+          "wr_pct": 59.523809523809526,
+          "days": 19,
+          "positive_days": 11
+        },
+        "15": {
+          "n": 42,
+          "ev_atr": -0.037966290754090005,
+          "median_atr": 0.31299867021287464,
+          "wr_pct": 54.761904761904766,
+          "days": 19,
+          "positive_days": 10
+        },
+        "30": {
+          "n": 41,
+          "ev_atr": 0.5054852475353694,
+          "median_atr": 0.983783783783873,
+          "wr_pct": 60.97560975609756,
+          "days": 19,
+          "positive_days": 12
+        }
+      }
+    }
+  },
+  "reference_mirror_breakdown": {
+    "RITHMIC": {
+      "TRAIN": {
+        "5": {
+          "n": 110,
+          "ev_atr": 0.36730743981644776,
+          "median_atr": 0.38157056950841856,
+          "wr_pct": 56.36363636363636,
+          "days": 14,
+          "positive_days": 12
+        },
+        "15": {
+          "n": 110,
+          "ev_atr": -0.01543153413586444,
+          "median_atr": 0.23227272727269144,
+          "wr_pct": 53.63636363636364,
+          "days": 14,
+          "positive_days": 9
+        },
+        "30": {
+          "n": 108,
+          "ev_atr": 0.2737548941694924,
+          "median_atr": 0.4384779516355983,
+          "wr_pct": 53.70370370370371,
+          "days": 14,
+          "positive_days": 10
+        }
+      },
+      "VALID": {
+        "5": {
+          "n": 100,
+          "ev_atr": 0.037754202807456234,
+          "median_atr": -0.14028030344779194,
+          "wr_pct": 45.0,
+          "days": 14,
+          "positive_days": 7
+        },
+        "15": {
+          "n": 100,
+          "ev_atr": -0.046489861868314185,
+          "median_atr": -0.26910755148778615,
+          "wr_pct": 44.0,
+          "days": 14,
+          "positive_days": 8
+        },
+        "30": {
+          "n": 99,
+          "ev_atr": 0.002192621146007797,
+          "median_atr": 0.428969359331257,
+          "wr_pct": 55.55555555555556,
+          "days": 14,
+          "positive_days": 7
+        }
+      },
+      "LATE_CHECK": {
+        "5": {
+          "n": 40,
+          "ev_atr": 0.05878818996506061,
+          "median_atr": 0.11797752808978214,
+          "wr_pct": 50.0,
+          "days": 5,
+          "positive_days": 3
+        },
+        "15": {
+          "n": 40,
+          "ev_atr": -0.3048132378889092,
+          "median_atr": -0.04969683014798399,
+          "wr_pct": 50.0,
+          "days": 5,
+          "positive_days": 1
+        },
+        "30": {
+          "n": 40,
+          "ev_atr": -0.1574365827372684,
+          "median_atr": 0.2325255569585153,
+          "wr_pct": 52.5,
+          "days": 5,
+          "positive_days": 3
+        }
+      },
+      "FULL": {
+        "5": {
+          "n": 251,
+          "ev_atr": 0.18922822111767607,
+          "median_atr": 0.07179487179512294,
+          "wr_pct": 50.99601593625498,
+          "days": 33,
+          "positive_days": 22
+        },
+        "15": {
+          "n": 251,
+          "ev_atr": -0.07300567757115499,
+          "median_atr": 0.0,
+          "wr_pct": 49.40239043824701,
+          "days": 33,
+          "positive_days": 18
+        },
+        "30": {
+          "n": 248,
+          "ev_atr": 0.1115687209687349,
+          "median_atr": 0.4097018572827721,
+          "wr_pct": 54.43548387096774,
+          "days": 33,
+          "positive_days": 20
+        }
+      }
+    },
+    "AMP": {
+      "TRAIN": {
+        "5": {
+          "n": 82,
+          "ev_atr": 0.2317136165378536,
+          "median_atr": 0.3734291026200629,
+          "wr_pct": 54.87804878048781,
+          "days": 10,
+          "positive_days": 7
+        },
+        "15": {
+          "n": 82,
+          "ev_atr": -0.05492076159909977,
+          "median_atr": 0.30227272727264054,
+          "wr_pct": 52.4390243902439,
+          "days": 10,
+          "positive_days": 6
+        },
+        "30": {
+          "n": 80,
+          "ev_atr": -0.04523542496201884,
+          "median_atr": 0.28285181733450643,
+          "wr_pct": 52.5,
+          "days": 10,
+          "positive_days": 7
+        }
+      },
+      "VALID": {
+        "5": {
+          "n": 97,
+          "ev_atr": 0.10998528057039922,
+          "median_atr": -0.053639846743489414,
+          "wr_pct": 47.42268041237113,
+          "days": 14,
+          "positive_days": 8
+        },
+        "15": {
+          "n": 97,
+          "ev_atr": -0.05667787280067871,
+          "median_atr": -0.243478260869907,
+          "wr_pct": 45.36082474226804,
+          "days": 14,
+          "positive_days": 9
+        },
+        "30": {
+          "n": 96,
+          "ev_atr": 0.10365567038416772,
+          "median_atr": 0.6543209876544159,
+          "wr_pct": 56.25,
+          "days": 14,
+          "positive_days": 7
+        }
+      },
+      "LATE_CHECK": {
+        "5": {
+          "n": 40,
+          "ev_atr": 0.0764196180813792,
+          "median_atr": -0.05257803790431532,
+          "wr_pct": 47.5,
+          "days": 5,
+          "positive_days": 4
+        },
+        "15": {
+          "n": 40,
+          "ev_atr": -0.005903654362523536,
+          "median_atr": 0.42852207558904654,
+          "wr_pct": 55.00000000000001,
+          "days": 5,
+          "positive_days": 2
+        },
+        "30": {
+          "n": 40,
+          "ev_atr": -0.17796137998741615,
+          "median_atr": 0.2325255569585153,
+          "wr_pct": 55.00000000000001,
+          "days": 5,
+          "positive_days": 2
+        }
+      },
+      "POST_CHECK": {
+        "5": {
+          "n": 18,
+          "ev_atr": 0.558564466778082,
+          "median_atr": 0.367155410619577,
+          "wr_pct": 66.66666666666666,
+          "days": 3,
+          "positive_days": 3
+        },
+        "15": {
+          "n": 18,
+          "ev_atr": 1.1967510097747531,
+          "median_atr": 2.287355227669364,
+          "wr_pct": 61.111111111111114,
+          "days": 3,
+          "positive_days": 3
+        },
+        "30": {
+          "n": 18,
+          "ev_atr": 2.0822266090884876,
+          "median_atr": 1.4238713919688757,
+          "wr_pct": 72.22222222222221,
+          "days": 3,
+          "positive_days": 3
+        }
+      },
+      "FULL": {
+        "5": {
+          "n": 237,
+          "ev_atr": 0.1805064721379467,
+          "median_atr": 0.0823529411760256,
+          "wr_pct": 51.47679324894515,
+          "days": 31,
+          "positive_days": 21
+        },
+        "15": {
+          "n": 237,
+          "ev_atr": 0.04769669151330207,
+          "median_atr": 0.1609195402299804,
+          "wr_pct": 50.63291139240506,
+          "days": 31,
+          "positive_days": 19
+        },
+        "30": {
+          "n": 234,
+          "ev_atr": 0.15681082958980658,
+          "median_atr": 0.5421935619166732,
+          "wr_pct": 55.98290598290598,
+          "days": 31,
+          "positive_days": 18
+        }
+      }
+    }
+  },
+  "gates": {
+    "rithmic_full_n_ge30": true,
+    "rithmic_valid_n_ge8": true,
+    "rithmic_valid_15m_ev_pos": true,
+    "rithmic_valid_30m_ev_pos": true,
+    "rithmic_late_n_ge3_and_15m_ev_pos": true,
+    "rithmic_late_30m_ev_pos": true,
+    "amp_valid_15m_ev_pos": true,
+    "amp_valid_30m_ev_pos": true,
+    "rithmic_full_15m_ev_pos": false,
+    "rithmic_full_30m_ev_pos": true
+  },
+  "governance": {
+    "xau_tuning": false,
+    "threshold_search": false,
+    "confirmation_window_search": false,
+    "new_market_data": false,
+    "independent_oos": false
+  }
+}
