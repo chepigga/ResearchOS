@@ -20,25 +20,33 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: gc-amp-feed-audit-001
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install dependencies
         run: pip install numpy pandas gdown
-
       - name: Compile-check
         run: python -m py_compile research/gc/gc_xau_short_chris_post10_transfer_lab_007.py
-
       - name: Download frozen FTMO XAU raw ticks
         shell: bash
         run: |
           set -euo pipefail
+          retry_gdown() {
+            local fid="$1" out="$2"
+            rm -f "$out"
+            for attempt in 1 2 3 4 5; do
+              echo "gdown attempt $attempt: $out"
+              if python -m gdown "$fid" -O "$out" && test -s "$out"; then return 0; fi
+              rm -f "$out"
+              sleep $((attempt * 12))
+            done
+            echo "Failed after retries: $out" >&2
+            return 1
+          }
           mkdir -p research/gc/_lab006_xau
           cd research/gc/_lab006_xau
-          python -m gdown 1iUo4U8OdoBRwpR4WYy_NHTv_5vqNJpkV -O XAUUSD_raw_ticks_20260803.meta.csv
-          python -m gdown 1gmggWBEowp0iJsrthyaES12svyULgKl1 -O XAUUSD_raw_ticks_20260915.meta.csv
+          retry_gdown 1iUo4U8OdoBRwpR4WYy_NHTv_5vqNJpkV XAUUSD_raw_ticks_20260803.meta.csv
+          retry_gdown 1gmggWBEowp0iJsrthyaES12svyULgKl1 XAUUSD_raw_ticks_20260915.meta.csv
           grep -q 'FTMO-Demo' XAUUSD_raw_ticks_20260803.meta.csv
           grep -q 'COPY_TICKS_ALL' XAUUSD_raw_ticks_20260803.meta.csv
           grep -q 'FTMO-Demo' XAUUSD_raw_ticks_20260915.meta.csv
@@ -79,13 +87,10 @@ jobs:
           EOF
           while IFS=$'\t' read -r day fid; do
             echo "Downloading XAU $day"
-            python -m gdown "$fid" -O "XAUUSD_raw_ticks_${day}.csv"
-            test -s "XAUUSD_raw_ticks_${day}.csv"
+            retry_gdown "$fid" "XAUUSD_raw_ticks_${day}.csv"
           done < files.tsv
-
       - name: Run LAB007
         run: python research/gc/gc_xau_short_chris_post10_transfer_lab_007.py
-
       - name: Commit LAB007 results
         run: |
           git config user.name 'github-actions[bot]'
