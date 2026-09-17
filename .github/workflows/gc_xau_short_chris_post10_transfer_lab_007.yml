@@ -5,6 +5,7 @@ on:
     branches: [gc-amp-feed-audit-001]
     paths:
       - 'research/gc/gc_xau_short_chris_post10_transfer_lab_007.py'
+      - 'research/gc/gc_xau_short_chris_post10_transfer_lab_007_runner.py'
       - 'research/gc/GC_XAU_SHORT_CHRIS_POST10_TRANSFER_LAB_007_PREREG.md'
       - '.github/workflows/gc_xau_short_chris_post10_transfer_lab_007.yml'
   workflow_dispatch:
@@ -26,7 +27,9 @@ jobs:
       - name: Install dependencies
         run: pip install numpy pandas gdown
       - name: Compile-check
-        run: python -m py_compile research/gc/gc_xau_short_chris_post10_transfer_lab_007.py
+        run: |
+          python -m py_compile research/gc/gc_xau_short_chris_post10_transfer_lab_007.py
+          python -m py_compile research/gc/gc_xau_short_chris_post10_transfer_lab_007_runner.py
       - name: Download frozen FTMO XAU raw ticks
         shell: bash
         run: |
@@ -90,7 +93,7 @@ jobs:
             retry_gdown "$fid" "XAUUSD_raw_ticks_${day}.csv"
           done < files.tsv
       - name: Run LAB007
-        run: python research/gc/gc_xau_short_chris_post10_transfer_lab_007.py
+        run: python research/gc/gc_xau_short_chris_post10_transfer_lab_007_runner.py
       - name: Commit LAB007 results
         run: |
           git config user.name 'github-actions[bot]'
