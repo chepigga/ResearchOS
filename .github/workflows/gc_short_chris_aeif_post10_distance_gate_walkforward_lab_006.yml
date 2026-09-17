@@ -1,0 +1,39 @@
+name: GC SHORT Chris AEIF Post10 Distance Gate Walkforward LAB006
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/GC_SHORT_CHRIS_AEIF_POST10_DISTANCE_GATE_WALKFORWARD_LAB_006_PREREG.md'
+      - 'research/gc/gc_short_chris_aeif_post10_distance_gate_walkforward_lab_006.py'
+      - '.github/workflows/gc_short_chris_aeif_post10_distance_gate_walkforward_lab_006.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  walkforward-distance-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install numpy pandas scipy scikit-learn requests
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_chris_aeif_post10_distance_gate_walkforward_lab_006.py
+      - name: Run LAB006
+        run: python research/gc/gc_short_chris_aeif_post10_distance_gate_walkforward_lab_006.py
+      - name: Commit LAB006 results
+        run: |
+          git config user.name 'chepigga'
+          git config user.email '158738928+chepigga@users.noreply.github.com'
+          git add research/gc/GC_SHORT_CHRIS_AEIF_POST10_DISTANCE_GATE_WALKFORWARD_LAB_006.json \
+                  research/gc/GC_SHORT_CHRIS_AEIF_POST10_DISTANCE_GATE_WALKFORWARD_LAB_006.md \
+                  research/gc/GC_SHORT_CHRIS_AEIF_POST10_DISTANCE_GATE_WALKFORWARD_LAB_006_OOF.csv
+          git diff --cached --quiet || git commit -m 'Record GC SHORT Chris AEIF post10 distance gate LAB006'
+          git push origin HEAD:gc-amp-feed-audit-001
