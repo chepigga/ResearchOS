@@ -1,0 +1,43 @@
+name: GC SHORT Sell Pressure Acceptance Continuation LAB002
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_short_sell_pressure_acceptance_continuation_lab_002.py'
+      - 'research/gc/GC_SHORT_SELL_PRESSURE_ACCEPTANCE_CONTINUATION_LAB_002_PREREG.md'
+      - '.github/workflows/gc_short_sell_pressure_acceptance_continuation_lab_002.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  short-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_sell_pressure_acceptance_continuation_lab_002.py
+      - name: Run LAB002
+        run: python research/gc/gc_short_sell_pressure_acceptance_continuation_lab_002.py
+      - name: Commit LAB002 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_SHORT_SELL_PRESSURE_ACCEPTANCE_CONTINUATION_LAB_002.json \
+                  research/gc/GC_SHORT_SELL_PRESSURE_ACCEPTANCE_CONTINUATION_LAB_002.md \
+                  research/gc/GC_SHORT_SELL_PRESSURE_ACCEPTANCE_CONTINUATION_LAB_002_EVENTS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Add GC SHORT acceptance-continuation LAB002 results'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
