@@ -1,0 +1,250 @@
+{
+  "status": "HISTORICAL_RAW_CHRIS_XAU_30M_DIRECTIONAL_TRANSFER_FAIL_SMALL_SAMPLE_NOT_OOS",
+  "frozen": {
+    "feed": "AMP_CQG_RAW_EXCLUSIVE",
+    "clock_offset_min": 180,
+    "entry": "SHORT at executable XAU Bid",
+    "exit": "cover at executable XAU Ask exactly 30m later",
+    "sl": null,
+    "tp": null,
+    "limit": null,
+    "filters": null,
+    "spread": "embedded"
+  },
+  "xau_file_stats": [
+    {
+      "file": "XAUUSD_raw_ticks_20260803.csv",
+      "rows": 217000,
+      "first_time_msc": 1785719100005,
+      "last_time_msc": 1785800998206
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260804.csv",
+      "rows": 205067,
+      "first_time_msc": 1785805500158,
+      "last_time_msc": 1785887398207
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260805.csv",
+      "rows": 258499,
+      "first_time_msc": 1785891900153,
+      "last_time_msc": 1785973787108
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260806.csv",
+      "rows": 260051,
+      "first_time_msc": 1785978300002,
+      "last_time_msc": 1786060199856
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260807.csv",
+      "rows": 272880,
+      "first_time_msc": 1786064700157,
+      "last_time_msc": 1786146597308
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260810.csv",
+      "rows": 236109,
+      "first_time_msc": 1786323900155,
+      "last_time_msc": 1786405797758
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260811.csv",
+      "rows": 250186,
+      "first_time_msc": 1786410300158,
+      "last_time_msc": 1786492197481
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260812.csv",
+      "rows": 243019,
+      "first_time_msc": 1786496700457,
+      "last_time_msc": 1786578599407
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260813.csv",
+      "rows": 259453,
+      "first_time_msc": 1786583100006,
+      "last_time_msc": 1786664996258
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260814.csv",
+      "rows": 224115,
+      "first_time_msc": 1786669500155,
+      "last_time_msc": 1786751392352
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260817.csv",
+      "rows": 227559,
+      "first_time_msc": 1786928700309,
+      "last_time_msc": 1787010599107
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260818.csv",
+      "rows": 237084,
+      "first_time_msc": 1787015100303,
+      "last_time_msc": 1787096999859
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260819.csv",
+      "rows": 279240,
+      "first_time_msc": 1787101500007,
+      "last_time_msc": 1787183399854
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260820.csv",
+      "rows": 277028,
+      "first_time_msc": 1787187900179,
+      "last_time_msc": 1787269799109
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260821.csv",
+      "rows": 267784,
+      "first_time_msc": 1787274300158,
+      "last_time_msc": 1787356199855
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260824.csv",
+      "rows": 309403,
+      "first_time_msc": 1787533500154,
+      "last_time_msc": 1787615399706
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260825.csv",
+      "rows": 285674,
+      "first_time_msc": 1787619900156,
+      "last_time_msc": 1787701799704
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260826.csv",
+      "rows": 253962,
+      "first_time_msc": 1787706300155,
+      "last_time_msc": 1787788198956
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260827.csv",
+      "rows": 263830,
+      "first_time_msc": 1787792700307,
+      "last_time_msc": 1787874599706
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260828.csv",
+      "rows": 287683,
+      "first_time_msc": 1787879100159,
+      "last_time_msc": 1787960999703
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260831.csv",
+      "rows": 270802,
+      "first_time_msc": 1788138300007,
+      "last_time_msc": 1788220199258
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260901.csv",
+      "rows": 290101,
+      "first_time_msc": 1788224700152,
+      "last_time_msc": 1788306599405
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260902.csv",
+      "rows": 286404,
+      "first_time_msc": 1788311100158,
+      "last_time_msc": 1788392999851
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260903.csv",
+      "rows": 273640,
+      "first_time_msc": 1788397500154,
+      "last_time_msc": 1788479399710
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260904.csv",
+      "rows": 245700,
+      "first_time_msc": 1788483900160,
+      "last_time_msc": 1788565799559
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260907.csv",
+      "rows": 170036,
+      "first_time_msc": 1788743100159,
+      "last_time_msc": 1788816599858
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260908.csv",
+      "rows": 269306,
+      "first_time_msc": 1788829500009,
+      "last_time_msc": 1788911399856
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260909.csv",
+      "rows": 248479,
+      "first_time_msc": 1788915900306,
+      "last_time_msc": 1788997799557
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260910.csv",
+      "rows": 280220,
+      "first_time_msc": 1789002300156,
+      "last_time_msc": 1789084199254
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260911.csv",
+      "rows": 282094,
+      "first_time_msc": 1789088700156,
+      "last_time_msc": 1789170595358
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260914.csv",
+      "rows": 261544,
+      "first_time_msc": 1789347900010,
+      "last_time_msc": 1789429799557
+    },
+    {
+      "file": "XAUUSD_raw_ticks_20260915.csv",
+      "rows": 242765,
+      "first_time_msc": 1789434300008,
+      "last_time_msc": 1789516199707
+    }
+  ],
+  "summary": {
+    "signals": 23,
+    "executable": 23,
+    "ev_atr": -0.16695120202218663,
+    "median_atr": -0.49122807017533965,
+    "wr_atr": 0.43478260869565216,
+    "sum_atr": -3.8398776465102924,
+    "ev_bps": -2.524379158308175,
+    "median_bps": -1.8061199680470863,
+    "bootstrap_atr": {
+      "p_ev_gt0": 0.4091,
+      "ci95": [
+        -1.7665105331967172,
+        1.449059396726583
+      ]
+    },
+    "monthly": {
+      "2026-08": {
+        "n": 12,
+        "ev_atr": -1.3147344119917717,
+        "sum_atr": -15.77681294390126,
+        "wr": 0.3333333333333333
+      },
+      "2026-09": {
+        "n": 11,
+        "ev_atr": 1.085175936126452,
+        "sum_atr": 11.93693529739097,
+        "wr": 0.5454545454545454
+      }
+    }
+  },
+  "gates": {
+    "signals_ge20": true,
+    "executable_ge20": true,
+    "gross_ev_atr_pos": false,
+    "gross_ev_bps_pos": false,
+    "wr_ge50pct": false,
+    "aug_ev_nonneg": false,
+    "sep_ev_nonneg": true,
+    "bootstrap_p_ge080": false,
+    "pass": false
+  }
+}
