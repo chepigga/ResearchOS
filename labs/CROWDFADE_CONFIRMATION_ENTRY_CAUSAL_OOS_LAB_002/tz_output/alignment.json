@@ -1,0 +1,131 @@
+{
+  "interpretation": "FTMO_UTC = MT5_server_timestamp - offset_min",
+  "best": {
+    "offset_min": -360,
+    "N": 0,
+    "corr": NaN,
+    "price_ratio_cv": NaN
+  },
+  "top20": [
+    {
+      "offset_min": -360,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -345,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -330,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -315,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -300,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -285,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -270,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -255,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -240,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -225,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -210,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -195,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -180,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -165,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -150,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -135,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -120,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -105,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -90,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    },
+    {
+      "offset_min": -75,
+      "N": 0,
+      "corr": NaN,
+      "price_ratio_cv": NaN
+    }
+  ]
+}
