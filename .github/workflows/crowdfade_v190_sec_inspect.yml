@@ -1,0 +1,37 @@
+name: CrowdFade v1.90 SEC Inspect
+on:
+  push:
+    branches:
+      - lab/crowdfade-v190-historical-replay-001
+    paths:
+      - '.github/workflows/crowdfade_v190_sec_inspect.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-v190-historical-replay-001
+          fetch-depth: 0
+      - name: Download seconds dataset and inspect
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect
+          cd labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect
+          curl -L --fail --retry 3 -o BTCUSDT_sec.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
+          echo '067eb8571e69cc5ed1085436203cfc69fe5ead935c602555bcd472f0a740a8b2  BTCUSDT_sec.csv.zip' | sha256sum -c -
+          unzip -l BTCUSDT_sec.csv.zip > ZIP_LIST.txt
+          MEMBER=$(unzip -Z1 BTCUSDT_sec.csv.zip | head -n 1)
+          unzip -p BTCUSDT_sec.csv.zip "$MEMBER" | head -n 6 > HEAD.txt || true
+      - name: Persist inspect
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect/ZIP_LIST.txt labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/secinspect/HEAD.txt
+          git commit -m 'research(CrowdFade): inspect seconds dataset' || true
+          git push origin HEAD:lab/crowdfade-v190-historical-replay-001
