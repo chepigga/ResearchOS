@@ -1,0 +1,70 @@
+{
+  "status": "HISTORICAL_POST10_DISTANCE_GATE_WALKFORWARD_PASS_NOT_OOS",
+  "feature": "cp10_dist_seed_high",
+  "threshold_rule": "expanding prior-event Q50 after min history 8",
+  "primary": "resid_10_20_atr",
+  "secondary": "resid_10_30_atr",
+  "feeds": {
+    "AMP_CQG_RAW_EXCLUSIVE": {
+      "resid_10_20_atr": {
+        "n": 15,
+        "selected_n": 8,
+        "selection_share": 0.5333333333333333,
+        "baseline_ev": 1.1233680354646294,
+        "selected_ev": 2.245869966935776,
+        "rejected_ev": -0.1594913147881094,
+        "uplift": 1.1225019314711464,
+        "selected_wr": 0.875
+      },
+      "resid_10_30_atr": {
+        "n": 15,
+        "selected_n": 8,
+        "selection_share": 0.5333333333333333,
+        "baseline_ev": 1.1248223011253549,
+        "selected_ev": 2.399225343281971,
+        "rejected_ev": -0.3316383184822072,
+        "uplift": 1.274403042156616,
+        "selected_wr": 0.75
+      }
+    },
+    "RITHMIC_RAW": {
+      "resid_10_20_atr": {
+        "n": 14,
+        "selected_n": 7,
+        "selection_share": 0.5,
+        "baseline_ev": 0.8037887876291945,
+        "selected_ev": 2.0299574353216943,
+        "rejected_ev": -0.4223798600633058,
+        "uplift": 1.2261686476924998,
+        "selected_wr": 0.8571428571428571
+      },
+      "resid_10_30_atr": {
+        "n": 14,
+        "selected_n": 7,
+        "selection_share": 0.5,
+        "baseline_ev": 0.961237333640967,
+        "selected_ev": 2.7023213004692814,
+        "rejected_ev": -0.7798466331873469,
+        "uplift": 1.7410839668283145,
+        "selected_wr": 0.8571428571428571
+      }
+    }
+  },
+  "gates": {
+    "rith_oof_n_ge12": true,
+    "amp_oof_n_ge12": true,
+    "rith_selection_25_75": true,
+    "amp_selection_25_75": true,
+    "rith_selected_ev_pos": true,
+    "amp_selected_ev_pos": true,
+    "rith_selected_gt_baseline": true,
+    "amp_selected_gt_baseline": true,
+    "rith_uplift_ge010": true,
+    "amp_uplift_ge010": true,
+    "rith_selected_wr_ge55": true,
+    "amp_selected_wr_ge55": true,
+    "rith_secondary_nonneg": true,
+    "amp_secondary_nonneg": true,
+    "pass": true
+  }
+}
