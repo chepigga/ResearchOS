@@ -1,0 +1,53 @@
+name: CrowdFade Confirmation FTMO Transport LAB002
+on:
+  push:
+    branches:
+      - lab/crowdfade-confirmation-entry-causal-oos-002
+    paths:
+      - '.github/workflows/crowdfade_confirmation_ftmo_transport_lab002.yml'
+      - 'labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/run_ftmo_transport.py'
+permissions:
+  contents: write
+jobs:
+  ftmo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-confirmation-entry-causal-oos-002
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download FTMO ticks and Binance flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/ftmo_data
+          cd labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/ftmo_data
+          curl -L --fail --retry 3 -o TickExport_BTCUSD_2026-05.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_2026-05.csv.zip
+          echo '0443ecc176737a8e4df71ee96d24d4a2ada0f74205260a5597423a0ec7d612e8  TickExport_BTCUSD_2026-05.csv.zip' | sha256sum -c -
+          curl -L --fail --retry 3 -o TickExport_BTCUSD_2026-06.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_2026-06.csv.zip
+          echo '7c8e5fff76f23220a3e2ef79e0a5359a4019fef0a4fca8fecddd62b6c2d0c5b0  TickExport_BTCUSD_2026-06.csv.zip' | sha256sum -c -
+          curl -L --fail --retry 3 -o TickExport_BTCUSD_2026-07.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_2026-07.csv.zip
+          echo '8149f8c0d5cf1101854d2c52f52acbb31ff218b8ebc573d1854712890dd7ccf0  TickExport_BTCUSD_2026-07.csv.zip' | sha256sum -c -
+          curl -L --fail --retry 3 -o TickExport_BTCUSD_2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/TickExport_BTCUSD_2026-08.csv.zip
+          echo 'bc9bb004f4821f2d12a62ac784f62a1f55ab5e8982c1fb6a06f4140ed8b7288a  TickExport_BTCUSD_2026-08.csv.zip' | sha256sum -c -
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          echo 'b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d  BTCUSDT_flow_2021-01-2026-08.csv.zip' | sha256sum -c -
+      - name: Run FTMO native transport
+        run: python labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/run_ftmo_transport.py
+      - name: Persist FTMO outputs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/ftmo_output
+          git commit -m 'research(CrowdFade): persist LAB002 FTMO transport' || true
+          git push origin HEAD:lab/crowdfade-confirmation-entry-causal-oos-002
+      - uses: actions/upload-artifact@v4
+        with:
+          name: crowdfade-confirmation-ftmo-transport-lab002
+          path: labs/CROWDFADE_CONFIRMATION_ENTRY_CAUSAL_OOS_LAB_002/ftmo_output
