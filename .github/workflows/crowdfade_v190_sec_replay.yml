@@ -30,6 +30,19 @@ jobs:
           echo '067eb5716cd0f6b2268d988c3e12eca65cd2b271cc211f2b3ba9cbc60eece37a  BTCUSDT_sec.csv.zip' | sha256sum -c -
           curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
           echo 'b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d  BTCUSDT_flow_2021-01-2026-08.csv.zip' | sha256sum -c -
+      - name: Patch pandas datetime unit transport only
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/run_sec_replay.py')
+          s=p.read_text()
+          old="ft=(f.time.astype('int64')//10**9).to_numpy(np.int64); r=f.count_long_short_ratio.to_numpy(float)"
+          new="ft=f.time.dt.tz_convert(None).to_numpy(dtype='datetime64[s]').astype(np.int64); r=f.count_long_short_ratio.to_numpy(float)"
+          if old not in s:
+              raise SystemExit('expected timestamp transport line not found')
+          p.write_text(s.replace(old,new))
+          PY
       - name: Run seconds live-parity replay
         run: python labs/CROWDFADE_V190_HISTORICAL_REPLAY_001/run_sec_replay.py
       - name: Persist outputs
