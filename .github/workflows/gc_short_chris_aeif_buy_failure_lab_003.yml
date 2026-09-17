@@ -1,0 +1,38 @@
+name: GC SHORT Chris AEIF Buy Failure LAB003
+
+on:
+  push:
+    branches:
+      - gc-amp-feed-audit-001
+    paths:
+      - 'research/gc/GC_SHORT_CHRIS_AEIF_BUY_FAILURE_LAB_003_PREREG.md'
+      - 'research/gc/gc_short_chris_aeif_buy_failure_lab_003.py'
+      - '.github/workflows/gc_short_chris_aeif_buy_failure_lab_003.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  chris-short:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Compile-check
+        run: python -m py_compile research/gc/gc_short_chris_aeif_buy_failure_lab_003.py
+      - name: Run LAB003
+        run: python research/gc/gc_short_chris_aeif_buy_failure_lab_003.py
+      - name: Commit LAB003 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_SHORT_CHRIS_AEIF_BUY_FAILURE_LAB_003.json research/gc/GC_SHORT_CHRIS_AEIF_BUY_FAILURE_LAB_003.md research/gc/GC_SHORT_CHRIS_AEIF_BUY_FAILURE_LAB_003_EVENTS.csv
+          git diff --cached --quiet || git commit -m 'Add GC SHORT Chris AEIF buy-failure LAB003 results'
+          git push origin HEAD:gc-amp-feed-audit-001
