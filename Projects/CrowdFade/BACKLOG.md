@@ -1,0 +1,768 @@
+# CrowdFade Research Backlog
+
+_Last updated: 2026-09-18_
+
+## Scope
+
+This backlog is the canonical research-state summary for the **CRYPTO BOT — CrowdFade** branch.
+
+Do not mix this branch with GC/COMEX, GC→XAU, BTC AEIF, XAU systems, or unrelated EAs.
+
+Active repo branch:
+
+`lab/crowdfade-execution-5y-positive-005`
+
+---
+
+## Frozen production-oriented core
+
+Current frozen candidate logic:
+
+- Signal source: Binance BTCUSDT Global Long/Short crowd ratio.
+- Rolling normalization: 72 observations.
+- Contrarian direction:
+  - high positive Z = crowd LONG → CrowdFade SHORT;
+  - high negative Z = crowd SHORT → CrowdFade LONG.
+- `ZLong = 2.50`
+- `ZShort = 2.50`
+- M15 confirmation = `0.25 ATR`, completed close.
+- Confirmation TTL = `60m`.
+- Passive limit retrace = `0.60 ATR`.
+- Limit TTL = `20m`.
+- Market fallback = OFF.
+- Maker cost proxy = `0.5 bps`.
+- Max trades/day = `3`.
+- SL = `4.5 ATR`.
+- TP = `10 ATR`.
+- Max hold = `24h`.
+- Breakeven = OFF.
+- Trailing = OFF.
+- Inherited anti-repeat gate = `1 ATR` ON.
+- All weekdays ON.
+- All UTC hours ON.
+- No side/time veto in production candidate.
+
+Important parity behavior:
+
+`if has and abs(sig-last) < 1 ATR: skip`
+
+This inherited anti-repeat/pause gate materially changes the sequential system and must not be removed casually.
+
+---
+
+## Frozen baseline
+
+### Historical 2021–2025
+
+- N = **1227**
+- ~20.45 trades/month
+- EV = **+0.106435R**
+- PF = **1.210426**
+- MaxDD = **13.4977R**
+- SumR = **+130.596R**
+- R/DD = **9.675**
+- positive years = **5/5**
+
+Annual:
+
+- 2021: +26.340R
+- 2022: +27.135R
+- 2023: +20.455R
+- 2024: +40.103R
+- 2025: +16.562R
+
+### 2026 seconds forward-shadow / stress
+
+- N = **136**
+- ~22.67 trades/month
+- EV = **+0.211108R**
+- PF = **1.467315**
+- MaxDD = **6.4893R**
+- SumR = **+28.711R**
+- positive months = **6/6**
+
+Monthly:
+
+- Mar +6.814R
+- Apr +6.401R
+- May +10.007R
+- Jun +3.065R
+- Jul +2.315R
+- Aug +0.108R
+
+Methodology warning:
+
+- 2021–2025 is discovery / in-sample.
+- 2026 has been reused across multiple LABs; it is forward-shadow/stress, **not pristine OOS**.
+- Historical data is Binance futures proxy, not broker-native execution.
+- Passive touch fills are optimistic and remain a transfer-risk item.
+
+---
+
+# Completed recent LABs
+
+## LAB016 — Side threshold asymmetry
+
+**Result: FAIL / no promotion**
+
+Keep:
+
+- `ZLong = 2.50`
+- `ZShort = 2.50`
+
+Do not promote v1.93 asymmetric `2.50 / 2.75`.
+
+---
+
+## LAB017 — Fri / Sat causal veto
+
+**Result: FAIL**
+
+All weekdays remain ON.
+
+Negative post-hoc weekday buckets did not survive full causal rerun because removing trades changes:
+
+- eligibility,
+- anti-repeat state,
+- occupancy,
+- max-per-day,
+- reachable signals.
+
+---
+
+## LAB018 — Coarse time-window veto
+
+Tested:
+
+- veto 04–07 UTC,
+- veto 18–20 UTC,
+- both.
+
+**Result: FAIL**
+
+All UTC hours remain ON.
+
+Important interaction clue:
+
+- 2026 removing 04–07 harmed LONG side strongly.
+- This motivated side × time testing.
+
+Note: numbering collision exists with an older queue/fill LAB018 idea. Future queue/fill work must use a new descriptive LAB number.
+
+---
+
+## LAB019 — Side × time causal interaction
+
+Atomic tests only:
+
+- VETO_LONG_04_07
+- VETO_SHORT_04_07
+- VETO_LONG_18_20
+- VETO_SHORT_18_20
+
+**Production verdict: no side×time veto promoted.**
+
+Key conclusions:
+
+- LONG 04–07: false/in-sample edge; rejected by 2026.
+- SHORT 04–07: not robust.
+- LONG 18–20: no forward benefit.
+- SHORT 18–20: only surviving watch candidate.
+
+SHORT 18–20 watch candidate:
+
+Historical:
+- EV +0.10935R
+- PF 1.2161
+- DD 15.37R
+- SumR +130.67R
+- 5/5 years
+
+2026:
+- EV +0.22012R
+- PF 1.4917
+- DD 6.489R
+- SumR +29.717R
+- 6/6 months
+
+Why not promote:
+- historical DD worsens;
+- historical R/DD falls;
+- historical gain is tiny;
+- 2026 is reused forward-shadow.
+
+---
+
+## LAB020 — Exit risk diagnostics: stop / BE / continuous trailing
+
+### Stop geometry
+
+| Stop | Hist EV | Hist PF | Hist DD | Hist SumR | 2026 EV | 2026 PF | 2026 DD |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Wide 4.5 ATR | +0.1064 | 1.210 | 13.50R | +130.60R | +0.2111 | 1.467 | 6.49R |
+| Narrow 2.5 ATR | +0.1696 | 1.250 | 24.34R | +231.31R | +0.2137 | 1.323 | 12.37R |
+| Vol-adaptive 3→4.5 ATR | +0.1421 | 1.253 | 28.21R | +179.67R | +0.2007 | 1.405 | 9.10R |
+
+Conclusion:
+
+- narrow stops increase absolute R but materially worsen DD;
+- current volatility-adaptive rule does not dominate fixed wide stop;
+- **4.5 ATR remains robustness anchor for prop-oriented use**.
+
+Path diagnostic:
+
+- 1216 / 1227 historical trades had some adverse excursion after entry = **99.10%**.
+- 135 / 136 in 2026 = **99.26%**.
+
+Interpretation:
+
+CrowdFade normally needs room after entry. The assumption “good entry should immediately move positive” is false for this system.
+
+### Breakeven
+
+| BE trigger | Hist EV | Hist DD | Hist SumR | 2026 EV | 2026 SumR |
+|---|---:|---:|---:|---:|---:|
+| OFF | +0.1064 | 13.50R | +130.60R | +0.2111 | +28.71R |
+| +0.5R | +0.0344 | 15.50R | +45.99R | +0.1530 | +22.64R |
+| +1.0R | +0.0673 | 16.32R | +84.70R | +0.1896 | +25.97R |
+| +1.5R | +0.1001 | 17.44R | +123.42R | +0.2358 | +32.07R |
+| +2.0R | +0.1058 | 13.50R | +129.87R | +0.2186 | +29.72R |
+
+Conclusion:
+
+- BE 0.5R = harmful.
+- BE 1.0R = harmful.
+- BE 2.0R changes almost nothing.
+- **BE 1.5R = watch-only research candidate**, because 2026 improves but historical risk efficiency worsens.
+- Production candidate remains **BE OFF**.
+
+Future idea:
+
+Instead of universal BE, investigate a **failure-after-profit detector**:
+- trades that reach +1R / +1.5R,
+- then reverse toward SL,
+- distinguish them causally from trades that continue toward TP.
+
+### Continuous trailing
+
+Historical update frequency: completed 1m bars.
+2026 proxy: completed 1-second OHLC, stop effective next second.
+
+| Trail | Hist EV | Hist SumR | 2026 EV | 2026 SumR |
+|---|---:|---:|---:|---:|
+| OFF | +0.1064 | +130.60R | +0.2111 | +28.71R |
+| 1R trail after +1R | +0.0588 | +76.31R | +0.1324 | +18.67R |
+| 2R trail after +1R | +0.0899 | +111.08R | +0.1824 | +24.80R |
+
+Conclusion:
+
+- continuous trailing raises apparent WR in some variants but truncates the right tail;
+- **trailing remains OFF**.
+
+---
+
+## LAB021 — Structure-adaptive stop
+
+Goal:
+
+Test whether stop distance should depend on causal trend or level-break structure.
+
+Fixed structure proxies only; no period optimization:
+
+Trend:
+- LONG: close > EMA50 and EMA50 > EMA50[-4]
+- SHORT mirror
+
+Breakout:
+- LONG: close > prior 20-M15 high
+- SHORT: close < prior 20-M15 low
+
+Stops:
+- narrow = 3.0 ATR
+- wide = 4.5 ATR
+
+Key result:
+
+The intuitive rule:
+
+> strong trend / breakout supports trade → use narrower stop
+
+**does not survive 2026.**
+
+Best watch interaction was the mirror:
+
+> breakout aligned → keep 4.5 ATR  
+> otherwise → 3 ATR
+
+Historical:
+- EV +0.1442R
+- PF 1.245
+- DD 19.71R
+- 5/5 years
+
+2026:
+- EV +0.2929R
+- PF 1.546
+- SumR +41.30R
+- DD 10.80R
+- 5/6 months
+
+But fixed 3 ATR control historically remained stronger in EV/PF, so the breakout rule is not stable enough to promote.
+
+Conclusion:
+
+- no adaptive stop promoted;
+- fixed 4.5 ATR remains production-oriented stop;
+- trend/breakout information looks more promising for **entry quality or risk sizing** than direct stop switching.
+
+---
+
+## LAB022 — H1 / H4 trend × crowd alignment
+
+Purpose:
+
+Determine whether the crowd is trading with or against higher-timeframe trend, and whether CrowdFade therefore trades with or against trend.
+
+Trend definition:
+
+H1 / H4:
+- UP = completed close > EMA50 and EMA50 slope over 4 bars > 0
+- DOWN = mirror
+- otherwise NEUTRAL
+
+Strong trend:
+- H1 and H4 both non-neutral,
+- both aligned in the same direction.
+
+### H1
+
+Historical:
+
+- crowd WITH H1 trend / CrowdFade countertrend:
+  - N 425
+  - EV +0.0873R
+  - PF 1.171
+
+- crowd AGAINST H1 trend / CrowdFade WITH trend:
+  - N 630
+  - EV **+0.1325R**
+  - PF **1.263**
+
+2026:
+
+- crowd WITH H1:
+  - N 40
+  - EV +0.1881R
+  - PF 1.395
+
+- crowd AGAINST H1 / CrowdFade WITH H1:
+  - N 69
+  - EV **+0.3182R**
+  - PF **1.776**
+
+### H4
+
+Historical:
+
+- crowd WITH H4 / CrowdFade countertrend:
+  - N 625
+  - EV +0.0575R
+  - PF 1.112
+
+- crowd AGAINST H4 / CrowdFade WITH H4:
+  - N 519
+  - EV **+0.1616R**
+  - PF **1.320**
+
+2026:
+
+- crowd WITH H4:
+  - N 66
+  - EV +0.1821R
+  - PF 1.352
+
+- crowd AGAINST H4 / CrowdFade WITH H4:
+  - N 63
+  - EV **+0.2851R**
+  - PF **1.772**
+
+### Strong H1 + H4 aligned
+
+Historical:
+
+- crowd WITH aligned trend → CrowdFade countertrend:
+  - N 369
+  - EV +0.0631R
+  - PF 1.121
+
+- crowd AGAINST aligned trend → CrowdFade WITH trend:
+  - N **438**
+  - EV **+0.1609R**
+  - PF **1.320**
+  - SumR +70.48R
+
+2026:
+
+- crowd WITH aligned trend → CrowdFade countertrend:
+  - N 31
+  - EV +0.2216R
+  - PF 1.457
+
+- crowd AGAINST aligned trend → CrowdFade WITH trend:
+  - N **50**
+  - EV **+0.3109R**
+  - PF **1.852**
+  - SumR +15.54R
+
+Core interpretation:
+
+> **The strongest context is H1 + H4 aligned, crowd positioned against that trend, CrowdFade trade therefore following the trend.**
+
+Historical EV is about 2.55× larger than the opposite aligned context.
+
+Important weak state historically:
+
+> strong H1+H4 UP  
+> crowd LONG  
+> CrowdFade SHORT against uptrend
+
+- N 214
+- EV **+0.018R**
+- PF **1.034**
+
+Do not convert this directly into a veto yet because 2026 strong-UP sample did not reproduce the historical weakness cleanly.
+
+---
+
+## LAB023 — H1/H4 aligned trend risk multiplier
+
+Target state:
+
+> H1 and H4 aligned and non-neutral  
+> crowd against trend  
+> CrowdFade trade with trend
+
+Risk multipliers tested only on target state:
+
+- 1.00×
+- 1.25×
+- 1.50×
+- 2.00×
+
+All non-target trades remain 1.00×.
+
+### Historical full equity sequence
+
+Target trades:
+- 438 / 1227 = 35.70%
+
+| Mult | SumR | EV/trade | PF | MaxDD | R/DD | +years |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1.00× | +130.60R | +0.1064 | 1.210 | 13.50R | **9.675** | 5/5 |
+| 1.25× | +148.22R | +0.1208 | 1.219 | 15.33R | 9.669 | 5/5 |
+| 1.50× | **+165.84R** | **+0.1352** | 1.227 | 17.16R | 9.664 | 5/5 |
+| 2.00× | +201.08R | +0.1639 | 1.239 | 20.82R | 9.657 | 5/5 |
+
+Historical interpretation:
+
+- return rises almost linearly;
+- DD rises almost linearly;
+- R/DD does **not** improve;
+- this is not a free risk-efficiency gain.
+
+Important clustering warning:
+
+2023:
+
+- baseline: +21.02R, DD 8.54R
+- 2.0×: +22.32R, DD **18.41R**
+
+### 2026 full equity sequence
+
+Target trades:
+- 50 / 136 = 36.76%
+
+| Mult | SumR | EV/trade | PF | MaxDD | R/DD | +months |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1.00× | +28.71R | +0.2111 | 1.467 | 6.49R | 4.424 | 6/6 |
+| 1.25× | +32.60R | +0.2397 | 1.494 | 7.07R | 4.612 | 6/6 |
+| 1.50× | **+36.48R** | **+0.2683** | **1.517** | 7.65R | **4.771** | 6/6 |
+| 2.00× | +44.25R | +0.3254 | 1.555 | 8.85R | 5.003 | 6/6 |
+
+2026 shows improved risk efficiency, but this period is not pristine OOS.
+
+### Current risk-scaling watch candidate
+
+**1.50×** on target state.
+
+Reason:
+
+- historical SumR +27%;
+- historical DD +27% → risk efficiency roughly unchanged rather than worse;
+- 5/5 historical years remain positive;
+- 2026 SumR +27%;
+- 2026 DD +17.9%;
+- 2026 R/DD improves;
+- 6/6 months remain positive;
+- less aggressive than 2×.
+
+Not production-proven.
+
+Risk examples:
+
+If base risk = 0.10%:
+- normal trade 0.10%
+- target state at 1.5× = 0.15%
+
+If base = 0.15%:
+- target = 0.225%
+
+If base = 0.25%:
+- target = 0.375%
+
+For prop-oriented use, do not promote 2× without fresh untouched forward validation.
+
+Full sequence files:
+
+- `labs/CROWDFADE_H1_H4_RISK_MULTIPLIER_LAB_023/output/equity_sequence_2021_2025.csv`
+- `labs/CROWDFADE_H1_H4_RISK_MULTIPLIER_LAB_023/output/equity_sequence_2026.csv`
+
+---
+
+# Current production vs research state
+
+## Keep frozen / production-oriented candidate
+
+- Z 2.50 / 2.50
+- M15 confirm 0.25 ATR
+- passive limit retrace 0.60 ATR
+- 4.5 ATR stop
+- 10 ATR TP
+- 24h max hold
+- no BE
+- no trailing
+- no weekday veto
+- no hour veto
+- no side×time veto
+- 1 ATR anti-repeat ON
+- base risk remains unchanged in production candidate
+
+## Research watch candidates only
+
+1. **H1+H4 aligned + crowd against trend + CrowdFade with trend → 1.50× risk**
+   - strongest current risk-sizing candidate;
+   - not production-proven.
+
+2. **BE at +1.5R**
+   - 2026 positive;
+   - historical risk profile weaker;
+   - no promotion.
+
+3. **SHORT 18–20 UTC veto**
+   - tiny cross-period point-estimate improvement;
+   - historical DD worsens;
+   - no promotion.
+
+4. **Breakout-aligned keep-wide / otherwise narrow**
+   - interesting 2026 interaction;
+   - historical control does not confirm dominance;
+   - no promotion.
+
+---
+
+# Priority backlog
+
+## P0 — Fresh untouched forward validation
+
+After freezing any candidate rule, obtain a truly fresh period not reused in LAB006–023.
+
+Required:
+- no retuning after seeing results;
+- report exact candidate parity;
+- monthly sequence;
+- broker/exchange execution differences;
+- DD clustering;
+- target-state frequency.
+
+Highest-priority candidate for fresh validation:
+
+> baseline + **1.50× risk only on H1+H4 aligned / crowd against trend / CrowdFade with trend**
+
+---
+
+## P0 — Passive fill realism / queue transfer risk
+
+Major unresolved transfer risk.
+
+Current passive fill model is optimistic because touch is treated as fill.
+
+New LAB should test a robustness envelope, not optimize a best value.
+
+Suggested fixed ladder:
+
+- touch baseline;
+- require penetration 0.05 ATR;
+- require penetration 0.10 ATR;
+- require penetration 0.20 ATR;
+
+or equivalent deterministic fill haircuts / delay assumptions.
+
+Record:
+
+- fill rate,
+- rejected fills,
+- trades/month,
+- EV,
+- PF,
+- DD,
+- SumR,
+- historical annual,
+- 2026 monthly,
+- side split,
+- effect on 1.50× target-state risk scaling.
+
+2026 second data should be used for penetration/delay realism.
+
+---
+
+## P1 — LAB023 stability validation
+
+For the fixed 1.50× target-state multiplier:
+
+- leave-one-year-out sensitivity;
+- annual contribution concentration;
+- paired monthly / weekly block bootstrap;
+- target-state clustering;
+- worst streak of boosted losses;
+- rolling 6m / 12m R/DD;
+- compare 1.0× vs 1.5× only;
+- no multiplier optimization.
+
+Strict criterion:
+
+Do not promote if improvement depends on one year / a few blocks or if DD concentration becomes materially worse.
+
+---
+
+## P1 — Daily drawdown / prop-sequence audit
+
+Current LAB023 uses full equity MaxDD, not prop daily DD.
+
+Need exact daily sequence at base risk examples:
+
+- 0.10%
+- 0.15%
+- 0.25%
+
+For 1.0× and 1.5× target-state scaling.
+
+Report:
+
+- worst closed-equity day,
+- worst intraday equity day if possible,
+- maximum 2-day / 3-day loss cluster,
+- probability / empirical count of touching 4% daily DD at scaled risk,
+- overall DD,
+- max consecutive losses,
+- boosted-loss clustering.
+
+---
+
+## P1 — Failure-after-profit detector
+
+Instead of universal BE:
+
+Study trades that:
+
+1. reach +1.0R or +1.5R,
+2. subsequently reverse strongly,
+3. end at SL or poor time exit.
+
+Goal:
+
+Find a causal state variable that can exit failed winners without truncating healthy right-tail trades.
+
+Do not retune signal simultaneously.
+
+---
+
+## P1 — Trend state as risk quality, not stop distance
+
+LAB022/023 suggest H1/H4 state is more useful for sizing than stop switching.
+
+Future clean tests:
+
+- 1.0× normal;
+- 1.5× only target state;
+- optionally reduced risk when CrowdFade is countertrend to aligned H1+H4;
+- avoid hard veto first.
+
+Potential asymmetric risk test:
+
+- CrowdFade with aligned H1+H4 = 1.50×
+- mixed/neutral = 1.00×
+- CrowdFade against aligned H1+H4 = 0.75× or 0.50×
+
+This must be a separately preregistered LAB.
+
+---
+
+## P2 — Strong-UP weak-state causal audit
+
+Historical warning state:
+
+> H1 UP + H4 UP + crowd LONG + CrowdFade SHORT
+
+Historical:
+- N 214
+- EV +0.018R
+- PF 1.034
+
+But 2026 did not confirm weakness.
+
+Do not veto now.
+
+Possible future validation:
+- causal risk reduction only,
+- no hard removal,
+- leave-one-year-out + fresh forward required.
+
+---
+
+## P2 — Broker-native execution parity
+
+Before production scaling:
+
+- broker-native BTC symbol / CFD or exchange execution must be specified;
+- spreads;
+- commissions;
+- maker/taker semantics;
+- order types;
+- stop/freeze level;
+- min lot / volume step;
+- slippage;
+- latency;
+- VPS;
+- partial fills;
+- limit-fill behavior.
+
+Do not translate Binance research metrics directly to broker PnL without execution validation.
+
+---
+
+# Guardrails
+
+Do not:
+
+- optimize signal threshold together with exit/risk logic;
+- remove inherited 1 ATR anti-repeat gate casually;
+- promote post-hoc buckets directly into filters;
+- use 2026 as pristine OOS;
+- select 2× multiplier because it has highest SumR;
+- treat 1-second OHLC as true exchange tick sequence;
+- assume passive touch = guaranteed fill;
+- add early BE/trailing merely to raise win rate.
+
+Priority objective remains:
+
+> stable equity curve, realistic execution, low drawdown, and robust prop-challenge survivability — not maximum backtest SumR.
