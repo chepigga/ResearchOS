@@ -1,0 +1,750 @@
+{
+  "lab": "CROWDFADE_RISK_TIERING_LAB_026",
+  "principle": "Position sizing only. Trade reachability, entry, exit, occupancy and anti-repeat sequence are unchanged.",
+  "modes": [
+    "BASELINE",
+    "HIGH_1P5_NORMAL_1_LOW_1",
+    "HIGH_1P5_NORMAL_1_LOW_0P75",
+    "HIGH_1P5_NORMAL_1_LOW_0P50"
+  ],
+  "historical": {
+    "period": "2021-2025 historical discovery",
+    "source": "labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/output/trades_diagnostic.csv",
+    "state_definition": {
+      "HIGH": "trend_relation == WITH_TREND and crowd_excursion_atr <= 0.75",
+      "LOW": "H1/H4 aligned (trend_relation != 0) and crowd_excursion_atr > 0.75",
+      "NORMAL": "all remaining baseline trades"
+    },
+    "baseline_trade_count": 1227,
+    "results": [
+      {
+        "name": "BASELINE",
+        "multipliers": {
+          "HIGH": 1.0,
+          "NORMAL": 1.0,
+          "LOW": 1.0
+        },
+        "all": {
+          "N": 1227,
+          "WR": 0.4384678076609617,
+          "EV_baseR_per_trade": 0.10643515915828407,
+          "Sum_baseR": 130.59594028721455,
+          "PF": 1.2104262820043927,
+          "MaxDD_baseR": 13.497689077732744,
+          "R_DD": 9.675429589103501,
+          "MaxConsecutiveLosses": 9
+        },
+        "positive_years": 5,
+        "annual": {
+          "2021": {
+            "N": 221,
+            "WR": 0.47058823529411764,
+            "EV_baseR_per_trade": 0.11918654930312203,
+            "Sum_baseR": 26.34022739598997,
+            "PF": 1.244022202211593,
+            "MaxDD_baseR": 9.62306500669101,
+            "R_DD": 2.7371972835760077,
+            "MaxConsecutiveLosses": 7
+          },
+          "2022": {
+            "N": 238,
+            "WR": 0.4327731092436975,
+            "EV_baseR_per_trade": 0.11162510657056694,
+            "Sum_baseR": 26.56677536379493,
+            "PF": 1.2153166619648563,
+            "MaxDD_baseR": 12.329233320603173,
+            "R_DD": 2.1547791880456706,
+            "MaxConsecutiveLosses": 7
+          },
+          "2023": {
+            "N": 257,
+            "WR": 0.4396887159533074,
+            "EV_baseR_per_trade": 0.08180424415539735,
+            "Sum_baseR": 21.023690747937117,
+            "PF": 1.1635327118361527,
+            "MaxDD_baseR": 8.540053052726133,
+            "R_DD": 2.461775192511947,
+            "MaxConsecutiveLosses": 5
+          },
+          "2024": {
+            "N": 255,
+            "WR": 0.43137254901960786,
+            "EV_baseR_per_trade": 0.15726621072211894,
+            "Sum_baseR": 40.10288373414033,
+            "PF": 1.311557906130614,
+            "MaxDD_baseR": 12.375728454937057,
+            "R_DD": 3.240446320405653,
+            "MaxConsecutiveLosses": 9
+          },
+          "2025": {
+            "N": 256,
+            "WR": 0.421875,
+            "EV_baseR_per_trade": 0.06469673064590703,
+            "Sum_baseR": 16.5623630453522,
+            "PF": 1.125451350773952,
+            "MaxDD_baseR": 13.49768907773274,
+            "R_DD": 1.227051753079368,
+            "MaxConsecutiveLosses": 8
+          }
+        },
+        "state_counts": {
+          "HIGH": 312,
+          "NORMAL": 670,
+          "LOW": 245
+        },
+        "state_contribution_baseR": {
+          "HIGH": 69.57921523858619,
+          "NORMAL": 69.94466708757737,
+          "LOW": -8.927942038949015
+        },
+        "worst_negative_streak_sum_baseR": -7.193374739823085
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_1",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 1.0
+        },
+        "all": {
+          "N": 1227,
+          "WR": 0.4384678076609617,
+          "EV_baseR_per_trade": 0.13478854760106573,
+          "Sum_baseR": 165.38554790650767,
+          "PF": 1.2379609703708645,
+          "MaxDD_baseR": 14.458756411256388,
+          "R_DD": 11.438435173978878,
+          "MaxConsecutiveLosses": 9
+        },
+        "positive_years": 5,
+        "annual": {
+          "2021": {
+            "N": 221,
+            "WR": 0.47058823529411764,
+            "EV_baseR_per_trade": 0.16953207195286868,
+            "Sum_baseR": 37.46658790158398,
+            "PF": 1.3053649287216105,
+            "MaxDD_baseR": 10.12388555540769,
+            "R_DD": 3.700811086467798,
+            "MaxConsecutiveLosses": 7
+          },
+          "2022": {
+            "N": 238,
+            "WR": 0.4327731092436975,
+            "EV_baseR_per_trade": 0.12941759362747438,
+            "Sum_baseR": 30.801387283338904,
+            "PF": 1.2250462791799097,
+            "MaxDD_baseR": 12.855192793975064,
+            "R_DD": 2.396026864550395,
+            "MaxConsecutiveLosses": 7
+          },
+          "2023": {
+            "N": 257,
+            "WR": 0.4396887159533074,
+            "EV_baseR_per_trade": 0.09046060441546704,
+            "Sum_baseR": 23.248375334775027,
+            "PF": 1.1600992061431317,
+            "MaxDD_baseR": 11.968324583700397,
+            "R_DD": 1.9424920482551815,
+            "MaxConsecutiveLosses": 5
+          },
+          "2024": {
+            "N": 255,
+            "WR": 0.43137254901960786,
+            "EV_baseR_per_trade": 0.17977439859434202,
+            "Sum_baseR": 45.84247164155722,
+            "PF": 1.3147505809189397,
+            "MaxDD_baseR": 13.76201139679194,
+            "R_DD": 3.3310880451852807,
+            "MaxConsecutiveLosses": 9
+          },
+          "2025": {
+            "N": 256,
+            "WR": 0.421875,
+            "EV_baseR_per_trade": 0.1094793974423926,
+            "Sum_baseR": 28.026725745252506,
+            "PF": 1.1938350822968333,
+            "MaxDD_baseR": 14.458756411256314,
+            "R_DD": 1.9383911692041071,
+            "MaxConsecutiveLosses": 8
+          }
+        },
+        "state_counts": {
+          "HIGH": 312,
+          "NORMAL": 670,
+          "LOW": 245
+        },
+        "state_contribution_baseR": {
+          "HIGH": 104.36882285787928,
+          "NORMAL": 69.94466708757737,
+          "LOW": -8.927942038949015
+        },
+        "worst_negative_streak_sum_baseR": -8.272747495503278
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_0P75",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 0.75
+        },
+        "all": {
+          "N": 1227,
+          "WR": 0.4384678076609617,
+          "EV_baseR_per_trade": 0.1366076066962061,
+          "Sum_baseR": 167.6175334162449,
+          "PF": 1.254337045060689,
+          "MaxDD_baseR": 13.385091634445743,
+          "R_DD": 12.522703466959545,
+          "MaxConsecutiveLosses": 9
+        },
+        "positive_years": 5,
+        "annual": {
+          "2021": {
+            "N": 221,
+            "WR": 0.47058823529411764,
+            "EV_baseR_per_trade": 0.1633189935812801,
+            "Sum_baseR": 36.093497581462906,
+            "PF": 1.3062477214942447,
+            "MaxDD_baseR": 9.372561503760029,
+            "R_DD": 3.8509747380140564,
+            "MaxConsecutiveLosses": 7
+          },
+          "2022": {
+            "N": 238,
+            "WR": 0.4327731092436975,
+            "EV_baseR_per_trade": 0.13517927270185814,
+            "Sum_baseR": 32.17266690304224,
+            "PF": 1.2478413548895935,
+            "MaxDD_baseR": 11.063960501315615,
+            "R_DD": 2.9078797686611946,
+            "MaxConsecutiveLosses": 7
+          },
+          "2023": {
+            "N": 257,
+            "WR": 0.4396887159533074,
+            "EV_baseR_per_trade": 0.0913461410353005,
+            "Sum_baseR": 23.47595824607223,
+            "PF": 1.1730363372560701,
+            "MaxDD_baseR": 12.362960721267807,
+            "R_DD": 1.8988945104134245,
+            "MaxConsecutiveLosses": 5
+          },
+          "2024": {
+            "N": 255,
+            "WR": 0.43137254901960786,
+            "EV_baseR_per_trade": 0.17464144209411292,
+            "Sum_baseR": 44.533567733998794,
+            "PF": 1.3177224628579254,
+            "MaxDD_baseR": 13.385091634445715,
+            "R_DD": 3.3271021932636144,
+            "MaxConsecutiveLosses": 9
+          },
+          "2025": {
+            "N": 256,
+            "WR": 0.421875,
+            "EV_baseR_per_trade": 0.12242907402995597,
+            "Sum_baseR": 31.341842951668728,
+            "PF": 1.2312494281890778,
+            "MaxDD_baseR": 12.946483205346357,
+            "R_DD": 2.420876963616332,
+            "MaxConsecutiveLosses": 8
+          }
+        },
+        "state_counts": {
+          "HIGH": 312,
+          "NORMAL": 670,
+          "LOW": 245
+        },
+        "state_contribution_baseR": {
+          "HIGH": 104.36882285787928,
+          "NORMAL": 69.94466708757737,
+          "LOW": -6.6959565292117516
+        },
+        "worst_negative_streak_sum_baseR": -7.516357337552633
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_0P50",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 0.5
+        },
+        "all": {
+          "N": 1227,
+          "WR": 0.4384678076609617,
+          "EV_baseR_per_trade": 0.1384266657913465,
+          "Sum_baseR": 169.84951892598215,
+          "PF": 1.2726041524254494,
+          "MaxDD_baseR": 14.09679560582147,
+          "R_DD": 12.048803407197052,
+          "MaxConsecutiveLosses": 9
+        },
+        "positive_years": 5,
+        "annual": {
+          "2021": {
+            "N": 221,
+            "WR": 0.47058823529411764,
+            "EV_baseR_per_trade": 0.1571059152096915,
+            "Sum_baseR": 34.72040726134182,
+            "PF": 1.3072060816603173,
+            "MaxDD_baseR": 8.621237452112368,
+            "R_DD": 4.027311329052265,
+            "MaxConsecutiveLosses": 7
+          },
+          "2022": {
+            "N": 238,
+            "WR": 0.4327731092436975,
+            "EV_baseR_per_trade": 0.140940951776242,
+            "Sum_baseR": 33.54394652274559,
+            "PF": 1.2732567084152369,
+            "MaxDD_baseR": 9.643396565952424,
+            "R_DD": 3.4784369068858934,
+            "MaxConsecutiveLosses": 7
+          },
+          "2023": {
+            "N": 257,
+            "WR": 0.4396887159533074,
+            "EV_baseR_per_trade": 0.09223167765513399,
+            "Sum_baseR": 23.703541157369436,
+            "PF": 1.1879308483476678,
+            "MaxDD_baseR": 14.096795605821443,
+            "R_DD": 1.6814843472356775,
+            "MaxConsecutiveLosses": 5
+          },
+          "2024": {
+            "N": 255,
+            "WR": 0.43137254901960786,
+            "EV_baseR_per_trade": 0.1695084855938837,
+            "Sum_baseR": 43.22466382644035,
+            "PF": 1.320936273007081,
+            "MaxDD_baseR": 13.32496921913447,
+            "R_DD": 3.2438847036412164,
+            "MaxConsecutiveLosses": 9
+          },
+          "2025": {
+            "N": 256,
+            "WR": 0.421875,
+            "EV_baseR_per_trade": 0.13537875061751936,
+            "Sum_baseR": 34.656960158084956,
+            "PF": 1.2740229031036017,
+            "MaxDD_baseR": 11.434209999436394,
+            "R_DD": 3.030988599981393,
+            "MaxConsecutiveLosses": 8
+          }
+        },
+        "state_counts": {
+          "HIGH": 312,
+          "NORMAL": 670,
+          "LOW": 245
+        },
+        "state_contribution_baseR": {
+          "HIGH": 104.36882285787928,
+          "NORMAL": 69.94466708757737,
+          "LOW": -4.463971019474507
+        },
+        "worst_negative_streak_sum_baseR": -7.113970123162927
+      }
+    ]
+  },
+  "forward_shadow_2026": {
+    "period": "2026 seconds forward-shadow/stress",
+    "source": "labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/output/trades_2026_diagnostic.csv",
+    "state_definition": {
+      "HIGH": "trend_relation == WITH_TREND and crowd_excursion_atr <= 0.75",
+      "LOW": "H1/H4 aligned (trend_relation != 0) and crowd_excursion_atr > 0.75",
+      "NORMAL": "all remaining baseline trades"
+    },
+    "baseline_trade_count": 136,
+    "results": [
+      {
+        "name": "BASELINE",
+        "multipliers": {
+          "HIGH": 1.0,
+          "NORMAL": 1.0,
+          "LOW": 1.0
+        },
+        "all": {
+          "N": 136,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.21110813076326732,
+          "Sum_baseR": 28.710705783804354,
+          "PF": 1.467315428277959,
+          "MaxDD_baseR": 6.489289729509487,
+          "R_DD": 4.4243217640976775,
+          "MaxConsecutiveLosses": 7
+        },
+        "positive_months": 6,
+        "monthly": {
+          "2026-03": {
+            "N": 23,
+            "WR": 0.4782608695652174,
+            "EV_baseR_per_trade": 0.29627155292776103,
+            "Sum_baseR": 6.814245717338504,
+            "PF": 1.6018103441507554,
+            "MaxDD_baseR": 2.714510625066583,
+            "R_DD": 2.510303571632312,
+            "MaxConsecutiveLosses": 2
+          },
+          "2026-04": {
+            "N": 20,
+            "WR": 0.55,
+            "EV_baseR_per_trade": 0.3200525134127605,
+            "Sum_baseR": 6.40105026825521,
+            "PF": 1.8709075004506257,
+            "MaxDD_baseR": 3.774779104442904,
+            "R_DD": 1.695741682134775,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-05": {
+            "N": 25,
+            "WR": 0.6,
+            "EV_baseR_per_trade": 0.400285753244774,
+            "Sum_baseR": 10.00714383111935,
+            "PF": 2.262698427368887,
+            "MaxDD_baseR": 3.2001281229595486,
+            "R_DD": 3.127107242776431,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-06": {
+            "N": 22,
+            "WR": 0.4090909090909091,
+            "EV_baseR_per_trade": 0.13929641642831,
+            "Sum_baseR": 3.06452116142282,
+            "PF": 1.3162595380536548,
+            "MaxDD_baseR": 6.388051159788984,
+            "R_DD": 0.4797270849540363,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": 0.10067222597034818,
+            "Sum_baseR": 2.315461197318008,
+            "PF": 1.1728777712162965,
+            "MaxDD_baseR": 4.335124032197138,
+            "R_DD": 0.5341164820477998,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-08": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": 0.004707982971759182,
+            "Sum_baseR": 0.10828360835046119,
+            "PF": 1.0092109025978375,
+            "MaxDD_baseR": 6.262014867652805,
+            "R_DD": 0.017292135301340987,
+            "MaxConsecutiveLosses": 7
+          }
+        },
+        "state_counts": {
+          "HIGH": 32,
+          "NORMAL": 77,
+          "LOW": 27
+        },
+        "state_contribution_baseR": {
+          "HIGH": 14.541641466347915,
+          "NORMAL": 13.636856493969619,
+          "LOW": 0.5322078234868233
+        },
+        "worst_negative_streak_sum_baseR": -6.2620148676528045
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_1",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 1.0
+        },
+        "all": {
+          "N": 136,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.2645700479189582,
+          "Sum_baseR": 35.98152651697832,
+          "PF": 1.5397092563340369,
+          "MaxDD_baseR": 7.144087286020243,
+          "R_DD": 5.036546318154317,
+          "MaxConsecutiveLosses": 7
+        },
+        "positive_months": 5,
+        "monthly": {
+          "2026-03": {
+            "N": 23,
+            "WR": 0.4782608695652174,
+            "EV_baseR_per_trade": 0.3437609654164408,
+            "Sum_baseR": 7.906502204578138,
+            "PF": 1.6340954982803988,
+            "MaxDD_baseR": 3.2173107422795217,
+            "R_DD": 2.4574878953023482,
+            "MaxConsecutiveLosses": 2
+          },
+          "2026-04": {
+            "N": 20,
+            "WR": 0.55,
+            "EV_baseR_per_trade": 0.42001412543327554,
+            "Sum_baseR": 8.40028250866551,
+            "PF": 2.0495144176949305,
+            "MaxDD_baseR": 3.926776543740721,
+            "R_DD": 2.139231100902738,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-05": {
+            "N": 25,
+            "WR": 0.6,
+            "EV_baseR_per_trade": 0.49382243426673206,
+            "Sum_baseR": 12.345560856668301,
+            "PF": 2.4454944910301313,
+            "MaxDD_baseR": 3.2001281229595486,
+            "R_DD": 3.857833306139898,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-06": {
+            "N": 22,
+            "WR": 0.4090909090909091,
+            "EV_baseR_per_trade": 0.22122748602527878,
+            "Sum_baseR": 4.867004692556133,
+            "PF": 1.4711861285975225,
+            "MaxDD_baseR": 6.748358793446553,
+            "R_DD": 0.7212130892154941,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": 0.1201751914809915,
+            "Sum_baseR": 2.7640294040628044,
+            "PF": 1.1966775726089656,
+            "MaxDD_baseR": 4.995099801490072,
+            "R_DD": 0.5533481840019043,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-08": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": -0.013124049980546787,
+            "Sum_baseR": -0.3018531495525761,
+            "PF": 0.9772561339785248,
+            "MaxDD_baseR": 6.766921463528456,
+            "R_DD": -0.04460716016573683,
+            "MaxConsecutiveLosses": 7
+          }
+        },
+        "state_counts": {
+          "HIGH": 32,
+          "NORMAL": 77,
+          "LOW": 27
+        },
+        "state_contribution_baseR": {
+          "HIGH": 21.812462199521867,
+          "NORMAL": 13.636856493969619,
+          "LOW": 0.5322078234868233
+        },
+        "worst_negative_streak_sum_baseR": -6.766921463528456
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_0P75",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 0.75
+        },
+        "all": {
+          "N": 136,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.26359172471401915,
+          "Sum_baseR": 35.848474561106606,
+          "PF": 1.5659277036674728,
+          "MaxDD_baseR": 6.747063288199456,
+          "R_DD": 5.313196724240784,
+          "MaxConsecutiveLosses": 7
+        },
+        "positive_months": 5,
+        "monthly": {
+          "2026-03": {
+            "N": 23,
+            "WR": 0.4782608695652174,
+            "EV_baseR_per_trade": 0.34148026546078597,
+            "Sum_baseR": 7.854046105598077,
+            "PF": 1.6563125923299098,
+            "MaxDD_baseR": 2.966031791376275,
+            "R_DD": 2.647997950808782,
+            "MaxConsecutiveLosses": 2
+          },
+          "2026-04": {
+            "N": 20,
+            "WR": 0.55,
+            "EV_baseR_per_trade": 0.4276812212993895,
+            "Sum_baseR": 8.55362442598779,
+            "PF": 2.1033712313513844,
+            "MaxDD_baseR": 3.675069388329743,
+            "R_DD": 2.327472905178334,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-05": {
+            "N": 25,
+            "WR": 0.6,
+            "EV_baseR_per_trade": 0.4865162170250923,
+            "Sum_baseR": 12.162905425627308,
+            "PF": 2.5445019523442842,
+            "MaxDD_baseR": 2.9041705940521227,
+            "R_DD": 4.188082287775211,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-06": {
+            "N": 22,
+            "WR": 0.4090909090909091,
+            "EV_baseR_per_trade": 0.2402546186212744,
+            "Sum_baseR": 5.285601609668037,
+            "PF": 1.5430478141686068,
+            "MaxDD_baseR": 6.414229596453801,
+            "R_DD": 0.8240430951505474,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": 0.1530859917806023,
+            "Sum_baseR": 3.520977810953853,
+            "PF": 1.264801691433751,
+            "MaxDD_baseR": 4.995099801490073,
+            "R_DD": 0.7048863788274102,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-08": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": -0.06646438333601998,
+            "Sum_baseR": -1.5286808167284593,
+            "PF": 0.8798261902318248,
+            "MaxDD_baseR": 6.747063288199456,
+            "R_DD": -0.22656980547405065,
+            "MaxConsecutiveLosses": 7
+          }
+        },
+        "state_counts": {
+          "HIGH": 32,
+          "NORMAL": 77,
+          "LOW": 27
+        },
+        "state_contribution_baseR": {
+          "HIGH": 21.812462199521867,
+          "NORMAL": 13.636856493969619,
+          "LOW": 0.39915586761511695
+        },
+        "worst_negative_streak_sum_baseR": -6.466919089966878
+      },
+      {
+        "name": "HIGH_1P5_NORMAL_1_LOW_0P50",
+        "multipliers": {
+          "HIGH": 1.5,
+          "NORMAL": 1.0,
+          "LOW": 0.5
+        },
+        "all": {
+          "N": 136,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.2626134015090802,
+          "Sum_baseR": 35.715422605234906,
+          "PF": 1.595049910904606,
+          "MaxDD_baseR": 6.963194482593217,
+          "R_DD": 5.12917206240861,
+          "MaxConsecutiveLosses": 7
+        },
+        "positive_months": 5,
+        "monthly": {
+          "2026-03": {
+            "N": 23,
+            "WR": 0.4782608695652174,
+            "EV_baseR_per_trade": 0.33919956550513114,
+            "Sum_baseR": 7.801590006618016,
+            "PF": 1.6804753359191968,
+            "MaxDD_baseR": 2.714752840473026,
+            "R_DD": 2.8737754282112276,
+            "MaxConsecutiveLosses": 2
+          },
+          "2026-04": {
+            "N": 20,
+            "WR": 0.55,
+            "EV_baseR_per_trade": 0.4353483171655034,
+            "Sum_baseR": 8.706966343310068,
+            "PF": 2.1608427490117323,
+            "MaxDD_baseR": 3.423362232918765,
+            "R_DD": 2.543396155856546,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-05": {
+            "N": 25,
+            "WR": 0.6,
+            "EV_baseR_per_trade": 0.47920999978345263,
+            "Sum_baseR": 11.980249994586316,
+            "PF": 2.6617954663884085,
+            "MaxDD_baseR": 2.6082130651446978,
+            "R_DD": 4.593278883035454,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-06": {
+            "N": 22,
+            "WR": 0.4090909090909091,
+            "EV_baseR_per_trade": 0.25928175121727004,
+            "Sum_baseR": 5.70419852677994,
+            "PF": 1.6242850140919787,
+            "MaxDD_baseR": 6.080100399461049,
+            "R_DD": 0.9381750550180998,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": 0.18599679208021316,
+            "Sum_baseR": 4.277926217844903,
+            "PF": 1.341150313138913,
+            "MaxDD_baseR": 4.995099801490072,
+            "R_DD": 0.8564245736529165,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-08": {
+            "N": 23,
+            "WR": 0.391304347826087,
+            "EV_baseR_per_trade": -0.1198047166914932,
+            "Sum_baseR": -2.7555084839043436,
+            "PF": 0.7735691477433145,
+            "MaxDD_baseR": 6.963194482593215,
+            "R_DD": -0.39572476264918915,
+            "MaxConsecutiveLosses": 7
+          }
+        },
+        "state_counts": {
+          "HIGH": 32,
+          "NORMAL": 77,
+          "LOW": 27
+        },
+        "state_contribution_baseR": {
+          "HIGH": 21.812462199521867,
+          "NORMAL": 13.636856493969619,
+          "LOW": 0.26610391174341164
+        },
+        "worst_negative_streak_sum_baseR": -6.1669167164053
+      }
+    ]
+  },
+  "risk_examples": {
+    "base_0.10pct": {
+      "HIGH_1P5": 0.15,
+      "NORMAL_1P0": 0.1,
+      "LOW_0P75": 0.075,
+      "LOW_0P50": 0.05
+    },
+    "base_0.15pct": {
+      "HIGH_1P5": 0.225,
+      "NORMAL_1P0": 0.15,
+      "LOW_0P75": 0.1125,
+      "LOW_0P50": 0.075
+    },
+    "base_0.25pct": {
+      "HIGH_1P5": 0.375,
+      "NORMAL_1P0": 0.25,
+      "LOW_0P75": 0.1875,
+      "LOW_0P50": 0.125
+    }
+  }
+}
