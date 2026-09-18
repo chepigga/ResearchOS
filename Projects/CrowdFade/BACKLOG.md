@@ -1353,6 +1353,23 @@ Target:
 Log:
 requested lot, margin-limited lot, actual risk %, margin needed/free, clamp reason.
 
+
+
+### STEP 4b — Contract-size / lot-cap parity hardening
+Status: DONE — implemented in local v200 parity build; MetaEditor compile pending
+
+Fix:
+- global manual cap default changed from `InpMaxLot=50` to `InpMaxLot=0` (disabled);
+- sizing order is now:
+  `raw risk lot -> broker SYMBOL_VOLUME_MAX / optional manual cap -> margin clamp -> final stepped lot`;
+- added `VOLUME_CLAMP` logging;
+- added `InpMinVolumeLotFrac=0.25`: skip with `VOLUME_UNDERSIZE_SKIP` if broker/manual limits would leave <25% of raw requested lot;
+- signal audit now records raw desired, broker-capped and final actual lot separately;
+- actual risk % is measured against raw requested risk, so silent under-sizing is visible.
+
+Exact local v200 SHA-256 after fix:
+`6492b13536fe0fb4472cd21c0ec5d377c05ee679dff0044092936e80bf53cfbe`
+
 ### STEP 5 — Transaction-cost-aware live audit
 Status: DONE — parity signal/execution CSV implemented; MetaEditor compile pending
 
