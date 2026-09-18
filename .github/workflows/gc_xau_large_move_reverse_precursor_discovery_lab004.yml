@@ -1,0 +1,99 @@
+name: GC XAU Large Move Reverse Precursor Discovery LAB004
+
+on:
+  push:
+    branches: [gc-amp-feed-audit-001]
+    paths:
+      - 'research/gc/gc_xau_large_move_reverse_precursor_discovery_lab004.py'
+      - 'research/gc/GC_XAU_LARGE_MOVE_REVERSE_PRECURSOR_DISCOVERY_LAB004_PREREG.md'
+      - '.github/workflows/gc_xau_large_move_reverse_precursor_discovery_lab004.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab012:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gc-amp-feed-audit-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install numpy pandas gdown
+      - name: Compile check
+        run: python -m py_compile research/gc/gc_xau_large_move_reverse_precursor_discovery_lab004.py
+      - name: Download frozen FTMO XAU raw ticks
+        shell: bash
+        run: |
+          set -euo pipefail
+          retry_gdown() {
+            local fid="$1" out="$2"
+            rm -f "$out"
+            for attempt in 1 2 3 4 5; do
+              echo "gdown attempt $attempt: $out"
+              if python -m gdown "$fid" -O "$out" && test -s "$out"; then return 0; fi
+              rm -f "$out"
+              sleep $((attempt * 12))
+            done
+            return 1
+          }
+          mkdir -p research/gc/_lab006_xau
+          cd research/gc/_lab006_xau
+          cat > files.tsv <<'EOF'
+          20260803	1WdMs_DuZGpuRcgUPyFZ4oxMxOjGW--17
+          20260804	1TwbVYZGHh3e77Z6MQh7JoumlOcII2ADz
+          20260805	1BJ4S-hcUGOe5KHZ9tcMrOPCWZLFcJpLg
+          20260806	1XxiVupqOzBpz-4BYGOA1OChyXwAOxlpo
+          20260807	1gmQOF9t-z5yU6cyaVnJlIG0BcJIncQRj
+          20260810	14vHeDnl5V3jci5HY8mBAjG23m6XzT091
+          20260811	1_gqAiA1PVxwZE-C-FJop5kD-88IwCBPh
+          20260812	1oZs9iTZCg110EeI3hp9CLVa7ac09mXlS
+          20260813	1UoDc1YuGFeghWDbrQ3QuxForZQTeM2tU
+          20260814	1Dw9j6P3ESu7EARDCa8zDOftsVDCnaFAb
+          20260817	1AJj8ljfv_cGTKNoVaE7B6q5z1K2qujCI
+          20260818	1bnCvY3VsOzVHcZYHDPCjvG2YmPEgDDV7
+          20260819	1TTTnWU0n-zlqY5oZ2mfH-YPYDfM0ZPUs
+          20260820	1ZWiJXoQISnolg8RGXCG-QK1zH0ujRJ5Q
+          20260821	164e1F70vUlBs0NfdYjuSogYJv2lI94Qr
+          20260824	1jD32o0VovNHi_ht1laoX1L0RKOrpTetW
+          20260825	1_weJFlCauopstQ_53xusPxty9whPEqqw
+          20260826	1eMcxfj6HhOx7WyikBSnb3UHUzq_pzFJi
+          20260827	10OTDJRn9MomIChDqpRA2mARh7yN8F9C7
+          20260828	1KlbF0Ud_Qo8ISYLDw1RCi7f3aaJj6sA9
+          20260831	1w3fF1d4sbogr7pyt_AX5NY3pQyvxlssz
+          20260901	1JQP4kID4sZdrWDkm2ZCxrPqwwP4HY7CH
+          20260902	1-C7SAKW5GENfzMlB0__VpHvrcKBYxmpA
+          20260903	1OsWXUEZxI8RidT62PhiXUWKg9Cu5zOo7
+          20260904	1muzuxYpAyOfhXObFkW_mHoYjhEa0qP4_
+          20260907	13Qnq3cvp3_3HpLXGXPVQlxG6q7HOEP9O
+          20260908	1KErGaEBczVmyKrANOcD4996XeS2La2tp
+          20260909	1J_ujRpRyvruRxPq45B8WCNuHQV79YQXm
+          20260910	1fRQjomXjqN-tNX26slBzuJuEOJQlSiEs
+          20260911	1euXgQquirtroEJVRkxUVU1yZmIIuQhS7
+          20260914	1fB3pTLmvBw3krrqeww1E-_eEw_qDNIjP
+          20260915	1FKhnwqgwL1Z40DtRBp8QwXC2Q4ch21_l
+          EOF
+          while IFS=$'\t' read -r day fid; do
+            retry_gdown "$fid" "XAUUSD_raw_ticks_${day}.csv"
+          done < files.tsv
+      - name: Run LAB004
+        run: python research/gc/gc_xau_large_move_reverse_precursor_discovery_lab004.py
+      - name: Commit LAB012 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/gc/GC_XAU_LARGE_MOVE_REVERSE_PRECURSOR_DISCOVERY_LAB004.json \
+                  research/gc/GC_XAU_LARGE_MOVE_REVERSE_PRECURSOR_DISCOVERY_LAB004.md \
+                  research/gc/GC_XAU_LARGE_MOVE_REVERSE_PRECURSOR_DISCOVERY_LAB004_EVENTS.csv \\
+                  research/gc/GC_XAU_LARGE_MOVE_REVERSE_PRECURSOR_DISCOVERY_LAB004_PRECURSORS.csv
+          if git diff --cached --quiet; then
+            echo 'No result changes'
+          else
+            git commit -m 'Record XAU large-move reverse precursor LAB004'
+            git push origin HEAD:gc-amp-feed-audit-001
+          fi
