@@ -1,0 +1,337 @@
+{
+  "lab": "CROWDFADE_H1_H4_RISK_MULTIPLIER_LAB_023",
+  "period": "2021-2025 historical discovery",
+  "rule": "Boost lot/risk only when H1 and H4 are non-neutral, aligned, and CrowdFade trade direction equals aligned trend (therefore crowd is against trend).",
+  "multipliers": [
+    1.0,
+    1.25,
+    1.5,
+    2.0
+  ],
+  "baseline_unweighted": {
+    "N": 1227,
+    "WR": 0.4384678076609617,
+    "EV": 0.10643515915828407,
+    "SumR": 130.59594028721455,
+    "PF": 1.2104262820043927,
+    "MaxDD_R": 13.497689077732744,
+    "R_DD": 9.675429589103501
+  },
+  "target_bucket_raw": {
+    "N": 438,
+    "WR": 0.4292237442922374,
+    "EV": 0.1609150323112961,
+    "SumR": 70.4807841523477,
+    "PF": 1.3198992057851433,
+    "MaxDD_R": 14.392662137777446,
+    "R_DD": 4.896994279282897
+  },
+  "target_trade_count": 438,
+  "target_share": 0.3569682151589242,
+  "results": [
+    {
+      "multiplier": 1.0,
+      "target_risk_multiple": 1.0,
+      "all": {
+        "N": 1227,
+        "WR": 0.4384678076609617,
+        "EV_baseR_per_trade": 0.10643515915828407,
+        "Sum_baseR": 130.59594028721455,
+        "PF": 1.2104262820043927,
+        "MaxDD_baseR": 13.497689077732744,
+        "R_DD": 9.675429589103501,
+        "MaxConsecutiveLosses": 9
+      },
+      "positive_years": 5,
+      "annual": {
+        "2021": {
+          "N": 221,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.11918654930312206,
+          "Sum_baseR": 26.340227395989974,
+          "PF": 1.244022202211593,
+          "MaxDD_baseR": 9.62306500669101,
+          "R_DD": 2.737197283576008,
+          "MaxConsecutiveLosses": 7
+        },
+        "2022": {
+          "N": 238,
+          "WR": 0.4327731092436975,
+          "EV_baseR_per_trade": 0.11162510657056694,
+          "Sum_baseR": 26.56677536379493,
+          "PF": 1.2153166619648563,
+          "MaxDD_baseR": 12.329233320603178,
+          "R_DD": 2.1547791880456697,
+          "MaxConsecutiveLosses": 7
+        },
+        "2023": {
+          "N": 257,
+          "WR": 0.4396887159533074,
+          "EV_baseR_per_trade": 0.08180424415539735,
+          "Sum_baseR": 21.023690747937117,
+          "PF": 1.1635327118361527,
+          "MaxDD_baseR": 8.540053052726135,
+          "R_DD": 2.4617751925119467,
+          "MaxConsecutiveLosses": 5
+        },
+        "2024": {
+          "N": 255,
+          "WR": 0.43137254901960786,
+          "EV_baseR_per_trade": 0.15726621072211897,
+          "Sum_baseR": 40.102883734140335,
+          "PF": 1.311557906130614,
+          "MaxDD_baseR": 12.375728454937057,
+          "R_DD": 3.240446320405654,
+          "MaxConsecutiveLosses": 9
+        },
+        "2025": {
+          "N": 256,
+          "WR": 0.421875,
+          "EV_baseR_per_trade": 0.06469673064590702,
+          "Sum_baseR": 16.562363045352196,
+          "PF": 1.125451350773952,
+          "MaxDD_baseR": 13.49768907773274,
+          "R_DD": 1.2270517530793679,
+          "MaxConsecutiveLosses": 8
+        }
+      },
+      "target_trade_count": 438,
+      "target_share": 0.3569682151589242,
+      "target_weighted_contribution_baseR": 70.4807841523477,
+      "non_target_contribution_baseR": 60.11515613486685
+    },
+    {
+      "multiplier": 1.25,
+      "target_risk_multiple": 1.25,
+      "all": {
+        "N": 1227,
+        "WR": 0.4384678076609617,
+        "EV_baseR_per_trade": 0.12079554712738506,
+        "Sum_baseR": 148.21613632530148,
+        "PF": 1.2193500129536103,
+        "MaxDD_baseR": 15.328532617039002,
+        "R_DD": 9.66929712244904,
+        "MaxConsecutiveLosses": 9
+      },
+      "positive_years": 5,
+      "annual": {
+        "2021": {
+          "N": 221,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.1425778830396357,
+          "Sum_baseR": 31.509712151759487,
+          "PF": 1.2661932628499408,
+          "MaxDD_baseR": 10.123938863329862,
+          "R_DD": 3.11239652640451,
+          "MaxConsecutiveLosses": 7
+        },
+        "2022": {
+          "N": 238,
+          "WR": 0.4327731092436975,
+          "EV_baseR_per_trade": 0.12025958564950176,
+          "Sum_baseR": 28.621781384581418,
+          "PF": 1.215387584750859,
+          "MaxDD_baseR": 13.558975855723137,
+          "R_DD": 2.1109102700039393,
+          "MaxConsecutiveLosses": 7
+        },
+        "2023": {
+          "N": 257,
+          "WR": 0.4396887159533074,
+          "EV_baseR_per_trade": 0.08306596985048134,
+          "Sum_baseR": 21.347954251573704,
+          "PF": 1.1495305105227367,
+          "MaxDD_baseR": 10.234516295927316,
+          "R_DD": 2.085878182642479,
+          "MaxConsecutiveLosses": 5
+        },
+        "2024": {
+          "N": 255,
+          "WR": 0.43137254901960786,
+          "EV_baseR_per_trade": 0.18040192127840757,
+          "Sum_baseR": 46.00248992599393,
+          "PF": 1.3299955134797554,
+          "MaxDD_baseR": 12.491450624302919,
+          "R_DD": 3.6827179892536366,
+          "MaxConsecutiveLosses": 9
+        },
+        "2025": {
+          "N": 256,
+          "WR": 0.421875,
+          "EV_baseR_per_trade": 0.08099296332575368,
+          "Sum_baseR": 20.73419861139294,
+          "PF": 1.14572856271607,
+          "MaxDD_baseR": 15.328532617038896,
+          "R_DD": 1.3526538468754155,
+          "MaxConsecutiveLosses": 8
+        }
+      },
+      "target_trade_count": 438,
+      "target_share": 0.3569682151589242,
+      "target_weighted_contribution_baseR": 88.10098019043463,
+      "non_target_contribution_baseR": 60.11515613486685
+    },
+    {
+      "multiplier": 1.5,
+      "target_risk_multiple": 1.5,
+      "all": {
+        "N": 1227,
+        "WR": 0.4384678076609617,
+        "EV_baseR_per_trade": 0.13515593509648605,
+        "Sum_baseR": 165.83633236338838,
+        "PF": 1.2269285543071315,
+        "MaxDD_baseR": 17.159376156345132,
+        "R_DD": 9.664473279937162,
+        "MaxConsecutiveLosses": 9
+      },
+      "positive_years": 5,
+      "annual": {
+        "2021": {
+          "N": 221,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.1659692167761493,
+          "Sum_baseR": 36.67919690752899,
+          "PF": 1.2847737356853834,
+          "MaxDD_baseR": 10.624812719968716,
+          "R_DD": 3.4522205590120736,
+          "MaxConsecutiveLosses": 7
+        },
+        "2022": {
+          "N": 238,
+          "WR": 0.4327731092436975,
+          "EV_baseR_per_trade": 0.1288940647284366,
+          "Sum_baseR": 30.676787405367907,
+          "PF": 1.2154490432125544,
+          "MaxDD_baseR": 14.788718390843098,
+          "R_DD": 2.0743371125629393,
+          "MaxConsecutiveLosses": 7
+        },
+        "2023": {
+          "N": 257,
+          "WR": 0.4396887159533074,
+          "EV_baseR_per_trade": 0.08432769554556531,
+          "Sum_baseR": 21.672217755210283,
+          "PF": 1.1380628673409352,
+          "MaxDD_baseR": 11.928979539128498,
+          "R_DD": 1.816770469269629,
+          "MaxConsecutiveLosses": 5
+        },
+        "2024": {
+          "N": 255,
+          "WR": 0.43137254901960786,
+          "EV_baseR_per_trade": 0.20353763183469628,
+          "Sum_baseR": 51.90209611784755,
+          "PF": 1.3458076703070934,
+          "MaxDD_baseR": 14.000197324897282,
+          "R_DD": 3.70724032764505,
+          "MaxConsecutiveLosses": 9
+        },
+        "2025": {
+          "N": 256,
+          "WR": 0.421875,
+          "EV_baseR_per_trade": 0.09728919600560026,
+          "Sum_baseR": 24.906034177433668,
+          "PF": 1.1632786834715962,
+          "MaxDD_baseR": 17.159376156345033,
+          "R_DD": 1.4514533599885069,
+          "MaxConsecutiveLosses": 8
+        }
+      },
+      "target_trade_count": 438,
+      "target_share": 0.3569682151589242,
+      "target_weighted_contribution_baseR": 105.72117622852156,
+      "non_target_contribution_baseR": 60.11515613486685
+    },
+    {
+      "multiplier": 2.0,
+      "target_risk_multiple": 2.0,
+      "all": {
+        "N": 1227,
+        "WR": 0.4384678076609617,
+        "EV_baseR_per_trade": 0.16387671103468804,
+        "Sum_baseR": 201.0767244395622,
+        "PF": 1.2391073565995794,
+        "MaxDD_baseR": 20.82106323495742,
+        "R_DD": 9.65737062370405,
+        "MaxConsecutiveLosses": 9
+      },
+      "positive_years": 5,
+      "annual": {
+        "2021": {
+          "N": 221,
+          "WR": 0.47058823529411764,
+          "EV_baseR_per_trade": 0.21275188424917654,
+          "Sum_baseR": 47.01816641906802,
+          "PF": 1.3141655955440057,
+          "MaxDD_baseR": 11.81338366317788,
+          "R_DD": 3.9800761373409768,
+          "MaxConsecutiveLosses": 7
+        },
+        "2022": {
+          "N": 238,
+          "WR": 0.4327731092436975,
+          "EV_baseR_per_trade": 0.14616302288630612,
+          "Sum_baseR": 34.786799446940854,
+          "PF": 1.215550252819536,
+          "MaxDD_baseR": 17.248203461083012,
+          "R_DD": 2.0168361026949873,
+          "MaxConsecutiveLosses": 7
+        },
+        "2023": {
+          "N": 257,
+          "WR": 0.4396887159533074,
+          "EV_baseR_per_trade": 0.08685114693573324,
+          "Sum_baseR": 22.320744762483443,
+          "PF": 1.1204004535205005,
+          "MaxDD_baseR": 18.410055888019812,
+          "R_DD": 1.2124213472381948,
+          "MaxConsecutiveLosses": 5
+        },
+        "2024": {
+          "N": 255,
+          "WR": 0.43137254901960786,
+          "EV_baseR_per_trade": 0.24980905294727368,
+          "Sum_baseR": 63.70130850155479,
+          "PF": 1.3715191622365182,
+          "MaxDD_baseR": 17.017690726086,
+          "R_DD": 3.7432404623447897,
+          "MaxConsecutiveLosses": 9
+        },
+        "2025": {
+          "N": 256,
+          "WR": 0.421875,
+          "EV_baseR_per_trade": 0.12988166136529358,
+          "Sum_baseR": 33.24970530951516,
+          "PF": 1.1921373823414874,
+          "MaxDD_baseR": 20.821063234957325,
+          "R_DD": 1.5969263881630638,
+          "MaxConsecutiveLosses": 8
+        }
+      },
+      "target_trade_count": 438,
+      "target_share": 0.3569682151589242,
+      "target_weighted_contribution_baseR": 140.9615683046954,
+      "non_target_contribution_baseR": 60.11515613486685
+    }
+  ],
+  "risk_percent_examples": {
+    "base_0.10pct": {
+      "1.0": 0.1,
+      "1.25": 0.125,
+      "1.5": 0.15000000000000002,
+      "2.0": 0.2
+    },
+    "base_0.15pct": {
+      "1.0": 0.15,
+      "1.25": 0.1875,
+      "1.5": 0.22499999999999998,
+      "2.0": 0.3
+    },
+    "base_0.25pct": {
+      "1.0": 0.25,
+      "1.25": 0.3125,
+      "1.5": 0.375,
+      "2.0": 0.5
+    }
+  }
+}
