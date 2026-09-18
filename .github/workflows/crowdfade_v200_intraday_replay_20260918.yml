@@ -1,0 +1,27 @@
+name: CrowdFade v200 intraday replay 2026-09-18
+on:
+  push:
+    paths:
+      - 'labs/CROWDFADE_V200_INTRADAY_REPLAY_20260918/run.py'
+      - '.github/workflows/crowdfade_v200_intraday_replay_20260918.yml'
+permissions:
+  contents: write
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run replay
+        run: python labs/CROWDFADE_V200_INTRADAY_REPLAY_20260918/run.py
+      - name: Commit result
+        run: |
+          git config user.name "ResearchOS Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add labs/CROWDFADE_V200_INTRADAY_REPLAY_20260918/result.json labs/CROWDFADE_V200_INTRADAY_REPLAY_20260918/RESULT.md
+          git diff --cached --quiet || git commit -m "lab(CrowdFade): v200 intraday replay 2026-09-18 result"
+          git push
