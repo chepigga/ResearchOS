@@ -1,0 +1,63 @@
+{
+  "lab": "CROWDFADE_V190_EXIT_ON_V200_ENTRY_LAB_028",
+  "period": "2026 seconds forward-shadow/stress",
+  "warning": "Second OHLC approximates v190 1-second timer; protective stop changes effective next second.",
+  "v190_exit_exact": {
+    "BE_at_ATR": 0.5,
+    "BE_lock_ATR": 0.15,
+    "trail_arm_ATR": 2.5,
+    "trail_dist_ATR": 0.5,
+    "signal_exit_absZ_opposite": 1.0,
+    "hold_hours": 6
+  },
+  "results": [
+    {
+      "name": "V190_EXIT_EXACT_LAB026",
+      "signal_exit": true,
+      "hold_hours": 6,
+      "all": {
+        "N": 0
+      },
+      "positive_months": 0,
+      "monthly": {},
+      "exit_mix": {
+        "SL": 0,
+        "BE_TRAIL_STOP": 0,
+        "SIGNAL": 0,
+        "TIME": 0
+      }
+    },
+    {
+      "name": "V190_EXIT_NO_SIGNAL_LAB026",
+      "signal_exit": false,
+      "hold_hours": 6,
+      "all": {
+        "N": 0
+      },
+      "positive_months": 0,
+      "monthly": {},
+      "exit_mix": {
+        "SL": 0,
+        "BE_TRAIL_STOP": 0,
+        "SIGNAL": 0,
+        "TIME": 0
+      }
+    },
+    {
+      "name": "V190_EXIT_24H_SIGNAL_LAB026",
+      "signal_exit": true,
+      "hold_hours": 24,
+      "all": {
+        "N": 0
+      },
+      "positive_months": 0,
+      "monthly": {},
+      "exit_mix": {
+        "SL": 0,
+        "BE_TRAIL_STOP": 0,
+        "SIGNAL": 0,
+        "TIME": 0
+      }
+    }
+  ]
+}
