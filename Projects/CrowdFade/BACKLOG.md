@@ -1110,3 +1110,79 @@ Research anti-repeat gate is defined at original signal state.
 
 This second live check can create sequence divergence and requires a dedicated parity audit before treating the EA as exact research parity.
 
+---
+
+## LAB028 — Literal v190 exit engine on frozen v200 entry
+
+Transferred from actual v1.90 source code:
+
+- BE trigger +0.50 ATR
+- BE lock +0.15 ATR
+- trail arm +2.50 ATR
+- trail distance 0.50 ATR
+- signal exit at opposite |Z| >= 1.00
+- time exit 6h
+- no fixed TP
+
+Kept frozen v200:
+- Z2.50/2.50
+- M15 confirm 0.25 ATR
+- passive retrace 0.60 ATR
+- hard SL 4.5 ATR
+- LAB026 sizing
+
+### Historical
+
+Exact v190 exit + LAB026:
+- N1689
+- WR 81.23%
+- EV **+0.00484R**
+- Sum **+8.17R**
+- PF **1.039**
+- DD 13.80R
+- only **3/5 positive years**
+
+### 2026 seconds
+
+Exact v190 exit + LAB026:
+- N187
+- WR 81.82%
+- EV **-0.0111R**
+- Sum **-2.08R**
+- PF **0.892**
+- only **3/6 positive months**
+
+Exit mix 2026:
+- hard SL 8
+- BE/trail stop **145**
+- signal 25
+- time 9
+
+### Root cause
+
+v190 uses SL = 1.0 ATR, so its exit geometry is roughly:
+- BE at 0.5R
+- lock 0.15R
+- trail arm 2.5R
+- trail distance 0.5R
+
+On v200 SL = 4.5 ATR, literal ATR transfer becomes:
+- BE at 0.111R
+- lock 0.033R
+- trail arm 0.556R
+- trail distance 0.111R
+
+This massively over-tightens the wider-stop v200 system.
+
+Verdict:
+**literal ATR transfer = FAIL**.
+
+Possible next test:
+translate v190 exit geometry in R onto v200:
+- BE +0.50R = +2.25 ATR
+- lock +0.15R = +0.675 ATR
+- trail arm +2.50R = +11.25 ATR
+- trail distance 0.50R = 2.25 ATR
+- signal exit |Z|>=1 opposite
+- hold 6h
+
