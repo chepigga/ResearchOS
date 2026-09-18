@@ -82,21 +82,19 @@ def main():
          q.yr.to_numpy(np.int64),q.daykey.to_numpy(np.int64)]
     sim(*[x[:1000] for x in arr],0.0)
 
-    rows=[]; seq=pd.DataFrame()
+    rows=[]; seqs=[]
     for name,dist in TRAILS:
         r,yr,reason=sim(*arr,dist)
-        if seq.empty:
-            seq['trade_index']=np.arange(1,len(r)+1)
-            seq['year']=yr
-        seq[name+'_R']=r; seq[name+'_equity']=np.cumsum(r)
-        eq=np.cumsum(r);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];seq[name+'_dd']=pk-eq
+        eq=np.cumsum(r);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];dd=pk-eq
+        seqs.append(pd.DataFrame({'mode':name,'trade_index':np.arange(1,len(r)+1),'year':yr,
+                                  'R':r,'equity':eq,'drawdown':dd}))
         annual={str(y):metrics(r[yr==y]) for y in range(2021,2026)}
         rows.append({'name':name,'trail_distance_R':dist,'activation_R':ACTIVATE_R,
                      'all':metrics(r),'positive_years':int(sum(v['SumR']>0 for v in annual.values())),
                      'annual':annual,
                      'exit_mix':{'SL':int((reason==-1).sum()),'TRAIL':int((reason==-3).sum()),
                                  'TP':int((reason==1).sum()),'TIME':int((reason==0).sum())}})
-    seq.to_csv(OUT/'equity_sequence_2021_2025.csv',index=False)
+    pd.concat(seqs,ignore_index=True).to_csv(OUT/'equity_sequence_2021_2025.csv',index=False)
     out={'lab':'CROWDFADE_TRAIL_DISTANCE_LAB_024','period':'2021-2025 historical',
          'definition':'4.5 ATR hard SL. Trailing activates at +1R MFE. Trail distance is 0.5R / 1R / 2.5R. Stop updates after completed 1m bar and is effective next bar.',
          'warning':'Historical path uses 1m OHLC, not ticks.','results':rows}
