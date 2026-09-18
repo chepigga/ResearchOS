@@ -1,0 +1,30 @@
+# GC_XAU_CROWDFade_STALL_XAU_DIVERGENCE_AND_5_30S_ENTRY_GATE_LAB004
+
+Frozen parent trigger: 30s_FADE_STALL.
+
+| State / Entry | Gate | TrFill | Tr120 | VaFill | Va120 | Va300 | Va G1 EV/PF | Va G2 EV/PF | Post120 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ALL__MARKET_5S | FAIL | 25 | -0.235 | 41 | -0.425 | -0.650 | -0.707/+0.216 | -0.512/+0.364 | -0.241 |
+| ALL__LIMIT_010_FROM_5S | FAIL | 20 | -0.375 | 29 | -0.321 | -0.639 | -0.897/+0.071 | -0.569/+0.312 | -0.142 |
+| ALL__CONFIRM_010 | FAIL | 20 | -0.095 | 33 | -0.374 | -0.519 | -0.545/+0.357 | -0.470/+0.404 | -0.137 |
+| ALL__CONFIRM_AFTER_NEGATIVE | FAIL | 17 | -0.238 | 20 | -0.735 | -0.924 | -0.550/+0.353 | -0.500/+0.375 | -0.039 |
+| DIVERGE_EARLY__MARKET_5S | FAIL | 12 | +0.064 | 14 | -0.038 | -0.306 | -0.571/+0.333 | -0.107/+0.833 | -0.132 |
+| DIVERGE_EARLY__LIMIT_010_FROM_5S | FAIL | 7 | -0.310 | 8 | +0.100 | -0.149 | -1.000/+0.000 | -0.688/+0.214 | -0.024 |
+| DIVERGE_EARLY__CONFIRM_010 | FAIL | 12 | +0.056 | 13 | +0.187 | -0.022 | -0.077/+0.889 | -0.038/+0.938 | -0.051 |
+| DIVERGE_EARLY__CONFIRM_AFTER_NEGATIVE | FAIL | 6 | +0.180 | 2 | -0.140 | -1.423 | +0.500/+2.000 | +0.250/+1.500 | +0.795 |
+| STALL_THEN_GO__MARKET_5S | FAIL | 6 | +0.384 | 11 | -0.336 | -0.376 | +0.091/+1.143 | +0.364/+1.800 | +0.172 |
+| STALL_THEN_GO__LIMIT_010_FROM_5S | FAIL | 5 | +0.576 | 3 | -0.459 | -0.395 | +0.000/+1.000 | +0.667/+3.000 | +0.701 |
+| STALL_THEN_GO__CONFIRM_010 | FAIL | 4 | +0.541 | 11 | -0.614 | -0.658 | -0.455/+0.444 | -0.091/+0.857 | +0.043 |
+| STALL_THEN_GO__CONFIRM_AFTER_NEGATIVE | FAIL | 4 | +0.922 | 9 | -0.698 | -0.733 | -0.333/+0.571 | -0.167/+0.750 | +0.090 |
+| CROWD_PERSISTS__MARKET_5S | FAIL | 10 | -0.788 | 16 | -0.663 | -0.894 | -1.000/+0.000 | -0.844/+0.100 | -0.568 |
+| CROWD_PERSISTS__LIMIT_010_FROM_5S | FAIL | 10 | -0.688 | 13 | -0.546 | -0.933 | -0.769/+0.167 | -0.615/+0.273 | -0.468 |
+| CROWD_PERSISTS__CONFIRM_010 | FAIL | 5 | -0.730 | 9 | -0.808 | -0.825 | -1.000/+0.000 | -0.722/+0.188 | -0.516 |
+| CROWD_PERSISTS__CONFIRM_AFTER_NEGATIVE | FAIL | 8 | -0.826 | 8 | -0.944 | -0.851 | -1.000/+0.000 | -0.688/+0.214 | -0.662 |
+| REVERSAL_CONFIRM__MARKET_5S | FAIL | 2 | +0.475 | 6 | -0.362 | -0.196 | +0.000/+1.000 | +0.250/+1.500 | -0.445 |
+| REVERSAL_CONFIRM__LIMIT_010_FROM_5S | FAIL | 2 | +0.575 | 3 | -0.459 | -0.395 | +0.000/+1.000 | +0.667/+3.000 | -0.189 |
+| REVERSAL_CONFIRM__CONFIRM_010 | FAIL | 1 | -0.278 | 6 | -0.719 | -0.553 | -0.500/+0.400 | -0.167/+0.750 | -0.652 |
+| REVERSAL_CONFIRM__CONFIRM_AFTER_NEGATIVE | FAIL | 2 | +0.368 | 6 | -0.610 | -0.444 | -0.500/+0.400 | -0.167/+0.750 | -0.544 |
+
+Candidates: NONE
+
+POST_CHECK was not used for candidate selection. No trigger threshold sweep was performed.
