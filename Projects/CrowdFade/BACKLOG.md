@@ -1429,3 +1429,24 @@ Implementation notes:
 - live audit includes signal_id, basis, desired/actual lot, MFE/MAE, exit reason, gross/net R and actual costs.
 
 
+
+
+### LAB031 — TREND_TRANSITION_AND_REVERSAL_RISK
+Status: **DONE — stale-H4 de-risk hypothesis FAIL**
+
+Current candidate tested:
+`Z=2.05 -> M15 confirm .25 ATR -> retrace .60 ATR -> limit20 -> SL4.5 -> TP10 -> H24`.
+
+Key findings:
+- `CONFLICT_FOLLOW_H4` is **not toxic**:
+  - 2021-25: N65, EV +0.1389R, PF 1.279.
+  - 2026 Mar-Aug: N4, EV +0.6048R, PF 2.203 (small sample).
+- `CONFLICT_ONSET` is positive in both samples; do not boost due small 2026 N.
+- de-risking/vetoing stale-H4 conflict reduces return and R/DD.
+- more important: inherited LAB026 sizing does **not** transport cleanly after lowering Z from 2.50 to 2.05.
+  - Z2.05 flat 2026: Sum +17.12R, PF 1.198, DD 8.34R, R/DD 2.051.
+  - old LAB026 sizing: Sum +15.57R, PF 1.162, DD 10.78R, R/DD 1.444.
+
+Next: `CROWDFADE_Z205_QUALITY_RISK_RECALIBRATION_LAB_032`.
+Freeze signal/entry/exit; recalibrate risk only. Candidate grid:
+`1/1/1`, old `1.5/1/.75`, `1.25/1/.75`, `1.25/1/1`, `1/1/.75`.
