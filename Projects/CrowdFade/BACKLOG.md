@@ -1450,3 +1450,44 @@ Key findings:
 Next: `CROWDFADE_Z205_QUALITY_RISK_RECALIBRATION_LAB_032`.
 Freeze signal/entry/exit; recalibrate risk only. Candidate grid:
 `1/1/1`, old `1.5/1/.75`, `1.25/1/.75`, `1.25/1/1`, `1/1/.75`.
+
+
+### LAB032 — Z205_QUALITY_RISK_RECALIBRATION
+Status: **DONE — FLAT RISK PROMOTED**
+
+Frozen trade sequence:
+`Z2.05 -> confirm .25 ATR -> retrace .60 ATR -> limit20 -> SL4.5 -> TP10 -> H24`.
+
+Tested risk maps:
+- `1/1/1`
+- old `1.5/1/.75`
+- `1.25/1/.75`
+- `1.25/1/1`
+- `1/1/.75`
+
+Key result:
+- old LAB026 quality ordering does not transport after lowering Z from 2.50 to 2.05.
+- 2026 state inversion:
+  - HIGH N49 EV -0.0126R PF .975
+  - NORMAL N101 EV +0.1265R PF 1.252
+  - LOW N26 EV +0.1907R PF 1.464
+- **FLAT 1/1/1 wins 2026 forward-shadow**:
+  - Sum +17.12R
+  - PF 1.198
+  - DD 8.34R
+  - R/DD 2.051
+- old LAB026:
+  - Sum +15.57R
+  - PF 1.162
+  - DD 10.78R
+  - R/DD 1.444
+- all 5 historical years remain positive under flat risk.
+
+Decision:
+**Current Z2.05 candidate should use flat risk. Retire inherited HIGH1.5/NORMAL1/LOW.75 from the live candidate.**
+Do not invert weighting to favor LOW from the small 2026 sample.
+
+Next:
+- update v200 candidate to flat risk only;
+- dual-broker forward;
+- broker-specific daily-DD / simultaneous BTC+ETH+SOL exposure audit.
