@@ -1,0 +1,103 @@
+{
+  "lab": "GC_XAU_LARGE_MOVE_TAIL_PRECURSOR_AUDIT_LAB004B",
+  "results": {
+    "2.0": {
+      "counts": {
+        "TRAIN": {
+          "n": 2470,
+          "quiet": 771,
+          "up": 1283,
+          "down": 1187,
+          "median_time_s": 239.0
+        },
+        "VALID": {
+          "n": 2330,
+          "quiet": 685,
+          "up": 1156,
+          "down": 1174,
+          "median_time_s": 234.0
+        },
+        "POST_CHECK": {
+          "n": 1349,
+          "quiet": 366,
+          "up": 637,
+          "down": 712,
+          "median_time_s": 230.0
+        },
+        "FULL": {
+          "n": 6149,
+          "quiet": 1822,
+          "up": 3076,
+          "down": 3073,
+          "median_time_s": 235.0
+        }
+      },
+      "key_enrichment": {
+        "TRAIN": {
+          "delta_flip_all": 1.0323227568025608,
+          "repeated_all": 1.2126682986536106,
+          "repeated_quiet": 1.8541137991315628
+        },
+        "VALID": {
+          "delta_flip_all": 1.0135312350977588,
+          "repeated_all": 1.0908905579399142,
+          "repeated_quiet": 1.4131386861313868
+        },
+        "POST_CHECK": {
+          "delta_flip_all": 0.9705194731139876,
+          "repeated_all": 1.0862287476984145,
+          "repeated_quiet": 2.375487900078064
+        }
+      }
+    },
+    "3.0": {
+      "counts": {
+        "TRAIN": {
+          "n": 1272,
+          "quiet": 327,
+          "up": 657,
+          "down": 615,
+          "median_time_s": 281.0
+        },
+        "VALID": {
+          "n": 1170,
+          "quiet": 353,
+          "up": 593,
+          "down": 577,
+          "median_time_s": 280.0
+        },
+        "POST_CHECK": {
+          "n": 674,
+          "quiet": 184,
+          "up": 331,
+          "down": 343,
+          "median_time_s": 279.0
+        },
+        "FULL": {
+          "n": 3116,
+          "quiet": 864,
+          "up": 1581,
+          "down": 1535,
+          "median_time_s": 280.0
+        }
+      },
+      "key_enrichment": {
+        "TRAIN": {
+          "delta_flip_all": 0.8576889875447034,
+          "repeated_all": 1.1605057117186497,
+          "repeated_quiet": 1.4894634417570196
+        },
+        "VALID": {
+          "delta_flip_all": 0.7075648268868607,
+          "repeated_all": 1.0476126840947688,
+          "repeated_quiet": 1.5123862335000904
+        },
+        "POST_CHECK": {
+          "delta_flip_all": 0.8837086526733537,
+          "repeated_all": 1.2452258287669984,
+          "repeated_quiet": 1.4601449275362317
+        }
+      }
+    }
+  }
+}
