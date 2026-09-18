@@ -1267,7 +1267,7 @@ Observed:
 ## Execution order — DO NOT SKIP / DO NOT COMBINE
 
 ### STEP 1 — Restore robust v200 exit baseline
-Status: IN PROGRESS
+Status: DONE
 
 Return v200 from experimental no-TP wide-trail mode to the validated integrated reference:
 - SL = 4.5 ATR
@@ -1286,7 +1286,7 @@ Reference:
 - 2026 stress: Sum +35.85R, DD 6.75R, R/DD 5.31
 
 ### STEP 2 — Remove double ATR-pause
-Status: IN PROGRESS
+Status: DONE
 
 Current v200 calls CanEnterByPauseAndDay twice:
 1. at original signal arm;
@@ -1303,7 +1303,7 @@ Goal:
 exact research/live reachability parity.
 
 ### STEP 3 — Canonical Binance price/ATR/confirmation
-Status: TODO
+Status: DONE — implemented in local v200 parity build; MetaEditor compile pending
 
 Problem:
 v191/v200 crowd state is Binance-derived but price confirmation/ATR currently uses broker-local crypto candles.
@@ -1338,7 +1338,7 @@ Required audit fields:
 - signal ID identical across brokers.
 
 ### STEP 4 — Margin-adaptive lot instead of hard MARGIN_BLOCK
-Status: TODO
+Status: DONE — implemented in local v200 parity build; MetaEditor compile pending
 
 Problem:
 FTMO can block desired crypto size even when signal is otherwise valid.
@@ -1354,7 +1354,7 @@ Log:
 requested lot, margin-limited lot, actual risk %, margin needed/free, clamp reason.
 
 ### STEP 5 — Transaction-cost-aware live audit
-Status: TODO
+Status: DONE — parity signal/execution CSV implemented; MetaEditor compile pending
 
 Do not use cost to retune the signal yet.
 
@@ -1380,7 +1380,7 @@ Goal:
 compare identical signal IDs broker-by-broker rather than comparing account PnL only.
 
 ### STEP 6 — Dual-broker forward A/B
-Status: TODO
+Status: READY AFTER METAEDITOR COMPILE
 
 Run the SAME v200 candidate on:
 - FTMO demo
@@ -1399,4 +1399,16 @@ Primary parity metrics:
 - skipped signals by reason (spread/margin/exposure/pause)
 
 Do not tune from the first few trades.
+
+Current local v200 parity build SHA-256:
+`cbb5fc20fc0f60dee2a0ab080f8c1a2a189f239abf16b596bbb40334794a056b`
+
+Implementation notes:
+- fixed TP10 restored;
+- double pause removed;
+- Binance USD-M canonical M15/ATR/H1/H4 implemented;
+- broker quote used only for executable basis/spread/order placement;
+- margin-adaptive lot implemented;
+- live audit includes signal_id, basis, desired/actual lot, MFE/MAE, exit reason, gross/net R and actual costs.
+
 
