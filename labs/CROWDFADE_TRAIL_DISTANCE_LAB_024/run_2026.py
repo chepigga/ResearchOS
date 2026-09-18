@@ -79,22 +79,20 @@ def main():
     m=load_base();arr=m.prep()
     sim(*[x[:2000] for x in arr],0.0)
 
-    rows=[];seq=pd.DataFrame()
+    rows=[];seqs=[]
     for name,dist in TRAILS:
         r,ets,reason=sim(*arr,dist)
         months=pd.to_datetime(ets,unit='s',utc=True).to_period('M').astype(str)
-        if seq.empty:
-            seq['entry_time_utc']=pd.to_datetime(ets,unit='s',utc=True).astype(str)
-            seq['month']=months
-        seq[name+'_R']=r;seq[name+'_equity']=np.cumsum(r)
-        eq=np.cumsum(r);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];seq[name+'_dd']=pk-eq
+        eq=np.cumsum(r);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];dd=pk-eq
+        seqs.append(pd.DataFrame({'mode':name,'entry_time_utc':pd.to_datetime(ets,unit='s',utc=True).astype(str),
+                                  'month':months,'R':r,'equity':eq,'drawdown':dd}))
         monthly={mo:metrics(r[months==mo]) for mo in sorted(set(months))}
         rows.append({'name':name,'trail_distance_R':dist,'activation_R':ACTIVATE_R,
                      'all':metrics(r),'positive_months':int(sum(v['SumR']>0 for v in monthly.values())),
                      'monthly':monthly,
                      'exit_mix':{'SL':int((reason==-1).sum()),'TRAIL':int((reason==-3).sum()),
                                  'TP':int((reason==1).sum()),'TIME':int((reason==0).sum())}})
-    seq.to_csv(OUT/'equity_sequence_2026.csv',index=False)
+    pd.concat(seqs,ignore_index=True).to_csv(OUT/'equity_sequence_2026.csv',index=False)
     out={'lab':'CROWDFADE_TRAIL_DISTANCE_LAB_024','period':'2026 seconds forward-shadow/stress',
          'definition':'4.5 ATR hard SL. Trailing activates at +1R MFE. Trail distance 0.5R / 1R / 2.5R. Stop updates after completed second and is effective next second.',
          'warning':'1-second OHLC is not a true exchange tick sequence.','results':rows}
