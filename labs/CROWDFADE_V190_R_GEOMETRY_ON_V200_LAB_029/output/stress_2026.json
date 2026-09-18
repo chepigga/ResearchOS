@@ -1,0 +1,101 @@
+{
+  "lab": "CROWDFADE_V190_R_GEOMETRY_ON_V200_LAB_029",
+  "period": "2026 seconds forward-shadow/stress",
+  "warning": "1-second OHLC approximates timer/tick path; stop changes become effective next second.",
+  "configuration": {
+    "entry": "frozen v200",
+    "hard_sl": "4.5 ATR = 1R",
+    "risk": "LAB026 HIGH1.5/NORMAL1/LOW0.75",
+    "BE_trigger_R": 0.5,
+    "BE_lock_R": 0.15,
+    "trail_arm_R": 2.5,
+    "trail_distance_R": 0.5,
+    "signal_exit_opposite_absZ": 1.0,
+    "hold_hours": 6,
+    "fixed_TP": false
+  },
+  "all": {
+    "N": 182,
+    "WR": 0.5274725274725275,
+    "EV": -0.03119241277174109,
+    "SumR": -5.677019124456878,
+    "PF": 0.8812725245445298,
+    "MaxDD_R": 11.281003277323014,
+    "R_DD": -0.5032370778465048,
+    "MaxConsecutiveLosses": 5
+  },
+  "positive_months": 2,
+  "monthly": {
+    "2026-03": {
+      "N": 30,
+      "WR": 0.5666666666666667,
+      "EV": -0.0028535348130068073,
+      "SumR": -0.08560604439020422,
+      "PF": 0.990038998558832,
+      "MaxDD_R": 4.047575498233556,
+      "R_DD": -0.021149956171926734,
+      "MaxConsecutiveLosses": 4
+    },
+    "2026-04": {
+      "N": 30,
+      "WR": 0.5,
+      "EV": -0.0726187888270921,
+      "SumR": -2.178563664812763,
+      "PF": 0.6939841775307777,
+      "MaxDD_R": 2.7251382475895016,
+      "R_DD": -0.7994323468689317,
+      "MaxConsecutiveLosses": 5
+    },
+    "2026-05": {
+      "N": 37,
+      "WR": 0.4864864864864865,
+      "EV": 0.009263704537040552,
+      "SumR": 0.3427570678705004,
+      "PF": 1.032879799731448,
+      "MaxDD_R": 5.64169667966873,
+      "R_DD": 0.06075425307881432,
+      "MaxConsecutiveLosses": 4
+    },
+    "2026-06": {
+      "N": 27,
+      "WR": 0.5185185185185185,
+      "EV": -0.08486839883584507,
+      "SumR": -2.291446768567817,
+      "PF": 0.6327342074373308,
+      "MaxDD_R": 4.25863694936192,
+      "R_DD": -0.5380704661643321,
+      "MaxConsecutiveLosses": 3
+    },
+    "2026-07": {
+      "N": 32,
+      "WR": 0.59375,
+      "EV": 0.036093647533118625,
+      "SumR": 1.154996721059796,
+      "PF": 1.1563153780047564,
+      "MaxDD_R": 2.2244310784891557,
+      "R_DD": 0.5192324150785896,
+      "MaxConsecutiveLosses": 2
+    },
+    "2026-08": {
+      "N": 26,
+      "WR": 0.5,
+      "EV": -0.10073678598524566,
+      "SumR": -2.6191564356163872,
+      "PF": 0.6746253638571581,
+      "MaxDD_R": 6.281380039650454,
+      "R_DD": -0.41697149656337906,
+      "MaxConsecutiveLosses": 4
+    }
+  },
+  "state_counts": {
+    "HIGH": 47,
+    "NORMAL": 100,
+    "LOW": 35
+  },
+  "exit_mix": {
+    "SL": 23,
+    "BE_TRAIL_STOP": 41,
+    "SIGNAL": 53,
+    "TIME": 65
+  }
+}
