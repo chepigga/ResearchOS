@@ -1250,3 +1250,153 @@ Verdict:
 Reference remains:
 **TP10 + SL4.5ATR + 24h fallback + LAB026**.
 
+---
+
+# LIVE EXECUTION PARITY ROADMAP — 2026-09-18
+
+Source evidence: same-day v1.91 runs on FTMO and GetLeveraged, crypto only (BTC/ETH/SOL; gold excluded).
+
+Observed:
+- exact matched signal IDs usually enter within the same second;
+- broker BTC quotes differ systematically by tens of USD;
+- local broker price/ATR paths cause different confirmations and different signal sets;
+- trailing/SL triggers can diverge even when entries are nearly identical;
+- FTMO crypto commission materially converts many tiny gross winners into net losers;
+- FTMO can reject otherwise valid ETH trades on margin while GetLeveraged takes them.
+
+## Execution order — DO NOT SKIP / DO NOT COMBINE
+
+### STEP 1 — Restore robust v200 exit baseline
+Status: IN PROGRESS
+
+Return v200 from experimental no-TP wide-trail mode to the validated integrated reference:
+- SL = 4.5 ATR
+- TP = 10 ATR
+- max hold = 24h
+- BE OFF
+- trailing OFF
+- signal exit OFF
+- LAB026 risk tiers ON:
+  - HIGH 1.50x
+  - NORMAL 1.00x
+  - LOW 0.75x
+
+Reference:
+- historical TP10 + LAB026: Sum +167.62R, DD 13.39R, R/DD 12.52
+- 2026 stress: Sum +35.85R, DD 6.75R, R/DD 5.31
+
+### STEP 2 — Remove double ATR-pause
+Status: IN PROGRESS
+
+Current v200 calls CanEnterByPauseAndDay twice:
+1. at original signal arm;
+2. again after confirmation before pending order placement.
+
+Research sequence applies the inherited anti-repeat/pause gate at original signal state.
+
+Action:
+- keep gate at signal arm;
+- remove second gate after confirmation;
+- retain HasAny/exposure/day checks required at order placement.
+
+Goal:
+exact research/live reachability parity.
+
+### STEP 3 — Canonical Binance price/ATR/confirmation
+Status: TODO
+
+Problem:
+v191/v200 crowd state is Binance-derived but price confirmation/ATR currently uses broker-local crypto candles.
+
+This produces:
+- different ATR;
+- different confirmation pass/fail;
+- different signal IDs / reachable trades across brokers.
+
+Target architecture:
+Binance Futures canonical market-data layer for:
+- signal reference price;
+- M15 OHLC;
+- ATR14;
+- confirmation close;
+- crowd-direction excursion;
+- H1/H4 trend quality state where feasible.
+
+Broker feed remains authoritative ONLY for:
+- executable bid/ask;
+- spread gate;
+- passive limit placement;
+- SL/TP tick normalization;
+- lot/margin;
+- actual fills.
+
+Required audit fields:
+- canonical Binance price/ATR;
+- broker bid/ask;
+- broker-vs-Binance basis;
+- canonical confirm timestamp;
+- signal ID identical across brokers.
+
+### STEP 4 — Margin-adaptive lot instead of hard MARGIN_BLOCK
+Status: TODO
+
+Problem:
+FTMO can block desired crypto size even when signal is otherwise valid.
+
+Target:
+- calculate desired risk lot;
+- calculate maximum lot allowed by current free margin;
+- reduce to broker-normalized maximum executable lot;
+- preserve requested risk multiplier in audit;
+- reject only if executable lot < broker minimum or below configured minimum risk fraction.
+
+Log:
+requested lot, margin-limited lot, actual risk %, margin needed/free, clamp reason.
+
+### STEP 5 — Transaction-cost-aware live audit
+Status: TODO
+
+Do not use cost to retune the signal yet.
+
+Log per setup/trade:
+- signal_id
+- Binance source timestamp
+- Z
+- canonical price / ATR
+- broker bid/ask / basis / spread
+- confirmation timestamp
+- H1/H4 quality state
+- HIGH/NORMAL/LOW
+- requested vs actual risk / lot
+- commission estimate and actual commission
+- entry / SL / TP
+- fill slippage
+- MFE / MAE
+- exit reason
+- gross R
+- net R after commission/swap
+
+Goal:
+compare identical signal IDs broker-by-broker rather than comparing account PnL only.
+
+### STEP 6 — Dual-broker forward A/B
+Status: TODO
+
+Run the SAME v200 candidate on:
+- FTMO demo
+- GetLeveraged demo
+
+Keep v191 running as control if resources allow.
+
+Primary parity metrics:
+- same signal ID rate
+- same confirmation rate
+- same direction rate
+- entry basis/slippage
+- exit divergence
+- gross R divergence
+- net R divergence
+- skipped signals by reason (spread/margin/exposure/pause)
+
+Do not tune from the first few trades.
+
