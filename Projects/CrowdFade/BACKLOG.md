@@ -1491,3 +1491,22 @@ Next:
 - update v200 candidate to flat risk only;
 - dual-broker forward;
 - broker-specific daily-DD / simultaneous BTC+ETH+SOL exposure audit.
+
+
+### v200 integration after LAB032
+Status: **DONE — working EA updated**
+
+Applied to current `CrowdFadeMulti_v200.mq5`:
+- ZLong/ZShort remain **2.05 / 2.05**.
+- LAB032 promoted **flat risk**:
+  - `InpUseQualityRisk=false`
+  - HIGH/NORMAL/LOW defaults = `1.00 / 1.00 / 1.00`
+  - quality state retained for logging only.
+- default portfolio restored to:
+  `BTCUSD:BTCUSDT;ETHUSD:ETHUSDT;SOLUSD:SOLUSDT`.
+- signal/entry/exit unchanged:
+  confirm .25 ATR, retrace .60 ATR, limit TTL20m, SL4.5, TP10, H24.
+- pre-LAB032 build backed up locally as `CrowdFadeMulti_v200_before_LAB032_flatrisk.mq5`.
+- static audit PASS; MetaEditor compile still required.
+- exact working SHA-256:
+  `815477f46968c2629ddca4c6aefd0982b4da119a58cd51aab16073c07e4d50d8`.
