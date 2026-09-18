@@ -1,0 +1,59 @@
+name: crowdfade-coarse-time-window-veto-lab018
+
+on:
+  push:
+    branches: [ lab/crowdfade-execution-5y-positive-005 ]
+    paths:
+      - 'labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/**'
+      - '.github/workflows/crowdfade_coarse_time_window_veto_lab018.yml'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: lab/crowdfade-execution-5y-positive-005}
+
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+
+      - run: python -m pip install -q numpy pandas numba
+
+      - name: Download 2021-2025 research data
+        run: |
+          ROOT=labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/data
+          mkdir -p "$ROOT/klines1m"
+          cd "$ROOT"
+          wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          cd klines1m
+          for Y in 2021 2022 2023 2024 2025; do
+            for M in $(seq -w 1 12); do
+              F=BTCUSDT-1m-${Y}-${M}.zip
+              wget -q "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/1m/$F" -O "$F"
+            done
+          done
+
+      - name: Run historical coarse time-window veto
+        run: python labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/run.py
+
+      - name: Download 2026 seconds stress data
+        run: |
+          ROOT=labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/stress_data
+          mkdir -p "$ROOT"
+          cd "$ROOT"
+          wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
+          wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+
+      - name: Run 2026 coarse time-window veto stress
+        run: python labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/run_2026.py
+
+      - name: Commit LAB018 outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_COARSE_TIME_WINDOW_VETO_LAB_018/output
+          git commit -m 'research(CrowdFade): LAB018 coarse time-window veto results' || exit 0
+          git push
