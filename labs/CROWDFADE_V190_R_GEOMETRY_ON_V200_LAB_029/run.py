@@ -1,0 +1,178 @@
+from pathlib import Path
+import importlib.util,json
+import numpy as np,pandas as pd
+from numba import njit
+
+ROOT=Path('labs/CROWDFADE_V190_R_GEOMETRY_ON_V200_LAB_029')
+OUT=ROOT/'output'; OUT.mkdir(parents=True,exist_ok=True)
+
+BE_TRIGGER_R=0.50
+BE_LOCK_R=0.15
+TRAIL_ARM_R=2.50
+TRAIL_DIST_R=0.50
+SIGNAL_EXIT_Z=1.00
+HOLD_HOURS=6
+
+def load_base():
+    path=Path('labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/run.py')
+    spec=importlib.util.spec_from_file_location('lab025_hist',path)
+    m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+    m.ROOT=ROOT;m.DATA=ROOT/'data';m.KDIR=m.DATA/'klines1m';m.OUT=OUT
+    return m
+
+@njit(cache=True)
+def sim(ts,O,H,L,C,ZPX,dt,QH,QL,QC,Z,A,H1,H4,Y,DAY):
+    cap=len(dt)
+    rs=np.zeros(cap);ets=np.zeros(cap,np.int64);yrs=np.zeros(cap,np.int16)
+    qual=np.zeros(cap,np.int8);reasons=np.zeros(cap,np.int8)
+    # -1 SL, -2 BE/TRAIL stop, -3 SIGNAL, -4 TIME
+    n=0;k=0;last=0.;la=0.;has=False;day=-1;dc=0;nextts=0
+    while k<len(dt)-3:
+        t=dt[k]
+        if t<nextts:k+=1;continue
+        if DAY[k]!=day:day=DAY[k];dc=0
+        if dc>=3:k+=1;continue
+
+        z=Z[k]
+        side=-1 if z>=2.5 else (1 if z<=-2.5 else 0)
+        if side==0:k+=1;continue
+
+        sig=QC[k];a=A[k]
+        if has and abs(sig-last)<la:k+=1;continue
+
+        crowd=-side
+        lev=sig+side*.25*a
+        ci=-1;mx=0.
+        for j in range(k+1,min(len(dt)-2,k+4)+1):
+            exc=((QH[j]-sig) if crowd>0 else (sig-QL[j]))/a
+            if exc>mx:mx=exc
+            if (side>0 and QC[j]>=lev) or (side<0 and QC[j]<=lev):
+                ci=j;break
+        if ci<0:k+=1;continue
+
+        aligned=(H1[k]!=0 and H4[k]!=0 and H1[k]==H4[k])
+        qstate=0
+        if aligned and side==H1[k] and mx<=.75:qstate=1
+        elif aligned and mx>.75:qstate=-1
+
+        entry=QC[ci]-side*.60*a
+        ps=np.searchsorted(ts,dt[ci])+1
+        pe=np.searchsorted(ts,dt[ci]+20*60,'right')
+        ei=-1
+        for j in range(ps,min(len(ts),pe)):
+            if (side>0 and L[j]<=entry) or (side<0 and H[j]>=entry):
+                ei=j;break
+        if ei<0:k=ci+1;continue
+
+        initial_risk=4.5*a
+        initial_stop=entry-side*initial_risk
+        stop=initial_stop
+
+        xe=min(len(ts)-1,np.searchsorted(ts,ts[ei]+HOLD_HOURS*3600,'left'))
+        xp=C[xe];ex=xe;reason=-4;peak=entry
+
+        for j in range(ei+1,xe+1):
+            # Existing stop applies during this bar. New protection becomes active next bar.
+            hit=(side>0 and L[j]<=stop) or (side<0 and H[j]>=stop)
+            if hit:
+                xp=stop;ex=j
+                improved=(side>0 and stop>initial_stop+1e-12) or (side<0 and stop<initial_stop-1e-12)
+                reason=-2 if improved else -1
+                break
+
+            cand=H[j] if side>0 else L[j]
+            if (side>0 and cand>peak) or (side<0 and cand<peak):
+                peak=cand
+
+            # v190 behavior translated to INITIAL R geometry.
+            prof_r=side*(C[j]-entry)/initial_risk
+            if prof_r>=BE_TRIGGER_R:
+                be=entry+side*BE_LOCK_R*initial_risk
+                if (side>0 and be>stop) or (side<0 and be<stop):
+                    stop=be
+
+            mfe_r=side*(peak-entry)/initial_risk
+            if mfe_r>=TRAIL_ARM_R:
+                tr=peak-side*TRAIL_DIST_R*initial_risk
+                if (side>0 and tr>stop) or (side<0 and tr<stop):
+                    stop=tr
+
+            # Opposite crowd extreme against open side, identical sign convention to LAB028.
+            znow=ZPX[j]
+            if np.isfinite(znow) and side*znow>=SIGNAL_EXIT_Z:
+                xp=C[j];ex=j;reason=-3
+                break
+
+            if ts[j]>=ts[ei]+HOLD_HOURS*3600:
+                xp=C[j];ex=j;reason=-4
+                break
+
+        R=side*(xp-entry)/initial_risk-(.50/10000.)*entry/initial_risk
+        rs[n]=R;ets[n]=ts[ei];yrs[n]=Y[k];qual[n]=qstate;reasons[n]=reason;n+=1
+
+        dc+=1;last=entry;la=a;has=True
+        nextts=ts[ex]+60
+        k=np.searchsorted(dt,nextts)
+
+    return rs[:n],ets[:n],yrs[:n],qual[:n],reasons[:n]
+
+def metrics(x):
+    x=np.asarray(x,float)
+    if not len(x):return {'N':0}
+    eq=np.cumsum(x);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];dd=pk-eq
+    pos=x[x>0].sum();neg=abs(x[x<0].sum())
+    cur=mx=0
+    for v in x:
+        if v<0:cur+=1;mx=max(mx,cur)
+        else:cur=0
+    return {'N':int(len(x)),'WR':float((x>0).mean()),'EV':float(x.mean()),'SumR':float(x.sum()),
+            'PF':float(pos/neg) if neg else 99.,'MaxDD_R':float(dd.max()) if len(dd) else 0.,
+            'R_DD':float(x.sum()/dd.max()) if len(dd) and dd.max()>0 else 99.,
+            'MaxConsecutiveLosses':int(mx)}
+
+def weights(q):
+    w=np.ones(len(q),float);w[q>0]=1.5;w[q<0]=.75;return w
+
+def main():
+    m=load_base();p,q=m.prep()
+    arr=[p.ts.to_numpy(np.int64),p.o.to_numpy(float),p.h.to_numpy(float),p.l.to_numpy(float),p.c.to_numpy(float),
+         p.z.to_numpy(float),
+         q.close_ts.to_numpy(np.int64),q.h.to_numpy(float),q.l.to_numpy(float),q.c.to_numpy(float),
+         q.z.to_numpy(float),q.atr.to_numpy(float),q.h1.to_numpy(np.int64),q.h4.to_numpy(np.int64),
+         q.yr.to_numpy(np.int64),q.daykey.to_numpy(np.int64)]
+    sim(*[x[:1000] for x in arr])
+
+    raw,ets,yr,qual,reason=sim(*arr)
+    mult=weights(qual);wr=raw*mult
+    eq=np.cumsum(wr);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];dd=pk-eq
+    annual={str(y):metrics(wr[yr==y]) for y in range(2021,2026)}
+
+    out={
+      'lab':'CROWDFADE_V190_R_GEOMETRY_ON_V200_LAB_029',
+      'period':'2021-2025 historical',
+      'configuration':{
+        'entry':'frozen v200',
+        'hard_sl':'4.5 ATR = 1R',
+        'risk':'LAB026 HIGH1.5/NORMAL1/LOW0.75',
+        'BE_trigger_R':BE_TRIGGER_R,
+        'BE_lock_R':BE_LOCK_R,
+        'trail_arm_R':TRAIL_ARM_R,
+        'trail_distance_R':TRAIL_DIST_R,
+        'signal_exit_opposite_absZ':SIGNAL_EXIT_Z,
+        'hold_hours':HOLD_HOURS,
+        'fixed_TP':False
+      },
+      'all':metrics(wr),
+      'positive_years':int(sum(v['SumR']>0 for v in annual.values())),
+      'annual':annual,
+      'state_counts':{'HIGH':int((qual>0).sum()),'NORMAL':int((qual==0).sum()),'LOW':int((qual<0).sum())},
+      'exit_mix':{'SL':int((reason==-1).sum()),'BE_TRAIL_STOP':int((reason==-2).sum()),
+                  'SIGNAL':int((reason==-3).sum()),'TIME':int((reason==-4).sum())}
+    }
+    pd.DataFrame({'trade_index':np.arange(1,len(raw)+1),'entry_ts':ets,'year':yr,'quality':qual,
+                  'raw_R':raw,'risk_mult':mult,'weighted_R':wr,'equity_R':eq,'drawdown_R':dd,
+                  'exit_reason':reason}).to_csv(OUT/'equity_sequence_2021_2025.csv',index=False)
+    (OUT/'summary.json').write_text(json.dumps(out,indent=2))
+    print(json.dumps(out,indent=2))
+
+if __name__=='__main__':main()
