@@ -43,17 +43,15 @@ def main():
   for sec in HORIZONS:
    mfe,mae,tmfe,tmae=exc(ts,H,L,ei,entry,side,a,sec);tag=f'{sec//3600}h'
    rec[f'mfe_{tag}']=mfe;rec[f'mae_{tag}']=mae;rec[f'tmfe_{tag}']=tmfe;rec[f'tmae_{tag}']=tmae
-  # path ordering thresholds: does favorable threshold happen before adverse?
+  # vectorized path ordering thresholds over 12h
   end=min(len(ts),np.searchsorted(ts,int(ts[ei])+43200,'right'))
+  hh=H[ei:end]; ll=L[ei:end]
+  fav_arr=((hh-entry)/a) if side>0 else ((entry-ll)/a)
+  adv_arr=((entry-ll)/a) if side>0 else ((hh-entry)/a)
+  adv_hits=np.flatnonzero(adv_arr>=1.0); adv_first=int(adv_hits[0]) if len(adv_hits) else -1
   for th in [.25,.5,1.0,1.5,2.0,3.0]:
-   fav_hit=-1;adv_hit=-1
-   for j in range(ei,end):
-    fav=((H[j]-entry)/a) if side>0 else ((entry-L[j])/a)
-    adv=((entry-L[j])/a) if side>0 else ((H[j]-entry)/a)
-    if fav_hit<0 and fav>=th:fav_hit=int(ts[j]-ts[ei])
-    if adv_hit<0 and adv>=1.0:adv_hit=int(ts[j]-ts[ei])
-    if fav_hit>=0 and adv_hit>=0:break
-   rec[f'fav{th}_before_mae1']=1 if fav_hit>=0 and (adv_hit<0 or fav_hit<adv_hit) else 0
+   fh=np.flatnonzero(fav_arr>=th); fav_first=int(fh[0]) if len(fh) else -1
+   rec[f'fav{th}_before_mae1']=1 if fav_first>=0 and (adv_first<0 or fav_first<adv_first) else 0
   rows.append(rec);k=np.searchsorted(dts,int(ts[ei])+1)
  d=pd.DataFrame(rows);d.to_csv(OUT/'events.csv',index=False)
  out={'config':{'z':ZTH,'confirm':CONF,'retrace_entry':IMP,'confirm_ttl_h':1,'entry_wait_min':20},'N':len(d),'overall':{},'by_side':{},'monthly':{}}
