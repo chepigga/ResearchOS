@@ -47,14 +47,14 @@ def prep():
     q['atr']=tr.rolling(14,min_periods=14).mean()
     q['atr_med96']=q.atr.rolling(96,min_periods=96).median()
     q['av']=(q.index+pd.Timedelta(minutes=15)).astype('datetime64[ns, UTC]')
-    a=q[['av','atr','atr_med96']].dropna().reset_index(drop=True)
+    a=q[['av','atr','atr_med96']].dropna(subset=['atr']).reset_index(drop=True)
     p=pd.merge_asof(p.sort_values('time'),a,left_on='time',right_on='av',direction='backward')
     p=pd.merge_asof(p.sort_values('time'),f,on='time',direction='backward',
-                    tolerance=pd.Timedelta(minutes=10)).dropna(subset=['atr','atr_med96','z'])
+                    tolerance=pd.Timedelta(minutes=10)).dropna(subset=['atr','z'])
     p=p[(p.time>='2021-01-01')&(p.time<'2026-01-01')].copy().reset_index(drop=True)
     p['ts']=(p.time.astype('int64')//10**9).astype('int64')
     q=p.set_index('time').resample('15min',label='left',closed='left').agg(
-        c=('c','last'),z=('z','last'),atr=('atr','last'),atr_med96=('atr_med96','last')).dropna().reset_index()
+        c=('c','last'),z=('z','last'),atr=('atr','last'),atr_med96=('atr_med96','last')).dropna(subset=['c','z','atr']).reset_index()
     q['close_ts']=(q.time.astype('int64')//10**9).astype('int64')+900
     q['yr']=q.time.dt.year.astype('int64')
     q['daykey']=(q.time.dt.year*10000+q.time.dt.month*100+q.time.dt.day).astype('int64')
@@ -64,6 +64,7 @@ def prep():
 def sl_mult(mode,a,amed):
     if mode==0:return 4.5
     if mode==1:return 2.5
+    if not np.isfinite(amed):return 4.5
     return 4.5 if a>amed else 3.0
 
 @njit(cache=True)
