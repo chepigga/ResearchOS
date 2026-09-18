@@ -950,3 +950,101 @@ Next priority LAB:
 
 This should be tested as a separate preregistered sequence-risk LAB.
 
+---
+
+## LAB026 — Quality-state risk tiering
+
+Purpose:
+
+Use LAB025 quality states for **risk sizing only**, preserving the exact baseline trade sequence.
+
+Fixed states:
+
+- HIGH:
+  - H1/H4 aligned;
+  - CrowdFade WITH trend;
+  - crowd excursion <=0.75 ATR.
+- LOW:
+  - H1/H4 aligned;
+  - crowd excursion >0.75 ATR.
+- NORMAL:
+  - all other baseline trades.
+
+Tested:
+
+- 1 / 1 / 1 baseline
+- 1.5 / 1 / 1
+- 1.5 / 1 / 0.75
+- 1.5 / 1 / 0.50
+
+### Historical 2021–2025
+
+| Risk map | SumR | EV | PF | MaxDD | R/DD | +years |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 / 1 / 1 | +130.60R | +0.1064 | 1.210 | 13.50R | 9.675 | 5/5 |
+| 1.5 / 1 / 1 | +165.39R | +0.1348 | 1.238 | 14.46R | 11.438 | 5/5 |
+| **1.5 / 1 / 0.75** | **+167.62R** | **+0.1366** | **1.254** | **13.39R** | **12.523** | **5/5** |
+| 1.5 / 1 / 0.50 | +169.85R | +0.1384 | 1.273 | 14.10R | 12.049 | 5/5 |
+
+Historical best risk-adjusted result:
+**HIGH 1.5 / NORMAL 1 / LOW 0.75**
+
+Versus baseline:
+- SumR +28.35%
+- EV +28.35%
+- PF improves
+- MaxDD slightly lower
+- R/DD +29.4%
+- 5/5 years remain positive
+
+### 2026 seconds forward-shadow
+
+| Risk map | SumR | EV | PF | MaxDD | R/DD | +months |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 / 1 / 1 | +28.71R | +0.2111 | 1.467 | 6.49R | 4.424 | 6/6 |
+| 1.5 / 1 / 1 | +35.98R | +0.2646 | 1.540 | 7.14R | 5.037 | 5/6 |
+| **1.5 / 1 / 0.75** | **+35.85R** | **+0.2636** | **1.566** | **6.75R** | **5.313** | 5/6 |
+| 1.5 / 1 / 0.50 | +35.72R | +0.2626 | 1.595 | 6.96R | 5.129 | 5/6 |
+
+2026:
+- 1.5 / 1 / 0.75 again gives best R/DD.
+- SumR +24.9%.
+- DD only +4.0%.
+- R/DD +20.1%.
+- But monthly consistency drops from 6/6 to 5/6.
+
+### August regime inversion
+
+August 2026 raw state contributions:
+
+- HIGH: -0.82R
+- NORMAL: -3.98R
+- LOW: +4.91R
+
+Therefore LOW was the rescue state in August.
+
+Consequences:
+- LOW cannot be treated as deterministic bad state;
+- hard veto remains rejected;
+- LOW 0.50x is too aggressive;
+- LOW 0.75x is the better compromise.
+
+### Current status
+
+**Leading Candidate v2: HIGH 1.50x / NORMAL 1.00x / LOW 0.75x**
+
+Do not tune further yet.
+
+Not production-proven because:
+- 2026 is reused forward-shadow;
+- positive-month property drops from 6/6 to 5/6;
+- quality-state behavior can invert locally;
+- execution/fill realism remains unresolved.
+
+Required next validation:
+- leave-one-year-out / rolling stability;
+- block bootstrap;
+- daily-DD prop audit;
+- fresh untouched forward;
+- broker-native execution / passive fill realism.
+
