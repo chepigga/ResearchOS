@@ -1048,3 +1048,65 @@ Required next validation:
 - fresh untouched forward;
 - broker-native execution / passive fill realism.
 
+---
+
+## LAB027 — Integrated v200 decision matrix
+
+Purpose:
+
+Test the current v200 strategy as a full causal system rather than combining isolated LAB conclusions.
+
+Matrix:
+
+- TP10 vs no fixed TP
+- trailing OFF vs 2.5R trail
+- flat risk vs LAB026 tiers
+
+### Historical 2021–2025
+
+| Mode | SumR | MaxDD | R/DD |
+|---|---:|---:|---:|
+| TP10 flat | +130.60R | 13.50R | 9.675 |
+| **TP10 + LAB026** | **+167.62R** | **13.39R** | **12.523** |
+| TP10 + trail2.5 + LAB026 | +164.29R | 15.11R | 10.873 |
+| NoTP + trail2.5 + LAB026 = current v200 full | +183.24R | 19.33R | 9.479 |
+
+### 2026 seconds
+
+| Mode | SumR | MaxDD | R/DD | +months |
+|---|---:|---:|---:|---:|
+| TP10 flat | +28.71R | 6.49R | 4.424 | 6/6 |
+| **TP10 + LAB026** | **+35.85R** | 6.75R | **5.313** | 5/6 |
+| TP10 + trail2.5 + LAB026 | **+37.07R** | **6.68R** | **5.552** | 5/6 |
+| **Current v200 full: NoTP + trail2.5 + LAB026** | **+15.16R** | **11.82R** | **1.282** | **4/6** |
+
+### Verdict
+
+- **LAB026 sizing = PASS**
+- **removing fixed TP = FAIL**
+- **2.5R trail = mixed/watch**
+- **BE OFF = keep**
+- **partial OFF = keep**
+- **signal exit OFF = keep**
+- fixed TP 10 ATR remains the robust production-oriented exit anchor.
+
+Why no-TP fails:
+
+- positions live longer;
+- occupancy blocks later signals;
+- trade count falls;
+- TIME exits increase sharply;
+- wide 2.5R trail protects only very large MFE and does not replace the fixed target effectively.
+
+Current v200 no-TP configuration should not be treated as validated.
+
+### Code parity warning
+
+Current v200 calls ATR-pause twice:
+1. at original signal arming;
+2. after confirmation before limit placement.
+
+Research anti-repeat gate is defined at original signal state.
+
+This second live check can create sequence divergence and requires a dedicated parity audit before treating the EA as exact research parity.
+
