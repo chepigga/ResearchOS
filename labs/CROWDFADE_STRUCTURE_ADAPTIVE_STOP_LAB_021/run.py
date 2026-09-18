@@ -58,17 +58,17 @@ def prep():
     q['prior20_low']=q.l.shift(1).rolling(20,min_periods=20).min()
     q['av']=(q.index+pd.Timedelta(minutes=15)).astype('datetime64[ns, UTC]')
 
-    a=q[['av','atr','ema50','ema50_lag4','prior20_high','prior20_low']].dropna().reset_index(drop=True)
+    a=q[['av','atr','ema50','ema50_lag4','prior20_high','prior20_low']].dropna(subset=['atr']).reset_index(drop=True)
     p=pd.merge_asof(p.sort_values('time'),a,left_on='time',right_on='av',direction='backward')
     p=pd.merge_asof(p.sort_values('time'),f,on='time',direction='backward',
-                    tolerance=pd.Timedelta(minutes=10)).dropna(subset=['atr','z','ema50','ema50_lag4','prior20_high','prior20_low'])
+                    tolerance=pd.Timedelta(minutes=10)).dropna(subset=['atr','z'])
     p=p[(p.time>='2021-01-01')&(p.time<'2026-01-01')].copy().reset_index(drop=True)
     p['ts']=(p.time.astype('int64')//10**9).astype('int64')
 
     q=p.set_index('time').resample('15min',label='left',closed='left').agg(
         c=('c','last'),h=('h','max'),l=('l','min'),z=('z','last'),atr=('atr','last'),
         ema50=('ema50','last'),ema50_lag4=('ema50_lag4','last'),
-        prior20_high=('prior20_high','last'),prior20_low=('prior20_low','last')).dropna().reset_index()
+        prior20_high=('prior20_high','last'),prior20_low=('prior20_low','last')).dropna(subset=['c','z','atr']).reset_index()
     q['close_ts']=(q.time.astype('int64')//10**9).astype('int64')+900
     q['yr']=q.time.dt.year.astype('int64')
     q['daykey']=(q.time.dt.year*10000+q.time.dt.month*100+q.time.dt.day).astype('int64')
@@ -76,6 +76,8 @@ def prep():
 
 @njit(cache=True)
 def stop_mult(mode,side,cl,ema,ema_lag4,ph,pl):
+    if not (np.isfinite(ema) and np.isfinite(ema_lag4) and np.isfinite(ph) and np.isfinite(pl)):
+        return SL_WIDE, False, False
     trend_align=(side>0 and cl>ema and ema>ema_lag4) or (side<0 and cl<ema and ema<ema_lag4)
     breakout_align=(side>0 and cl>ph) or (side<0 and cl<pl)
     narrow=False
