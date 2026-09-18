@@ -1,0 +1,23 @@
+name: crowdfade-execution-plateau-lab008
+on:
+  push:
+    branches: [ lab/crowdfade-execution-5y-positive-005 ]
+    paths: ['labs/CROWDFADE_EXECUTION_PLATEAU_LAB_008/**','.github/workflows/crowdfade_execution_plateau_lab008.yml']
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: lab/crowdfade-execution-5y-positive-005}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m pip install -q numpy pandas numba
+      - run: |
+          ROOT=labs/CROWDFADE_EXECUTION_PLATEAU_LAB_008/data;mkdir -p "$ROOT/klines";cd "$ROOT"
+          wget -q https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip;cd klines
+          for Y in 2021 2022 2023 2024 2025; do for M in $(seq -w 1 12); do F=BTCUSDT-5m-${Y}-${M}.zip;wget -q "https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/5m/$F" -O "$F";done;done
+      - run: python labs/CROWDFADE_EXECUTION_PLATEAU_LAB_008/run.py
+      - run: |
+          git config user.name 'github-actions[bot]';git config user.email '41898282+github-actions[bot]@users.noreply.github.com';git add labs/CROWDFADE_EXECUTION_PLATEAU_LAB_008/output;git commit -m 'research(CrowdFade): LAB008 local execution plateau' || exit 0;git push
