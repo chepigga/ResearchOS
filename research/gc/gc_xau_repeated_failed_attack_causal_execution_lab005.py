@@ -200,13 +200,13 @@ def main():
         for p in ('TRAIN','VALID','POST_CHECK','FULL'):
             q=z if p=='FULL' else z[z.period==p]
             w=q[q.hit2==True]
-            vals=w.fp_pos_0.50_ms.dropna().to_numpy(float)/1000.0
+            vals=w['fp_pos_0.50_ms'].dropna().to_numpy(float)/1000.0
             timing[subset][p]={
               'n':int(len(q)),'plus2_rate':float(q.hit2.mean()) if len(q) else None,
               'plus3_rate':float(q.hit3.mean()) if len(q) else None,
-              'median_t025_s':float(q.fp_pos_0.25_ms.dropna().median()/1000) if len(q.fp_pos_0.25_ms.dropna()) else None,
-              'median_t050_s':float(q.fp_pos_0.50_ms.dropna().median()/1000) if len(q.fp_pos_0.50_ms.dropna()) else None,
-              'median_t100_s':float(q.fp_pos_1.00_ms.dropna().median()/1000) if len(q.fp_pos_1.00_ms.dropna()) else None,
+              'median_t025_s':float(q['fp_pos_0.25_ms'].dropna().median()/1000) if len(q['fp_pos_0.25_ms'].dropna()) else None,
+              'median_t050_s':float(q['fp_pos_0.50_ms'].dropna().median()/1000) if len(q['fp_pos_0.50_ms'].dropna()) else None,
+              'median_t100_s':float(q['fp_pos_1.00_ms'].dropna().median()/1000) if len(q['fp_pos_1.00_ms'].dropna()) else None,
               'median_t050_on_plus2_s':float(np.median(vals)) if len(vals) else None,
               'mfe5_mean':float(q.mfe5_atr.mean()) if len(q) else None,'mae5_mean':float(q.mae5_atr.mean()) if len(q) else None,
             }
