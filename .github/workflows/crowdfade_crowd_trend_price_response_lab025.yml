@@ -37,6 +37,9 @@ jobs:
       - name: Run historical diagnostic
         run: python labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/run.py
 
+      - name: Run historical causal gate
+        run: python labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/run_gate.py
+
       - name: Download 2026 seconds stress data
         run: |
           ROOT=labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/stress_data
@@ -47,6 +50,9 @@ jobs:
 
       - name: Run 2026 diagnostic
         run: python labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/run_2026.py
+
+      - name: Run 2026 causal gate
+        run: python labs/CROWDFADE_CROWD_TREND_PRICE_RESPONSE_LAB_025/run_2026_gate.py
 
       - name: Commit LAB025 outputs
         run: |
