@@ -35,3 +35,16 @@
 - **Risks:** missing source artifacts; post-hoc reconstruction; data drift
 - **Required files:** raw-data SHA256, selected trades, logs and dependency lock
 - **Next action:** complete remaining evidence, then create LAB_002 spec
+
+## ROS-004 — CrowdFade canonical research backlog
+
+- **Project:** CrowdFade
+- **Priority:** P0
+- **Status:** IN_PROGRESS
+- **Dependencies:** frozen CrowdFade baseline and LAB016–LAB023 artifacts
+- **Goal:** maintain one canonical state for frozen core, watch candidates, validation debt, and next research actions
+- **Canonical backlog:** `Projects/CrowdFade/BACKLOG.md`
+- **Current leading watch candidate:** 1.50× risk only when H1+H4 are aligned, crowd is against trend, and CrowdFade trade is with trend
+- **Production status:** frozen core unchanged; no risk multiplier promoted yet
+- **Next action:** fresh untouched forward + passive fill realism + LAB023 stability/daily-DD audit
+
