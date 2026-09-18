@@ -15,6 +15,8 @@ MODES=[
     ('TREND_ADAPTIVE_3_OR_4P5',1),
     ('BREAKOUT_ADAPTIVE_3_OR_4P5',2),
     ('TREND_AND_BREAKOUT_3_OR_4P5',3),
+    ('TREND_WIDE_ELSE_3',4),
+    ('BREAKOUT_WIDE_ELSE_3',5),
 ]
 
 def load_1m():
@@ -84,6 +86,8 @@ def stop_mult(mode,side,cl,ema,ema_lag4,ph,pl):
     if mode==1:narrow=trend_align
     elif mode==2:narrow=breakout_align
     elif mode==3:narrow=trend_align and breakout_align
+    elif mode==4:return (SL_WIDE if trend_align else SL_NARROW), trend_align, breakout_align
+    elif mode==5:return (SL_WIDE if breakout_align else SL_NARROW), trend_align, breakout_align
     return SL_NARROW if narrow else SL_WIDE, trend_align, breakout_align
 
 @njit(cache=True)
