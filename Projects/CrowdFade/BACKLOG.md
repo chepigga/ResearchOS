@@ -766,3 +766,49 @@ Do not:
 Priority objective remains:
 
 > stable equity curve, realistic execution, low drawdown, and robust prop-challenge survivability — not maximum backtest SumR.
+
+---
+
+## LAB024 — Continuous trailing distance 0.5R / 1.0R / 2.5R
+
+Definition:
+
+- hard SL remains 4.5 ATR = 1R;
+- trailing activates after +1R MFE;
+- trail distance tested: 0.5R, 1.0R, 2.5R;
+- historical update resolution = completed 1m bars;
+- 2026 = completed 1-second OHLC;
+- full causal rerun because earlier exits change future reachable signals.
+
+### Historical 2021–2025
+
+| Mode | N | EV | PF | SumR | MaxDD | R/DD |
+|---|---:|---:|---:|---:|---:|---:|
+| No trail | 1227 | +0.1064R | 1.210 | +130.60R | 13.50R | 9.675 |
+| Trail 0.5R | 1348 | +0.0451R | 1.105 | +60.75R | 15.00R | 4.050 |
+| Trail 1.0R | 1298 | +0.0588R | 1.136 | +76.31R | 14.61R | 5.223 |
+| Trail 2.5R | 1228 | +0.1027R | 1.204 | +126.15R | 14.44R | 8.738 |
+
+### 2026 seconds forward-shadow
+
+| Mode | N | EV | PF | SumR | MaxDD | R/DD | +months |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| No trail | 136 | +0.2111R | 1.467 | +28.71R | 6.49R | 4.424 | 6/6 |
+| Trail 0.5R | 150 | +0.0835R | 1.210 | +12.52R | 7.18R | 1.743 | 5/6 |
+| Trail 1.0R | 141 | +0.1324R | 1.332 | +18.67R | 7.60R | 2.456 | 5/6 |
+| Trail 2.5R | 136 | **+0.2191R** | **1.494** | **+29.80R** | **6.39R** | **4.665** | **6/6** |
+
+Verdict:
+
+- **0.5R trailing = strong FAIL**
+- **1.0R trailing = strong FAIL**
+- **2.5R trailing = watch candidate only**
+- production core remains **TRAILING OFF**
+
+Why 2.5R is different:
+
+At +1R activation, a 2.5R distance initially does not tighten beyond the original hard stop. It only becomes meaningfully protective after larger MFE, so it preserves most of the right tail.
+
+2026 improves slightly, but historical 5-year metrics remain slightly inferior to no-trail baseline. Requires stability + fresh untouched forward before promotion.
+
+
