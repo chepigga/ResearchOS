@@ -1186,3 +1186,67 @@ translate v190 exit geometry in R onto v200:
 - signal exit |Z|>=1 opposite
 - hold 6h
 
+---
+
+## LAB029 — v190 R-geometry exit on frozen v200
+
+Tested exact requested geometry:
+
+- BE +0.50R
+- lock +0.15R
+- trail arm +2.50R
+- trail distance 0.50R
+- signal exit opposite |Z|>=1.0
+- hold 6h
+- no fixed TP
+
+Frozen:
+- v200 entry
+- SL 4.5 ATR = 1R
+- LAB026 HIGH1.5 / NORMAL1 / LOW0.75
+
+### Historical 2021–2025
+
+- N1604
+- WR 54.55%
+- EV **+0.03194R**
+- Sum **+51.23R**
+- PF **1.123**
+- DD **14.12R**
+- R/DD **3.629**
+- 5/5 years positive
+
+### 2026 seconds
+
+- N182
+- WR 52.75%
+- EV **-0.03119R**
+- Sum **-5.68R**
+- PF **0.881**
+- DD **11.28R**
+- only **2/6 positive months**
+
+Exit attribution 2026:
+- hard SL -24.16R
+- BE/trail +12.66R
+- signal exit **-11.10R**
+- 6h time exits +16.93R
+
+Quality-state inversion 2026:
+- HIGH: **-5.61R**
+- NORMAL: -0.68R
+- LOW: **+0.61R**
+
+Conclusion:
+
+- translating v190 ATR thresholds into R fixes much of LAB028's historical geometry mismatch;
+- but the v190-style exit architecture still fails forward-shadow;
+- LAB026 quality ranking is **not exit-engine invariant**;
+- combining a new exit engine with old risk tiers can invert which states are actually best.
+
+Verdict:
+**v190 R-geometry + frozen v200 + LAB026 = FAIL**.
+
+Reference remains:
+**TP10 + SL4.5ATR + 24h fallback + LAB026**.
+
