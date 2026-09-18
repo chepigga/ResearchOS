@@ -811,4 +811,142 @@ At +1R activation, a 2.5R distance initially does not tighten beyond the origina
 
 2026 improves slightly, but historical 5-year metrics remain slightly inferior to no-trail baseline. Requires stability + fresh untouched forward before promotion.
 
+---
+
+## LAB025 — Crowd × Trend × Price-Response
+
+Purpose:
+
+Test whether CrowdFade edge depends on:
+
+1. H1/H4 trend alignment;
+2. whether crowd is with or against that trend;
+3. how much price actually moves in the crowd direction before frozen contrarian confirmation.
+
+Price-response is causal at confirmation time:
+
+- FAIL: crowd-direction excursion <= 0.25 ATR
+- CONTESTED: >0.25 and <=0.75 ATR
+- CONTINUATION: >0.75 ATR
+
+### Strongest diagnostic state
+
+> H1 + H4 aligned  
+> CrowdFade WITH trend / crowd AGAINST trend  
+> crowd-direction excursion <=0.75 ATR before confirmation
+
+Historical:
+- N312
+- EV **+0.2230R**
+- PF **1.468**
+- SumR +69.58R
+- positive contribution 5/5 years
+
+2026:
+- N32
+- EV **+0.4544R**
+- PF **2.390**
+- SumR +14.54R
+
+### Broad aligned price-response split
+
+Aligned H1/H4 + crowd excursion <=0.75 ATR:
+
+Historical:
+- N562
+- EV **+0.1827R**
+- PF **1.383**
+- SumR +102.70R
+- DD 9.99R
+- 5/5 years positive
+
+2026:
+- N54
+- EV **+0.4052R**
+- PF **2.094**
+- SumR +21.88R
+- DD 4.55R
+
+Aligned H1/H4 + crowd excursion >0.75 ATR:
+
+Historical:
+- N245
+- EV **-0.0364R**
+- PF **0.938**
+- SumR -8.93R
+
+2026:
+- N27
+- EV **+0.0197R**
+- PF **1.040**
+- SumR +0.53R
+
+Countertrend + crowd continuation >0.75 ATR is negative in both samples:
+- historical EV -0.0826R / PF 0.864
+- 2026 EV -0.0522R / PF 0.915
+
+### Confirmation speed
+
+WITH_TREND historical:
+- 1 M15 bar: EV +0.2065R
+- 2 bars: EV +0.1405R
+- 3–4 bars: EV +0.0559R
+
+2026 remains positive across all speed buckets, so no speed filter is promoted.
+
+### Stage B causal gate
+
+Full stateful rerun tested hard veto when crowd continuation >0.75 ATR.
+
+Result: **hard veto rejected**.
+
+Historical VETO_ALIGNED_GT_0P75:
+- EV +0.1277R
+- PF 1.260
+- SumR +134.46R
+- DD 16.27R
+- R/DD 8.27 vs baseline 9.68
+
+2026:
+- EV +0.1660R
+- PF 1.360
+- SumR +19.76R
+- DD 10.32R
+- R/DD 1.92
+- only 5/6 positive months
+
+VETO_COUNTERTREND_GT_0P75 was the least harmful veto but still did not dominate:
+- historical R/DD 9.48 vs baseline 9.68
+- 2026 R/DD 3.52 vs baseline 4.42
+- 5/6 months
+
+Conclusion:
+
+**Price-response is a strong trade-quality signal, but should not currently be used as binary entry veto.**
+
+Best interpretation:
+
+- HIGH quality:
+  - H1/H4 aligned
+  - CrowdFade WITH trend
+  - crowd excursion <=0.75 ATR
+  - candidate for higher risk
+
+- NORMAL quality:
+  - mixed / other baseline states
+  - base risk
+
+- LOW quality:
+  - aligned H1/H4
+  - crowd excursion >0.75 ATR
+  - candidate for reduced risk, not veto
+
+Next priority LAB:
+
+**risk-tiering without changing trade reachability**, e.g.
+- HIGH = 1.50×
+- NORMAL = 1.00×
+- LOW = 0.50–0.75×
+
+This should be tested as a separate preregistered sequence-risk LAB.
 
