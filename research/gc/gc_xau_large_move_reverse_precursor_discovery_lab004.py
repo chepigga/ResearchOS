@@ -246,3 +246,5 @@ def main():
     OUT_MD.write_text('\n'.join(lines)+'\n',encoding='utf-8');print(OUT_MD.read_text())
 
 if __name__=='__main__':main()
+
+# rerun marker after workflow commit-step fix
