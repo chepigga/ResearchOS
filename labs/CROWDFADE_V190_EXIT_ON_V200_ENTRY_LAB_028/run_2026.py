@@ -123,12 +123,14 @@ def weights(q):
 
 def main():
     m=load_base();arr=m.prep();ft,fz=load_flow_z()
-    sim_v190(*[x[:2000] for x in arr],ft[:5000],fz[:5000],True,6)
+    warm=tuple(x[:2000] for x in arr[:5])+(ft[:5000],fz[:5000])+tuple(x[:2000] for x in arr[5:])
+    sim_v190(*warm,True,6)
     modes=[('V190_EXIT_EXACT_LAB026',True,6),('V190_EXIT_NO_SIGNAL_LAB026',False,6),
            ('V190_EXIT_24H_SIGNAL_LAB026',True,24)]
     rows=[];seqs=[]
     for name,sigexit,hold in modes:
-        raw,ets,qual,reason=sim_v190(*arr,ft,fz,sigexit,hold)
+        args=tuple(arr[:5])+(ft,fz)+tuple(arr[5:])
+        raw,ets,qual,reason=sim_v190(*args,sigexit,hold)
         mult=weights(qual);wr=raw*mult
         months=pd.to_datetime(ets,unit='s',utc=True).to_period('M').astype(str)
         eq=np.cumsum(wr);pk=np.maximum.accumulate(np.r_[0.,eq])[1:];dd=pk-eq
