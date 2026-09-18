@@ -68,11 +68,17 @@ def aggregate_window(t,w):
     return b
 
 def causal_features(b,w,atr_map):
+    from collections import deque
     b=b.copy()
-    look=max(120,int(3600/w))
     b['abs_delta']=b.delta_frac.abs()
-    b['q90_abs_delta']=b.abs_delta.shift(1).rolling(look,min_periods=max(60,look//3)).quantile(.90)
-    b['q75_vol']=b.volume.shift(1).rolling(look,min_periods=max(60,look//3)).quantile(.75)
+
+    # Exact causal 1-hour clock lookback, excluding the current bucket.
+    ridx=pd.to_datetime(b.end_ms,unit='ms',utc=True)
+    ad=pd.Series(b.abs_delta.to_numpy(float),index=ridx)
+    vv=pd.Series(b.volume.to_numpy(float),index=ridx)
+    b['q90_abs_delta']=ad.rolling('3600s',closed='left',min_periods=60).quantile(.90).to_numpy()
+    b['q75_vol']=vv.rolling('3600s',closed='left',min_periods=60).quantile(.75).to_numpy()
+
     atr=[]
     for ms in b.end_ms.to_numpy(np.int64):
         prev_min=((ms//60000)*60000)-60000
@@ -81,13 +87,22 @@ def causal_features(b,w,atr_map):
     b['crowd_dir']=np.sign(b.delta).astype(int)
     b['impact']=b.crowd_dir*(b.close-b.open)/b.gc_atr
     b['extreme']=(b.abs_delta>=b.q90_abs_delta)&(b.volume>=b.q75_vol)&b.crowd_dir.ne(0)&b.gc_atr.gt(0)
+
+    # Prior extreme-effort impacts from the preceding clock hour only.
     q20=np.full(len(b),np.nan); q80=np.full(len(b),np.nan)
-    hist=[]
-    for i,row in b.iterrows():
-        if row.extreme:
-            if len(hist)>=20:
-                q20[i]=float(np.quantile(hist,.20)); q80[i]=float(np.quantile(hist,.80))
-            if np.isfinite(row.impact): hist.append(float(row.impact))
+    hist=deque()
+    ends=b.end_ms.to_numpy(np.int64)
+    impacts=b.impact.to_numpy(float)
+    ex=b.extreme.to_numpy(bool)
+    for i in np.flatnonzero(ex):
+        now=int(ends[i]); cutoff=now-3600000
+        while hist and hist[0][0] < cutoff:
+            hist.popleft()
+        vals=[v for _,v in hist]
+        if len(vals)>=20:
+            q20[i]=float(np.quantile(vals,.20)); q80[i]=float(np.quantile(vals,.80))
+        if np.isfinite(impacts[i]):
+            hist.append((now,float(impacts[i])))
     b['impact_q20']=q20; b['impact_q80']=q80
     return b
 
