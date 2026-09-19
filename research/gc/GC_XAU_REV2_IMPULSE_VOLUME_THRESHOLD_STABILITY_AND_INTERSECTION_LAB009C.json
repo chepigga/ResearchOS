@@ -1,0 +1,329 @@
+{
+  "lab": "GC_XAU_REV2_IMPULSE_VOLUME_THRESHOLD_STABILITY_AND_INTERSECTION_LAB009C",
+  "status": "THRESHOLD_STABILITY_INTERSECTION_NOT_OOS",
+  "thresholds": {
+    "Q60": {
+      "impulse": 0.0,
+      "volume": 43.599999999999994,
+      "aligned_volume": 17.2
+    },
+    "Q65": {
+      "impulse": 0.0521431118894362,
+      "volume": 56.00000000000002,
+      "aligned_volume": 20.60000000000001
+    },
+    "Q70": {
+      "impulse": 0.09786184210526758,
+      "volume": 62.99999999999999,
+      "aligned_volume": 22.799999999999997
+    },
+    "Q75": {
+      "impulse": 0.13058813530500168,
+      "volume": 73.0,
+      "aligned_volume": 29.0
+    },
+    "Q80": {
+      "impulse": 0.1707317073173098,
+      "volume": 80.80000000000001,
+      "aligned_volume": 36.0
+    }
+  },
+  "base": {
+    "5s": {
+      "TRAIN": {
+        "n": 53,
+        "retention": 1.0,
+        "hit2": 0.16981132075471697,
+        "hit3": 0.05660377358490566,
+        "ev": 0.19467311716119218,
+        "pf": 1.3317313727975417
+      },
+      "VALID": {
+        "n": 74,
+        "retention": 1.0,
+        "hit2": 0.25675675675675674,
+        "hit3": 0.08108108108108109,
+        "ev": 0.0015506950657420352,
+        "pf": 1.002185315437385
+      },
+      "POST_CHECK": {
+        "n": 45,
+        "retention": 1.0,
+        "hit2": 0.26666666666666666,
+        "hit3": 0.17777777777777778,
+        "ev": 0.19043018197389755,
+        "pf": 1.296593981745563
+      }
+    },
+    "30s": {
+      "TRAIN": {
+        "n": 54,
+        "retention": 1.0,
+        "hit2": 0.2222222222222222,
+        "hit3": 0.09259259259259259,
+        "ev": 0.2396044056186835,
+        "pf": 1.4002044272948675
+      },
+      "VALID": {
+        "n": 74,
+        "retention": 1.0,
+        "hit2": 0.2972972972972973,
+        "hit3": 0.05405405405405406,
+        "ev": 0.028107534610727503,
+        "pf": 1.0398490227398318
+      },
+      "POST_CHECK": {
+        "n": 45,
+        "retention": 1.0,
+        "hit2": 0.24444444444444444,
+        "hit3": 0.2,
+        "ev": 0.15700381208206726,
+        "pf": 1.2615913359150743
+      }
+    }
+  },
+  "stability": {
+    "IMPULSE": {
+      "positive_plateaus": [
+        [
+          60,
+          80
+        ]
+      ],
+      "robust_plateaus": [
+        [
+          60,
+          80
+        ]
+      ]
+    },
+    "VOLUME": {
+      "positive_plateaus": [
+        [
+          60,
+          80
+        ]
+      ],
+      "robust_plateaus": [
+        [
+          65,
+          80
+        ]
+      ]
+    },
+    "ALIGNED_VOLUME": {
+      "positive_plateaus": [
+        [
+          60,
+          80
+        ]
+      ],
+      "robust_plateaus": [
+        [
+          60,
+          80
+        ]
+      ]
+    },
+    "IMPULSE_AND_VOLUME": {
+      "positive_plateaus": [
+        [
+          60,
+          80
+        ]
+      ],
+      "robust_plateaus": [
+        [
+          60,
+          80
+        ]
+      ]
+    },
+    "IMPULSE_AND_ALIGNED_VOLUME": {
+      "positive_plateaus": [
+        [
+          60,
+          80
+        ]
+      ],
+      "robust_plateaus": [
+        [
+          60,
+          80
+        ]
+      ]
+    }
+  },
+  "intersections": [
+    {
+      "family": "IMPULSE_AND_VOLUME",
+      "q": 60,
+      "train_n": 12,
+      "valid_n": 18,
+      "post_n": 10,
+      "train_hit2": 0.3333333333333333,
+      "valid_hit2": 0.3333333333333333,
+      "post_hit2": 0.3,
+      "train_ev": 2.422788257129156,
+      "valid_ev": 0.8050802854185686,
+      "post_ev": 0.6887441583307456,
+      "train_pf": 223.2884839924028,
+      "valid_pf": 3.469446055511854,
+      "post_pf": 2.7179086851041707,
+      "valid_n_ge12": true
+    },
+    {
+      "family": "IMPULSE_AND_VOLUME",
+      "q": 65,
+      "train_n": 8,
+      "valid_n": 13,
+      "post_n": 8,
+      "train_hit2": 0.5,
+      "valid_hit2": 0.38461538461538464,
+      "post_hit2": 0.375,
+      "train_ev": 3.3759004404264426,
+      "valid_ev": 0.9282140642692494,
+      "post_ev": 0.745166609209634,
+      "train_pf": Infinity,
+      "valid_pf": 4.090923884211153,
+      "post_pf": 2.4869128680970887,
+      "valid_n_ge12": true
+    },
+    {
+      "family": "IMPULSE_AND_VOLUME",
+      "q": 70,
+      "train_n": 6,
+      "valid_n": 9,
+      "post_n": 4,
+      "train_hit2": 0.3333333333333333,
+      "valid_hit2": 0.4444444444444444,
+      "post_hit2": 0.5,
+      "train_ev": 0.9715879896879042,
+      "valid_ev": 0.9739843483872817,
+      "post_ev": 1.2872658978603877,
+      "train_pf": Infinity,
+      "valid_pf": 3.563804212930308,
+      "post_pf": 4.279463120739639,
+      "valid_n_ge12": false
+    },
+    {
+      "family": "IMPULSE_AND_VOLUME",
+      "q": 75,
+      "train_n": 6,
+      "valid_n": 8,
+      "post_n": 2,
+      "train_hit2": 0.3333333333333333,
+      "valid_hit2": 0.5,
+      "post_hit2": 0.5,
+      "train_ev": 0.9715879896879042,
+      "valid_ev": 0.9380887265263409,
+      "post_ev": 3.1091980071887497,
+      "train_pf": Infinity,
+      "valid_pf": 3.1949481888747644,
+      "post_pf": Infinity,
+      "valid_n_ge12": false
+    },
+    {
+      "family": "IMPULSE_AND_VOLUME",
+      "q": 80,
+      "train_n": 5,
+      "valid_n": 7,
+      "post_n": 0,
+      "train_hit2": 0.4,
+      "valid_hit2": 0.42857142857142855,
+      "post_hit2": null,
+      "train_ev": 1.0032733902106337,
+      "valid_ev": 0.7093078294329376,
+      "post_ev": null,
+      "train_pf": Infinity,
+      "valid_pf": 2.452189068156551,
+      "post_pf": null,
+      "valid_n_ge12": false
+    },
+    {
+      "family": "IMPULSE_AND_ALIGNED_VOLUME",
+      "q": 60,
+      "train_n": 12,
+      "valid_n": 22,
+      "post_n": 12,
+      "train_hit2": 0.3333333333333333,
+      "valid_hit2": 0.36363636363636365,
+      "post_hit2": 0.25,
+      "train_ev": 2.0776652732589542,
+      "valid_ev": 0.5392025608407702,
+      "post_ev": 0.337240328369708,
+      "train_pf": 11.341432126119566,
+      "valid_pf": 2.081532224215457,
+      "post_pf": 1.590806775227598,
+      "valid_n_ge12": true
+    },
+    {
+      "family": "IMPULSE_AND_ALIGNED_VOLUME",
+      "q": 65,
+      "train_n": 8,
+      "valid_n": 15,
+      "post_n": 8,
+      "train_hit2": 0.5,
+      "valid_hit2": 0.4,
+      "post_hit2": 0.375,
+      "train_ev": 3.385148008994048,
+      "valid_ev": 0.7212463677179836,
+      "post_ev": 0.745166609209634,
+      "train_pf": Infinity,
+      "valid_pf": 2.9938085270850094,
+      "post_pf": 2.4869128680970887,
+      "valid_n_ge12": true
+    },
+    {
+      "family": "IMPULSE_AND_ALIGNED_VOLUME",
+      "q": 70,
+      "train_n": 7,
+      "valid_n": 11,
+      "post_n": 4,
+      "train_hit2": 0.42857142857142855,
+      "valid_hit2": 0.45454545454545453,
+      "post_hit2": 0.5,
+      "train_ev": 1.3306971034466364,
+      "valid_ev": 1.0369787418638283,
+      "post_ev": 1.2872658978603877,
+      "train_pf": Infinity,
+      "valid_pf": 4.336206375918034,
+      "post_pf": 4.279463120739639,
+      "valid_n_ge12": false
+    },
+    {
+      "family": "IMPULSE_AND_ALIGNED_VOLUME",
+      "q": 75,
+      "train_n": 6,
+      "valid_n": 10,
+      "post_n": 2,
+      "train_hit2": 0.5,
+      "valid_hit2": 0.5,
+      "post_hit2": 0.5,
+      "train_ev": 1.4046230314185584,
+      "valid_ev": 1.0145616837227305,
+      "post_ev": 3.1091980071887497,
+      "train_pf": Infinity,
+      "valid_pf": 3.9673503518624917,
+      "post_pf": Infinity,
+      "valid_n_ge12": false
+    },
+    {
+      "family": "IMPULSE_AND_ALIGNED_VOLUME",
+      "q": 80,
+      "train_n": 5,
+      "valid_n": 8,
+      "post_n": 0,
+      "train_hit2": 0.4,
+      "valid_hit2": 0.5,
+      "post_hit2": null,
+      "train_ev": 1.5398913172583653,
+      "valid_ev": 0.8824735868098545,
+      "post_ev": null,
+      "train_pf": Infinity,
+      "valid_pf": 3.06481939962181,
+      "post_pf": null,
+      "valid_n_ge12": false
+    }
+  ]
+}
