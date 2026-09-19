@@ -1,0 +1,283 @@
+{
+  "lab": "GC_XAU_ANCHORED_EPISODE_STRUCTURAL_CLASSES_LAB007C",
+  "status": "STRUCTURAL_TAXONOMY_NOT_OOS",
+  "results": {
+    "SPARSE": {
+      "TRAIN": {
+        "n": 622,
+        "share": 0.355225585379783,
+        "any2_rate": 0.18971061093247588,
+        "any3_rate": 0.07717041800643087,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "VALID": {
+        "n": 831,
+        "share": 0.36447368421052634,
+        "any2_rate": 0.18772563176895307,
+        "any3_rate": 0.05174488567990373,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "POST_CHECK": {
+        "n": 487,
+        "share": 0.3717557251908397,
+        "any2_rate": 0.20944558521560575,
+        "any3_rate": 0.07186858316221766,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "FULL": {
+        "n": 1940,
+        "share": 0.36322785995131995,
+        "any2_rate": 0.19381443298969073,
+        "any3_rate": 0.06494845360824743,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      }
+    },
+    "ONE_SIDED_BUILDUP": {
+      "TRAIN": {
+        "n": 261,
+        "share": 0.14905768132495717,
+        "any2_rate": 0.21455938697318008,
+        "any3_rate": 0.07279693486590039,
+        "dir_n": 261,
+        "dir2_rate": 0.21455938697318008,
+        "dir3_rate": 0.07279693486590039,
+        "fixed5m_ev": -0.41499500942514367,
+        "fixed5m_pf": 0.5433177422531735
+      },
+      "VALID": {
+        "n": 335,
+        "share": 0.14692982456140352,
+        "any2_rate": 0.21492537313432836,
+        "any3_rate": 0.07462686567164178,
+        "dir_n": 335,
+        "dir2_rate": 0.21492537313432836,
+        "dir3_rate": 0.07462686567164178,
+        "fixed5m_ev": -0.21744846713830704,
+        "fixed5m_pf": 0.7089041663214201
+      },
+      "POST_CHECK": {
+        "n": 186,
+        "share": 0.14198473282442747,
+        "any2_rate": 0.25806451612903225,
+        "any3_rate": 0.12903225806451613,
+        "dir_n": 186,
+        "dir2_rate": 0.25806451612903225,
+        "dir3_rate": 0.12903225806451613,
+        "fixed5m_ev": 0.015246208426328364,
+        "fixed5m_pf": 1.0234017872055208
+      },
+      "FULL": {
+        "n": 782,
+        "share": 0.14641452911439806,
+        "any2_rate": 0.22506393861892582,
+        "any3_rate": 0.08695652173913043,
+        "dir_n": 782,
+        "dir2_rate": 0.22506393861892582,
+        "dir3_rate": 0.08695652173913043,
+        "fixed5m_ev": -0.22803470483887245,
+        "fixed5m_pf": 0.7069938384899861
+      }
+    },
+    "DOMINANCE_REVERSAL": {
+      "TRAIN": {
+        "n": 54,
+        "share": 0.03083952027412907,
+        "any2_rate": 0.2222222222222222,
+        "any3_rate": 0.07407407407407407,
+        "dir_n": 54,
+        "dir2_rate": 0.2222222222222222,
+        "dir3_rate": 0.07407407407407407,
+        "fixed5m_ev": 0.1761741436699349,
+        "fixed5m_pf": 1.3066515266702476
+      },
+      "VALID": {
+        "n": 74,
+        "share": 0.03245614035087719,
+        "any2_rate": 0.21621621621621623,
+        "any3_rate": 0.0945945945945946,
+        "dir_n": 74,
+        "dir2_rate": 0.21621621621621623,
+        "dir3_rate": 0.0945945945945946,
+        "fixed5m_ev": 0.004548562225856237,
+        "fixed5m_pf": 1.0061270138739724
+      },
+      "POST_CHECK": {
+        "n": 45,
+        "share": 0.03435114503816794,
+        "any2_rate": 0.24444444444444444,
+        "any3_rate": 0.2,
+        "dir_n": 45,
+        "dir2_rate": 0.24444444444444444,
+        "dir3_rate": 0.2,
+        "fixed5m_ev": 0.1116807266167828,
+        "fixed5m_pf": 1.1673821319730342
+      },
+      "FULL": {
+        "n": 173,
+        "share": 0.03239093802658678,
+        "any2_rate": 0.2254335260115607,
+        "any3_rate": 0.11560693641618497,
+        "dir_n": 173,
+        "dir2_rate": 0.2254335260115607,
+        "dir3_rate": 0.11560693641618497,
+        "fixed5m_ev": 0.0859863009285842,
+        "fixed5m_pf": 1.1282554371058404
+      }
+    },
+    "ALTERNATING_CONFLICT": {
+      "TRAIN": {
+        "n": 126,
+        "share": 0.0719588806396345,
+        "any2_rate": 0.18253968253968253,
+        "any3_rate": 0.047619047619047616,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "VALID": {
+        "n": 140,
+        "share": 0.06140350877192982,
+        "any2_rate": 0.2,
+        "any3_rate": 0.06428571428571428,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "POST_CHECK": {
+        "n": 77,
+        "share": 0.05877862595419847,
+        "any2_rate": 0.15584415584415584,
+        "any3_rate": 0.03896103896103896,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "FULL": {
+        "n": 343,
+        "share": 0.06422018348623854,
+        "any2_rate": 0.1836734693877551,
+        "any3_rate": 0.052478134110787174,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      }
+    },
+    "REASSERTION": {
+      "TRAIN": {
+        "n": 88,
+        "share": 0.05025699600228441,
+        "any2_rate": 0.19318181818181818,
+        "any3_rate": 0.07954545454545454,
+        "dir_n": 88,
+        "dir2_rate": 0.19318181818181818,
+        "dir3_rate": 0.07954545454545454,
+        "fixed5m_ev": -0.20277721278561023,
+        "fixed5m_pf": 0.7141402160572617
+      },
+      "VALID": {
+        "n": 134,
+        "share": 0.058771929824561406,
+        "any2_rate": 0.21641791044776118,
+        "any3_rate": 0.11194029850746269,
+        "dir_n": 134,
+        "dir2_rate": 0.21641791044776118,
+        "dir3_rate": 0.11194029850746269,
+        "fixed5m_ev": 0.03917317241918317,
+        "fixed5m_pf": 1.0620228543167614
+      },
+      "POST_CHECK": {
+        "n": 90,
+        "share": 0.06870229007633588,
+        "any2_rate": 0.2,
+        "any3_rate": 0.044444444444444446,
+        "dir_n": 90,
+        "dir2_rate": 0.2,
+        "dir3_rate": 0.044444444444444446,
+        "fixed5m_ev": -0.26146519010678665,
+        "fixed5m_pf": 0.662216280841137
+      },
+      "FULL": {
+        "n": 312,
+        "share": 0.05841602696124321,
+        "any2_rate": 0.20512820512820512,
+        "any3_rate": 0.08333333333333333,
+        "dir_n": 312,
+        "dir2_rate": 0.20512820512820512,
+        "dir3_rate": 0.08333333333333333,
+        "fixed5m_ev": -0.1157918484954293,
+        "fixed5m_pf": 0.833302679563511
+      }
+    },
+    "MIXED_TRANSITION": {
+      "TRAIN": {
+        "n": 600,
+        "share": 0.34266133637921187,
+        "any2_rate": 0.155,
+        "any3_rate": 0.051666666666666666,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "VALID": {
+        "n": 766,
+        "share": 0.33596491228070174,
+        "any2_rate": 0.18407310704960836,
+        "any3_rate": 0.07441253263707572,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "POST_CHECK": {
+        "n": 425,
+        "share": 0.3244274809160305,
+        "any2_rate": 0.19058823529411764,
+        "any3_rate": 0.06588235294117648,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      },
+      "FULL": {
+        "n": 1791,
+        "share": 0.3353304624602134,
+        "any2_rate": 0.17587939698492464,
+        "any3_rate": 0.06476828587381352,
+        "dir_n": 0,
+        "dir2_rate": null,
+        "dir3_rate": null,
+        "fixed5m_ev": null,
+        "fixed5m_pf": null
+      }
+    }
+  },
+  "interesting_classes": []
+}
