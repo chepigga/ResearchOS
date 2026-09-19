@@ -1,0 +1,151 @@
+{
+  "lab": "GC_XAU_REV2_Q65_FROZEN_OOS_BOOTSTRAP_MONTECARLO_LOPO_COST_LAB011",
+  "status": "FROZEN_VALIDATION_NOT_PRISTINE_OOS",
+  "frozen": {
+    "impulse_q65": 0.0521431118894362,
+    "aligned_volume_q65": 20.60000000000001,
+    "sl_atr": 2.25,
+    "tp_atr": 4.5,
+    "timeout_s": 300
+  },
+  "split_stats_exact_cost": {
+    "TRAIN": {
+      "n": 8,
+      "ev_r": 0.379425533634462,
+      "pf": 4.000226865675783,
+      "wr_pct": 75.0,
+      "cum_r": 3.035404269075696,
+      "maxdd_r": 1.0102089961352656,
+      "maxdd_pct_at_025": 0.2525522490338164,
+      "max_consec_losses": 1
+    },
+    "VALID": {
+      "n": 15,
+      "ev_r": 0.36588419787108734,
+      "pf": 3.9118689903381503,
+      "wr_pct": 80.0,
+      "cum_r": 5.48826296806631,
+      "maxdd_r": 1.8847904855187076,
+      "maxdd_pct_at_025": 0.4711976213796769,
+      "max_consec_losses": 3
+    },
+    "POST_CHECK": {
+      "n": 8,
+      "ev_r": 0.06955741053863057,
+      "pf": 1.1704957622194883,
+      "wr_pct": 50.0,
+      "cum_r": 0.5564592843090446,
+      "maxdd_r": 2.025272582376322,
+      "maxdd_pct_at_025": 0.5063181455940805,
+      "max_consec_losses": 2
+    },
+    "FULL": {
+      "n": 31,
+      "ev_r": 0.2929073071435824,
+      "pf": 2.4739777583425213,
+      "wr_pct": 70.96774193548387,
+      "cum_r": 9.080126521451053,
+      "maxdd_r": 2.0252725823763216,
+      "maxdd_pct_at_025": 0.5063181455940804,
+      "max_consec_losses": 3
+    }
+  },
+  "exact_cost": {
+    "commission_rate_side_pct": 0.0007,
+    "median_commission_r": 0.011173262387932942,
+    "mean_commission_r": 0.012055719769569482,
+    "min_commission_r": 0.0034002522435578634,
+    "max_commission_r": 0.02855268865212568,
+    "gross_full": {
+      "n": 31,
+      "ev_r": 0.3049630269131518,
+      "pf": 2.563700087332489,
+      "wr_pct": 74.19354838709677,
+      "cum_r": 9.453853834307706,
+      "maxdd_r": 2.0,
+      "maxdd_pct_at_025": 0.5,
+      "max_consec_losses": 3
+    },
+    "net_full": {
+      "n": 31,
+      "ev_r": 0.2929073071435824,
+      "pf": 2.4739777583425213,
+      "wr_pct": 70.96774193548387,
+      "cum_r": 9.080126521451053,
+      "maxdd_r": 2.0252725823763216,
+      "maxdd_pct_at_025": 0.5063181455940804,
+      "max_consec_losses": 3
+    }
+  },
+  "bootstrap": {
+    "iid": {
+      "p_ev_gt0": 0.9785,
+      "ev_ci95": [
+        0.008843602766470273,
+        0.5846515215483704
+      ],
+      "median_ev": 0.29103598462126534
+    },
+    "block3": {
+      "p_ev_gt0": 0.9834,
+      "ev_ci95": [
+        0.02659440919050099,
+        0.6170492197048011
+      ],
+      "median_ev": 0.3302248757295586
+    }
+  },
+  "monte_carlo": {
+    "maxdd_r_median": 2.044509747266047,
+    "maxdd_r_p95": 3.5904291374865394,
+    "maxdd_r_p99": 4.259677221764972,
+    "maxdd_pct_p95_at_025": 0.8976072843716348,
+    "streak_median": 2.0,
+    "streak_p95": 4.0,
+    "streak_p99": 5.0
+  },
+  "leave_one_period_out": {
+    "week_count": 7,
+    "min_remaining_ev_week": 0.20740409821160075,
+    "min_remaining_pf_week": 1.8755815382501808,
+    "all_week_remaining_ev_positive": true,
+    "split_leaveout": [
+      {
+        "type": "split",
+        "leave_out": "TRAIN",
+        "n": 23,
+        "ev_r": 0.2628140109728415,
+        "pf": 2.174060204565489,
+        "wr_pct": 69.56521739130434,
+        "cum_r": 6.044722252375355,
+        "maxdd_r": 2.0252725823763216,
+        "maxdd_pct_at_025": 0.5063181455940804,
+        "max_consec_losses": 3
+      },
+      {
+        "type": "split",
+        "leave_out": "VALID",
+        "n": 16,
+        "ev_r": 0.22449147208654635,
+        "pf": 1.8401043614763535,
+        "wr_pct": 62.5,
+        "cum_r": 3.5918635533847416,
+        "maxdd_r": 2.0252725823763216,
+        "maxdd_pct_at_025": 0.5063181455940804,
+        "max_consec_losses": 2
+      },
+      {
+        "type": "split",
+        "leave_out": "POST_CHECK",
+        "n": 23,
+        "ev_r": 0.3705942277018264,
+        "pf": 3.9427315446574696,
+        "wr_pct": 78.26086956521739,
+        "cum_r": 8.523667237142007,
+        "maxdd_r": 1.8847904855187076,
+        "maxdd_pct_at_025": 0.4711976213796769,
+        "max_consec_losses": 3
+      }
+    ]
+  }
+}
