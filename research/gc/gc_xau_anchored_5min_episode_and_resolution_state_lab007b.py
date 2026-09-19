@@ -145,7 +145,7 @@ def emit_setups(s):
               'directional_balance':float(pick.directional_balance),
               'run_length_same_direction':int(pick.run_length_same_direction),
               'direction_flips_so_far':int(pick.direction_flips_so_far),
-              'hit1':hit1,'hit2':hit2,'hit3':hit3,
+              'hit1':np.nan,'hit2':hit2,'hit3':hit3,
               'fixed5m_ev_atr':hold,'mfe5_atr':mfe,'mae5_atr':mae
             })
     return pd.DataFrame(rows)
@@ -158,7 +158,7 @@ def summarize(setups):
             z=setups[setups.rule==rule] if p=='FULL' else setups[(setups.rule==rule)&(setups.period==p)]
             out[rule][p]={
               'n':int(len(z)),
-              'hit1_rate':float(z.hit1.mean()) if len(z) else None,
+              'hit1_rate':None,
               'hit2_rate':float(z.hit2.mean()) if len(z) else None,
               'hit3_rate':float(z.hit3.mean()) if len(z) else None,
               'fixed5m':stat(z.fixed5m_ev_atr.to_numpy(float)) if len(z) else stat([]),
