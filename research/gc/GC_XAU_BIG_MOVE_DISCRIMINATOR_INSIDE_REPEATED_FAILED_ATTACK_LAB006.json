@@ -1,0 +1,884 @@
+{
+  "lab": "GC_XAU_BIG_MOVE_DISCRIMINATOR_INSIDE_REPEATED_FAILED_ATTACK_LAB006",
+  "status": "CAUSAL_DISCRIMINATOR_DISCOVERY_NOT_OOS",
+  "base_rates": {
+    "ALL": {
+      "TRAIN": {
+        "n": 5004,
+        "big2_rate": 0.19564348521183053,
+        "big3_rate": 0.07793764988009592
+      },
+      "VALID": {
+        "n": 6422,
+        "big2_rate": 0.19931485518530054,
+        "big3_rate": 0.07365306758019309
+      },
+      "POST_CHECK": {
+        "n": 3745,
+        "big2_rate": 0.19679572763684913,
+        "big3_rate": 0.07423230974632844
+      }
+    },
+    "QUIET": {
+      "TRAIN": {
+        "n": 2723,
+        "big2_rate": 0.18766066838046272,
+        "big3_rate": 0.06830701432243849
+      },
+      "VALID": {
+        "n": 3468,
+        "big2_rate": 0.19607843137254902,
+        "big3_rate": 0.06920415224913495
+      },
+      "POST_CHECK": {
+        "n": 2053,
+        "big2_rate": 0.19386264003896736,
+        "big3_rate": 0.07355090112031173
+      }
+    }
+  },
+  "results": {
+    "attack1_impact": {
+      "side": "Q5",
+      "threshold": 0.7077960242003923,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1889908256880734,
+          "big3_rate": 0.06422018348623854,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0070880985295967,
+          "big3_lift": 0.9401696754463845
+        },
+        "VALID": {
+          "n": 657,
+          "big2_rate": 0.1841704718417047,
+          "big3_rate": 0.0791476407914764,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9392694063926941,
+          "big3_lift": 1.143683409436834
+        },
+        "POST_CHECK": {
+          "n": 426,
+          "big2_rate": 0.20892018779342722,
+          "big3_rate": 0.08450704225352113,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0776712199495129,
+          "big3_lift": 1.148959985076019
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "attack2_impact": {
+      "side": "Q5",
+      "threshold": 0.14477859088718034,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.22385321100917432,
+          "big3_rate": 0.09724770642201835,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.192861631268066,
+          "big3_lift": 1.4236855085330966
+        },
+        "VALID": {
+          "n": 678,
+          "big2_rate": 0.2153392330383481,
+          "big3_rate": 0.0752212389380531,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0982300884955754,
+          "big3_lift": 1.0869469026548673
+        },
+        "POST_CHECK": {
+          "n": 391,
+          "big2_rate": 0.19948849104859334,
+          "big3_rate": 0.08184143222506395,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0290197792029199,
+          "big3_lift": 1.1127182805169291
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": true,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "impact_deterioration": {
+      "side": "Q1",
+      "threshold": 0.14242411625125986,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1963302752293578,
+          "big3_rate": 0.07339449541284404,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0461983159482218,
+          "big3_lift": 1.0744796290815823
+        },
+        "VALID": {
+          "n": 664,
+          "big2_rate": 0.19427710843373494,
+          "big3_rate": 0.06626506024096386,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9908132530120483,
+          "big3_lift": 0.9575301204819278
+        },
+        "POST_CHECK": {
+          "n": 407,
+          "big2_rate": 0.1891891891891892,
+          "big3_rate": 0.07125307125307126,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.9758929784055413,
+          "big3_lift": 0.9687586442553331
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "attack1_delta_frac": {
+      "side": "Q1",
+      "threshold": -0.4068686868686869,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.22385321100917432,
+          "big3_rate": 0.08256880733944955,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.192861631268066,
+          "big3_lift": 1.20878958271678
+        },
+        "VALID": {
+          "n": 599,
+          "big2_rate": 0.20868113522537562,
+          "big3_rate": 0.08848080133555926,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0642737896494157,
+          "big3_lift": 1.2785475792988312
+        },
+        "POST_CHECK": {
+          "n": 392,
+          "big2_rate": 0.20153061224489796,
+          "big3_rate": 0.07397959183673469,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0395536355245616,
+          "big3_lift": 1.005828490336532
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": true,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "attack2_delta_frac": {
+      "side": "Q1",
+      "threshold": -0.3333333333333333,
+      "summary": {
+        "TRAIN": {
+          "n": 560,
+          "big2_rate": 0.2,
+          "big3_rate": 0.0625,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0657534246575344,
+          "big3_lift": 0.9149865591397849
+        },
+        "VALID": {
+          "n": 596,
+          "big2_rate": 0.20302013422818793,
+          "big3_rate": 0.08557046979865772,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0354026845637585,
+          "big3_lift": 1.236493288590604
+        },
+        "POST_CHECK": {
+          "n": 397,
+          "big2_rate": 0.1964735516372796,
+          "big3_rate": 0.08312342569269521,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.013467842993304,
+          "big3_lift": 1.1301482976629356
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "abs_delta_frac_1": {
+      "side": "Q5",
+      "threshold": 0.5714285714285714,
+      "summary": {
+        "TRAIN": {
+          "n": 552,
+          "big2_rate": 0.19384057971014493,
+          "big3_rate": 0.06340579710144928,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0329313083184435,
+          "big3_lift": 0.9282472339099268
+        },
+        "VALID": {
+          "n": 522,
+          "big2_rate": 0.2049808429118774,
+          "big3_rate": 0.09003831417624521,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0454022988505747,
+          "big3_lift": 1.3010536398467432
+        },
+        "POST_CHECK": {
+          "n": 415,
+          "big2_rate": 0.19518072289156627,
+          "big3_rate": 0.07710843373493977,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0067990555185566,
+          "big3_lift": 1.0483683076677572
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "abs_delta_frac_2": {
+      "side": "Q5",
+      "threshold": 0.4782608695652174,
+      "summary": {
+        "TRAIN": {
+          "n": 547,
+          "big2_rate": 0.18281535648994515,
+          "big3_rate": 0.05850091407678245,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 0.9741804612957351,
+          "big3_lift": 0.8564408012423581
+        },
+        "VALID": {
+          "n": 520,
+          "big2_rate": 0.20192307692307693,
+          "big3_rate": 0.06346153846153846,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0298076923076924,
+          "big3_lift": 0.9170192307692306
+        },
+        "POST_CHECK": {
+          "n": 404,
+          "big2_rate": 0.22524752475247525,
+          "big3_rate": 0.09405940594059406,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.1618923827056074,
+          "big3_lift": 1.2788341748082093
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "attack1_volume": {
+      "side": "Q5",
+      "threshold": 72.0,
+      "summary": {
+        "TRAIN": {
+          "n": 553,
+          "big2_rate": 0.19710669077757687,
+          "big3_rate": 0.07775768535262206,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0503356535955808,
+          "big3_lift": 1.1383557914795155
+        },
+        "VALID": {
+          "n": 938,
+          "big2_rate": 0.1791044776119403,
+          "big3_rate": 0.05970149253731343,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9134328358208955,
+          "big3_lift": 0.862686567164179
+        },
+        "POST_CHECK": {
+          "n": 451,
+          "big2_rate": 0.17960088691796008,
+          "big3_rate": 0.05543237250554324,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.9264337207099801,
+          "big3_lift": 0.7536600049925847
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "attack2_volume": {
+      "side": "Q5",
+      "threshold": 61.0,
+      "summary": {
+        "TRAIN": {
+          "n": 550,
+          "big2_rate": 0.20363636363636364,
+          "big3_rate": 0.07272727272727272,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0851307596513076,
+          "big3_lift": 1.0647116324535677
+        },
+        "VALID": {
+          "n": 979,
+          "big2_rate": 0.19101123595505617,
+          "big3_rate": 0.0602655771195097,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9741573033707865,
+          "big3_lift": 0.8708375893769151
+        },
+        "POST_CHECK": {
+          "n": 471,
+          "big2_rate": 0.17197452229299362,
+          "big3_rate": 0.055201698513800426,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.8870947092148641,
+          "big3_lift": 0.75052375529028
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "volume_ratio_2_to_1": {
+      "side": "Q1",
+      "threshold": 0.4117647058823529,
+      "summary": {
+        "TRAIN": {
+          "n": 546,
+          "big2_rate": 0.1978021978021978,
+          "big3_rate": 0.08241758241758242,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0540418485623966,
+          "big3_lift": 1.2065756823821339
+        },
+        "VALID": {
+          "n": 606,
+          "big2_rate": 0.16666666666666666,
+          "big3_rate": 0.06930693069306931,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.85,
+          "big3_lift": 1.0014851485148515
+        },
+        "POST_CHECK": {
+          "n": 449,
+          "big2_rate": 0.19821826280623608,
+          "big3_rate": 0.062360801781737196,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0224675717115645,
+          "big3_lift": 0.847859112966268
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": true,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "persistence_abs_delta": {
+      "side": "Q5",
+      "threshold": 0.3333333333333333,
+      "summary": {
+        "TRAIN": {
+          "n": 683,
+          "big2_rate": 0.20351390922401172,
+          "big3_rate": 0.07613469985358712,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0844782286046653,
+          "big3_lift": 1.1145956328027833
+        },
+        "VALID": {
+          "n": 639,
+          "big2_rate": 0.18935837245696402,
+          "big3_rate": 0.07668231611893583,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9657276995305165,
+          "big3_lift": 1.1080594679186226
+        },
+        "POST_CHECK": {
+          "n": 485,
+          "big2_rate": 0.21649484536082475,
+          "big3_rate": 0.09278350515463918,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.1167435113712896,
+          "big3_lift": 1.2614869939236706
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "efficiency1": {
+      "side": "Q1",
+      "threshold": 0.43939228777807643,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1889908256880734,
+          "big3_rate": 0.06422018348623854,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0070880985295967,
+          "big3_lift": 0.9401696754463845
+        },
+        "VALID": {
+          "n": 618,
+          "big2_rate": 0.18932038834951456,
+          "big3_rate": 0.06957928802588997,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 0.9655339805825243,
+          "big3_lift": 1.00542071197411
+        },
+        "POST_CHECK": {
+          "n": 404,
+          "big2_rate": 0.1905940594059406,
+          "big3_rate": 0.06435643564356436,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.9831397084432062,
+          "big3_lift": 0.8749918038161433
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "efficiency2": {
+      "side": "Q5",
+      "threshold": 0.5716009654060984,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.22018348623853212,
+          "big3_rate": 0.08256880733944955,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.1733065225587533,
+          "big3_lift": 1.20878958271678
+        },
+        "VALID": {
+          "n": 767,
+          "big2_rate": 0.2151238591916558,
+          "big3_rate": 0.07431551499348109,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0971316818774446,
+          "big3_lift": 1.0738591916558016
+        },
+        "POST_CHECK": {
+          "n": 407,
+          "big2_rate": 0.171990171990172,
+          "big3_rate": 0.07371007371007371,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.8871754349141284,
+          "big3_lift": 1.0021641147468963
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": true,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "efficiency_deterioration": {
+      "side": "Q1",
+      "threshold": 0.31631559464172826,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.20917431192660552,
+          "big3_rate": 0.07155963302752294,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.1146411964308158,
+          "big3_lift": 1.0476176383545428
+        },
+        "VALID": {
+          "n": 652,
+          "big2_rate": 0.200920245398773,
+          "big3_rate": 0.0736196319018405,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0246932515337424,
+          "big3_lift": 1.0638036809815952
+        },
+        "POST_CHECK": {
+          "n": 456,
+          "big2_rate": 0.18859649122807018,
+          "big3_rate": 0.06798245614035088,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.9728356695759499,
+          "big3_lift": 0.924291274543976
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": false,
+        "pass": false
+      }
+    },
+    "prior30_abs_move_atr": {
+      "side": "Q5",
+      "threshold": 0.1862330525492625,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.20917431192660552,
+          "big3_rate": 0.07706422018348624,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.1146411964308158,
+          "big3_lift": 1.1282036105356614
+        },
+        "VALID": {
+          "n": 768,
+          "big2_rate": 0.23046875,
+          "big3_rate": 0.08203125,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.175390625,
+          "big3_lift": 1.1853515625
+        },
+        "POST_CHECK": {
+          "n": 438,
+          "big2_rate": 0.17579908675799086,
+          "big3_rate": 0.0958904109589041,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 0.9068229274225006,
+          "big3_lift": 1.303728567540597
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "prior30_signed_pred_move_atr": {
+      "side": "Q1",
+      "threshold": -0.14633918822242445,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.2036697247706422,
+          "big3_rate": 0.06972477064220184,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0853085333668469,
+          "big3_lift": 1.0207556476275033
+        },
+        "VALID": {
+          "n": 668,
+          "big2_rate": 0.2275449101796407,
+          "big3_rate": 0.08233532934131736,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.1604790419161677,
+          "big3_lift": 1.1897455089820357
+        },
+        "POST_CHECK": {
+          "n": 420,
+          "big2_rate": 0.19523809523809524,
+          "big3_rate": 0.08095238095238096,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0070949988035416,
+          "big3_lift": 1.1006307158625042
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "prior60_signed_pred_move_atr": {
+      "side": "Q1",
+      "threshold": -0.7843746744996074,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1889908256880734,
+          "big3_rate": 0.062385321100917435,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0070880985295967,
+          "big3_lift": 0.913307684719345
+        },
+        "VALID": {
+          "n": 674,
+          "big2_rate": 0.21216617210682492,
+          "big3_rate": 0.08902077151335312,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.082047477744807,
+          "big3_lift": 1.2863501483679525
+        },
+        "POST_CHECK": {
+          "n": 412,
+          "big2_rate": 0.19902912621359223,
+          "big3_rate": 0.0825242718446602,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.026650241498756,
+          "big3_lift": 1.1220021860734264
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "prior60_range_atr": {
+      "side": "Q5",
+      "threshold": 1.2043445371116173,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1981651376146789,
+          "big3_rate": 0.07155963302752294,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.055975870302878,
+          "big3_lift": 1.0476176383545428
+        },
+        "VALID": {
+          "n": 672,
+          "big2_rate": 0.20833333333333334,
+          "big3_rate": 0.09077380952380952,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0625,
+          "big3_lift": 1.3116815476190475
+        },
+        "POST_CHECK": {
+          "n": 412,
+          "big2_rate": 0.2087378640776699,
+          "big3_rate": 0.08980582524271845,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.076730741084061,
+          "big3_lift": 1.2210023789622582
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "gc_pred_60_atr": {
+      "side": "Q1",
+      "threshold": -0.7565750624574148,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.1761467889908257,
+          "big3_rate": 0.05871559633027523,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 0.9386452180470027,
+          "big3_lift": 0.8595837032652659
+        },
+        "VALID": {
+          "n": 692,
+          "big2_rate": 0.1994219653179191,
+          "big3_rate": 0.08092485549132948,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.0170520231213873,
+          "big3_lift": 1.1693641618497108
+        },
+        "POST_CHECK": {
+          "n": 429,
+          "big2_rate": 0.20279720279720279,
+          "big3_rate": 0.07925407925407925,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0460870787503953,
+          "big3_lift": 1.0775405609842696
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    },
+    "gc_minus_xau_signed_context": {
+      "side": "Q5",
+      "threshold": 0.13564897205060633,
+      "summary": {
+        "TRAIN": {
+          "n": 545,
+          "big2_rate": 0.2,
+          "big3_rate": 0.07155963302752294,
+          "base2_rate": 0.18766066838046272,
+          "base3_rate": 0.06830701432243849,
+          "big2_lift": 1.0657534246575344,
+          "big3_lift": 1.0476176383545428
+        },
+        "VALID": {
+          "n": 600,
+          "big2_rate": 0.19666666666666666,
+          "big3_rate": 0.08333333333333333,
+          "base2_rate": 0.19607843137254902,
+          "base3_rate": 0.06920415224913495,
+          "big2_lift": 1.003,
+          "big3_lift": 1.2041666666666666
+        },
+        "POST_CHECK": {
+          "n": 380,
+          "big2_rate": 0.2131578947368421,
+          "big3_rate": 0.09473684210526316,
+          "base2_rate": 0.19386264003896736,
+          "base3_rate": 0.07355090112031173,
+          "big2_lift": 1.0995305474742132,
+          "big3_lift": 1.2880446148483793
+        }
+      },
+      "gate": {
+        "train_n_ge100": true,
+        "valid_n_ge100": true,
+        "train_big2_lift_ge125": false,
+        "valid_big2_lift_ge120": false,
+        "train_big3_lift_ge120": false,
+        "valid_big3_lift_ge115": true,
+        "pass": false
+      }
+    }
+  },
+  "survivors": [],
+  "pair": null
+}
