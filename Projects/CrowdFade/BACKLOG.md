@@ -1510,3 +1510,21 @@ Applied to current `CrowdFadeMulti_v200.mq5`:
 - static audit PASS; MetaEditor compile still required.
 - exact working SHA-256:
   `815477f46968c2629ddca4c6aefd0982b4da119a58cd51aab16073c07e4d50d8`.
+
+
+### v191 RISK_PARITY patch
+Status: **LOCAL BUILD READY — COMPILE PENDING**
+
+Purpose: keep v1.91 signal/confirmation/management unchanged and normalize broker economic risk.
+Changes:
+- reconstructed v1.91 from v1.93 lineage (v1.93 explicitly changed threshold asymmetry only);
+- restored symmetric Z=1.00 and live confirm=0.30 ATR;
+- BTC+ETH+SOL default portfolio;
+- removed mandatory manual `InpMaxLot=50`; default now 0=disabled;
+- raw sizing uses `OrderCalcProfit(1 lot, entry->SL)` in account currency;
+- commission-aware sizing: auto FTMO 6.5bps RT / GetLeveraged 0bps;
+- adaptive margin clamp instead of immediate MARGIN_BLOCK;
+- logs broker contract size, raw/broker/actual lot, base units, requested and actual risk;
+- broker `SYMBOL_VOLUME_MAX` remains authoritative; no child-order splitting.
+Local SHA-256:
+`70e191d91e6d2d9b4bb962c913fd9607ade0cec4c5a5016e9a569008fd8031d1`.
