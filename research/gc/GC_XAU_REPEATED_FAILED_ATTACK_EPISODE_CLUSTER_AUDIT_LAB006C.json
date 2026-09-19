@@ -1,0 +1,197 @@
+{
+  "lab": "GC_XAU_REPEATED_FAILED_ATTACK_EPISODE_CLUSTER_AUDIT_LAB006C",
+  "results": {
+    "ALL": {
+      "TIME_ONLY": {
+        "120": {
+          "signals": 15206,
+          "clusters": 6322,
+          "days": 35,
+          "clusters_per_day": 180.62857142857143,
+          "median_signals_per_cluster": 2.0,
+          "mean_signals_per_cluster": 2.4052515026890227,
+          "p90_signals_per_cluster": 5.0,
+          "median_cluster_span_s": 60.0,
+          "singleton_share": 0.4234419487503954,
+          "cluster_plus2_share": 0.3487820310028472,
+          "cluster_plus3_share": 0.14583992407465993,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "300": {
+          "signals": 15206,
+          "clusters": 1140,
+          "days": 35,
+          "clusters_per_day": 32.57142857142857,
+          "median_signals_per_cluster": 9.0,
+          "mean_signals_per_cluster": 13.33859649122807,
+          "p90_signals_per_cluster": 30.100000000000136,
+          "median_cluster_span_s": 960.0,
+          "singleton_share": 0.10526315789473684,
+          "cluster_plus2_share": 0.7342105263157894,
+          "cluster_plus3_share": 0.4780701754385965,
+          "median_plus2_signals_in_winning_cluster": 3.0,
+          "median_plus3_signals_in_winning_cluster": 2.0
+        },
+        "600": {
+          "signals": 15206,
+          "clusters": 105,
+          "days": 35,
+          "clusters_per_day": 3.0,
+          "median_signals_per_cluster": 89.0,
+          "mean_signals_per_cluster": 144.8190476190476,
+          "p90_signals_per_cluster": 408.6,
+          "median_cluster_span_s": 12480.0,
+          "singleton_share": 0.02857142857142857,
+          "cluster_plus2_share": 0.9142857142857143,
+          "cluster_plus3_share": 0.8285714285714286,
+          "median_plus2_signals_in_winning_cluster": 21.0,
+          "median_plus3_signals_in_winning_cluster": 9.0
+        }
+      },
+      "SAME_DIRECTION": {
+        "120": {
+          "signals": 15206,
+          "clusters": 10484,
+          "days": 35,
+          "clusters_per_day": 299.54285714285714,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.4504006104540252,
+          "p90_signals_per_cluster": 2.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.6930560854635636,
+          "cluster_plus2_share": 0.24294162533384203,
+          "cluster_plus3_share": 0.09566959175887066,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "300": {
+          "signals": 15206,
+          "clusters": 7819,
+          "days": 35,
+          "clusters_per_day": 223.4,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.9447499680266018,
+          "p90_signals_per_cluster": 4.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.5274331755979026,
+          "cluster_plus2_share": 0.3018288783731935,
+          "cluster_plus3_share": 0.12328942319989769,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "600": {
+          "signals": 15206,
+          "clusters": 7303,
+          "days": 35,
+          "clusters_per_day": 208.65714285714284,
+          "median_signals_per_cluster": 2.0,
+          "mean_signals_per_cluster": 2.0821580172531835,
+          "p90_signals_per_cluster": 4.0,
+          "median_cluster_span_s": 60.0,
+          "singleton_share": 0.4921265233465699,
+          "cluster_plus2_share": 0.31685608653977815,
+          "cluster_plus3_share": 0.1313158975763385,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        }
+      }
+    },
+    "QUIET": {
+      "TIME_ONLY": {
+        "120": {
+          "signals": 8261,
+          "clusters": 5421,
+          "days": 35,
+          "clusters_per_day": 154.88571428571427,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.5238885814425382,
+          "p90_signals_per_cluster": 3.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.6618705035971223,
+          "cluster_plus2_share": 0.26434237225604135,
+          "cluster_plus3_share": 0.10016602102933038,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "300": {
+          "signals": 8261,
+          "clusters": 2500,
+          "days": 35,
+          "clusters_per_day": 71.42857142857143,
+          "median_signals_per_cluster": 2.0,
+          "mean_signals_per_cluster": 3.3044,
+          "p90_signals_per_cluster": 7.0,
+          "median_cluster_span_s": 210.0,
+          "singleton_share": 0.3212,
+          "cluster_plus2_share": 0.4468,
+          "cluster_plus3_share": 0.196,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "600": {
+          "signals": 8261,
+          "clusters": 737,
+          "days": 35,
+          "clusters_per_day": 21.057142857142857,
+          "median_signals_per_cluster": 7.0,
+          "mean_signals_per_cluster": 11.208955223880597,
+          "p90_signals_per_cluster": 26.0,
+          "median_cluster_span_s": 1380.0,
+          "singleton_share": 0.11533242876526459,
+          "cluster_plus2_share": 0.7109905020352781,
+          "cluster_plus3_share": 0.4287652645861601,
+          "median_plus2_signals_in_winning_cluster": 2.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        }
+      },
+      "SAME_DIRECTION": {
+        "120": {
+          "signals": 8261,
+          "clusters": 6731,
+          "days": 35,
+          "clusters_per_day": 192.31428571428572,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.2273064923488337,
+          "p90_signals_per_cluster": 2.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.8153320457584311,
+          "cluster_plus2_share": 0.21839251225672263,
+          "cluster_plus3_share": 0.08200861684742237,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "300": {
+          "signals": 8261,
+          "clusters": 5216,
+          "days": 35,
+          "clusters_per_day": 149.02857142857144,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.5837806748466257,
+          "p90_signals_per_cluster": 3.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.6372699386503068,
+          "cluster_plus2_share": 0.26495398773006135,
+          "cluster_plus3_share": 0.10256901840490798,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        },
+        "600": {
+          "signals": 8261,
+          "clusters": 4266,
+          "days": 35,
+          "clusters_per_day": 121.88571428571429,
+          "median_signals_per_cluster": 1.0,
+          "mean_signals_per_cluster": 1.936474449132677,
+          "p90_signals_per_cluster": 4.0,
+          "median_cluster_span_s": 0.0,
+          "singleton_share": 0.523441162681669,
+          "cluster_plus2_share": 0.303328645100797,
+          "cluster_plus3_share": 0.1209563994374121,
+          "median_plus2_signals_in_winning_cluster": 1.0,
+          "median_plus3_signals_in_winning_cluster": 1.0
+        }
+      }
+    }
+  }
+}
