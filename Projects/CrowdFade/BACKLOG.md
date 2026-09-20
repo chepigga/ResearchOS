@@ -2994,3 +2994,143 @@ If conflict audit is clean, forward-demo candidate should begin with:
 - FAST G1 risk = **0.25x CORE = 0.0625% per FAST trade**;
 - hard existing portfolio notional/margin caps remain active.
 
+
+## LAB041B — CORE_FAST_OVERLAP_CONFLICT_AND_2025_FAILURE_AUDIT
+Status: **DONE — OVERLAP IS NOT THE FAILURE SOURCE; KEEP ALLOW_ALL; 2025 FAILURE IS A REGIME BREAK**
+
+Frozen:
+- CORE unchanged;
+- G1 unchanged:
+  `ONE_ALIGN AND (response 0.50–1.00 OR response >=2.50)`;
+- FAST entry/exit geometry unchanged;
+- no new alpha filter selected.
+
+Conflict policies tested statefully at FAST entry:
+1. ALLOW_ALL;
+2. BLOCK_ANY_CORE_OPEN;
+3. BLOCK_OPPOSITE_CORE_OPEN;
+4. BLOCK_SAME_SIDE_CORE_OPEN.
+
+Blocked FAST trades do not consume pause/day quota/occupancy. CORE is never blocked.
+
+### Overlap audit — ALLOW_ALL
+
+Historical G1 FAST:
+- total N1006;
+- entry with no CORE: N506, EV **-0.0096R**, Sum -4.87R;
+- entry with same-side CORE: N374, EV ~0.000R, Sum -0.08R;
+- entry with opposite-side CORE: N126, EV **+0.0545R**, Sum +6.87R.
+
+Lifetime overlap:
+- no CORE overlap during FAST lifetime: N181, EV **-0.336R**, Sum **-60.87R**, PF 0.531;
+- some CORE overlap during FAST lifetime: N825, EV **+0.0761R**, Sum **+62.79R**, PF 1.170.
+
+2026:
+- no CORE at entry: N49, EV **+0.276R**, Sum +13.53R;
+- same-side CORE at entry: N42, EV -0.0569R, Sum -2.39R;
+- opposite CORE at entry: N6, EV **+0.675R**, Sum +4.05R.
+Lifetime:
+- no overlap N16, EV +0.314R;
+- overlap N81, EV +0.125R.
+
+Interpretation:
+- opposite-side overlap is **not** demonstrably harmful;
+- historical overlap is actually associated with much better FAST outcomes;
+- CORE presence appears to act more like a regime/context proxy than a conflict source;
+- lifetime overlap itself cannot be used as a causal entry filter because later CORE entries are future information.
+
+### Stateful conflict-policy results
+
+Standalone FAST historical / 2026:
+- ALLOW_ALL: +1.92R / +15.18R;
+- BLOCK_ANY_CORE_OPEN: **-8.45R** / +0.97R;
+- BLOCK_OPPOSITE_CORE_OPEN: **-11.83R** / +10.56R;
+- BLOCK_SAME_SIDE_CORE_OPEN: **-6.68R** / ~0R.
+
+Every stricter policy makes historical FAST negative.
+
+Preferred portfolio risk 0.25x:
+
+ALLOW_ALL:
+- hist 43.7 trades/mo, Sum +137.10R, DD 20.96R, R/DD 6.540;
+- 2026 44.8/mo, Sum **+26.52R**, DD 7.95R, R/DD **3.337**.
+
+BLOCK_ANY:
+- hist 37.8/mo, Sum +134.50R, R/DD 6.749;
+- 2026 39.3/mo, Sum +22.97R, R/DD 2.927.
+
+BLOCK_OPPOSITE:
+- hist 42.6/mo, Sum +133.66R, R/DD 6.573;
+- 2026 44.3/mo, Sum +25.36R, R/DD 3.191.
+
+BLOCK_SAME:
+- hist 40.0/mo, Sum +134.95R, R/DD 6.287;
+- 2026 41.3/mo, Sum +22.72R, R/DD 2.720.
+
+All stricter policies FAIL the preregistered comparison against ALLOW_ALL G1@0.25.
+
+Decision:
+**do not add an entry-time CORE/FAST overlap veto.**
+Keep ALLOW_ALL for the research candidate.
+
+### 2025 failure audit
+
+G1 2025:
+- N215;
+- EV **-0.1323R**;
+- Sum **-28.44R**;
+- PF 0.751;
+- DD 43.98R.
+
+The failure is strongly time-clustered:
+- Jan–Jun 2025 combined: approximately **+12.46R**;
+- Jul–Dec 2025 combined: approximately **-40.90R**.
+
+Worst months:
+- Jul: -13.20R, EV -0.660R;
+- Nov: -7.32R, EV -0.431R;
+- Dec: -9.55R, EV -0.415R.
+
+It is **not** a BUY/SELL asymmetry:
+- BUY -13.43R;
+- SELL -15.01R.
+
+It is **not** isolated to one G1 response branch:
+- response 0.50–1.00: -17.30R;
+- response >=2.50: -11.14R.
+
+It is **not** solved by H1 vs H4 aligned side:
+- H1-align: -18.29R;
+- H4-align: -10.15R.
+
+Overlap explains part of concentration but is not a usable fix:
+- no CORE at FAST entry: -18.42R;
+- same-side CORE: -8.00R;
+- opposite CORE: -2.02R;
+- no CORE overlap over entire trade lifetime: only N40 but **-21.26R**;
+- some lifetime overlap: N175, -7.18R.
+However lifetime overlap uses future information and entry-time overlap vetoes fail statefully.
+
+The strongest causal diagnostic found in 2025 is Z location:
+- |Z| 1.00–1.25: **+1.19R**;
+- |Z| 1.25–1.50: **+3.11R**;
+- |Z| 1.50–1.75: **-10.64R**;
+- |Z| 1.75–2.05: **-22.10R**.
+
+Thus the 2025 failure is concentrated in the **upper half of the FAST Z range (1.50–2.05)**, especially H2 2025.
+
+This is diagnostic only.
+Do **not** automatically add `|Z|<1.50` from the 2025 audit because that would be post-hoc curve fitting.
+
+### LAB041B decision
+
+1. **Overlap conflict hypothesis rejected.**
+2. **ALLOW_ALL remains the preferred CORE+G1 portfolio behavior.**
+3. 2025 is a genuine FAST regime failure, not primarily an execution-overlap problem.
+4. The next clean hypothesis should be tested separately:
+   **LAB041C — G1_Z_LOCATION_REGIME_STABILITY**
+   - preregister `1.00–1.50` vs `1.50–2.05`;
+   - test 2021–2024, 2025, 2026 separately;
+   - then full CORE+FAST stateful replay;
+   - no further threshold search.
+
