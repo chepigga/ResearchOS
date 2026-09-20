@@ -2822,3 +2822,175 @@ Next LAB should be:
 - require 2026 portfolio SumR and R/DD not worse than CORE;
 - test FAST risk 0.25x / 0.40x, not 0.50x initially.
 
+
+## LAB041 — FAST_LANE_COMPOSITE_GATE_AND_PORTFOLIO_REPLAY
+Status: **DONE — G1 RESPONSE HYBRID PASSES PRE-REGISTERED PORTFOLIO GATE; PRODUCTION PROMOTION PENDING STABILITY/OVERLAP AUDIT**
+
+Preregistered stateful gates:
+- G1 RESPONSE:
+  `ONE_ALIGN AND (response 0.50–1.00 OR response >=2.50)`;
+- G2 RESPONSE+RECLAIM:
+  G1 OR `BOTH_ALIGN AND reclaim 0.35–0.50 ATR`;
+- G3 FULL COMPOSITE:
+  G2 OR `MIXED_NEUTRAL AND confirm <=15m`.
+
+Stateful semantics:
+- rejected FAST candidate does **not** consume pause, day quota, or H24 occupancy;
+- accepted FAST trade does;
+- therefore filtered sequence is recomputed causally, not filtered post-trade.
+- This materially expands reachable FAST events relative to the static LAB040 candidate rows.
+
+CORE baseline:
+Historical:
+- N1617 = 26.9/mo;
+- EV +0.0845R;
+- PF 1.173;
+- Sum +136.62R;
+- DD 18.81R;
+- R/DD 7.261.
+
+2026 Mar–Aug:
+- N172 = 28.7/mo;
+- EV +0.1321R;
+- PF 1.276;
+- Sum +22.72R;
+- DD 8.01R;
+- R/DD 2.836.
+
+### Standalone gated FAST
+
+G1 RESPONSE:
+Historical:
+- N1006 = **16.8/mo**;
+- EV **+0.0019R**;
+- PF 1.004;
+- Sum +1.92R;
+- DD 43.98R;
+- R/DD 0.044.
+Year SumR:
+- 2021 +14.35R;
+- 2022 +13.35R;
+- 2023 -3.80R;
+- 2024 +6.47R;
+- 2025 **-28.44R**.
+
+2026:
+- N97 = **16.2/mo**;
+- EV **+0.1565R**;
+- PF 1.366;
+- Sum +15.18R;
+- DD 7.26R;
+- R/DD 2.090.
+Monthly:
+- Mar +7.21R;
+- Apr +5.38R;
+- May -3.33R;
+- Jun +4.06R;
+- Jul +4.88R;
+- Aug -3.02R.
+
+Interpretation:
+G1 is **not a robust standalone alpha** historically. It is near-flat over 5 years and has a severe 2025 failure regime.
+Its value in LAB041 is as a small-risk diversifying/additive lane inside CORE.
+
+G2 RESPONSE+RECLAIM:
+- hist N1993 = 33.2/mo, EV +0.0042R, Sum +8.39R, DD 36.84R;
+- 2026 N174 = 29.0/mo, EV **-0.0426R**, Sum -7.42R, DD 25.09R.
+Rejected.
+
+G3 FULL COMPOSITE:
+- hist N2065 = 34.4/mo, EV +0.0047R, Sum +9.71R, DD 37.38R;
+- 2026 N187 = 31.2/mo, EV **-0.0289R**, Sum -5.41R, DD 21.45R.
+Rejected.
+
+### Combined portfolio
+
+#### G1 RESPONSE + FAST risk 0.25x
+Historical:
+- N2623 = **43.7 trades/mo**;
+- Sum +137.10R;
+- DD 20.96R;
+- R/DD 6.540;
+- max planned concurrent risk = 1.25 CORE units.
+
+2026:
+- N269 = **44.8 trades/mo**;
+- Sum **+26.52R**;
+- DD **7.95R**;
+- R/DD **3.337**;
+- max risk = 1.25 units.
+
+PASS preregistered portfolio gate.
+
+#### G1 RESPONSE + FAST risk 0.40x
+Historical:
+- N2623 = **43.7 trades/mo**;
+- Sum +137.38R;
+- DD 22.25R;
+- R/DD 6.174;
+- max planned concurrent risk = 1.40 CORE units.
+
+2026:
+- N269 = **44.8 trades/mo**;
+- Sum **+28.80R**;
+- DD **7.91R**;
+- R/DD **3.642**;
+- max risk = 1.40 units.
+
+PASS preregistered portfolio gate.
+
+Relative to CORE:
+- BTC frequency rises from ~27–29/mo to **~44–45/mo** (+56–62%);
+- 2026 SumR improves +22.72R -> +26.52R at 0.25x or +28.80R at 0.40x;
+- 2026 DD slightly improves 8.01R -> 7.95/7.91R;
+- 2026 R/DD improves 2.836 -> 3.337 / 3.642;
+- historical total R changes only marginally because G1 FAST is nearly flat over the full 5-year history;
+- historical R/DD deteriorates 7.261 -> 6.540 / 6.174.
+
+Approx annual weighted SumR for G1 0.40x:
+- 2021 ~+48.54R;
+- 2022 ~+30.03R;
+- 2023 ~+10.97R;
+- 2024 ~+34.87R;
+- 2025 ~+12.97R.
+All years remain positive because CORE absorbs the weak FAST regimes.
+
+Approx 2026 monthly weighted SumR at 0.40x:
+- Mar ~+15.37R;
+- Apr ~+0.67R (FAST rescues negative CORE April);
+- May ~+3.24R;
+- Jun ~+5.21R;
+- Jul ~+5.57R;
+- Aug ~-1.25R.
+5/6 months positive.
+
+#### G2/G3 portfolios
+Both 0.25x and 0.40x FAIL:
+- 2026 SumR falls below CORE;
+- 2026 R/DD falls below CORE.
+Do not promote.
+
+### LAB041 decision
+
+Research winner:
+**G1 RESPONSE hybrid only.**
+
+Preferred risk for next validation:
+- **0.25x FAST** = conservative candidate;
+- 0.40x is a higher-return research variant but causes more historical DD/RDD degradation.
+
+Do NOT yet embed G1 into production v200.
+Required next:
+1. overlap/conflict audit:
+   - CORE + FAST simultaneous positions;
+   - same-side vs opposite-side;
+   - unintended hedge and aggregate symbol exposure;
+2. G1 stability audit around 2025 failure regime;
+3. ETH/SOL transfer;
+4. fresh post-2026-09-20 forward.
+
+If conflict audit is clean, forward-demo candidate should begin with:
+- CORE risk 0.25%;
+- FAST G1 risk = **0.25x CORE = 0.0625% per FAST trade**;
+- hard existing portfolio notional/margin caps remain active.
+
