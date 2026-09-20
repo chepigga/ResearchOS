@@ -2302,3 +2302,102 @@ Core principle:
 
 > Do not solve volatility by simply blocking high ATR.  
 > First identify whether the market is merely volatile or is **expanding and continuing directionally against the CrowdFade thesis**.
+
+## LAB035B — SIGN_FLIP_STABILITY_AND_PAIRED_EVENT_AUDIT
+Status: **DONE — PASS RESEARCH PROMOTION GATE / NOT YET PRODUCTION**
+
+Frozen geometry:
+`Z2.05 -> M15 confirm .25 ATR -> retrace .60 ATR -> TTL20 -> SL4.5 -> TP10 -> H24 -> flat risk`
+
+Headline:
+- historical PRESERVE: N1642, EV +0.0745R, PF 1.151, Sum +122.40R, DD 19.83R, R/DD 6.174;
+- historical CANCEL_SIGN_FLIP: N1617, EV +0.0845R, PF 1.173, Sum +136.62R, DD 18.81R, R/DD 7.261;
+- forward PRESERVE: N176, EV +0.0972R, PF 1.198, Sum +17.12R, DD 8.34R, R/DD 2.051;
+- forward CANCEL_SIGN_FLIP: N172, EV +0.1321R, PF 1.276, Sum +22.72R, DD 8.01R, R/DD 2.836.
+
+Paired decomposition:
+- historical baseline-only removed: 68 trades, SumR -10.91R;
+  - 41 are direct sign-flip fills, SumR **-15.53R**;
+- historical candidate-only replacements: 43 trades, SumR **+3.31R**;
+- 1574 common trades are exactly identical entry and PnL;
+- total historical delta reconciles exactly to **+14.216R**.
+
+Forward:
+- baseline-only removed: 9 trades, SumR +2.70R;
+  - 5 direct sign-flip fills, SumR **-1.835R**;
+- candidate-only replacements: 5 trades, SumR **+8.306R**;
+- 167 common trades identical;
+- total forward delta: **+5.609R**.
+
+Direct sign-flip event audit on PRESERVE sequence:
+Historical:
+- 88 confirmed sign-flip events;
+- 41 filled (46.6%);
+- filled EV **-0.379R**;
+- SumR **-15.53R**;
+- PF **0.427**;
+- WR 24.4%;
+- max consecutive losses 8.
+
+Forward:
+- 8 confirmed sign-flip events;
+- 5 filled (62.5%);
+- EV **-0.367R**;
+- SumR **-1.835R**;
+- PF 0.546;
+- WR 20%.
+
+Sign-flip strength historical:
+- abs(current Z) <0.5: N15 fills, EV **-0.727R**;
+- 0.5–1.0: N8, EV **-0.574R**;
+- 1.0–2.05: N10, EV +0.117R;
+- >=2.05: N8, EV -0.150R.
+Do not derive a sub-threshold filter from these small cells yet.
+
+Historical delta by year:
+- 2021 +2.969R
+- 2022 **-3.795R**
+- 2023 +8.908R
+- 2024 +4.328R
+- 2025 +1.806R
+
+Leave-one-year-out remains positive for every omitted year:
+- excl 2021 +11.247R
+- excl 2022 +18.011R
+- excl 2023 +5.308R
+- excl 2024 +9.888R
+- excl 2025 +12.410R
+
+2026 forward monthly delta:
+- Mar +1.735R
+- Apr 0
+- May +1.200R
+- Jun 0
+- Jul +1.644R
+- Aug +1.030R
+
+Concentration:
+- removing top 3 positive historical weeks still leaves **+5.433R**;
+- top 3 weeks = 28.2% of total positive contribution.
+
+4-week moving-block bootstrap:
+- historical observed +14.216R, median +14.905R, 95% resampled interval [-2.717R, +32.647R], P(delta>0)=**94.9%**;
+- forward observed +5.609R, median +6.314R, interval [+2.674R, +9.916R], P(delta>0)=**99.9%**.
+
+Interpretation:
+1. The benefit is **not** caused only by sequence reshuffling. Direct filled sign-flip setups are structurally weak in both historical and forward samples.
+2. Sequence replacement adds additional value: canceling stale events frees future reachability.
+3. Effect is not concentrated entirely in 2023; every leave-one-year-out historical total remains positive.
+4. 2022 is a genuine negative transfer year and prevents treating the filter as universal truth.
+5. Historical bootstrap CI still crosses zero, so this is a strong candidate, not pristine proof.
+6. Forward sample is reused shadow, not fresh OOS.
+
+Decision:
+**CANCEL_SIGN_FLIP passes the LAB035B research promotion gate.**
+
+Do not replace production control yet.
+Next:
+- ETH/SOL transfer replication;
+- then fresh post-2026-09-20 forward with v200 control vs candidate;
+- if transfer does not fail catastrophically, create v200b candidate with exactly one strategy change: cancel event before pending order when current Z has opposite sign to original signal Z.
+
