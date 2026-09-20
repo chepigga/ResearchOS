@@ -2564,3 +2564,119 @@ Next LAB:
 - common portfolio exposure cap;
 - test whether the combined equity curve adds frequency without contaminating v200 core.
 
+
+## LAB039 — V200_CORE_PLUS_V191_FAST_LANE
+Status: **DONE — NAIVE HYBRID FAILS; FAST ENTRY POPULATION NEEDS DISCRIMINATION**
+
+Architecture:
+- CORE unchanged:
+  `|Z|>=2.05 -> M15 confirm .25 ATR -> retrace .60 -> TTL20 -> SL4.5 -> TP10 -> H24 -> CANCEL_SIGN_FLIP`.
+- FAST incremental lane only:
+  `1.0<=|Z|<2.05`;
+  M5 cadence;
+  M15 ATR;
+  confirm .30 ATR;
+  confirmation window <=3h;
+  market after confirmation;
+  ATR pause 1.0;
+  max 3/day.
+- FAST entry is tested with:
+  A) canonical v191-style management;
+  B) v200 exit geometry.
+- combined portfolio uses CORE 1.0 risk unit and FAST 0.50x / 0.40x.
+- independent lanes may overlap; max simultaneous risk is audited.
+
+Canonical v191 source basis:
+- Z=1.00;
+- confirm=.30 ATR;
+- confirm max=36 M5;
+- market after confirm;
+- SL=1.50 ATR;
+- H6;
+- ExitZ=.75;
+- BE .50 -> lock .15;
+- trail .50 ATR, arm 2.50;
+- ATR pause=1.0;
+- max 3/day.
+
+### Standalone lanes
+
+Historical 2021–2025:
+- CORE: N1617 = 26.9/mo, EV **+0.0845R**, PF 1.173, Sum +136.62R, DD 18.81R, R/DD 7.261.
+- FAST mid-Z + v191 exits: N5396 = **89.9/mo**, EV **-0.0416R**, PF 0.877, Sum **-224.37R**, DD 250.67R.
+- FAST mid-Z + v200 exits: N2492 = **41.5/mo**, EV **+0.0127R**, PF 1.026, Sum +31.68R, DD **44.27R**, R/DD 0.716.
+- v191-like full reference: N5405 = 90.1/mo, EV -0.0577R, PF 0.831, Sum -311.98R.
+
+2026 Mar–Aug reused forward-shadow:
+- CORE: N172 = 28.7/mo, EV **+0.1321R**, PF 1.276, Sum +22.72R, DD 8.01R, R/DD 2.836.
+- FAST mid-Z + v191 exits: N552 = **92.0/mo**, EV **-0.0419R**, PF 0.862, Sum -23.14R.
+- FAST mid-Z + v200 exits: N266 = **44.3/mo**, EV **-0.1028R**, PF 0.810, Sum -27.35R.
+- v191-like full reference: N552 = 92.0/mo, EV -0.0545R, PF 0.817.
+
+### Combined portfolio
+
+CORE + FAST/v191 exits:
+- 0.50x FAST:
+  - hist 116.9 trades/mo, Sum +24.43R, DD 50.61R, R/DD 0.483;
+  - 2026 120.7/mo, Sum +11.15R, DD 14.90R, R/DD 0.748.
+- 0.40x FAST:
+  - hist 116.9/mo, Sum +46.87R, DD 42.52R, R/DD 1.102;
+  - 2026 120.7/mo, Sum +13.47R, DD 13.18R, R/DD 1.022.
+
+CORE + FAST entry / v200 exits:
+- 0.50x FAST:
+  - hist **68.5/mo**, Sum **+152.46R**, DD 30.52R, R/DD 4.996;
+  - 2026 **73.0/mo**, Sum **+9.05R**, DD 13.42R, R/DD 0.674.
+- 0.40x FAST:
+  - hist 68.5/mo, Sum +149.29R, DD 28.00R, R/DD 5.332;
+  - 2026 73.0/mo, Sum +11.78R, DD 12.14R, R/DD 0.971.
+
+Max simultaneous planned stop-risk:
+- CORE + FAST0.50 = 1.50 core-risk units;
+- CORE + FAST0.40 = 1.40 core-risk units.
+
+### Interpretation
+
+1. Frequency can be raised dramatically:
+   - CORE 26.9–28.7 BTC trades/month;
+   - naive FAST can push total to ~69–121/month.
+
+2. But **raw lower-Z FAST population has no robust alpha**.
+   - v191 exit shell is clearly negative both historical and 2026.
+   - v200 exit shell rescues historical FAST to barely positive EV, but 2026 becomes strongly negative.
+
+3. The value of v200 is therefore not only its exit shell.
+   The `|Z|>=2.05` selection itself is carrying substantial edge.
+
+4. Naively adding FAST at reduced risk still damages the forward equity curve:
+   - CORE alone 2026 Sum +22.72R / DD 8.01R / RDD 2.836;
+   - best naive hybrid reported here is materially worse in forward risk efficiency.
+
+5. Do **not** implement naive FAST lane in production.
+
+6. v191-like full replay is negative in this reconstruction. This does not prove the live v191 EA is intrinsically negative because:
+   - live v191 confirmation is timer/quote based;
+   - replay uses raw close crossing as an approximation;
+   - broker execution / BE / freeze-level / slippage differ;
+   - score-based lot weighting is omitted.
+   It is valid here as a frequency/architecture reference, not as exact v191 performance replication.
+
+### Decision
+
+Keep CORE unchanged.
+
+FAST lane is **not rejected as a concept**, but raw `1.0<=|Z|<2.05` is rejected.
+
+Next research:
+**LAB040 — FAST_LANE_DISCRIMINATOR**
+- keep the large fast candidate pool;
+- identify causal subsets using:
+  - exact Z band;
+  - confirmation speed;
+  - H1/H4 state;
+  - crowd excursion before confirmation;
+  - ATR expansion;
+  - price response / reclaim quality;
+- require the subset to improve both historical and 2026 EV/PF;
+- then rerun full portfolio sequence at 0.40x–0.50x risk.
+
