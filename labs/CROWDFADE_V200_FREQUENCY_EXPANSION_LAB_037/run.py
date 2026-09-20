@@ -3,9 +3,11 @@ import json, math
 import numpy as np
 import pandas as pd
 from numba import njit
-import sys
-sys.path.append(str(Path(__file__).resolve().parents[1]/'CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035'))
-import run as core
+import importlib.util
+_core_path=Path(__file__).resolve().parents[1]/'CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035'/'run.py'
+_spec=importlib.util.spec_from_file_location('crowdfade_core_033_035',_core_path)
+core=importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(core)
 
 ROOT=Path(__file__).resolve().parent
 DATA=ROOT/'data'
