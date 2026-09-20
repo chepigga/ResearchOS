@@ -14,6 +14,15 @@ TTL=1200
 ZFLIP_BASE=0
 ZFLIP_CAND=1
 ATRMODE=0
+ZTH=2.05
+CONF=0.25
+CONF_TTL=3600
+SL=4.5
+TP=10.0
+HOLD=86400
+COST_BPS=0.50
+MAXDAY=3
+ANTI_REPEAT_ATR=1.0
 BOOT_REPS=20000
 BLOCK_WEEKS=4
 SEED=35035
@@ -34,21 +43,21 @@ def audit_preserve(ts,O,H,L,C,dt,QH,QL,QC,Z,A,H1,H4,retrace,pttl):
         d=t//86400
         if d!=day:
             day=d; dc=0
-        if dc>=core.MAXDAY:
+        if dc>=MAXDAY:
             k+=1; continue
         z=Z[k]
-        side=-1 if z>=core.ZTH else (1 if z<=-core.ZTH else 0)
+        side=-1 if z>=ZTH else (1 if z<=-ZTH else 0)
         if side==0:
             k+=1; continue
         sig=QC[k]; siga=A[k]
-        if has and abs(sig-last)<core.ANTI_REPEAT_ATR*la:
+        if has and abs(sig-last)<ANTI_REPEAT_ATR*la:
             k+=1; continue
 
-        lev=sig+side*core.CONF*siga
+        lev=sig+side*CONF*siga
         ci=-1; maxcrowd=0.
         crowd=-side
         j=k+1
-        while j<len(dt) and dt[j]<=t+core.CONF_TTL:
+        while j<len(dt) and dt[j]<=t+CONF_TTL:
             exc=((QH[j]-sig) if crowd>0 else (sig-QL[j]))/siga
             if exc>maxcrowd: maxcrowd=exc
             if (side>0 and QC[j]>=lev) or (side<0 and QC[j]<=lev):
@@ -74,19 +83,19 @@ def audit_preserve(ts,O,H,L,C,dt,QH,QL,QC,Z,A,H1,H4,retrace,pttl):
             k=ci+1; continue
 
         FILLED[n]=1; ET[n]=ts[ei]
-        risk=core.SL*siga
+        risk=SL*siga
         sl=entry-side*risk
-        tp=entry+side*core.TP*siga
-        xe=min(len(ts)-1,np.searchsorted(ts,ts[ei]+core.HOLD,'left'))
+        tp=entry+side*TP*siga
+        xe=min(len(ts)-1,np.searchsorted(ts,ts[ei]+HOLD,'left'))
         xp=C[xe]; ex=xe
         for q in range(ei+1,xe+1):
-            sh=(side>0 and L[q]<=sl) or (side<0 and H[q]>=tp)
-            th=(side>0 and H[q]>=tp) or (side<0 and L[q]<=sl)
+            sh=(side>0 and L[q]<=sl) or (side<0 and H[q]>=sl)
+            th=(side>0 and H[q]>=tp) or (side<0 and L[q]<=tp)
             if sh:
                 xp=sl; ex=q; break
             if th:
                 xp=tp; ex=q; break
-        rr=side*(xp-entry)/risk-(core.COST_BPS/10000.)*entry/risk
+        rr=side*(xp-entry)/risk-(COST_BPS/10000.)*entry/risk
         R[n]=rr; n+=1
 
         dc+=1; last=entry; la=siga; has=True; nextts=ts[ex]+1
@@ -203,10 +212,10 @@ def flip_breakdown(e):
     f=e[e.sign_flip].copy()
     ff=f[f.filled].copy()
     f['abs_confirm_z']=f.confirm_z.abs()
-    f['flip_strength']=pd.cut(f.abs_confirm_z,[-np.inf,.5,1.0,core.ZTH,np.inf],
+    f['flip_strength']=pd.cut(f.abs_confirm_z,[-np.inf,.5,1.0,ZTH,np.inf],
                               labels=['<0.5','0.5-1.0','1.0-2.05','>=2.05'])
     ff['abs_confirm_z']=ff.confirm_z.abs()
-    ff['flip_strength']=pd.cut(ff.abs_confirm_z,[-np.inf,.5,1.0,core.ZTH,np.inf],
+    ff['flip_strength']=pd.cut(ff.abs_confirm_z,[-np.inf,.5,1.0,ZTH,np.inf],
                                labels=['<0.5','0.5-1.0','1.0-2.05','>=2.05'])
     ff['direction']=np.where(ff.side>0,'BUY','SELL')
     return {
@@ -273,8 +282,8 @@ def main():
     result={
       'lab':'LAB035B_SIGN_FLIP_STABILITY_AND_PAIRED_EVENT_AUDIT',
       'candidate':'CANCEL_SIGN_FLIP',
-      'frozen':{'retrace_ATR':RETRACE,'TTL_min':TTL//60,'Z':core.ZTH,'confirm_ATR':core.CONF,
-                'SL_ATR':core.SL,'TP_ATR':core.TP,'hold_h':core.HOLD/3600,'cost_bps':core.COST_BPS},
+      'frozen':{'retrace_ATR':RETRACE,'TTL_min':TTL//60,'Z':ZTH,'confirm_ATR':CONF,
+                'SL_ATR':SL,'TP_ATR':TP,'hold_h':HOLD/3600,'cost_bps':COST_BPS},
       'headline':{
         'historical_baseline':hb,'historical_candidate':hc,
         'forward_baseline':fb,'forward_candidate':fc
