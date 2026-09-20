@@ -3134,3 +3134,183 @@ Do **not** automatically add `|Z|<1.50` from the 2025 audit because that would b
    - then full CORE+FAST stateful replay;
    - no further threshold search.
 
+
+## LAB041C — FAST_ENTRY_LATENESS_AND_FIRST_RESPONSE_AUDIT
+Status: **DONE — ENTRY LATENESS CONFIRMED; 0.10 ATR EARLY RESPONSE IS THE NEXT STABILITY CANDIDATE**
+
+Frozen baseline:
+- G1 ALLOW_ALL from LAB041/041B;
+- FAST `1.0<=|Z|<2.05`;
+- ONE_ALIGN;
+- response `0.50–1.00 OR >=2.50`;
+- market entry at first raw close >= +0.30 signal ATR;
+- SL4.5 / TP10 / H24.
+
+First reversal definition:
+- primary = first raw close >= +0.10 signal ATR in trade direction;
+- first H/L touch +0.10 ATR also recorded.
+
+### Lateness measurement
+
+Historical 2021–2025:
+- first +0.10 ATR touch:
+  - median **1m**;
+  - mean 5.21m.
+- first +0.10 ATR close:
+  - median **1m**;
+  - mean 7.33m.
+- current +0.30 confirmation:
+  - median **5m**;
+  - mean **17.07m**;
+  - p90 53.5m.
+- actual market-entry displacement:
+  - median **0.387 ATR**;
+  - mean **0.456 ATR**;
+  - p90 0.661 ATR.
+- pre-entry MFE:
+  - median **0.461 ATR**;
+  - mean 0.550 ATR.
+- pre-entry MAE:
+  - median 0.088 ATR;
+  - mean 0.283 ATR.
+
+2026 second-data shadow:
+- first +0.10 close median **0.60m**;
+- current +0.30 confirmation median **4.75m**;
+- mean confirmation 10.87m;
+- market-entry displacement:
+  - median **0.320 ATR**;
+  - mean **0.342 ATR**;
+- pre-entry MFE median 0.327 ATR;
+- pre-entry MAE median 0.096 ATR.
+
+Interpretation:
+the reversal is usually visible materially before the current 0.30-ATR market entry.
+Historical M1 path exaggerates close-crossing overshoot relative to 2026 second data, so the live lateness penalty is smaller than the historical M1 penalty but still measurable.
+
+### Paired same-signal oracle diagnostic
+Important: uses baseline G1 membership known only at later 0.30 confirmation, therefore diagnostic / non-tradable as-is.
+
+Historical same 1006 trades:
+- entry at 0.30: +1.92R;
+- hypothetical 0.25: +12.24R;
+- 0.20: +21.97R;
+- 0.15: +29.75R;
+- **0.10: +37.68R**.
+Paired improvement 0.10 vs current = **+35.76R**.
+
+2026 same 97 trades:
+- 0.30: +15.18R;
+- 0.25: +16.01R;
+- 0.20: +17.65R;
+- 0.15: +18.13R;
+- **0.10: +18.80R**.
+Paired improvement = **+3.61R**.
+
+This directly supports the price-lateness hypothesis on the same accepted signal population.
+
+### Causal stateful early-response replay
+Here G1 is evaluated using only information available at the earlier response threshold. Population and later sequence are allowed to change.
+
+Historical:
+- **0.10 ATR:** N1011, EV **+0.0625R**, PF 1.133, Sum **+63.14R**, DD **25.83R**, R/DD **2.444**;
+- 0.15: +31.92R, EV +0.0316;
+- 0.20: +43.31R, EV +0.0430;
+- 0.25: +23.31R, EV +0.0230;
+- current 0.30: +1.92R, EV +0.0019, DD 43.98R.
+
+2026:
+- **0.10 ATR:** N105, EV **+0.1071R**, PF 1.241, Sum **+11.25R**, DD 8.61R;
+- 0.15: +7.53R;
+- 0.20: -0.52R;
+- 0.25: +6.30R;
+- current 0.30: **+15.18R**, EV +0.1565, DD 7.26R.
+
+Interpretation:
+- 0.10 is dramatically more robust historically than current 0.30;
+- 0.10 remains positive in 2026 but does **not** dominate the current 0.30 selection in 2026;
+- therefore current confirmation has real selection value even though it enters later.
+
+Core conclusion:
+> **Entry is late, but confirmation is not useless.**
+> The research problem is to preserve the information gained between 0.10 and 0.30 while avoiding paying the entire price move at entry.
+
+### Retrace after 0.30 confirmation
+Stateful, TTL20m.
+
+Historical:
+- retrace 0.10: EV -0.019R, Sum -19.12R, noFill 88;
+- retrace 0.20: EV +0.0236R, Sum +22.82R, noFill 191;
+- retrace 0.30: EV +0.0064R, Sum +5.97R, noFill 320.
+
+2026:
+- retrace 0.10: +8.65R;
+- retrace 0.20: +4.89R;
+- retrace 0.30: +3.39R;
+versus current market +15.18R.
+
+Decision:
+**do not add passive retrace after FAST 0.30 confirmation.**
+It misses too many winners and does not solve the problem.
+
+### Is “slower confirmation = worse” universally true?
+No.
+
+Historical confirmation latency:
+- <=5m EV +0.0127R;
+- 5–15m EV **+0.0560R**;
+- 15–30m EV -0.0413R;
+- 30–60m ~flat;
+- 60–120m -0.0986R;
+- 120–180m -0.430R.
+
+So very stale confirmations are clearly weak historically, but fastest is not automatically best.
+
+2026:
+- <=5m EV ~flat;
+- 5–15m +0.257R;
+- 15–30m **+0.706R** (N14);
+- 30–60m ~flat.
+Thus a simple “confirmation must be fast” veto is not transferable.
+
+### 2025 failure and lateness
+2025 H1:
+- +12.46R;
+- confirm mean 17.84m, median 6m.
+
+2025 H2:
+- **-40.90R**;
+- confirm mean **13.55m**, median **4m**.
+
+H2 failure actually confirmed *faster* than H1.
+Therefore the 2025 regime failure is **not explained by slower clock-time confirmation**.
+
+Entry displacement H1/H2 is almost identical:
+- H1 mean 0.449 ATR;
+- H2 mean 0.448 ATR.
+
+So 2025 failure is not a simple overshoot/latency problem either.
+
+### LAB041C decision
+
+Supported:
+1. User hypothesis is materially correct: the FAST engine often sees the first reversal well before it enters at 0.30 ATR.
+2. On the exact same accepted signals, earlier entry improves PnL in both historical and 2026 samples.
+3. A causal 0.10 response entry is positive in both samples and greatly improves historical robustness.
+4. But 0.30 confirmation has selection value and remains stronger in 2026.
+5. Waiting for a retrace *after* 0.30 is rejected.
+6. 2025 failure is a separate regime problem, not merely entry latency.
+
+Next clean LAB:
+**LAB041D — EARLY_010_PROBE_PLUS_030_CONFIRM**
+- at +0.10 ATR, take a small probe using only causal early-G1 information;
+- at +0.30 ATR, validate / add / retain based on full G1 state;
+- cancel/exit probe on sign-flip or confirmation timeout;
+- compare probe risk 0.20x / 0.25x / 0.40x of FAST unit;
+- preserve total portfolio cap;
+- test whether this captures the price advantage of 0.10 while retaining 0.30 selection quality.
+
+Alternative simpler validation before staged entry:
+**LAB041D-A — CAUSAL_010_STABILITY_BY_YEAR_AND_PORTFOLIO**
+to verify 0.10 by year, including 2025 H2, before adding staged complexity.
+
