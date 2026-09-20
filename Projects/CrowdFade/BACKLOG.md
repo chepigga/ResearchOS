@@ -1743,24 +1743,44 @@ Already implemented:
 
 ## v191 P0 — CONFIRM_SIDE_CONSISTENCY
 
-Status: **PLANNED — code fix after exact behavior definition**
+Status: **IMPLEMENTED in v191d — COMPILE / FORWARD CHECK PENDING**
 
-Before sending a confirmed order:
-- re-evaluate current crowd state;
-- if the intended position would already satisfy the existing `SIGNAL_EXIT` condition, cancel the pending confirmation instead of opening and immediately closing;
-- log:
-  - original z / side;
-  - current z;
-  - cancel reason;
-  - confirmation age.
+Implementation:
+- source: `CrowdFadeMulti_v191d_Confirm_CONSISTENCY_VOL_DIAG.mq5`;
+- preserve v191c signal/risk shell unchanged;
+- store original confirmation Z snapshot (`confZ`);
+- when price confirmation fires, re-check current crowd state before order send;
+- cancel only if the intended trade would already satisfy the existing `SIGNAL_EXIT` rule:
+  - BUY cancelled when current `z >= +InpExitZ`;
+  - SELL cancelled when current `z <= -InpExitZ`;
+- if `InpExitZ<=0`, this consistency gate is disabled together with signal-exit semantics;
+- new execution-log events:
+  - `CONFIRM_OK`;
+  - `CONFIRM_CANCEL_Z`;
+- diagnostics:
+  - original Z;
+  - current Z;
+  - confirmation age;
+  - signal ATR;
+  - current ATR;
+  - `ATRExpansion = currentATR / signalATR`.
 
-Constraint:
-- do not change Z threshold;
-- do not change score model;
-- do not change stop geometry in the same patch.
+Explicitly unchanged:
+- Z threshold = 1.00;
+- confirm = 0.30 ATR;
+- M5 confirmation architecture;
+- SL = 1.50 ATR;
+- ExitZ = 0.75;
+- score;
+- trailing / BE logic;
+- risk sizing;
+- notional and margin caps.
 
-Goal:
+Purpose:
 remove logically self-contradictory entries without retuning alpha.
+
+v191d SHA-256:
+`163a6c3e5fa0278f22b407ed22fd3394f804f0eb0815c8d71aef29ba39e44686`
 
 ## v191 P0 — COST_AWARE_BE
 
