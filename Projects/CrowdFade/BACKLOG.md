@@ -3314,3 +3314,184 @@ Alternative simpler validation before staged entry:
 **LAB041D-A — CAUSAL_010_STABILITY_BY_YEAR_AND_PORTFOLIO**
 to verify 0.10 by year, including 2025 H2, before adding staged complexity.
 
+
+## LAB041D — EARLY_010_PROBE_PLUS_030_CONFIRM
+Status: **DONE — STAGED 20/80 ENTRY STRONGLY OUTPERFORMS CURRENT FAST ENTRY; PROMOTE TO PORTFOLIO VALIDATION**
+
+Frozen staged logic:
+- lower-Z G1 population unchanged;
+- at first causal +0.10 ATR close:
+  - if early G1 is valid, enter **20% FAST risk probe**;
+- continue monitoring to +0.30 ATR;
+- if crowd sign flips before +0.30:
+  - close probe immediately at market;
+- if +0.30 is not reached within 3h:
+  - close probe at timeout;
+- if +0.30 arrives and full G1 remains valid:
+  - add remaining **80% FAST risk**;
+- probe and confirm tranches each use SL4.5 / TP10 / H24 from their own entry;
+- total staged trade R = 0.20*probe_R + 0.80*confirm_R.
+
+### Full sample
+
+Historical 2021–2025
+
+Current +0.30 market:
+- N1006;
+- EV +0.0019R;
+- PF 1.004;
+- Sum +1.92R;
+- DD 43.98R;
+- R/DD 0.044.
+
+Staged 20/80:
+- N1210;
+- EV **+0.0333R**;
+- PF **1.082**;
+- Sum **+40.27R**;
+- DD **21.39R**;
+- R/DD **1.882**.
+
+Delta:
+- +38.35R total;
+- DD reduced by ~51%;
+- R/DD improves from 0.044 -> 1.882.
+
+2026 Mar–Aug
+
+Current +0.30:
+- N97;
+- EV +0.1565R;
+- PF 1.366;
+- Sum +15.18R;
+- DD 7.26R;
+- R/DD 2.090.
+
+Staged 20/80:
+- N127;
+- EV +0.1264R;
+- PF 1.320;
+- Sum **+16.06R**;
+- DD **5.58R**;
+- R/DD **2.879**.
+
+Interpretation:
+- current 0.30 has higher per-event EV;
+- staged produces more causal opportunities and better equity smoothness;
+- staged improves absolute 2026 SumR slightly and improves DD/RDD materially.
+
+### 2025 H1 / H2
+
+Current:
+- H1: +12.46R, EV +0.1187R, DD 8.82R;
+- H2: **-40.90R**, EV -0.3718R, DD 43.98R.
+
+Staged:
+- H1: +4.49R, EV +0.0368R, DD 10.64R;
+- H2: **-14.49R**, EV -0.1123R, DD 20.24R.
+
+Thus staged logic:
+- gives up ~7.97R in good 2025 H1;
+- recovers ~26.41R in bad 2025 H2;
+- cuts H2 drawdown by more than half.
+
+Important:
+**2025 H2 remains negative.**
+Staging mitigates the regime failure; it does not solve the regime itself.
+
+### Staged execution
+
+Historical:
+- staged events N1210;
+- confirmed to +0.30: 1005;
+- confirmation rate **83.1%**;
+- timeout: 99;
+- sign-flip exits: 85;
+- probe SL before confirmation: 21;
+- weighted probe component contribution: **+4.67R**;
+- weighted confirmed 80% component: **+35.59R**.
+
+2026:
+- N127;
+- confirmed N110;
+- confirmation rate **86.6%**;
+- timeout 9;
+- sign-flip 8;
+- weighted probe component: **+3.11R**;
+- weighted confirm component: **+12.95R**.
+
+This is important:
+the improvement is **not** coming only from cheap probe exits.
+Most PnL still comes from the confirmed 80% tranche, while the probe improves entry economics and reduces failure damage.
+
+### Historical by year — staged
+
+- 2021: **+29.25R**, EV +0.124R;
+- 2022: **+19.58R**, EV +0.081R;
+- 2023: +0.41R;
+- 2024: +1.02R;
+- 2025: -9.99R.
+
+Compared with current:
+- 2021 +14.35R;
+- 2022 +13.35R;
+- 2023 -3.80R;
+- 2024 +6.47R;
+- 2025 -28.44R.
+
+Staging materially improves 2021/2022/2023/2025 but weakens 2024.
+
+### 2026 monthly stability — staged
+
+Staged:
+- Mar +3.38R;
+- Apr +1.06R;
+- May **+3.08R**;
+- Jun +0.27R;
+- Jul +5.24R;
+- Aug **+3.03R**.
+
+**6/6 months positive.**
+
+Current +0.30:
+- Mar +7.21R;
+- Apr +5.38R;
+- May -3.33R;
+- Jun +4.06R;
+- Jul +4.88R;
+- Aug -3.02R.
+
+Thus staged sacrifices some strong-month upside but materially improves cross-month consistency.
+
+### LAB041D conclusion
+
+The staged architecture resolves the core conflict found in LAB041C:
+
+> use +0.10 ATR to improve entry price,
+> but keep +0.30 ATR as the main information/selection confirmation.
+
+This is superior to:
+- full early entry at +0.10;
+- full late entry at +0.30;
+- waiting for retrace after +0.30.
+
+Research promotion:
+**PROMOTE staged 20/80 FAST entry to full CORE+FAST portfolio validation.**
+
+Do NOT implement production yet.
+
+Next required LAB:
+**LAB041E — CORE_PLUS_STAGED_FAST_FULL_PORTFOLIO**
+- CORE unchanged;
+- G1 FAST uses staged 20/80 entry;
+- FAST total risk remains 0.25x CORE initially;
+- ALLOW_ALL overlap policy;
+- full causal portfolio equity/DD sequence;
+- compare against:
+  1. CORE only;
+  2. CORE + current G1@0.25x;
+  3. CORE + staged G1@0.25x;
+- require historical R/DD not materially worse than CORE;
+- require 2026 SumR/RDD >= current G1 hybrid;
+- audit max concurrent planned risk / same-symbol exposure.
+
