@@ -1,6 +1,6 @@
 # CrowdFade Research Backlog
 
-_Last updated: 2026-09-18_
+_Last updated: 2026-09-20_
 
 ## Scope
 
@@ -1528,3 +1528,509 @@ Changes:
 - broker `SYMBOL_VOLUME_MAX` remains authoritative; no child-order splitting.
 Local SHA-256:
 `70e191d91e6d2d9b4bb962c913fd9607ade0cec4c5a5016e9a569008fd8031d1`.
+
+
+---
+
+# LIVE AUDIT / ROADMAP — 2026-09-20
+
+Source set:
+- FTMO and GetLeveraged MT5 history reports through 2026-09-20;
+- live journal `joirnal_20092026.rtf`;
+- current v1.91 risk-parity lineage through v191c;
+- current v200 flat-risk candidate;
+- BTC/ETH/SOL price-path review across the report window;
+- broker contract screenshots for FTMO / GetLeveraged / IC Markets.
+
+This section records **observed weaknesses and planned research/code changes**.  
+Do not silently promote hypotheses below into production logic without the stated LAB / forward validation.
+
+## Broker role decision
+
+### IC Markets — primary production/development candidate
+
+Observed account specs supplied by user:
+
+- commission: 0 on the tested crypto CFD account;
+- contract size:
+  - BTC = 1
+  - ETH = 1
+  - SOL = 1
+- margin rate:
+  - BTC = 0.20%
+  - ETH = 0.20%
+  - SOL = 0.50%
+- max order:
+  - BTC = 10
+  - ETH = 10
+  - SOL = 100
+- SOL volume limit = 1000;
+- crypto trading is near-24/7 but has short broker session pauses.
+
+Reason to prefer:
+- no commission;
+- contract=1 across BTC/ETH/SOL;
+- margin does not materially distort the EA risk target;
+- zero short swap shown for BTC/ETH/SOL in supplied specs.
+
+Open risk:
+- real live spread/limit-fill quality must be measured from broker feed;
+- SOL target exposure can exceed one-ticket max=100 and may need controlled child-order logic if research requires full notional parity.
+
+### GetLeveraged — secondary / prop-forward venue
+
+Observed account specs supplied by user:
+
+- commission = 0;
+- contract size BTC/ETH/SOL = 1;
+- full 24/7 sessions;
+- margin:
+  - BTC / ETH = 6.67%
+  - SOL = 33.33%;
+- very high max order limits.
+
+Main weakness:
+- SOL margin is heavy and can become the binding position-size rule before stop-risk sizing.
+
+### FTMO — benchmark/control only for CrowdFade crypto
+
+Keep for:
+- signal/execution comparison;
+- broker divergence diagnostics;
+- commission stress.
+
+Do not treat as preferred production venue for CrowdFade crypto:
+- 6.5 bps round-turn crypto commission materially converts small gross winners into net losers;
+- broker contract/margin structure materially distorts execution compared with contract=1 venues.
+
+---
+
+# 2026-09-20 price-path audit — core findings
+
+## Finding A — the bots do not simply “dislike volatility”
+
+Main weakness is more specific:
+
+> **rapid volatility expansion + strong directional impulse + regime transition**
+
+High but stable volatility can be useful because:
+- ATR scales stop geometry;
+- large moves make TP reachable;
+- the signal can still work if price response is orderly.
+
+The failure mode appears when current volatility expands materially after the original signal and price continues hard in the crowd direction.
+
+## Finding B — v191 is vulnerable to false reversal confirmation during impulse
+
+Observed SOL example:
+- BUY thesis armed near 110.21;
+- M5 confirmation triggered;
+- market BUY near 110.37;
+- stop hit near 109.87;
+- price continued materially lower before the later reversal area.
+
+Interpretation:
+- M5 / 0.30 ATR confirmation can be only a local bounce inside a larger directional impulse;
+- market-after-confirmation is vulnerable to entering too early.
+
+## Finding C — v200 entry architecture handles the same impulse better
+
+Observed same SOL episode:
+- v200 waited for M15 price response;
+- then required passive retrace;
+- order was placed around 108.1 rather than v191 around 110.37.
+
+Interpretation:
+- completed M15 response + passive retrace gives materially better entry geometry during impulse;
+- do **not** replace v200 with v191-style market-after-confirmation.
+
+## Finding D — v200 trade count is not simply “one signal”
+
+On 2026-09-20 the journal shows:
+- several v200 confirmation episodes;
+- several pending BUY_LIMIT orders;
+- only a small number were actually filled/closed by report time.
+
+Therefore the apparent low trade count must be decomposed into:
+1. signal generation;
+2. confirmation pass rate;
+3. pending-order placement;
+4. passive-fill reachability;
+5. TTL expiry;
+6. still-open trades at report cutoff.
+
+Current suspected bottleneck:
+> `0.60 ATR` passive retrace + `20m` TTL may be too strict even when the core signal/confirmation is valid.
+
+Do **not** loosen Z or confirmation first.
+
+## Finding E — v191 stale confirmation-state inconsistency
+
+Observed GetLeveraged SOL:
+- original pending BUY thesis at `z=-2.50`;
+- by actual confirmation/entry, current z had flipped to approximately `+2.30`;
+- v191 still opened BUY;
+- approximately one second later its own signal-exit logic closed the BUY.
+
+Root cause:
+- pending confirmation stores `confSide`;
+- entry can proceed after the crowd state has become incompatible with that side;
+- signal-exit then immediately contradicts the just-opened trade.
+
+This is a state-machine consistency defect, not an alpha retune.
+
+## Finding F — v200 also preserves original-event side through a later Z flip
+
+Observed SOL:
+- original v200 BUY event at `z=-2.50`;
+- later pending BUY_LIMIT was still placed while current z was positive.
+
+Difference versus v191:
+- v200 signal-exit is OFF;
+- therefore it intentionally trades the original event rather than immediately self-cancelling.
+
+Do not label this a bug yet.
+Need a dedicated causal test:
+> original-event persistence vs cancel-on-Z-flip.
+
+## Finding G — v191 BE shell is transaction-cost blind
+
+Current v191:
+- BE trigger = +0.50 ATR;
+- BE lock = +0.15 ATR.
+
+FTMO audit showed multiple trades that were positive by price but net negative after commission.
+
+Therefore:
+- fixed +0.15 ATR is not a true economic breakeven;
+- any future BE rule must include spread + commission + slippage + safety buffer;
+- IC / GetLeveraged remove commission but not spread/slippage risk.
+
+## Finding H — v200 uses stale signal ATR during later confirmation/execution
+
+Current v200 freezes `sigAtr/confAtr` at the original signal and uses it later for:
+- confirmation distance;
+- passive entry distance;
+- SL;
+- TP.
+
+During volatility expansion:
+- current ATR can be materially larger than signal ATR;
+- the system can remain calibrated to the pre-expansion regime.
+
+This is a primary volatility-regime research target.
+
+---
+
+# Planned changes — v191 lineage
+
+Current implementation baseline for further work:
+**v191c RISK_PARITY_NOTIONAL_CAP**
+
+Already implemented:
+- `OrderCalcProfit()` account-currency stop-risk sizing;
+- commission-aware risk denominator;
+- manual `InpMaxLot=0` by default;
+- broker volume cap logging;
+- adaptive margin under-sizing;
+- hard one-position notional cap:
+  - `InpMaxNotionalPctEquity = 15%`;
+- hard new-trade margin cap:
+  - `InpMaxNewTradeMarginPct = 5%`;
+- hard projected total-account margin cap:
+  - `InpMaxAccountMarginPct = 12%`;
+- under-risking allowed rather than inflating economic exposure.
+
+## v191 P0 — CONFIRM_SIDE_CONSISTENCY
+
+Status: **PLANNED — code fix after exact behavior definition**
+
+Before sending a confirmed order:
+- re-evaluate current crowd state;
+- if the intended position would already satisfy the existing `SIGNAL_EXIT` condition, cancel the pending confirmation instead of opening and immediately closing;
+- log:
+  - original z / side;
+  - current z;
+  - cancel reason;
+  - confirmation age.
+
+Constraint:
+- do not change Z threshold;
+- do not change score model;
+- do not change stop geometry in the same patch.
+
+Goal:
+remove logically self-contradictory entries without retuning alpha.
+
+## v191 P0 — COST_AWARE_BE
+
+Status: **RESEARCH REQUIRED BEFORE PROMOTION**
+
+Current fixed lock `+0.15 ATR` is not broker-neutral economic breakeven.
+
+Test:
+- BE OFF control;
+- current BE;
+- cost-aware lock floor:
+  `expected round-turn cost + current spread + slippage allowance + small positive buffer`.
+
+Important:
+- do not assume FTMO cost structure for IC/GetLeveraged;
+- use broker-native execution cost;
+- if cost-aware BE still truncates right tail, disable BE rather than forcing it.
+
+## v191 P1 — volatility-expansion confirmation robustness
+
+Do not simply increase confirmation globally.
+
+Test current M5 confirmation against:
+- completed-bar confirmation;
+- stronger confirmation only in volatility-expansion state;
+- failed-continuation / reclaim confirmation after extreme impulse.
+
+Primary question:
+> can v191 avoid false local bounces without losing its useful higher-frequency role?
+
+v191 remains the faster control bot; do not turn it into v200.
+
+---
+
+# Planned research / changes — v200
+
+## Freeze before new LABs
+
+Do not change production-oriented core yet:
+
+- ZLong / ZShort = 2.05 / 2.05;
+- M15 completed-close confirmation = 0.25 ATR;
+- passive retrace = 0.60 ATR;
+- limit TTL = 20m;
+- SL = 4.5 ATR;
+- TP = 10 ATR;
+- hold = 24h;
+- BE OFF;
+- trailing OFF;
+- signal exit OFF;
+- LAB032 flat risk = 1 / 1 / 1;
+- quality state remains diagnostic only.
+
+Reason:
+the 2026-09-20 forward sample is too small to justify directly weakening the core.
+
+## LAB033 — V200_PASSIVE_RETRACE_REACHABILITY
+
+Purpose:
+determine whether v200 is losing valid trades at the **execution reachability** layer rather than the signal layer.
+
+Freeze:
+- Z2.05;
+- M15 confirm 0.25 ATR;
+- SL4.5;
+- TP10;
+- H24;
+- flat risk;
+- same canonical signals.
+
+Test retrace:
+- 0.60 ATR — baseline;
+- 0.45 ATR;
+- 0.40 ATR;
+- 0.30 ATR.
+
+Test TTL:
+- 20m baseline;
+- 30m.
+
+Primary candidate to examine:
+> 0.40 ATR + 30m
+
+This is a hypothesis, **not promoted**.
+
+Required outputs:
+- confirmation episodes;
+- pending orders;
+- fill rate;
+- TTL expiry rate;
+- missed-winner rate;
+- trades/month;
+- EV;
+- PF;
+- MaxDD;
+- SumR;
+- MAE/MFE after fill;
+- entry improvement versus confirmation close;
+- broker-specific fill divergence;
+- full causal sequential rerun.
+
+Do not add market fallback in the candidate set except as a control.
+
+## LAB034 — VOLATILITY_EXPANSION_AND_IMPULSE_RESPONSE
+
+Purpose:
+test the hypothesis that the real weak regime is **volatility expansion / directional impulse**, not high volatility itself.
+
+Stage A — diagnostics only.
+
+For every signal/confirmation/fill record:
+- signal ATR;
+- current ATR at confirmation;
+- current ATR at fill;
+- `ATRExpansion = currentATR / signalATR`;
+- rolling normal ATR reference;
+- crowd-direction excursion (`crowdExc`);
+- 1h directional impulse in ATR units;
+- H1/H4 state;
+- confirmation age;
+- outcome / MFE / MAE.
+
+Predefined `crowdExc` diagnostic buckets:
+- <0.50 ATR;
+- 0.50–1.00 ATR;
+- 1.00–1.50 ATR;
+- >1.50 ATR.
+
+Do not optimize thresholds from one day.
+
+Stage B — test one intervention at a time:
+
+1. **Dynamic execution ATR**
+   - baseline: frozen signal ATR;
+   - candidate: `EffectiveATR = max(signalATR, currentATR)`.
+
+2. **Impulse confirmation**
+   - baseline 0.25 ATR response;
+   - for extreme continuation, test failed-continuation / reclaim requirement before accepting reversal.
+
+3. **Risk response**
+   - baseline 1.00x;
+   - extreme expansion diagnostic candidates 0.75x and 0.50x;
+   - no hard veto first.
+
+4. **Retrace after valid reversal**
+   - test whether confirmed strong reversals need *less* passive retrace (0.30–0.40 ATR) because waiting 0.60 ATR misses the move.
+
+Goal:
+distinguish:
+- fast but orderly market;
+- expanding volatility;
+- one-direction impulse against the contrarian thesis.
+
+## LAB035 — ORIGINAL_EVENT_PERSISTENCE_VS_Z_FLIP_CANCEL
+
+Purpose:
+resolve whether v200 should preserve the original contrarian event after current crowd Z flips.
+
+Freeze all other logic.
+
+Compare:
+- BASE: preserve original `confSide` exactly as current v200;
+- CANCEL_ON_SIGN_FLIP;
+- CANCEL_ON_OPPOSITE_THRESHOLD only.
+
+Required:
+- full causal rerun;
+- trade reachability;
+- EV/PF/DD/SumR;
+- missed right-tail winners;
+- losses avoided;
+- confirmation-age interaction;
+- volatility-regime split.
+
+Do not implement a Z-flip cancellation rule before this LAB.
+
+## LAB036 — IC_MARKETS_VS_GETLEVERAGED_EXECUTION_AUDIT
+
+Purpose:
+select the preferred production venue using actual execution data rather than specification sheets.
+
+Run same v200 build / canonical signal IDs on:
+- IC Markets;
+- GetLeveraged.
+
+FTMO may remain as benchmark only.
+
+Collect continuously:
+- bid / ask;
+- spread in USD;
+- spread in bps;
+- spread / ATR;
+- contract size;
+- margin required for target notional;
+- session availability;
+- limit placement success;
+- limit fill / no-fill;
+- time-to-fill;
+- slippage;
+- basis to canonical Binance price;
+- rejected orders;
+- swap if position crosses rollover.
+
+Minimum:
+- 24h continuous audit;
+- preferably enough signals to cover BTC/ETH/SOL and at least one volatile episode.
+
+Decision metrics:
+- net R after all costs;
+- fill reachability;
+- execution parity to canonical signals;
+- margin distortion;
+- missed trades;
+- operational uptime.
+
+---
+
+# Planned code changes after LAB validation
+
+## v191
+
+Implement first because they are consistency/risk-shell issues:
+
+1. **CONFIRM_SIDE_CONSISTENCY**
+   - cancel self-contradictory stale confirmation before order send.
+
+2. **Broker-native cost-aware BE or BE OFF**
+   - only after LAB confirms economic benefit.
+
+3. **Volatility diagnostics in logs**
+   - signal ATR;
+   - current ATR;
+   - ATR expansion ratio;
+   - confirmation age.
+
+Do not import v200 passive-entry architecture wholesale into v191.
+
+## v200
+
+No immediate strategy-code relaxation.
+
+Only after LAB results:
+
+1. promote retrace/TTL change if LAB033 improves fill reachability without degrading EV/DD;
+2. add dynamic `EffectiveATR` only if LAB034 survives historical + 2026 + fresh forward;
+3. add impulse/reclaim logic only if it improves the extreme-expansion state without killing normal-state edge;
+4. change original-event persistence only if LAB035 supports it;
+5. add broker-specific execution shell for IC Markets / GetLeveraged after LAB036.
+
+Potential IC Markets execution feature:
+- controlled SOL child-order split only if target lot > `SYMBOL_VOLUME_MAX`;
+- maximum two child orders initially;
+- total notional/risk must stay under the same parent risk cap;
+- never use splitting to bypass broker total volume limit;
+- must preserve one logical signal_id / parent trade_id.
+
+---
+
+# Immediate priority order
+
+1. **v191 CONFIRM_SIDE_CONSISTENCY fix**
+2. **LAB033 — v200 retrace / TTL reachability**
+3. **LAB034 — volatility expansion / impulse response**
+4. **LAB035 — v200 original-event persistence vs Z flip**
+5. **LAB036 — IC vs GetLeveraged execution audit**
+6. cost-aware BE study for v191
+7. only then consider production promotion of any relaxed v200 entry rule
+
+Core principle:
+
+> Do not solve volatility by simply blocking high ATR.  
+> First identify whether the market is merely volatile or is **expanding and continuing directionally against the CrowdFade thesis**.
