@@ -2062,6 +2062,191 @@ Explicitly **NOT** implemented before LAB validation:
 v200a SHA-256:
 `c608b3fed647e943319a4d89ecee3f2c62ceb99ff76e03076773a84bb7ddabe3`
 
+
+---
+
+# SEQUENTIAL CHANGE LABS — 2026-09-20
+
+Runner:
+`labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/run.py`
+
+Frozen during the sequence:
+`Z2.05 -> M15 confirm .25 ATR -> SL4.5 -> TP10 -> H24 -> flat risk`
+
+Data:
+- 2021–2025 Binance USD-M BTCUSDT M1 monthly archives;
+- 2026 Mar–Aug BTCUSDT second OHLC;
+- exact `BTCUSDT_flow_2021-01-2026-08` CrowdFade flow archive.
+
+Important:
+- 2021–2025 remains discovery/in-sample;
+- 2026 Mar–Aug remains reused forward-shadow/stress, not pristine OOS;
+- BTC only; ETH/SOL transfer is not yet proven.
+
+## LAB033A — PASSIVE RETRACE REACHABILITY
+Status: **DONE — KEEP 0.60 ATR**
+
+TTL frozen at 20m.
+
+| Retrace | Hist N | Hist EV | Hist PF | Hist DD | Hist R/DD | 2026 N | 2026 EV | 2026 PF | 2026 DD | 2026 R/DD |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **0.60** | 1642 | +0.0745R | 1.151 | **19.83R** | **6.174** | 176 | **+0.0972R** | **1.198** | 8.34R | **2.051** |
+| 0.45 | 1780 | +0.0795R | 1.167 | 27.96R | 5.061 | 187 | +0.0496R | 1.100 | 8.33R | 1.114 |
+| 0.40 | 1818 | +0.0746R | 1.157 | 31.29R | 4.336 | 190 | +0.0842R | 1.176 | **8.12R** | 1.970 |
+| 0.30 | 1880 | +0.0734R | 1.155 | 36.84R | 3.748 | 198 | +0.0089R | 1.018 | 13.42R | 0.131 |
+
+Interpretation:
+- relaxing retrace does increase fill rate materially;
+- this is **not free frequency**;
+- historical DD expands strongly as entry is moved closer;
+- 0.40 is the least damaging relaxation but still lowers historical R/DD ~30%;
+- 0.30 nearly destroys the 2026 edge.
+
+Decision:
+**do not change 0.60 ATR to 0.40 ATR.**
+
+## LAB033B — PENDING TTL 20m vs 30m
+Status: **DONE — KEEP 20m**
+
+Using retrace 0.60 ATR.
+
+20m:
+- historical N1642, EV +0.0745R, PF 1.151, DD 19.83R, R/DD 6.174;
+- 2026 N176, EV +0.0972R, PF 1.198, DD 8.34R, R/DD 2.051.
+
+30m:
+- historical N1725, EV +0.0745R, PF 1.152, DD **30.39R**, R/DD 4.230;
+- 2026 N182, EV +0.0663R, PF 1.136, DD 9.65R, R/DD 1.251.
+
+Interpretation:
+30m adds fills, but the extra fills worsen path risk and DD materially.
+
+Decision:
+**TTL remains 20m.**
+
+## LAB034A — VOLATILITY EXPANSION DIAGNOSTIC
+Status: **DONE — SIMPLE “HIGH VOL = BAD” HYPOTHESIS NOT SUPPORTED**
+
+2026 baseline split by `currentATR / signalATR` at confirmation:
+
+- 0.90–1.10: N133, EV +0.101R, PF 1.204;
+- 1.10–1.25: N28, EV +0.039R, PF 1.087;
+- 1.25–1.50: N10, EV +0.435R, PF 2.018;
+- >=1.50: N2, EV +0.326R, PF 1.649.
+
+The >=1.25 samples are small, but the available evidence does **not** show monotonic deterioration as ATR expands.
+
+Crowd-direction excursion is also non-monotonic:
+- <0.50 ATR: N112, EV +0.046R;
+- 0.50–1.00: N39, EV +0.174R;
+- 1.00–1.50: N13, EV **-0.198R**;
+- >=1.50: N12, EV **+0.646R**.
+
+Interpretation:
+- volatility magnitude alone is not the correct veto variable;
+- intermediate directional continuation may be problematic;
+- extreme continuation can also precede strong mean reversion;
+- do not create a simple high-ATR filter from this sample.
+
+## LAB034B — DYNAMIC EXECUTION ATR
+Status: **DONE — NO PROMOTION**
+
+Candidate:
+`EffectiveATR = max(signalATR, currentATR at confirmation)`
+for retrace / SL / TP only. Confirmation threshold itself remains frozen.
+
+Baseline:
+- historical: N1642, EV +0.0745R, PF 1.151, DD 19.83R, R/DD 6.174;
+- 2026: N176, EV +0.0972R, PF 1.198, DD 8.34R, R/DD 2.051.
+
+Dynamic ATR:
+- historical: N1556, EV +0.0794R, PF 1.167, DD 19.56R, R/DD 6.313;
+- 2026: N164, EV +0.1154R, PF 1.249, **DD 10.19R**, R/DD **1.857**;
+- 2026 positive months fall from 4 to 3.
+
+Interpretation:
+dynamic ATR improves some point estimates but worsens forward-shadow risk efficiency and reduces reachability.
+
+Decision:
+**v200 keeps frozen signal ATR geometry.**
+
+## LAB035 — ORIGINAL EVENT PERSISTENCE vs Z-FLIP CANCEL
+Status: **DONE — CANCEL_SIGN_FLIP IS A STRONG RESEARCH CANDIDATE; NOT YET PRODUCTION-PROMOTED**
+
+Full causal rerun:
+
+| Mode | Hist N | Hist EV | Hist PF | Hist DD | Hist R/DD | 2026 N | 2026 EV | 2026 PF | 2026 DD | 2026 R/DD |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| PRESERVE | 1642 | +0.0745R | 1.151 | 19.83R | 6.174 | 176 | +0.0972R | 1.198 | 8.34R | 2.051 |
+| **CANCEL_SIGN_FLIP** | 1617 | **+0.0845R** | **1.173** | **18.81R** | **7.261** | 172 | **+0.1321R** | **1.276** | **8.01R** | **2.836** |
+| CANCEL_OPPOSITE_THRESHOLD | 1638 | +0.0749R | 1.152 | 19.83R | 6.186 | 174 | +0.1143R | 1.236 | 8.01R | 2.481 |
+
+CANCEL_SIGN_FLIP:
+- historical SumR: +122.40R -> **+136.62R**;
+- historical R/DD: 6.174 -> **7.261**;
+- historical 5/5 years remain positive;
+- improves 4/5 historical years; 2022 is worse;
+- 2026 SumR: +17.12R -> **+22.72R**;
+- 2026 R/DD: 2.051 -> **2.836**;
+- 2026 max consecutive losses: 9 -> **8**;
+- forward cancellations: 8 confirmation episodes.
+
+Direct 2026 baseline filled sign-flip trades:
+- 5 trades;
+- 4 were approximately -1R losses;
+- 1 was a +2.21R winner;
+- direct SumR = **-1.83R**.
+
+Therefore sign-flip cancellation is not “all stale trades are bad”; it can remove right-tail winners too. Its full-sequence benefit also comes from changing later reachability.
+
+Year contribution warning:
+- 2021 improves;
+- 2022 worsens;
+- 2023 improves strongly;
+- 2024 improves;
+- 2025 improves.
+
+Forward:
+- Mar improves;
+- Apr unchanged;
+- May improves;
+- Jun unchanged;
+- Jul improves;
+- Aug improves from -1.07R to approximately flat.
+
+Decision:
+**promote CANCEL_SIGN_FLIP to the next validation candidate, not directly to production.**
+
+Required before final promotion:
+- paired/stability audit of sign-flip episodes;
+- fresh forward after 2026-09-20;
+- ETH/SOL transfer check;
+- keep one control instance with original persistence logic.
+
+## Current v200 decision after LAB033–035
+
+Keep unchanged:
+- Z = 2.05 / 2.05;
+- M15 confirm = 0.25 ATR;
+- retrace = **0.60 ATR**;
+- limit TTL = **20m**;
+- SL = 4.5 ATR;
+- TP = 10 ATR;
+- H24;
+- flat risk;
+- frozen signal ATR execution geometry.
+
+Do **not** promote:
+- 0.40 ATR retrace;
+- TTL30;
+- dynamic `max(signalATR,currentATR)`;
+- simple high-volatility veto.
+
+Next candidate:
+> **cancel pending v200 event if current crowd Z has crossed sign relative to original signal Z before order placement.**
+
+This changes trade reachability and therefore needs fresh forward / transfer validation before replacing the v200a control.
+
 # Planned code changes after LAB validation
 
 ## v191
