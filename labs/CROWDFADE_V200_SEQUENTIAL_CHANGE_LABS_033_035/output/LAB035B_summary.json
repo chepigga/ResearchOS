@@ -1,0 +1,799 @@
+{
+  "lab": "LAB035B_SIGN_FLIP_STABILITY_AND_PAIRED_EVENT_AUDIT",
+  "candidate": "CANCEL_SIGN_FLIP",
+  "frozen": {
+    "retrace_ATR": 0.6,
+    "TTL_min": 20,
+    "Z": 2.05,
+    "confirm_ATR": 0.25,
+    "SL_ATR": 4.5,
+    "TP_ATR": 10.0,
+    "hold_h": 24.0,
+    "cost_bps": 0.5
+  },
+  "headline": {
+    "historical_baseline": {
+      "N": 1642,
+      "WR": 0.4336175395858709,
+      "EV": 0.07454306369074261,
+      "SumR": 122.39971058019937,
+      "PF": 1.150989525720721,
+      "MaxDD_R": 19.82565683656125,
+      "R_DD": 6.173803551087265,
+      "MaxConsecutiveLosses": 13,
+      "armed": 7029,
+      "confirmed": 3703,
+      "pending": 3703,
+      "no_fill": 2061,
+      "cancel_z": 0,
+      "fill_rate_pending": 0.4434242506076154,
+      "confirm_rate_armed": 0.5268174704794423,
+      "positive_periods": 5,
+      "periods": {
+        "2021": {
+          "N": 306,
+          "WR": 0.4803921568627451,
+          "EV": 0.13017019031736685,
+          "SumR": 39.83207823711425,
+          "PF": 1.2911949005355647,
+          "MaxDD_R": 19.82565683656125,
+          "R_DD": 2.009117708708566,
+          "MaxConsecutiveLosses": 10
+        },
+        "2022": {
+          "N": 311,
+          "WR": 0.45980707395498394,
+          "EV": 0.09158701143711383,
+          "SumR": 28.4835605569424,
+          "PF": 1.1921783057826114,
+          "MaxDD_R": 11.577941634595275,
+          "R_DD": 2.460157552689035,
+          "MaxConsecutiveLosses": 8
+        },
+        "2023": {
+          "N": 315,
+          "WR": 0.39365079365079364,
+          "EV": 0.011384565663431444,
+          "SumR": 3.5861381839809052,
+          "PF": 1.0212970052321504,
+          "MaxDD_R": 18.673617108047342,
+          "R_DD": 0.19204303929073652,
+          "MaxConsecutiveLosses": 9
+        },
+        "2024": {
+          "N": 355,
+          "WR": 0.4169014084507042,
+          "EV": 0.07875639799389994,
+          "SumR": 27.95852128783448,
+          "PF": 1.1559788430852873,
+          "MaxDD_R": 16.642191970677022,
+          "R_DD": 1.6799782947520643,
+          "MaxConsecutiveLosses": 10
+        },
+        "2025": {
+          "N": 355,
+          "WR": 0.4225352112676056,
+          "EV": 0.06349130229387984,
+          "SumR": 22.539412314327343,
+          "PF": 1.1266151295286546,
+          "MaxDD_R": 13.400211573279327,
+          "R_DD": 1.68201913761362,
+          "MaxConsecutiveLosses": 13
+        }
+      }
+    },
+    "historical_candidate": {
+      "N": 1617,
+      "WR": 0.4390847247990105,
+      "EV": 0.0844871758261805,
+      "SumR": 136.61576331093386,
+      "PF": 1.1726024783537283,
+      "MaxDD_R": 18.814135954048083,
+      "R_DD": 7.261336031832988,
+      "MaxConsecutiveLosses": 13,
+      "armed": 7117,
+      "confirmed": 3758,
+      "pending": 3662,
+      "no_fill": 2045,
+      "cancel_z": 96,
+      "fill_rate_pending": 0.4415619879847078,
+      "confirm_rate_armed": 0.5280314739356471,
+      "positive_periods": 5,
+      "periods": {
+        "2021": {
+          "N": 302,
+          "WR": 0.4867549668874172,
+          "EV": 0.14172413560463257,
+          "SumR": 42.80068895259903,
+          "PF": 1.3183248191016674,
+          "MaxDD_R": 18.28667724036505,
+          "R_DD": 2.3405394205855528,
+          "MaxConsecutiveLosses": 9
+        },
+        "2022": {
+          "N": 310,
+          "WR": 0.4612903225806452,
+          "EV": 0.0796420497307606,
+          "SumR": 24.689035416535784,
+          "PF": 1.1670940095820863,
+          "MaxDD_R": 14.48753187917832,
+          "R_DD": 1.7041574522447958,
+          "MaxConsecutiveLosses": 8
+        },
+        "2023": {
+          "N": 306,
+          "WR": 0.40522875816993464,
+          "EV": 0.04083024770138478,
+          "SumR": 12.49405579662374,
+          "PF": 1.0779788166519548,
+          "MaxDD_R": 18.814135954048073,
+          "R_DD": 0.6640781073943236,
+          "MaxConsecutiveLosses": 8
+        },
+        "2024": {
+          "N": 349,
+          "WR": 0.42120343839541546,
+          "EV": 0.09251172566720973,
+          "SumR": 32.2865922578562,
+          "PF": 1.1844146803897437,
+          "MaxDD_R": 17.126614724774026,
+          "R_DD": 1.8851706993299109,
+          "MaxConsecutiveLosses": 10
+        },
+        "2025": {
+          "N": 350,
+          "WR": 0.4257142857142857,
+          "EV": 0.06955825967805462,
+          "SumR": 24.34539088731912,
+          "PF": 1.1399207963221667,
+          "MaxDD_R": 12.397749684325026,
+          "R_DD": 1.963694340280154,
+          "MaxConsecutiveLosses": 13
+        }
+      }
+    },
+    "forward_baseline": {
+      "N": 176,
+      "WR": 0.42045454545454547,
+      "EV": 0.09724566352430898,
+      "SumR": 17.11523678027838,
+      "PF": 1.1980013144084698,
+      "MaxDD_R": 8.343985928106411,
+      "R_DD": 2.051206333249716,
+      "MaxConsecutiveLosses": 9,
+      "armed": 712,
+      "confirmed": 362,
+      "pending": 362,
+      "no_fill": 186,
+      "cancel_z": 0,
+      "fill_rate_pending": 0.4861878453038674,
+      "confirm_rate_armed": 0.5084269662921348,
+      "positive_periods": 4,
+      "periods": {
+        "2026-03": {
+          "N": 30,
+          "WR": 0.5,
+          "EV": 0.3582525892418191,
+          "SumR": 10.747577677254572,
+          "PF": 1.824554402310198,
+          "MaxDD_R": 3.112598482089929,
+          "R_DD": 3.4529277512331746,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-04": {
+          "N": 26,
+          "WR": 0.46153846153846156,
+          "EV": -0.05707113768469542,
+          "SumR": -1.483849579802081,
+          "PF": 0.8803549904227296,
+          "MaxDD_R": 5.297730270917771,
+          "R_DD": -0.2800915682604243,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-05": {
+          "N": 31,
+          "WR": 0.41935483870967744,
+          "EV": 0.10862924984217022,
+          "SumR": 3.367506745107277,
+          "PF": 1.2222840505651058,
+          "MaxDD_R": 4.081904491425714,
+          "R_DD": 0.8249842082735956,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-06": {
+          "N": 29,
+          "WR": 0.41379310344827586,
+          "EV": 0.12360772151637055,
+          "SumR": 3.5846239239747457,
+          "PF": 1.2666800445506885,
+          "MaxDD_R": 5.49547011623188,
+          "R_DD": 0.6522870378981592,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-07": {
+          "N": 28,
+          "WR": 0.39285714285714285,
+          "EV": 0.07043313394366395,
+          "SumR": 1.9721277504225905,
+          "PF": 1.1273083203747558,
+          "MaxDD_R": 4.660834052955487,
+          "R_DD": 0.4231276479736588,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-08": {
+          "N": 32,
+          "WR": 0.34375,
+          "EV": -0.033523429271209965,
+          "SumR": -1.0727497366787189,
+          "PF": 0.9366036583863625,
+          "MaxDD_R": 8.295038087109518,
+          "R_DD": -0.12932426896818847,
+          "MaxConsecutiveLosses": 9
+        }
+      }
+    },
+    "forward_candidate": {
+      "N": 172,
+      "WR": 0.43023255813953487,
+      "EV": 0.13211627080977384,
+      "SumR": 22.7239985792811,
+      "PF": 1.2757932715976612,
+      "MaxDD_R": 8.014074755501825,
+      "R_DD": 2.8355111815847005,
+      "MaxConsecutiveLosses": 8,
+      "armed": 713,
+      "confirmed": 364,
+      "pending": 356,
+      "no_fill": 184,
+      "cancel_z": 8,
+      "fill_rate_pending": 0.48314606741573035,
+      "confirm_rate_armed": 0.5105189340813464,
+      "positive_periods": 4,
+      "periods": {
+        "2026-03": {
+          "N": 29,
+          "WR": 0.5172413793103449,
+          "EV": 0.43044327962543716,
+          "SumR": 12.482855109137677,
+          "PF": 2.0376231893208705,
+          "MaxDD_R": 2.716344484584054,
+          "R_DD": 4.595460988096707,
+          "MaxConsecutiveLosses": 3
+        },
+        "2026-04": {
+          "N": 26,
+          "WR": 0.46153846153846156,
+          "EV": -0.05707113768469542,
+          "SumR": -1.483849579802081,
+          "PF": 0.8803549904227296,
+          "MaxDD_R": 5.297730270917771,
+          "R_DD": -0.2800915682604243,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-05": {
+          "N": 30,
+          "WR": 0.43333333333333335,
+          "EV": 0.1522462974983837,
+          "SumR": 4.567388924951511,
+          "PF": 1.3229197320926673,
+          "MaxDD_R": 4.081904491425714,
+          "R_DD": 1.1189357650443772,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-06": {
+          "N": 29,
+          "WR": 0.41379310344827586,
+          "EV": 0.12360772151637055,
+          "SumR": 3.5846239239747457,
+          "PF": 1.2666800445506885,
+          "MaxDD_R": 5.49547011623188,
+          "R_DD": 0.6522870378981592,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-07": {
+          "N": 27,
+          "WR": 0.4074074074074074,
+          "EV": 0.13391618658165796,
+          "SumR": 3.615737037704765,
+          "PF": 1.249607806810126,
+          "MaxDD_R": 4.663638962441725,
+          "R_DD": 0.7753038060672874,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-08": {
+          "N": 31,
+          "WR": 0.3548387096774194,
+          "EV": -0.0013792527963068992,
+          "SumR": -0.042756836685513874,
+          "PF": 0.9973094230334602,
+          "MaxDD_R": 7.265045187116312,
+          "R_DD": -0.0058852815893475794,
+          "MaxConsecutiveLosses": 8
+        }
+      }
+    }
+  },
+  "paired_decomposition": {
+    "historical": {
+      "baseline_only_removed": {
+        "N": 68,
+        "SumR": -10.909724787030084,
+        "EV": -0.16043712922103065,
+        "direct_sign_flip_N": 41,
+        "direct_sign_flip_SumR": -15.527747553044877
+      },
+      "candidate_only_added": {
+        "N": 43,
+        "SumR": 3.3063279437044235,
+        "EV": 0.07689134752800984
+      },
+      "common": {
+        "N": 1574,
+        "baseline_SumR": 133.30943536722947,
+        "candidate_SumR": 133.30943536722947,
+        "delta_R": 0.0,
+        "identical_entry_N": 1574
+      },
+      "reconciliation": {
+        "baseline_total_R": 122.39971058019937,
+        "candidate_total_R": 136.6157633109339,
+        "delta_R": 14.216052730734507,
+        "decomp_delta_R": 14.216052730734507
+      }
+    },
+    "forward": {
+      "baseline_only_removed": {
+        "N": 9,
+        "SumR": 2.69738417285301,
+        "EV": 0.2997093525392234,
+        "direct_sign_flip_N": 5,
+        "direct_sign_flip_SumR": -1.834711162879635
+      },
+      "candidate_only_added": {
+        "N": 5,
+        "SumR": 8.306145971855727,
+        "EV": 1.6612291943711455
+      },
+      "common": {
+        "N": 167,
+        "baseline_SumR": 14.417852607425374,
+        "candidate_SumR": 14.417852607425374,
+        "delta_R": 0.0,
+        "identical_entry_N": 167
+      },
+      "reconciliation": {
+        "baseline_total_R": 17.11523678027838,
+        "candidate_total_R": 22.723998579281098,
+        "delta_R": 5.608761799002716,
+        "decomp_delta_R": 5.608761799002718
+      }
+    }
+  },
+  "preserve_sequence_event_audit": {
+    "historical": {
+      "confirmed_flip_events": 126,
+      "filled_flip_events": 61,
+      "fill_rate": 0.48412698412698413,
+      "filled_metrics": {
+        "N": 61,
+        "WR": 0.13114754098360656,
+        "EV": -0.6938794152412749,
+        "SumR": -42.32664432971777,
+        "PF": 0.1566452813743963,
+        "MaxDD_R": 42.32664432971778,
+        "R_DD": -0.9999999999999998,
+        "MaxConsecutiveLosses": 12
+      },
+      "confirmed_by_strength": {
+        "<0.5": 49,
+        "0.5-1.0": 17,
+        "1.0-2.05": 37,
+        ">=2.05": 23
+      },
+      "filled_by_strength": {
+        "<0.5": {
+          "N": 23,
+          "SumR": -22.392273085703764,
+          "EV": -0.9735770906827723,
+          "WR": 0.0
+        },
+        "0.5-1.0": {
+          "N": 11,
+          "SumR": -11.051408235800636,
+          "EV": -1.004673475981876,
+          "WR": 0.0
+        },
+        "1.0-2.05": {
+          "N": 14,
+          "SumR": -6.091657471003293,
+          "EV": -0.4351183907859495,
+          "WR": 0.21428571428571427
+        },
+        ">=2.05": {
+          "N": 13,
+          "SumR": -2.791305537210065,
+          "EV": -0.21471581055462036,
+          "WR": 0.38461538461538464
+        }
+      },
+      "filled_by_confirm_bar": {
+        "1": {
+          "N": 18,
+          "SumR": -14.796866017467478,
+          "EV": -0.8220481120815265,
+          "WR": 0.05555555555555555
+        },
+        "2": {
+          "N": 20,
+          "SumR": -14.451700870362455,
+          "EV": -0.7225850435181227,
+          "WR": 0.15
+        },
+        "3": {
+          "N": 8,
+          "SumR": -6.637085921670631,
+          "EV": -0.8296357402088289,
+          "WR": 0.125
+        },
+        "4": {
+          "N": 15,
+          "SumR": -6.4409915202171995,
+          "EV": -0.4293994346811466,
+          "WR": 0.2
+        }
+      },
+      "filled_by_direction": {
+        "BUY": {
+          "N": 42,
+          "SumR": -23.255402720151487,
+          "EV": -0.5537000647655116,
+          "WR": 0.19047619047619047
+        },
+        "SELL": {
+          "N": 19,
+          "SumR": -19.07124160956628,
+          "EV": -1.0037495583982252,
+          "WR": 0.0
+        }
+      }
+    },
+    "forward": {
+      "confirmed_flip_events": 9,
+      "filled_flip_events": 4,
+      "fill_rate": 0.4444444444444444,
+      "filled_metrics": {
+        "N": 4,
+        "WR": 0.25,
+        "EV": -0.20117956572160756,
+        "SumR": -0.8047182628864302,
+        "PF": 0.7330933052108726,
+        "MaxDD_R": 3.01497968614915,
+        "R_DD": -0.2669066947891274,
+        "MaxConsecutiveLosses": 3
+      },
+      "confirmed_by_strength": {
+        "<0.5": 4,
+        "0.5-1.0": 1,
+        "1.0-2.05": 2,
+        ">=2.05": 2
+      },
+      "filled_by_strength": {
+        "<0.5": {
+          "N": 3,
+          "SumR": 0.19944959760683068,
+          "EV": 0.0664831992022769,
+          "WR": 0.3333333333333333
+        },
+        ">=2.05": {
+          "N": 1,
+          "SumR": -1.0041678604932607,
+          "EV": -1.0041678604932607,
+          "WR": 0.0
+        }
+      },
+      "filled_by_confirm_bar": {
+        "1": {
+          "N": 1,
+          "SumR": -1.0055274403479089,
+          "EV": -1.0055274403479089,
+          "WR": 0.0
+        },
+        "3": {
+          "N": 1,
+          "SumR": -1.0041678604932607,
+          "EV": -1.0041678604932607,
+          "WR": 0.0
+        },
+        "4": {
+          "N": 2,
+          "SumR": 1.2049770379547393,
+          "EV": 0.6024885189773697,
+          "WR": 0.5
+        }
+      },
+      "filled_by_direction": {
+        "BUY": {
+          "N": 4,
+          "SumR": -0.8047182628864302,
+          "EV": -0.20117956572160756,
+          "WR": 0.25
+        }
+      }
+    }
+  },
+  "stability": {
+    "historical_year_delta": [
+      {
+        "bucket": "2021",
+        "delta_R": 2.968610715484784,
+        "removed_R": 2.760640338100474,
+        "added_R": 0.20797037738431068,
+        "common_delta_R": 0.0,
+        "changed_events": 8
+      },
+      {
+        "bucket": "2022",
+        "delta_R": -3.794525140406609,
+        "removed_R": 1.907344687740133,
+        "added_R": -5.7018698281467435,
+        "common_delta_R": 0.0,
+        "changed_events": 33
+      },
+      {
+        "bucket": "2023",
+        "delta_R": 8.907917612642837,
+        "removed_R": 5.33535417889168,
+        "added_R": 3.5725634337511596,
+        "common_delta_R": 0.0,
+        "changed_events": 39
+      },
+      {
+        "bucket": "2024",
+        "delta_R": 4.328070970021721,
+        "removed_R": 1.318153039203369,
+        "added_R": 3.009917930818353,
+        "common_delta_R": 0.0,
+        "changed_events": 24
+      },
+      {
+        "bucket": "2025",
+        "delta_R": 1.8059785729917728,
+        "removed_R": -0.41176745690557137,
+        "added_R": 2.217746029897344,
+        "common_delta_R": 0.0,
+        "changed_events": 7
+      }
+    ],
+    "forward_month_delta": [
+      {
+        "bucket": "2026-03",
+        "delta_R": 1.735277431883104,
+        "removed_R": -0.4829336369985848,
+        "added_R": 2.218211068881689,
+        "common_delta_R": 0.0,
+        "changed_events": 3
+      },
+      {
+        "bucket": "2026-04",
+        "delta_R": 0.0,
+        "removed_R": -0.0,
+        "added_R": 0.0,
+        "common_delta_R": 0.0,
+        "changed_events": 0
+      },
+      {
+        "bucket": "2026-05",
+        "delta_R": 1.1998821798442338,
+        "removed_R": -0.9413490097928126,
+        "added_R": 2.1412311896370464,
+        "common_delta_R": 0.0,
+        "changed_events": 5
+      },
+      {
+        "bucket": "2026-06",
+        "delta_R": 0.0,
+        "removed_R": -0.0,
+        "added_R": 0.0,
+        "common_delta_R": 0.0,
+        "changed_events": 0
+      },
+      {
+        "bucket": "2026-07",
+        "delta_R": 1.643609287282174,
+        "removed_R": -2.303094426054818,
+        "added_R": 3.9467037133369915,
+        "common_delta_R": 0.0,
+        "changed_events": 5
+      },
+      {
+        "bucket": "2026-08",
+        "delta_R": 1.0299928999932049,
+        "removed_R": 1.0299928999932049,
+        "added_R": 0.0,
+        "common_delta_R": 0.0,
+        "changed_events": 1
+      }
+    ],
+    "historical_leave_one_year_out": [
+      {
+        "left_out_year": 2021,
+        "remaining_delta_R": 11.247442015249723
+      },
+      {
+        "left_out_year": 2022,
+        "remaining_delta_R": 18.010577871141116
+      },
+      {
+        "left_out_year": 2023,
+        "remaining_delta_R": 5.30813511809167
+      },
+      {
+        "left_out_year": 2024,
+        "remaining_delta_R": 9.887981760712787
+      },
+      {
+        "left_out_year": 2025,
+        "remaining_delta_R": 12.410074157742734
+      }
+    ],
+    "historical_week_concentration": {
+      "nonzero_weeks": 42,
+      "positive_weeks": 29,
+      "negative_weeks": 13,
+      "net_delta_R": 14.216052730734507,
+      "total_positive_contribution_R": 31.177543962353575,
+      "total_negative_contribution_R": -16.961491231619068,
+      "top1_share_of_positive": 0.10881958950618084,
+      "top3_share_of_positive": 0.28170671272040076,
+      "top5_share_of_positive": 0.41430932429978734,
+      "net_after_removing_top3_positive_weeks_R": 5.433129310404103,
+      "top10_weeks": [
+        {
+          "week": "2023-12-04/2023-12-10",
+          "delta_R": 3.392727535794223
+        },
+        {
+          "week": "2024-10-07/2024-10-13",
+          "delta_R": 3.0118840055345366
+        },
+        {
+          "week": "2024-11-11/2024-11-17",
+          "delta_R": 2.3783118790016435
+        },
+        {
+          "week": "2023-10-23/2023-10-29",
+          "delta_R": 2.1787561887130273
+        },
+        {
+          "week": "2023-07-17/2023-07-23",
+          "delta_R": 1.9554675633261938
+        },
+        {
+          "week": "2023-06-19/2023-06-25",
+          "delta_R": 1.6765508399455413
+        },
+        {
+          "week": "2021-12-20/2021-12-26",
+          "delta_R": 1.5389795961961952
+        },
+        {
+          "week": "2024-05-13/2024-05-19",
+          "delta_R": 1.3427646451706694
+        },
+        {
+          "week": "2025-04-28/2025-05-04",
+          "delta_R": 1.010621805338205
+        },
+        {
+          "week": "2025-09-29/2025-10-05",
+          "delta_R": 1.007017501440577
+        }
+      ]
+    },
+    "forward_week_concentration": {
+      "nonzero_weeks": 5,
+      "positive_weeks": 4,
+      "negative_weeks": 1,
+      "net_delta_R": 5.608761799002717,
+      "total_positive_contribution_R": 5.611566708488958,
+      "total_negative_contribution_R": -0.002804909486240348,
+      "top1_share_of_positive": 0.3092322558079982,
+      "top3_share_of_positive": 0.8164518122122522,
+      "top5_share_of_positive": 1.0,
+      "net_after_removing_top3_positive_weeks_R": 1.027187990506964,
+      "top10_weeks": [
+        {
+          "week": "2026-03-23/2026-03-29",
+          "delta_R": 1.735277431883104
+        },
+        {
+          "week": "2026-07-06/2026-07-12",
+          "delta_R": 1.6464141967684143
+        },
+        {
+          "week": "2026-05-11/2026-05-17",
+          "delta_R": 1.1998821798442338
+        },
+        {
+          "week": "2026-08-10/2026-08-16",
+          "delta_R": 1.0299928999932049
+        },
+        {
+          "week": "2026-03-16/2026-03-22",
+          "delta_R": 0.0
+        },
+        {
+          "week": "2026-03-09/2026-03-15",
+          "delta_R": 0.0
+        },
+        {
+          "week": "2026-04-06/2026-04-12",
+          "delta_R": 0.0
+        },
+        {
+          "week": "2026-03-30/2026-04-05",
+          "delta_R": 0.0
+        },
+        {
+          "week": "2026-04-13/2026-04-19",
+          "delta_R": 0.0
+        },
+        {
+          "week": "2026-04-20/2026-04-26",
+          "delta_R": 0.0
+        }
+      ]
+    },
+    "historical_4week_block_bootstrap": {
+      "reps": 20000,
+      "block_weeks": 4,
+      "observed_sumR": 14.21605273073451,
+      "ci95_sumR": [
+        -2.7167616308745255,
+        32.647364926078495
+      ],
+      "p_bootstrap_sumR_gt_0": 0.94895,
+      "median_sumR": 14.904786896578443
+    },
+    "forward_4week_block_bootstrap": {
+      "reps": 20000,
+      "block_weeks": 4,
+      "observed_sumR": 5.608761799002718,
+      "ci95_sumR": [
+        2.673602187275379,
+        9.916497779911559
+      ],
+      "p_bootstrap_sumR_gt_0": 0.9993,
+      "median_sumR": 6.314046330892616
+    }
+  },
+  "promotion_gate": {
+    "requirements": [
+      "historical total delta > 0",
+      ">=4/5 historical years non-negative delta",
+      "historical leave-one-year-out delta > 0 for every omitted year",
+      "forward total delta > 0",
+      ">=4/6 forward months non-negative delta",
+      "historical 4-week bootstrap P(delta>0) >= 0.80",
+      "forward 4-week bootstrap P(delta>0) >= 0.70",
+      "after removing top 3 positive historical weeks, net delta remains > 0"
+    ],
+    "checks": {
+      "historical_delta_positive": true,
+      "historical_years_nonnegative_4of5": true,
+      "leave_one_year_out_all_positive": true,
+      "forward_delta_positive": true,
+      "forward_months_nonnegative_4of6": true,
+      "historical_bootstrap_ge_080": true,
+      "forward_bootstrap_ge_070": true,
+      "hist_after_top3_positive_weeks_positive": true
+    },
+    "pass": true
+  },
+  "limitations": [
+    "2021-2025 is discovery/in-sample; 2026 Mar-Aug is reused forward-shadow, not pristine OOS.",
+    "This audit is BTC only; ETH/SOL transfer is not established.",
+    "Bootstrap is a descriptive stability diagnostic, not an independent significance test.",
+    "Stateful cancellation changes future reachability; paired decomposition is therefore required and direct removed-trade PnL alone is insufficient."
+  ]
+}
