@@ -118,6 +118,9 @@ def prep(raw,ft,fz,start,end):
 
 @njit(cache=True)
 def extract_events(ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5,H1,H4):
+    # EXACT LAB039 FAST population parity:
+    # signal cadence on completed M5; confirmation is the first raw-price close
+    # crossing 0.30 ATR within 3h; market entry at that raw close.
     cap=len(dt5)
     R=np.zeros(cap);ST=np.zeros(cap,np.int64);CT=np.zeros(cap,np.int64);ET=np.zeros(cap,np.int64)
     SIDE=np.zeros(cap,np.int8);OZ=np.zeros(cap);CZ=np.zeros(cap);SA=np.zeros(cap);CA=np.zeros(cap)
@@ -140,37 +143,35 @@ def extract_events(ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5,H1,H4):
             k+=1;continue
 
         target=sig+side*CONF_ATR*siga
-        j=k+1;ci=-1
+        ps=np.searchsorted(ts,t+1)
+        pe=np.searchsorted(ts,t+CONF_TTL,'right')
+        ci=-1
         maxcrowd=0.;maxthesis=0.
-        while j<len(dt5) and dt5[j]<=t+CONF_TTL:
-            crowd_exc=((H5[j]-sig) if side<0 else (sig-L5[j]))/siga
-            thesis_exc=((sig-L5[j]) if side<0 else (H5[j]-sig))/siga
+        for q in range(ps,min(len(ts),pe)):
+            crowd_exc=((H[q]-sig) if side<0 else (sig-L[q]))/siga
+            thesis_exc=((sig-L[q]) if side<0 else (H[q]-sig))/siga
             if crowd_exc>maxcrowd:maxcrowd=crowd_exc
             if thesis_exc>maxthesis:maxthesis=thesis_exc
-            if (side>0 and C5[j]>=target) or (side<0 and C5[j]<=target):
-                ci=j;break
-            j+=1
+            if (side>0 and C[q]>=target) or (side<0 and C[q]<=target):
+                ci=q;break
         if ci<0:
             k+=1;continue
 
+        zk=np.searchsorted(dt5,ts[ci],'right')-1
+        if zk<0:
+            k+=1;continue
+
         # LAB035B sign-flip consistency remains ON.
-        if z*Z5[ci]<0.0:
-            k=ci+1;continue
+        if z*Z5[zk]<0.0:
+            k=np.searchsorted(dt5,ts[ci])+1
+            continue
 
-        # Market entry at completed M5 confirm close (causal approximation to v191 timer quote).
-        entry=C5[ci]
-        ei=np.searchsorted(ts,dt5[ci]-1,'right')-1
-        if ei<0:
-            k=ci+1;continue
-
-        # Current completed M15 ATR at confirmation approximated by A5[ci].
-        curA=A5[ci]
-        atr_exp=curA/siga if siga>0 else 0.
-        confirm_min=(dt5[ci]-t)/60.0
-        # response quality: thesis excursion / (crowd excursion + epsilon), clipped later only in bins.
+        entry=C[ci]
+        ei=ci
+        curA=A5[zk]
+        confirm_min=(ts[ci]-t)/60.0
         response=maxthesis/(maxcrowd+1e-9)
-        # reclaim: confirm close displacement beyond signal, in ATR, positive by construction if confirmed.
-        reclaim=side*(C5[ci]-sig)/siga
+        reclaim=side*(entry-sig)/siga
 
         risk=SL*siga;sl=entry-side*risk;tp=entry+side*TP*siga
         xe=min(len(ts)-1,np.searchsorted(ts,ts[ei]+HOLD,'left'))
@@ -182,7 +183,7 @@ def extract_events(ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5,H1,H4):
             if th:xp=tp;ex=q;break
 
         rr=side*(xp-entry)/risk-(COST_BPS/10000.)*entry/risk
-        R[n]=rr;ST[n]=t;CT[n]=dt5[ci];ET[n]=ts[ei];SIDE[n]=side;OZ[n]=z;CZ[n]=Z5[ci]
+        R[n]=rr;ST[n]=t;CT[n]=ts[ci];ET[n]=ts[ei];SIDE[n]=side;OZ[n]=z;CZ[n]=Z5[zk]
         SA[n]=siga;CA[n]=curA;CMIN[n]=confirm_min;CEX[n]=maxcrowd;RESP[n]=response;RECLAIM[n]=reclaim
         H1A[n]=H1[k];H4A[n]=H4[k];n+=1
 
@@ -373,7 +374,7 @@ def main():
         'Rule family is restricted to simple one-feature unions or two-feature ANDs to reduce overfit.',
         'BTC only; ETH/SOL transfer remains mandatory before production.',
         'Exit shell is v200 to isolate entry discrimination; final hybrid must rerun full portfolio sequence.',
-        'Confirmation is completed-M5 close approximation, not exact live quote timer behavior.'
+        'Confirmation uses the same LAB039 first-raw-close crossing approximation to the live timer/quote behavior; it is not exact tick replay.'
       ]
     }
     (OUT/'summary.json').write_text(json.dumps(result,indent=2))
@@ -391,7 +392,7 @@ def main():
     def fmt(m):
         return f"N={m['N']} EV={m['EV']:+.4f} PF={m['PF']:.3f} Sum={m['SumR']:+.2f}R DD={m['MaxDD_R']:.2f} R/DD={m['R_DD']:.3f}"
     lines=['# LAB040 — FAST_LANE_DISCRIMINATOR','',
-           'Population: 1.0 <= |Z| < 2.05, M5 confirm .30 ATR <=3h, sign-flip cancel, market entry, v200 exits.','',
+           'Population: EXACT LAB039 FAST parity — completed-M5 signal cadence; first raw-price close crossing .30 ATR <=3h; sign-flip cancel; market entry; v200 exits.','',
            f"- Raw historical: {fmt(baseline['historical'])}",
            f"- Raw 2026: {fmt(baseline['forward'])}",'',
            f"Passing simple causal rules: **{len(candidates)}**",'']
