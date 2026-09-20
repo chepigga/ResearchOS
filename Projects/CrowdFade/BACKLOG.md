@@ -2680,3 +2680,145 @@ Next research:
 - require the subset to improve both historical and 2026 EV/PF;
 - then rerun full portfolio sequence at 0.40x–0.50x risk.
 
+
+## LAB040 — FAST_LANE_DISCRIMINATOR
+Status: **DONE — NO STRICT-GATE PASS; SEVERAL AGGREGATE-POSITIVE CANDIDATES IDENTIFIED**
+
+Parity:
+- exact LAB039 FAST population:
+  - completed-M5 signal cadence;
+  - first raw-price close crossing 0.30 ATR within 3h;
+  - sign-flip cancel;
+  - market entry;
+  - v200 exit shell for attribution;
+- raw FAST population:
+  - 2021–2025 N=2492, EV +0.0127R, PF 1.026, Sum +31.68R, DD 44.27R;
+  - 2026 Mar–Aug N=266, EV **-0.1028R**, PF 0.810, Sum -27.35R.
+
+Method:
+- causal features only, known before entry:
+  - |Z| band;
+  - confirmation speed;
+  - H1/H4 state;
+  - crowd excursion;
+  - ATR expansion;
+  - response ratio;
+  - reclaim displacement;
+- simple rule family only:
+  - one-feature bin / 2-bin union;
+  - two-feature AND;
+- strict gate:
+  - N>=20 in 2021–23 discovery, 2024–25 validation, and 2026;
+  - EV>0 and PF>1 in all three;
+  - validation EV>=+0.03R;
+  - 2026 EV>=+0.05R.
+
+Result:
+**0 rules passed the strict gate.**
+
+This is important:
+there is no currently demonstrated FAST discriminator that is simultaneously frequent enough and stable enough to promote.
+
+### Aggregate-positive candidates (2021–2025 AND 2026)
+
+#### Candidate A — ONE_ALIGN + response >=2.50
+- 2021–2025:
+  - N105;
+  - EV **+0.329R**;
+  - PF 1.839;
+  - Sum +34.51R.
+- 2026:
+  - N15;
+  - EV **+0.077R**;
+  - PF 1.184;
+  - Sum +1.16R.
+- 2021–23 EV +0.260R;
+- 2024–25 EV +0.441R.
+
+Interpretation:
+very strong quality signal across both internal historical splits, but 2026 N=15 is too small for strict promotion.
+
+#### Candidate B — ONE_ALIGN + response 0.50–1.00
+- 2021–2025:
+  - N134;
+  - EV **+0.108R**;
+  - PF 1.226;
+  - Sum +14.51R.
+- 2026:
+  - N13;
+  - EV **+0.073R**;
+  - PF 1.145;
+  - Sum +0.95R.
+- 2021–23 EV +0.099R;
+- 2024–25 EV +0.119R.
+
+Interpretation:
+less powerful but unusually consistent across discovery / validation / 2026; sample still too small.
+
+#### Candidate C — BOTH_ALIGN + reclaim 0.35–0.50 ATR
+- 2021–2025:
+  - N397;
+  - EV **+0.0365R**;
+  - PF 1.073;
+  - Sum +14.49R.
+- 2026:
+  - N19;
+  - EV **+0.0551R**;
+  - PF 1.098;
+  - Sum +1.05R.
+- 2021–23 EV +0.0255R;
+- 2024–25 EV +0.0498R.
+
+Interpretation:
+largest reasonably coherent candidate population and the closest to the strict gate (forward N19 vs required N20), but edge is thin.
+
+#### Candidate D — confirmation <=15m + MIXED_NEUTRAL
+- 2021–2025:
+  - N146;
+  - EV +0.122R;
+  - PF 1.279;
+  - Sum +17.82R.
+- 2026:
+  - N14;
+  - EV +0.252R;
+  - PF 1.585;
+  - Sum +3.53R.
+- 2021–23 EV +0.159R;
+- 2024–25 EV +0.043R.
+
+Interpretation:
+interesting fast-reversal phenotype; forward sample too small.
+
+### Simple Z-band audit
+
+Only one pure Z-band is aggregate-positive in both periods:
+
+`|Z| = 1.50–1.75`
+- 2021–2025 N437, EV **+0.0091R**, PF 1.018;
+- 2026 N46, EV **+0.0101R**, PF 1.018;
+- but 2021–23 EV **-0.029R** and 2024–25 EV +0.071R.
+
+Decision:
+**do not use Z1.50–1.75 alone.**
+The apparent edge is too weak and regime-dependent.
+
+### LAB040 conclusion
+
+The FAST edge is **conditional on price response / trend-state interaction**, not on Z magnitude alone.
+
+Most promising research phenotype:
+> lower-Z crowd extreme + one timeframe aligned with trade + unusually strong response quality.
+
+Most scalable near-pass phenotype:
+> H1/H4 both aligned with trade + confirmation reclaim around 0.35–0.50 ATR.
+
+No production promotion yet.
+
+Next LAB should be:
+**LAB041 — FAST_LANE_COMPOSITE_GATE_AND_PORTFOLIO_REPLAY**
+- construct only 2–3 preregistered composite gates from the LAB040 candidates;
+- test union / overlap without data-mining hundreds of combinations;
+- rerun full CORE+FAST stateful portfolio;
+- require 2026 portfolio SumR and R/DD not worse than CORE;
+- test FAST risk 0.25x / 0.40x, not 0.50x initially.
+
