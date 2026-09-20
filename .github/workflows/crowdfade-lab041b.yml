@@ -1,0 +1,86 @@
+name: CrowdFade LAB041B overlap conflict audit
+
+on:
+  push:
+    branches:
+      - lab/crowdfade-execution-5y-positive-005
+    paths:
+      - 'labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B/run.py'
+      - '.github/workflows/crowdfade-lab041b.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab041b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip numpy pandas numba
+
+      - name: Download frozen research data
+        shell: bash
+        run: |
+          set -euo pipefail
+          LAB="labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B"
+          mkdir -p "$LAB/data/hist_1m"
+
+          curl -fL --retry 5 --retry-delay 3             -o "$LAB/data/BTCUSDT_flow_2021-01-2026-08.csv.zip"             "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip"
+
+          curl -fL --retry 5 --retry-delay 3             -o "$LAB/data/BTCUSDT_sec.csv.zip"             "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip"
+
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import urlretrieve
+          import time
+          root=Path("labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B/data/hist_1m")
+          base="https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/1m"
+          for y in range(2021,2026):
+              for m in range(1,13):
+                  name=f"BTCUSDT-1m-{y}-{m:02d}.zip"
+                  p=root/name
+                  url=f"{base}/{name}"
+                  for attempt in range(5):
+                      try:
+                          urlretrieve(url,p)
+                          print("downloaded",name,p.stat().st_size)
+                          break
+                      except Exception:
+                          if p.exists(): p.unlink()
+                          if attempt==4: raise
+                          time.sleep(2+attempt)
+          PY
+
+      - name: Run LAB041B
+        run: python labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B/run.py
+
+      - name: Upload outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: crowdfade-lab041b-results
+          path: labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B/output/
+          retention-days: 30
+
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name "ResearchOS Lab Runner"
+          git config user.email "researchos-lab@users.noreply.github.com"
+          git add labs/CROWDFADE_CORE_FAST_OVERLAP_CONFLICT_2025_FAILURE_LAB_041B/output/
+          if git diff --cached --quiet; then
+            echo "No output changes"
+          else
+            git commit -m "lab(CrowdFade): record LAB041B overlap conflict audit"
+            git push origin HEAD:lab/crowdfade-execution-5y-positive-005
+          fi
