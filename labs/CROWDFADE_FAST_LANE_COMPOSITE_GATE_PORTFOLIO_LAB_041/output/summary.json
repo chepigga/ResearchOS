@@ -1,0 +1,836 @@
+{
+  "lab": "LAB041_FAST_LANE_COMPOSITE_GATE_AND_PORTFOLIO_REPLAY",
+  "preregistered_gates": {
+    "G1_RESPONSE": "ONE_ALIGN AND (response 0.50-1.00 OR response>=2.50)",
+    "G2_RESPONSE_RECLAIM": "G1 OR (BOTH_ALIGN AND reclaim 0.35-0.50 ATR)",
+    "G3_FULL_COMPOSITE": "G2 OR (MIXED_NEUTRAL AND confirm<=15m)"
+  },
+  "risk_tests": [
+    0.25,
+    0.4
+  ],
+  "historical": {
+    "CORE": {
+      "N": 1617,
+      "WR": 0.4390847247990105,
+      "EV": 0.0844871758261805,
+      "SumR": 136.61576331093386,
+      "PF": 1.1726024783537283,
+      "MaxDD_R": 18.814135954048083,
+      "R_DD": 7.261336031832988,
+      "MaxConsecutiveLosses": 13,
+      "trades_per_month": 26.95,
+      "periods": {
+        "2021": {
+          "N": 302,
+          "WR": 0.4867549668874172,
+          "EV": 0.14172413560463257,
+          "SumR": 42.80068895259903,
+          "PF": 1.3183248191016674,
+          "MaxDD_R": 18.28667724036505,
+          "R_DD": 2.3405394205855528,
+          "MaxConsecutiveLosses": 9
+        },
+        "2022": {
+          "N": 310,
+          "WR": 0.4612903225806452,
+          "EV": 0.0796420497307606,
+          "SumR": 24.689035416535784,
+          "PF": 1.1670940095820863,
+          "MaxDD_R": 14.48753187917832,
+          "R_DD": 1.7041574522447958,
+          "MaxConsecutiveLosses": 8
+        },
+        "2023": {
+          "N": 306,
+          "WR": 0.40522875816993464,
+          "EV": 0.04083024770138478,
+          "SumR": 12.49405579662374,
+          "PF": 1.0779788166519548,
+          "MaxDD_R": 18.814135954048073,
+          "R_DD": 0.6640781073943236,
+          "MaxConsecutiveLosses": 8
+        },
+        "2024": {
+          "N": 349,
+          "WR": 0.42120343839541546,
+          "EV": 0.09251172566720973,
+          "SumR": 32.2865922578562,
+          "PF": 1.1844146803897437,
+          "MaxDD_R": 17.126614724774026,
+          "R_DD": 1.8851706993299109,
+          "MaxConsecutiveLosses": 10
+        },
+        "2025": {
+          "N": 350,
+          "WR": 0.4257142857142857,
+          "EV": 0.06955825967805462,
+          "SumR": 24.34539088731912,
+          "PF": 1.1399207963221667,
+          "MaxDD_R": 12.397749684325026,
+          "R_DD": 1.963694340280154,
+          "MaxConsecutiveLosses": 13
+        }
+      }
+    },
+    "gates": {
+      "G1_RESPONSE": {
+        "N": 1006,
+        "WR": 0.40556660039761433,
+        "EV": 0.0019086772739333416,
+        "SumR": 1.9201293375769417,
+        "PF": 1.0038379111781415,
+        "MaxDD_R": 43.98470845259128,
+        "R_DD": 0.04365447459192652,
+        "MaxConsecutiveLosses": 12,
+        "trades_per_month": 16.766666666666666,
+        "periods": {
+          "2021": {
+            "N": 197,
+            "WR": 0.4416243654822335,
+            "EV": 0.0728399377040389,
+            "SumR": 14.349467727695664,
+            "PF": 1.1536556243558764,
+            "MaxDD_R": 13.384686364211682,
+            "R_DD": 1.0720809839865684,
+            "MaxConsecutiveLosses": 12
+          },
+          "2022": {
+            "N": 197,
+            "WR": 0.4365482233502538,
+            "EV": 0.06775365353263088,
+            "SumR": 13.347469745928283,
+            "PF": 1.1489358184268768,
+            "MaxDD_R": 18.676690211224923,
+            "R_DD": 0.7146592675133782,
+            "MaxConsecutiveLosses": 9
+          },
+          "2023": {
+            "N": 194,
+            "WR": 0.3865979381443299,
+            "EV": -0.01960551881288605,
+            "SumR": -3.8034706496998933,
+            "PF": 0.9617293995600098,
+            "MaxDD_R": 16.28544235272165,
+            "R_DD": -0.23355034314215303,
+            "MaxConsecutiveLosses": 9
+          },
+          "2024": {
+            "N": 203,
+            "WR": 0.41379310344827586,
+            "EV": 0.03185816496725719,
+            "SumR": 6.4672074883532105,
+            "PF": 1.0624713618929318,
+            "MaxDD_R": 14.63761066367885,
+            "R_DD": 0.4418212532733001,
+            "MaxConsecutiveLosses": 7
+          },
+          "2025": {
+            "N": 215,
+            "WR": 0.35348837209302325,
+            "EV": -0.13228160453348994,
+            "SumR": -28.440544974700337,
+            "PF": 0.751379336290068,
+            "MaxDD_R": 43.98470845259125,
+            "R_DD": -0.6466007386488618,
+            "MaxConsecutiveLosses": 9
+          }
+        }
+      },
+      "G2_RESPONSE_RECLAIM": {
+        "N": 1993,
+        "WR": 0.3958855995985951,
+        "EV": 0.004211029802170365,
+        "SumR": 8.392582395725537,
+        "PF": 1.0084609021621707,
+        "MaxDD_R": 36.837592653842776,
+        "R_DD": 0.2278265703893669,
+        "MaxConsecutiveLosses": 11,
+        "trades_per_month": 33.21666666666667,
+        "periods": {
+          "2021": {
+            "N": 386,
+            "WR": 0.41968911917098445,
+            "EV": 0.0013738622742691146,
+            "SumR": 0.5303108378678782,
+            "PF": 1.002825051929063,
+            "MaxDD_R": 18.90076407118765,
+            "R_DD": 0.028057640202825706,
+            "MaxConsecutiveLosses": 9
+          },
+          "2022": {
+            "N": 370,
+            "WR": 0.4,
+            "EV": -0.0101215124856543,
+            "SumR": -3.744959619692091,
+            "PF": 0.979132449721213,
+            "MaxDD_R": 20.370464734694874,
+            "R_DD": -0.18384262060127154,
+            "MaxConsecutiveLosses": 9
+          },
+          "2023": {
+            "N": 387,
+            "WR": 0.3643410852713178,
+            "EV": 0.0014790009229383924,
+            "SumR": 0.5723733571771579,
+            "PF": 1.0029064187093404,
+            "MaxDD_R": 20.680560092400903,
+            "R_DD": 0.02767687889591913,
+            "MaxConsecutiveLosses": 8
+          },
+          "2024": {
+            "N": 430,
+            "WR": 0.3953488372093023,
+            "EV": 0.030975211930631907,
+            "SumR": 13.31934113017172,
+            "PF": 1.0602733647702662,
+            "MaxDD_R": 16.96628416318239,
+            "R_DD": 0.7850476275220768,
+            "MaxConsecutiveLosses": 11
+          },
+          "2025": {
+            "N": 420,
+            "WR": 0.4,
+            "EV": -0.005439245975712219,
+            "SumR": -2.284483309799132,
+            "PF": 0.9889546861671501,
+            "MaxDD_R": 19.535965855671733,
+            "R_DD": -0.1169373107363358,
+            "MaxConsecutiveLosses": 11
+          }
+        }
+      },
+      "G3_FULL_COMPOSITE": {
+        "N": 2065,
+        "WR": 0.401452784503632,
+        "EV": 0.004700860509330199,
+        "SumR": 9.707276951766861,
+        "PF": 1.0095800402293649,
+        "MaxDD_R": 37.38285153565634,
+        "R_DD": 0.25967192316797744,
+        "MaxConsecutiveLosses": 10,
+        "trades_per_month": 34.416666666666664,
+        "periods": {
+          "2021": {
+            "N": 400,
+            "WR": 0.42,
+            "EV": -0.013304452085805765,
+            "SumR": -5.321780834322306,
+            "PF": 0.9728480108102822,
+            "MaxDD_R": 27.95545360994001,
+            "R_DD": -0.1903664633232802,
+            "MaxConsecutiveLosses": 9
+          },
+          "2022": {
+            "N": 392,
+            "WR": 0.41581632653061223,
+            "EV": 0.013255558524069157,
+            "SumR": 5.196178941435109,
+            "PF": 1.0282205280880485,
+            "MaxDD_R": 21.93527410430957,
+            "R_DD": 0.23688689353620743,
+            "MaxConsecutiveLosses": 9
+          },
+          "2023": {
+            "N": 396,
+            "WR": 0.3686868686868687,
+            "EV": -0.003651836778637944,
+            "SumR": -1.4461273643406258,
+            "PF": 0.992662197081243,
+            "MaxDD_R": 20.514756207420568,
+            "R_DD": -0.07049205702076707,
+            "MaxConsecutiveLosses": 10
+          },
+          "2024": {
+            "N": 443,
+            "WR": 0.40632054176072235,
+            "EV": 0.04230934278527385,
+            "SumR": 18.743038853876318,
+            "PF": 1.0841816074858301,
+            "MaxDD_R": 19.19986519534594,
+            "R_DD": 0.9762067943278916,
+            "MaxConsecutiveLosses": 8
+          },
+          "2025": {
+            "N": 434,
+            "WR": 0.39631336405529954,
+            "EV": -0.017198231900648925,
+            "SumR": -7.464032644881634,
+            "PF": 0.9650273787799234,
+            "MaxDD_R": 28.38436830561426,
+            "R_DD": -0.2629627886911717,
+            "MaxConsecutiveLosses": 10
+          }
+        }
+      }
+    },
+    "portfolios": {
+      "G1_RESPONSE_RISK0.25": {
+        "N": 2623,
+        "WR": 0.4262295081967213,
+        "EV": 0.0522667920874297,
+        "SumR": 137.0957956453281,
+        "PF": 1.1495729168442121,
+        "MaxDD_R": 20.962235722041505,
+        "R_DD": 6.540132334318412,
+        "MaxConsecutiveLosses": 13,
+        "trades": 2623,
+        "trades_per_month": 43.71666666666667,
+        "core_trades": 1617,
+        "fast_trades": 1006,
+        "fast_mult": 0.25,
+        "weighted_sumR": 137.0957956453281,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G1_RESPONSE_RISK0.40": {
+        "N": 2623,
+        "WR": 0.4262295081967213,
+        "EV": 0.05237659742507231,
+        "SumR": 137.38381504596467,
+        "PF": 1.1385437649426713,
+        "MaxDD_R": 22.2510955828376,
+        "R_DD": 6.174249467155658,
+        "MaxConsecutiveLosses": 13,
+        "trades": 2623,
+        "trades_per_month": 43.71666666666667,
+        "core_trades": 1617,
+        "fast_trades": 1006,
+        "fast_mult": 0.4,
+        "weighted_sumR": 137.38381504596467,
+        "max_concurrent_risk_units": 1.4
+      },
+      "G2_RESPONSE_RECLAIM_RISK0.25": {
+        "N": 3610,
+        "WR": 0.4152354570637119,
+        "EV": 0.038424905515198136,
+        "SumR": 138.71390890986527,
+        "PF": 1.1334446425288616,
+        "MaxDD_R": 23.367640096399946,
+        "R_DD": 5.936153943557002,
+        "MaxConsecutiveLosses": 17,
+        "trades": 3610,
+        "trades_per_month": 60.166666666666664,
+        "core_trades": 1617,
+        "fast_trades": 1993,
+        "fast_mult": 0.25,
+        "weighted_sumR": 138.71390890986527,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G2_RESPONSE_RECLAIM_RISK0.40": {
+        "N": 3610,
+        "WR": 0.4152354570637119,
+        "EV": 0.03877362777540835,
+        "SumR": 139.97279626922412,
+        "PF": 1.1177949200560007,
+        "MaxDD_R": 26.931879009533283,
+        "R_DD": 5.197290401448665,
+        "MaxConsecutiveLosses": 17,
+        "trades": 3610,
+        "trades_per_month": 60.166666666666664,
+        "core_trades": 1617,
+        "fast_trades": 1993,
+        "fast_mult": 0.4,
+        "weighted_sumR": 139.97279626922412,
+        "max_concurrent_risk_units": 1.4
+      },
+      "G3_FULL_COMPOSITE_RISK0.25": {
+        "N": 3682,
+        "WR": 0.4179793590439978,
+        "EV": 0.03776278722131331,
+        "SumR": 139.0425825488756,
+        "PF": 1.133077314231607,
+        "MaxDD_R": 24.750085026245998,
+        "R_DD": 5.617862823559159,
+        "MaxConsecutiveLosses": 17,
+        "trades": 3682,
+        "trades_per_month": 61.36666666666667,
+        "core_trades": 1617,
+        "fast_trades": 2065,
+        "fast_mult": 0.25,
+        "weighted_sumR": 139.0425825488756,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G3_FULL_COMPOSITE_RISK0.40": {
+        "N": 3682,
+        "WR": 0.4179793590439978,
+        "EV": 0.03815824934591,
+        "SumR": 140.49867409164062,
+        "PF": 1.1173935365214265,
+        "MaxDD_R": 29.14379089728699,
+        "R_DD": 4.820878470711225,
+        "MaxConsecutiveLosses": 17,
+        "trades": 3682,
+        "trades_per_month": 61.36666666666667,
+        "core_trades": 1617,
+        "fast_trades": 2065,
+        "fast_mult": 0.4,
+        "weighted_sumR": 140.49867409164062,
+        "max_concurrent_risk_units": 1.4
+      }
+    }
+  },
+  "forward": {
+    "CORE": {
+      "N": 172,
+      "WR": 0.43023255813953487,
+      "EV": 0.13211627080977384,
+      "SumR": 22.7239985792811,
+      "PF": 1.2757932715976612,
+      "MaxDD_R": 8.014074755501825,
+      "R_DD": 2.8355111815847005,
+      "MaxConsecutiveLosses": 8,
+      "trades_per_month": 28.666666666666668,
+      "periods": {
+        "2026-03": {
+          "N": 29,
+          "WR": 0.5172413793103449,
+          "EV": 0.43044327962543716,
+          "SumR": 12.482855109137677,
+          "PF": 2.0376231893208705,
+          "MaxDD_R": 2.716344484584054,
+          "R_DD": 4.595460988096707,
+          "MaxConsecutiveLosses": 3
+        },
+        "2026-04": {
+          "N": 26,
+          "WR": 0.46153846153846156,
+          "EV": -0.05707113768469542,
+          "SumR": -1.483849579802081,
+          "PF": 0.8803549904227296,
+          "MaxDD_R": 5.297730270917771,
+          "R_DD": -0.2800915682604243,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-05": {
+          "N": 30,
+          "WR": 0.43333333333333335,
+          "EV": 0.1522462974983837,
+          "SumR": 4.567388924951511,
+          "PF": 1.3229197320926673,
+          "MaxDD_R": 4.081904491425714,
+          "R_DD": 1.1189357650443772,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-06": {
+          "N": 29,
+          "WR": 0.41379310344827586,
+          "EV": 0.12360772151637055,
+          "SumR": 3.5846239239747457,
+          "PF": 1.2666800445506885,
+          "MaxDD_R": 5.49547011623188,
+          "R_DD": 0.6522870378981592,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-07": {
+          "N": 27,
+          "WR": 0.4074074074074074,
+          "EV": 0.13391618658165796,
+          "SumR": 3.615737037704765,
+          "PF": 1.249607806810126,
+          "MaxDD_R": 4.663638962441725,
+          "R_DD": 0.7753038060672874,
+          "MaxConsecutiveLosses": 4
+        },
+        "2026-08": {
+          "N": 31,
+          "WR": 0.3548387096774194,
+          "EV": -0.0013792527963068992,
+          "SumR": -0.042756836685513874,
+          "PF": 0.9973094230334602,
+          "MaxDD_R": 7.265045187116312,
+          "R_DD": -0.0058852815893475794,
+          "MaxConsecutiveLosses": 8
+        }
+      }
+    },
+    "gates": {
+      "G1_RESPONSE": {
+        "N": 97,
+        "WR": 0.4948453608247423,
+        "EV": 0.15654544843596743,
+        "SumR": 15.184908498288841,
+        "PF": 1.3655535503153073,
+        "MaxDD_R": 7.264802130649438,
+        "R_DD": 2.090202627023426,
+        "MaxConsecutiveLosses": 5,
+        "trades_per_month": 16.166666666666668,
+        "periods": {
+          "2026-03": {
+            "N": 18,
+            "WR": 0.5,
+            "EV": 0.40037746665245133,
+            "SumR": 7.2067943997441235,
+            "PF": 2.0598276135116667,
+            "MaxDD_R": 2.0394204476902456,
+            "R_DD": 3.533746269880843,
+            "MaxConsecutiveLosses": 3
+          },
+          "2026-04": {
+            "N": 13,
+            "WR": 0.6153846153846154,
+            "EV": 0.4142223287980515,
+            "SumR": 5.384890274374669,
+            "PF": 2.070934565063367,
+            "MaxDD_R": 1.6078524873224667,
+            "R_DD": 3.349119596998633,
+            "MaxConsecutiveLosses": 1
+          },
+          "2026-05": {
+            "N": 18,
+            "WR": 0.3333333333333333,
+            "EV": -0.184931820760056,
+            "SumR": -3.328772773681008,
+            "PF": 0.6561571262345077,
+            "MaxDD_R": 6.259687452600338,
+            "R_DD": -0.5317793897678073,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-06": {
+            "N": 16,
+            "WR": 0.5625,
+            "EV": 0.25375285956410015,
+            "SumR": 4.0600457530256024,
+            "PF": 1.7404539782634998,
+            "MaxDD_R": 2.4701615215295716,
+            "R_DD": 1.643635737031295,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 17,
+            "WR": 0.5882352941176471,
+            "EV": 0.2873422363914786,
+            "SumR": 4.884818018655136,
+            "PF": 1.744553974426785,
+            "MaxDD_R": 2.5446353189691147,
+            "R_DD": 1.9196534694936478,
+            "MaxConsecutiveLosses": 3
+          },
+          "2026-08": {
+            "N": 15,
+            "WR": 0.4,
+            "EV": -0.20152447825531195,
+            "SumR": -3.0228671738296793,
+            "PF": 0.6214936348261757,
+            "MaxDD_R": 4.087899513489283,
+            "R_DD": -0.739467094006298,
+            "MaxConsecutiveLosses": 4
+          }
+        }
+      },
+      "G2_RESPONSE_RECLAIM": {
+        "N": 174,
+        "WR": 0.39080459770114945,
+        "EV": -0.04261749539786375,
+        "SumR": -7.4154441992282925,
+        "PF": 0.9174746968305062,
+        "MaxDD_R": 25.094105294040293,
+        "R_DD": -0.2955054229803291,
+        "MaxConsecutiveLosses": 7,
+        "trades_per_month": 29.0,
+        "periods": {
+          "2026-03": {
+            "N": 28,
+            "WR": 0.5,
+            "EV": 0.38978804456156746,
+            "SumR": 10.914065247723888,
+            "PF": 2.0072471310421958,
+            "MaxDD_R": 4.012753226143007,
+            "R_DD": 2.7198446135732874,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-04": {
+            "N": 26,
+            "WR": 0.34615384615384615,
+            "EV": -0.16079480537772434,
+            "SumR": -4.180664939820833,
+            "PF": 0.7109922884854876,
+            "MaxDD_R": 6.10513694987196,
+            "R_DD": -0.6847782407090003,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-05": {
+            "N": 30,
+            "WR": 0.36666666666666664,
+            "EV": -0.12059194205389313,
+            "SumR": -3.617758261616794,
+            "PF": 0.750388612317948,
+            "MaxDD_R": 5.571549716112503,
+            "R_DD": -0.6493271075288998,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-06": {
+            "N": 28,
+            "WR": 0.39285714285714285,
+            "EV": -0.040905566042294714,
+            "SumR": -1.145355849184252,
+            "PF": 0.9224714528668687,
+            "MaxDD_R": 7.209381664000414,
+            "R_DD": -0.15887019200322172,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 31,
+            "WR": 0.41935483870967744,
+            "EV": -0.04207812259743097,
+            "SumR": -1.30442180052036,
+            "PF": 0.9224483690065858,
+            "MaxDD_R": 7.21668828658654,
+            "R_DD": -0.180750747256862,
+            "MaxConsecutiveLosses": 7
+          },
+          "2026-08": {
+            "N": 31,
+            "WR": 0.3225806451612903,
+            "EV": -0.26068737405838527,
+            "SumR": -8.081308595809944,
+            "PF": 0.562428445890658,
+            "MaxDD_R": 11.28751680077328,
+            "R_DD": -0.7159509694157277,
+            "MaxConsecutiveLosses": 7
+          }
+        }
+      },
+      "G3_FULL_COMPOSITE": {
+        "N": 187,
+        "WR": 0.39572192513368987,
+        "EV": -0.028938962615816455,
+        "SumR": -5.411586009157677,
+        "PF": 0.9442669100831457,
+        "MaxDD_R": 21.451972844019426,
+        "R_DD": -0.2522651901765001,
+        "MaxConsecutiveLosses": 12,
+        "trades_per_month": 31.166666666666668,
+        "periods": {
+          "2026-03": {
+            "N": 30,
+            "WR": 0.43333333333333335,
+            "EV": 0.19901703039381563,
+            "SumR": 5.970510911814469,
+            "PF": 1.420717417109985,
+            "MaxDD_R": 5.0493240480598525,
+            "R_DD": 1.182437659969273,
+            "MaxConsecutiveLosses": 6
+          },
+          "2026-04": {
+            "N": 29,
+            "WR": 0.41379310344827586,
+            "EV": 0.015269167088771088,
+            "SumR": 0.44280584557436153,
+            "PF": 1.0306027628149932,
+            "MaxDD_R": 5.275717148965417,
+            "R_DD": 0.08393282525792668,
+            "MaxConsecutiveLosses": 6
+          },
+          "2026-05": {
+            "N": 31,
+            "WR": 0.3870967741935484,
+            "EV": -0.1108432899590261,
+            "SumR": -3.4361419887298092,
+            "PF": 0.7691135800015624,
+            "MaxDD_R": 5.872496919859211,
+            "R_DD": -0.5851245280537649,
+            "MaxConsecutiveLosses": 5
+          },
+          "2026-06": {
+            "N": 28,
+            "WR": 0.35714285714285715,
+            "EV": -0.13890978913504073,
+            "SumR": -3.8894740957811402,
+            "PF": 0.7534407323851858,
+            "MaxDD_R": 9.953499910597303,
+            "R_DD": -0.39076446784714297,
+            "MaxConsecutiveLosses": 4
+          },
+          "2026-07": {
+            "N": 30,
+            "WR": 0.5666666666666667,
+            "EV": 0.19183688603510562,
+            "SumR": 5.755106581053169,
+            "PF": 1.4690243591143353,
+            "MaxDD_R": 3.494685599293959,
+            "R_DD": 1.6468166928137653,
+            "MaxConsecutiveLosses": 3
+          },
+          "2026-08": {
+            "N": 39,
+            "WR": 0.2564102564102564,
+            "EV": -0.2629331605920186,
+            "SumR": -10.254393263088726,
+            "PF": 0.5980205999726589,
+            "MaxDD_R": 15.274945138076152,
+            "R_DD": -0.6713211190217241,
+            "MaxConsecutiveLosses": 9
+          }
+        }
+      }
+    },
+    "portfolios": {
+      "G1_RESPONSE_RISK0.25": {
+        "N": 269,
+        "WR": 0.45353159851301117,
+        "EV": 0.09858819964257737,
+        "SumR": 26.520225703853313,
+        "PF": 1.2858401558364487,
+        "MaxDD_R": 7.947539038917595,
+        "R_DD": 3.3369104038355504,
+        "MaxConsecutiveLosses": 8,
+        "trades": 269,
+        "trades_per_month": 44.833333333333336,
+        "core_trades": 172,
+        "fast_trades": 97,
+        "fast_mult": 0.25,
+        "weighted_sumR": 26.520225703853313,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G1_RESPONSE_RISK0.40": {
+        "N": 269,
+        "WR": 0.45353159851301117,
+        "EV": 0.10705562073827747,
+        "SumR": 28.79796197859664,
+        "PF": 1.290856657850351,
+        "MaxDD_R": 7.907617608967055,
+        "R_DD": 3.64180002153119,
+        "MaxConsecutiveLosses": 8,
+        "trades": 269,
+        "trades_per_month": 44.833333333333336,
+        "core_trades": 172,
+        "fast_trades": 97,
+        "fast_mult": 0.4,
+        "weighted_sumR": 28.79796197859664,
+        "max_concurrent_risk_units": 1.4
+      },
+      "G2_RESPONSE_RECLAIM_RISK0.25": {
+        "N": 346,
+        "WR": 0.41040462427745666,
+        "EV": 0.06031831655917348,
+        "SumR": 20.870137529474025,
+        "PF": 1.1990301110157455,
+        "MaxDD_R": 11.08754882049842,
+        "R_DD": 1.882304003107501,
+        "MaxConsecutiveLosses": 9,
+        "trades": 346,
+        "trades_per_month": 57.666666666666664,
+        "core_trades": 172,
+        "fast_trades": 174,
+        "fast_mult": 0.25,
+        "weighted_sumR": 20.870137529474025,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G2_RESPONSE_RECLAIM_RISK0.40": {
+        "N": 346,
+        "WR": 0.41040462427745666,
+        "EV": 0.05710352861153116,
+        "SumR": 19.75782089958978,
+        "PF": 1.1669613557608034,
+        "MaxDD_R": 13.481114946604986,
+        "R_DD": 1.4655924957130855,
+        "MaxConsecutiveLosses": 9,
+        "trades": 346,
+        "trades_per_month": 57.666666666666664,
+        "core_trades": 172,
+        "fast_trades": 174,
+        "fast_mult": 0.4,
+        "weighted_sumR": 19.75782089958978,
+        "max_concurrent_risk_units": 1.4
+      },
+      "G3_FULL_COMPOSITE_RISK0.25": {
+        "N": 359,
+        "WR": 0.41225626740947074,
+        "EV": 0.05952953224788769,
+        "SumR": 21.371102076991683,
+        "PF": 1.2003485570216161,
+        "MaxDD_R": 10.603224894425832,
+        "R_DD": 2.0155285104088074,
+        "MaxConsecutiveLosses": 16,
+        "trades": 359,
+        "trades_per_month": 59.833333333333336,
+        "core_trades": 172,
+        "fast_trades": 187,
+        "fast_mult": 0.25,
+        "weighted_sumR": 21.371102076991683,
+        "max_concurrent_risk_units": 1.25
+      },
+      "G3_FULL_COMPOSITE_RISK0.40": {
+        "N": 359,
+        "WR": 0.41225626740947074,
+        "EV": 0.0572684238875154,
+        "SumR": 20.55936417561803,
+        "PF": 1.1695836590444029,
+        "MaxDD_R": 12.70619666488883,
+        "R_DD": 1.618058079679338,
+        "MaxConsecutiveLosses": 16,
+        "trades": 359,
+        "trades_per_month": 59.833333333333336,
+        "core_trades": 172,
+        "fast_trades": 187,
+        "fast_mult": 0.4,
+        "weighted_sumR": 20.55936417561803,
+        "max_concurrent_risk_units": 1.4
+      }
+    }
+  },
+  "promotion_gate": {
+    "G1_RESPONSE_RISK0.25": {
+      "adds_trades": true,
+      "forward_sum_not_worse": true,
+      "forward_rdd_not_worse": true,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": true
+    },
+    "G1_RESPONSE_RISK0.40": {
+      "adds_trades": true,
+      "forward_sum_not_worse": true,
+      "forward_rdd_not_worse": true,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": true
+    },
+    "G2_RESPONSE_RECLAIM_RISK0.25": {
+      "adds_trades": true,
+      "forward_sum_not_worse": false,
+      "forward_rdd_not_worse": false,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": false
+    },
+    "G2_RESPONSE_RECLAIM_RISK0.40": {
+      "adds_trades": true,
+      "forward_sum_not_worse": false,
+      "forward_rdd_not_worse": false,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": false
+    },
+    "G3_FULL_COMPOSITE_RISK0.25": {
+      "adds_trades": true,
+      "forward_sum_not_worse": false,
+      "forward_rdd_not_worse": false,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": false
+    },
+    "G3_FULL_COMPOSITE_RISK0.40": {
+      "adds_trades": true,
+      "forward_sum_not_worse": false,
+      "forward_rdd_not_worse": false,
+      "hist_portfolio_ev_positive": true,
+      "fast_lane_hist_positive": true,
+      "max_risk_ok": true,
+      "pass": false
+    }
+  },
+  "promotion_rule": "adds trades; 2026 SumR >= CORE; 2026 R/DD >= CORE; historical combined EV>0/PF>1; FAST historical EV>0/PF>1; max concurrent risk <=1.8 units",
+  "limitations": [
+    "BTC only; ETH/SOL transfer still required.",
+    "2026 Mar-Aug is reused forward-shadow, not pristine OOS.",
+    "FAST confirmation uses first raw-price close crossing as LAB039/LAB040 approximation to live timer/quote behavior.",
+    "CORE and FAST are independent lanes; portfolio overlap is allowed and risk concurrency is audited.",
+    "Rejected FAST candidates do not consume pause/day quota; accepted FAST trades do. This is intentional stateful gate-before-entry behavior."
+  ]
+}
