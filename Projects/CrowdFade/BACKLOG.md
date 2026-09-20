@@ -1999,6 +1999,69 @@ Decision metrics:
 
 ---
 
+## v200a — BROKER_PARITY_VOL_DIAG
+
+Status: **IMPLEMENTED — METAEDITOR COMPILE / FORWARD CHECK PENDING**
+
+Source:
+- `CrowdFadeMulti_v200a_BROKER_PARITY_VOL_DIAG.mq5`
+- derived byte-for-byte from canonical v200 SHA-256:
+  `815477f46968c2629ddca4c6aefd0982b4da119a58cd51aab16073c07e4d50d8`
+
+Frozen strategy core explicitly unchanged:
+- ZLong / ZShort = 2.05 / 2.05;
+- M15 completed-close confirmation = 0.25 ATR;
+- passive retrace = 0.60 ATR;
+- limit TTL = 20m;
+- SL = 4.5 ATR;
+- TP = 10 ATR;
+- hold = 24h;
+- BE OFF;
+- trailing OFF;
+- signal exit OFF;
+- LAB032 flat risk = 1 / 1 / 1.
+
+Implemented execution/risk shell:
+- auto broker cost profile:
+  - FTMO = 6.5 bps round-turn;
+  - IC Markets = 0;
+  - GetLeveraged = 0;
+  - unknown broker falls back to manual `InpCommissionRoundTurnBps`;
+- per-position economic notional cap:
+  - `InpMaxNotionalPctEquity = 15%`;
+- one-new-trade margin cap:
+  - `InpMaxNewTradeMarginPct = 5%`;
+- projected total-account margin cap:
+  - `InpMaxAccountMarginPct = 12%`;
+- sizing chain:
+  `raw risk lot -> broker/manual volume cap -> notional cap -> margin cap -> actual lot`;
+- actual requested/realized risk and exposure are logged.
+
+Implemented LAB034 diagnostics only:
+- original Z snapshot;
+- current Z at confirmation;
+- Z sign-flip flag;
+- signal ATR;
+- current ATR;
+- `ATRExpansion = currentATR / signalATR`;
+- confirmation age;
+- `CONFIRM_OK` / `CONFIRM_TIMEOUT` execution events.
+
+New audit CSVs:
+- `CrowdFade_signals_v200a_broker_vol_diag.csv`;
+- `CrowdFade_execution_v200a_broker_vol_diag.csv`.
+
+Explicitly **NOT** implemented before LAB validation:
+- no cancel-on-Z-flip;
+- no dynamic EffectiveATR;
+- no retrace 0.40 ATR;
+- no TTL 30m;
+- no impulse/reclaim entry logic;
+- no IC SOL child-order split.
+
+v200a SHA-256:
+`c608b3fed647e943319a4d89ecee3f2c62ceb99ff76e03076773a84bb7ddabe3`
+
 # Planned code changes after LAB validation
 
 ## v191
