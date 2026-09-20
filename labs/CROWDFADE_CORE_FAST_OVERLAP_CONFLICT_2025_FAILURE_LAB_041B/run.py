@@ -16,6 +16,8 @@ lab041=importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(lab041)
 
 core=lab041.core
+# Repoint imported LAB041 loaders to this LAB's frozen data directory.
+lab041.DATA=DATA
 
 # G1 frozen from LAB041.
 FAST_Z_LO=lab041.FAST_Z_LO
