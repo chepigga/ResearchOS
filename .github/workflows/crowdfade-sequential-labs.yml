@@ -8,6 +8,7 @@ on:
       - 'labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/run.py'
       - 'labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/lab035b.py'
       - 'labs/CROWDFADE_V200_FREQUENCY_EXPANSION_LAB_037/run.py'
+      - 'labs/CROWDFADE_V200_FREQUENCY_TIMING_LAB_038/run.py'
       - '.github/workflows/crowdfade-sequential-labs.yml'
   workflow_dispatch:
 
@@ -82,6 +83,9 @@ jobs:
       - name: Run LAB037 frequency expansion
         run: python labs/CROWDFADE_V200_FREQUENCY_EXPANSION_LAB_037/run.py
 
+      - name: Run LAB038 timing frequency audit
+        run: python labs/CROWDFADE_V200_FREQUENCY_TIMING_LAB_038/run.py
+
       - name: Upload outputs
         uses: actions/upload-artifact@v4
         with:
@@ -89,6 +93,7 @@ jobs:
           path: |
             labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/output/
             labs/CROWDFADE_V200_FREQUENCY_EXPANSION_LAB_037/output/
+            labs/CROWDFADE_V200_FREQUENCY_TIMING_LAB_038/output/
           retention-days: 30
 
       - name: Commit research outputs
@@ -97,7 +102,7 @@ jobs:
           set -e
           git config user.name "ResearchOS Lab Runner"
           git config user.email "researchos-lab@users.noreply.github.com"
-          git add labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/output/ labs/CROWDFADE_V200_FREQUENCY_EXPANSION_LAB_037/output/
+          git add labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/output/ labs/CROWDFADE_V200_FREQUENCY_EXPANSION_LAB_037/output/ labs/CROWDFADE_V200_FREQUENCY_TIMING_LAB_038/output/
           if git diff --cached --quiet; then
             echo "No output changes"
           else
