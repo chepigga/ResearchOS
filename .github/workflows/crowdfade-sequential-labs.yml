@@ -74,7 +74,7 @@ jobs:
       - name: Run sequential LAB033-035
         run: python labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/run.py
 
-      - name: Upload outputs
+      - name: Run LAB035B stability audit\n        run: python labs/CROWDFADE_V200_SEQUENTIAL_CHANGE_LABS_033_035/lab035b.py\n\n      - name: Upload outputs
         uses: actions/upload-artifact@v4
         with:
           name: crowdFade-LAB033-035-results
