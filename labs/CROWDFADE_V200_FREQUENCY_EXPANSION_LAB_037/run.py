@@ -162,10 +162,10 @@ def run_one(arr,z_core=2.05,z_lane=2.05,mode=0,conf=0.25,cancel=True,period='his
     if len(df):
         df['signal_time_utc']=pd.to_datetime(df.signal_ts,unit='s',utc=True)
         if period=='hist':
-            sub=df.groupby(df.signal_time_utc.dt.year).R.apply(lambda s:metrics(s.values))
+            grp=df.groupby(df.signal_time_utc.dt.year)
         else:
-            sub=df.groupby(df.signal_time_utc.dt.strftime('%Y-%m')).R.apply(lambda s:metrics(s.values))
-        m['periods']={str(k):v for k,v in sub.items()}
+            grp=df.groupby(df.signal_time_utc.dt.strftime('%Y-%m'))
+        m['periods']={str(k):metrics(g.R.to_numpy(float)) for k,g in grp}
         m['positive_periods']=sum(v['SumR']>0 for v in m['periods'].values())
     else:
         m['periods']={};m['positive_periods']=0
