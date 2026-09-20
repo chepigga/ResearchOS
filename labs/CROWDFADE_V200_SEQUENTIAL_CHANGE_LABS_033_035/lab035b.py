@@ -321,14 +321,14 @@ def main():
     loo=result['stability']['historical_leave_one_year_out']
     hcq=result['stability']['historical_week_concentration']
     gates={
-      'historical_delta_positive':hp.delta_R.sum()>0,
-      'historical_years_nonnegative_4of5':sum(x['delta_R']>=0 for x in yd)>=4,
-      'leave_one_year_out_all_positive':all(x['remaining_delta_R']>0 for x in loo),
-      'forward_delta_positive':fp.delta_R.sum()>0,
-      'forward_months_nonnegative_4of6':sum(x['delta_R']>=0 for x in md)>=4,
-      'historical_bootstrap_ge_080':result['stability']['historical_4week_block_bootstrap']['p_bootstrap_sumR_gt_0']>=.80,
-      'forward_bootstrap_ge_070':result['stability']['forward_4week_block_bootstrap']['p_bootstrap_sumR_gt_0']>=.70,
-      'hist_after_top3_positive_weeks_positive':hcq['net_after_removing_top3_positive_weeks_R']>0
+      'historical_delta_positive':bool(hp.delta_R.sum()>0),
+      'historical_years_nonnegative_4of5':bool(sum(x['delta_R']>=0 for x in yd)>=4),
+      'leave_one_year_out_all_positive':bool(all(x['remaining_delta_R']>0 for x in loo)),
+      'forward_delta_positive':bool(fp.delta_R.sum()>0),
+      'forward_months_nonnegative_4of6':bool(sum(x['delta_R']>=0 for x in md)>=4),
+      'historical_bootstrap_ge_080':bool(result['stability']['historical_4week_block_bootstrap']['p_bootstrap_sumR_gt_0']>=.80),
+      'forward_bootstrap_ge_070':bool(result['stability']['forward_4week_block_bootstrap']['p_bootstrap_sumR_gt_0']>=.70),
+      'hist_after_top3_positive_weeks_positive':bool(hcq['net_after_removing_top3_positive_weeks_R']>0)
     }
     result['promotion_gate']['checks']=gates
     result['promotion_gate']['pass']=bool(all(gates.values()))
