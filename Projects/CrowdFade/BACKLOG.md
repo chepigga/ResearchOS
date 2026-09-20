@@ -2401,3 +2401,166 @@ Next:
 - then fresh post-2026-09-20 forward with v200 control vs candidate;
 - if transfer does not fail catastrophically, create v200b candidate with exactly one strategy change: cancel event before pending order when current Z has opposite sign to original signal Z.
 
+
+---
+
+# FREQUENCY EXPANSION LABS — 2026-09-20
+
+Goal:
+increase v200 trade frequency toward v191 without silently degrading the validated v200 execution geometry.
+
+Research candidate foundation:
+- Z2.05;
+- M15 confirm 0.25 ATR;
+- retrace 0.60 ATR;
+- pending TTL20m;
+- SL4.5;
+- TP10;
+- H24;
+- flat risk;
+- CANCEL_SIGN_FLIP enabled as LAB035B research candidate.
+
+Baseline BTC frequency:
+- historical: 1617 trades / 60 months = **26.9 trades/month**;
+- 2026 Mar-Aug: 172 / 6 = **28.7 trades/month**.
+
+## LAB037A — GLOBAL Z FRONTIER
+Status: **DONE — LOWERING Z GLOBALLY REJECTED**
+
+| Z | Hist trades/mo | Hist EV | Hist DD | Hist R/DD | 2026 trades/mo | 2026 EV | 2026 DD | 2026 R/DD |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **2.05** | 26.9 | **+0.0845R** | **18.81R** | **7.261** | 28.7 | **+0.1321R** | 8.01R | **2.836** |
+| 1.75 | 30.1 | +0.0234R | 35.39R | 1.193 | 31.3 | +0.0870R | **6.10R** | 2.682 |
+| 1.50 | 32.6 | +0.0550R | 27.06R | 3.977 | 33.2 | +0.0450R | 11.05R | 0.811 |
+| 1.25 | 34.0 | +0.0513R | 25.83R | 4.048 | 35.3 | **-0.0236R** | 17.68R | -0.283 |
+| 1.00 | 35.5 | +0.0483R | **39.92R** | 2.582 | 37.3 | **-0.0435R** | **25.11R** | -0.388 |
+
+Interpretation:
+- even v191-like Z=1.00 increases BTC frequency only ~32% under the still-strict v200 execution layer;
+- forward edge becomes negative at Z1.25 and Z1.00;
+- Z1.75 adds only ~12% frequency while historical risk efficiency collapses.
+
+Decision:
+**keep global Z2.05.**
+
+## LAB037B — MID-Z H1+H4 TREND LANE
+Status: **DONE — NO PROMOTION**
+
+Design:
+- high-Z core |Z|>=2.05 unchanged;
+- lower-Z trades only if H1 and H4 both align with CrowdFade direction;
+- same M15 confirm / passive entry / exit shell.
+
+Results:
+- lane >=1.75: hist 28.5/mo, R/DD 5.193; 2026 29.5/mo, R/DD 2.338;
+- lane >=1.50: hist 29.9/mo, R/DD 4.465; 2026 31.0/mo, R/DD 2.086;
+- lane >=1.25: hist 30.8/mo, R/DD 3.518; 2026 32.7/mo, R/DD 0.855;
+- lane >=1.00: hist 31.5/mo, Sum +159.49R, R/DD 6.308; 2026 EV only +0.0052R, R/DD 0.070.
+
+Decision:
+**no mid-Z M15/passive lane promoted.**
+Trend alignment alone does not rescue the lower-Z population under this architecture.
+
+## LAB037C — M15 CONFIRM THRESHOLD
+Status: **DONE — KEEP 0.25 ATR**
+
+On the surviving core architecture:
+
+- 0.25 ATR:
+  - hist 26.9/mo, EV +0.0845R, DD 18.81R, R/DD 7.261;
+  - 2026 28.7/mo, EV +0.1321R, R/DD 2.836.
+- 0.20 ATR:
+  - hist 27.2/mo, EV +0.0702R, **DD 32.88R**, R/DD 3.481;
+  - 2026 29.3/mo, EV +0.1821R, R/DD 3.999.
+- 0.15 ATR:
+  - hist 27.5/mo, EV +0.0613R, **DD 30.15R**, R/DD 3.354;
+  - 2026 29.2/mo, EV +0.2030R, R/DD 4.433.
+
+Interpretation:
+forward likes easier confirmation, but 5-year history does not.
+Trade count barely changes because passive reachability / occupancy dominate after confirmation.
+
+Decision:
+**keep 0.25 ATR.**
+
+## LAB038A — CONFIRMATION TTL 60–180m
+Status: **DONE — KEEP 60m**
+
+Extending confirmation wait:
+- does almost nothing for trade frequency;
+- sharply worsens historical DD/RDD.
+
+Historical:
+- 60m: 26.9/mo, EV +0.0845R, DD 18.81R, R/DD 7.261;
+- 90m: 27.1/mo, DD 30.46R, R/DD 3.608;
+- 120m: 27.4/mo, DD 45.57R, R/DD 1.673;
+- 180m: 27.5/mo, DD 43.16R, R/DD 1.729.
+
+Decision:
+**confirmation TTL remains 60m.**
+
+## LAB038B — MAX HOLD / OCCUPANCY
+Status: **DONE — SHORTER HOLD RAISES FREQUENCY BUT DOES NOT SURVIVE ROBUSTNESS GATE**
+
+| Hold | Hist trades/mo | Hist EV | Hist DD | Hist R/DD | 2026 trades/mo | 2026 EV | 2026 DD | 2026 R/DD |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **24h** | 26.9 | **+0.0845R** | **18.81R** | **7.261** | 28.7 | **+0.1321R** | 8.01R | **2.836** |
+| 18h | 29.4 | +0.0518R | 28.94R | 3.154 | 31.5 | +0.1301R | **7.39R** | **3.330** |
+| 12h | 33.1 | +0.0580R | 23.58R | 4.890 | 36.3 | +0.0667R | 11.80R | 1.233 |
+| 8h | 37.0 | +0.0408R | 26.25R | 3.450 | 42.2 | +0.0591R | 10.98R | 1.361 |
+| 6h | **39.2** | +0.0223R | **41.53R** | 1.265 | **45.2** | +0.0549R | 10.62R | 1.401 |
+
+Key point:
+**H6 gets much closer to v191 frequency**, but it destroys much of v200's historical risk efficiency.
+
+## LAB038C — v191-LIKE TIMING INTERACTION
+Status: **DONE — FAIL**
+
+The closest timing shell:
+- confirm TTL 180m;
+- hold 6h;
+- while retaining v200 Z/confirm/retrace/SL/TP.
+
+Historical:
+- 40.4 trades/month;
+- EV **-0.0005R**;
+- PF 0.999;
+- Sum -1.12R;
+- DD 61.99R.
+
+2026:
+- 44.7 trades/month;
+- EV +0.0677R;
+- PF 1.244;
+- DD 10.78R.
+
+Decision:
+**do not make v200 globally v191-like by timing changes.**
+
+## Frequency research conclusion
+
+The evidence now separates two goals:
+
+1. **v200 core quality**
+   - depends on Z2.05 + M15 confirmation + deep passive retrace + H24 right-tail capture;
+   - global relaxation consistently sacrifices historical robustness.
+
+2. **v191-like frequency**
+   - comes from a genuinely different fast architecture:
+     - Z1.0 state;
+     - M5 decision rhythm;
+     - 3h confirmation window;
+     - market-after-confirm;
+     - H6 / active management.
+
+Therefore the next rational architecture is **not a globally weakened v200**.
+
+Next LAB:
+**HYBRID CORE + FAST LANE**
+- preserve v200 high-quality core unchanged;
+- add a separately measured v191-like fast lane;
+- independent lane attribution;
+- initially lower risk on fast lane;
+- common portfolio exposure cap;
+- test whether the combined equity curve adds frequency without contaminating v200 core.
+
