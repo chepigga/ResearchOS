@@ -3495,3 +3495,78 @@ Next required LAB:
 - require 2026 SumR/RDD >= current G1 hybrid;
 - audit max concurrent planned risk / same-symbol exposure.
 
+
+
+## v200b DEMO_STAGED_FAST implementation
+Status: **CODED — DEMO FORWARD / METAEDITOR COMPILE PENDING**
+
+File:
+`Projects/CrowdFade/CrowdFadeMulti_v200b_DEMO_STAGED_FAST.mq5`
+
+Library:
+`/Трейдінг/CrowdFadeMulti_v200b_DEMO_STAGED_FAST.mq5`
+
+Source basis:
+- exact `CrowdFadeMulti_v200a_BROKER_PARITY_VOL_DIAG.mq5`;
+- CORE frozen inputs verified unchanged:
+  - Z 2.05 / 2.05;
+  - M15 confirm .25 ATR;
+  - passive retrace .60 ATR;
+  - pending TTL20m;
+  - SL4.5 / TP10 / H24;
+  - ExitZ OFF;
+  - BE/trail OFF;
+  - flat quality risk;
+  - broker-neutral notional/margin caps unchanged;
+  - DemoOnly remains TRUE.
+
+Added FAST demo lane from LAB041D:
+- lower-Z zone: `1.00 <= |Z| < 2.05`;
+- exact ONE_ALIGN G1 context;
+- response gate:
+  - `0.50 <= response < 1.00`, OR
+  - `response >= 2.50`;
+- staged entry:
+  - 20% of FAST risk at +0.10 ATR probe;
+  - remaining 80% at +0.30 ATR full confirmation;
+- FAST total risk multiplier = 0.25x CORE;
+- sign-flip before +0.30 => close probe;
+- 180m timeout before +0.30 => close probe;
+- if probe disappears via SL/TP/manual before confirmation => invalidate event;
+- confirmed probe/add tranches use v200 SL4.5 / TP10 / H24;
+- ALLOW_ALL CORE/FAST overlap retained;
+- separate FAST magic 77201;
+- HEDGING account required while FAST lane enabled;
+- independent FAST pause 1.0 ATR and max 3 accepted FAST events/day/symbol;
+- canonical Binance M5 added for FAST signal clock;
+- live FAST response uses broker mid mapped to canonical space through frozen completed-M5 broker/Binance basis;
+- FAST state persisted across restart;
+- FAST execution CSV:
+  `CrowdFade_fast_v200b_staged_demo.csv`.
+
+Safety integration:
+- FAST market tranches run through existing:
+  - OrderCalcProfit risk sizing;
+  - broker volume cap;
+  - 15% per-new-position notional cap;
+  - 5% new-trade margin cap;
+  - 12% total account margin cap;
+- account DD guards manage both CORE and FAST positions;
+- FAST 20/80 tranches count as one logical FAST exposure per symbol/side for portfolio position limits;
+- existing FAST positions remain managed even if new FAST entries are later disabled.
+
+Known demo-parity limitations:
+- FAST live trigger uses broker tick mapped via frozen M5 basis, whereas research replay used Binance raw price path;
+- spread/slippage/freeze and broker basis drift must be measured in demo;
+- tiny 20% probe may fall below broker minimum lot at low CORE risk; this is logged as `FAST_MINLOT_SKIP` rather than oversized;
+- ETH/SOL transfer remains unproven;
+- no production promotion until demo execution logs are reviewed.
+
+Local source SHA-256:
+`4084f745ddf2c378ca92a590546bfacce829bb5498416ec753ae4da90dc3ac66`
+
+GitHub implementation commit:
+`59ff36c68b58721007ab5fedf834e97aad8dab96`
+
+Compile status:
+**MetaEditor compiler unavailable in current environment; user must compile in MT5/MetaEditor before attaching to demo chart.**
