@@ -22,19 +22,15 @@ SKIP_RAPID30=1
 SKIP_HIGH_VOL=2
 SKIP_BOTH=3
 Z100_125_ONLY=4
-Z100_125_SKIP_HIGHVOL=5
-Z100_125_SKIP_RAPID30=6
-Z100_125_SKIP_BOTH=7
+Z100_125_SKIP_BOTH=5
 
 NAMES={
 0:'BASE_LAB045',
-1:'SKIP_RAPID_REPEAT_LE30M',
+1:'SKIP_RAPID_REPEAT_30',
 2:'SKIP_HIGH_VOL',
-3:'SKIP_RAPID30_PLUS_HIGHVOL',
+3:'SKIP_RAPID_REPEAT_30_AND_HIGH_VOL',
 4:'Z100_125_ONLY',
-5:'Z100_125_SKIP_HIGHVOL',
-6:'Z100_125_SKIP_RAPID30',
-7:'Z100_125_SKIP_BOTH'
+5:'Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL'
 }
 
 def build_signal_features(p):
@@ -77,8 +73,6 @@ def gate_allows(variant,z,vol_state,gap_min):
     if variant==SKIP_HIGH_VOL: return not high
     if variant==SKIP_BOTH: return (not rapid) and (not high)
     if variant==Z100_125_ONLY: return lowz
-    if variant==Z100_125_SKIP_HIGHVOL: return lowz and (not high)
-    if variant==Z100_125_SKIP_RAPID30: return lowz and (not rapid)
     if variant==Z100_125_SKIP_BOTH: return lowz and (not rapid) and (not high)
     return True
 
@@ -187,23 +181,87 @@ def summarize(df,mode):
       'exit_reasons':{str(k):int(v) for k,v in df.exit_reason.value_counts().items()} if len(df) else {}
     }
 
+def matched_vs_base(base,other):
+    kb=set(zip(base.signal_ts.astype(np.int64),base.side.astype(int)))
+    ko=set(zip(other.signal_ts.astype(np.int64),other.side.astype(int)))
+    onlyb=base[[((int(x),int(y)) in (kb-ko)) for x,y in zip(base.signal_ts,base.side)]]
+    onlyo=other[[((int(x),int(y)) in (ko-kb)) for x,y in zip(other.signal_ts,other.side)]]
+    common=kb&ko
+    bm={(int(x),int(y)):float(r) for x,y,r in zip(base.signal_ts,base.side,base.R)}
+    om={(int(x),int(y)):float(r) for x,y,r in zip(other.signal_ts,other.side,other.R)}
+    return {
+      'N_base':int(len(base)),
+      'N_variant':int(len(other)),
+      'delta_N':int(len(other)-len(base)),
+      'removed_signal_count':int(len(kb-ko)),
+      'added_signal_count':int(len(ko-kb)),
+      'common_signal_count':int(len(common)),
+      'removed_trade_sumR':float(onlyb.R.sum()),
+      'added_trade_sumR':float(onlyo.R.sum()),
+      'common_signal_outcome_deltaR':float(sum(om[k]-bm[k] for k in common)),
+      'full_sequence_deltaR':float(other.R.sum()-base.R.sum())
+    }
+
+def decision_verdict(h,f):
+    hm=h['all']; fm=f['all']
+    agg=(hm.get('N',0)>0 and fm.get('N',0)>0 and
+         hm.get('EV',-1)>0 and hm.get('PF',0)>1.0 and
+         fm.get('EV',-1)>0 and fm.get('PF',0)>1.0)
+    hy=sum(1 for x in h.get('periods',{}).values() if x.get('SumR',0)>0)
+    fy=sum(1 for x in f.get('periods',{}).values() if x.get('SumR',0)>0)
+    ht=len(h.get('periods',{})); ft=len(f.get('periods',{}))
+    if not agg:
+        verdict='FAILED'
+    elif hy>=4 and ht>=5 and fy>=4 and ft>=6:
+        verdict='SUPPORTED'
+    else:
+        verdict='MIXED'
+    return {
+      'verdict':verdict,
+      'positive_historical_years':hy,
+      'historical_years_total':ht,
+      'positive_2026_months':fy,
+      'forward_months_total':ft
+    }
+
 def run_period(raw,ft,fz,start,end,label):
     p=lab43.prep(raw,ft,fz,start,end)
     out={}
+    frames={}
 
     d192=lab43.df192(lab43.sim_v192(*p))
     d192.to_csv(OUT/f'{label}_V192_CANONICAL_CONTROL.csv',index=False)
+    frames['V192_CANONICAL_CONTROL']=d192
     out['V192_CANONICAL_CONTROL']=lab43.summarize(d192,'year' if label=='historical' else 'month')
 
     full=lab44.make_df(lab44.sim(*p,lab44.FULL_V191F))
     full.to_csv(OUT/f'{label}_FULL_V191F_CONTROL.csv',index=False)
+    frames['FULL_V191F_CONTROL']=full
     out['FULL_V191F_CONTROL']=lab44.summarize(full,'year' if label=='historical' else 'month')
 
-    for v in range(8):
+    for v in range(6):
         d=sim_variant(p,v)
         d.to_csv(OUT/f'{label}_{NAMES[v]}.csv',index=False)
+        frames[NAMES[v]]=d
         out[NAMES[v]]=summarize(d,'year' if label=='historical' else 'month')
-    return out
+
+    # Hard parity assertion: BASE must be byte-logically equivalent to LAB044 FRESH45_ADV.
+    frozen=lab44.make_df(lab44.sim(*p,lab44.FRESH45_ADV))
+    base=frames['BASE_LAB045']
+    parity=(len(frozen)==len(base))
+    if parity and len(base):
+        parity = (
+          np.array_equal(frozen[['signal_ts','side']].to_numpy(),base[['signal_ts','side']].to_numpy())
+          and np.allclose(frozen.R.to_numpy(float),base.R.to_numpy(float),atol=1e-12,rtol=0)
+        )
+    if not parity:
+        raise RuntimeError('LAB046 BASE parity failure vs LAB044 FRESH45_ADV')
+
+    matched={}
+    for name,d in frames.items():
+        if name!='BASE_LAB045':
+            matched[name]=matched_vs_base(base,d)
+    return out,matched
 
 def fmt(m):
     return f"N={m['N']} WR={m['WR']:.1%} EV={m['EV']:+.4f} PF={m['PF']:.3f} Sum={m['SumR']:+.2f}R DD={m['MaxDD_R']:.2f} R/DD={m['R_DD']:.3f} MCL={m['MaxConsecutiveLosses']}"
@@ -213,33 +271,36 @@ def main():
     hist=lab43.load_hist()
     sec=lab43.load_sec()
 
-    h=run_period(hist,ft,fz,
+    h,hm=run_period(hist,ft,fz,
         int(pd.Timestamp('2021-01-01',tz='UTC').timestamp()),
         int(pd.Timestamp('2026-01-01',tz='UTC').timestamp()),'historical')
-    f=run_period(sec,ft,fz,
+    f,fm=run_period(sec,ft,fz,
         int(pd.Timestamp('2026-03-01',tz='UTC').timestamp()),
         int(pd.Timestamp('2026-09-01',tz='UTC').timestamp()),'forward')
 
+    decisions={name:decision_verdict(h[name],f[name]) for name in NAMES.values()}
+
     result={
       'lab':'CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046',
+      'preregistration':'PREREG.md committed before this replay; only the six registered variants are decision-tested.',
       'base':'v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained',
       'method':'Full stateful causal replay for every variant; skipped signals alter occupancy and future reachability.',
       'pre_registered_gates':{
-        'SKIP_RAPID_REPEAT_LE30M':'skip signal if same-side |Z|>=1 extreme occurred <=30m ago',
+        'SKIP_RAPID_REPEAT_30':'skip signal if same-side |Z|>=1 extreme occurred <=30m ago',
         'SKIP_HIGH_VOL':'skip causal HIGH_VOL from lagged 30d ATR%-tercile state',
-        'SKIP_RAPID30_PLUS_HIGHVOL':'apply both skips',
+        'SKIP_RAPID_REPEAT_30_AND_HIGH_VOL':'apply both toxic-state skips',
         'Z100_125_ONLY':'accept only 1.00<=|Z|<1.25',
-        'Z100_125_SKIP_HIGHVOL':'low-Z bucket plus skip HIGH_VOL',
-        'Z100_125_SKIP_RAPID30':'low-Z bucket plus skip rapid repeat',
-        'Z100_125_SKIP_BOTH':'low-Z bucket plus both toxic-state skips'
+        'Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL':'low-Z bucket plus both toxic-state skips'
       },
       'historical':h,
       'forward_2026_shadow':f,
+      'matched_vs_base':{'historical':hm,'forward_2026_shadow':fm},
+      'decisions':decisions,
       'limitations':[
         'BTCUSDT only; ETH/SOL transfer not established.',
         'Historical 2021-2025 uses 1m OHLC; 2026 Mar-Aug uses second OHLC.',
         '2026 is reused forward-shadow/stress, not pristine OOS.',
-        'All gates and thresholds were preregistered from LAB045; no threshold search is performed here.',
+        'All gate thresholds were fixed before this replay; no threshold search is performed here.',
         'Every candidate is a full stateful rerun; skipped signals change occupancy, pause state and future reachability.',
         'v191 MT5 is tick/timer-driven; this uses the same common research approximation as LAB043-045.',
         'v192 is immutable reference and reconstructed on the common replay frame.',
@@ -248,28 +309,65 @@ def main():
     }
 
     (OUT/'summary.json').write_text(json.dumps(result,indent=2,default=float))
+
     rows=[]
     for period,d in [('historical',h),('2026',f)]:
         for name,v in d.items():
             rows.append({'period':period,'variant':name,**v['all']})
     pd.DataFrame(rows).to_csv(OUT/'comparison.csv',index=False)
 
+    drows=[]
+    for name,x in decisions.items():
+        drows.append({
+          'variant':name,**x,
+          'hist_N':h[name]['all'].get('N',0),'hist_EV':h[name]['all'].get('EV',np.nan),
+          'hist_PF':h[name]['all'].get('PF',np.nan),'hist_SumR':h[name]['all'].get('SumR',np.nan),
+          'hist_DD':h[name]['all'].get('MaxDD_R',np.nan),
+          'fwd_N':f[name]['all'].get('N',0),'fwd_EV':f[name]['all'].get('EV',np.nan),
+          'fwd_PF':f[name]['all'].get('PF',np.nan),'fwd_SumR':f[name]['all'].get('SumR',np.nan),
+          'fwd_DD':f[name]['all'].get('MaxDD_R',np.nan)
+        })
+    pd.DataFrame(drows).to_csv(OUT/'decision_table.csv',index=False)
+
+    mrows=[]
+    for period,matches in [('historical',hm),('2026',fm)]:
+        for name,x in matches.items():
+            mrows.append({'period':period,'variant':name,**x})
+    pd.DataFrame(mrows).to_csv(OUT/'matched_reachability_vs_base.csv',index=False)
+
     lines=['# LAB046 — V191 PREREGISTERED TOXIC STATE GATES','',
-      'Base: **v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained**.',
-      '',
-      '**Full stateful causal rerun** for every candidate. No threshold search and no exit changes.',
-      '',
+      'Preregistration was committed before this replay. Only the six registered variants enter the decision table.','',
+      'Base: **v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained**.','',
+      '**Full stateful causal rerun. No threshold search and no exit changes.**','',
       '## Full sample']
     for period,d in [('Historical 2021–2025',h),('2026 Mar–Aug shadow',f)]:
         lines += ['',f'### {period}']
         for name,v in d.items():
             lines.append(f"- {name}: {fmt(v['all'])}")
 
-    lines += ['','## Period consistency']
-    for period,d in [('Historical',h),('2026',f)]:
-        lines += ['',f'### {period}']
-        for name,v in d.items():
-            lines.append(f"- {name}: {json.dumps(v['periods'])}")
+    lines += ['','## Pre-registered decision table']
+    for name,x in decisions.items():
+        lines.append(
+          f"- {name}: **{x['verdict']}**; positive years "
+          f"{x['positive_historical_years']}/{x['historical_years_total']}; "
+          f"positive 2026 months {x['positive_2026_months']}/{x['forward_months_total']}"
+        )
+
+    lines += ['','## Historical yearly sequence']
+    for name,v in h.items():
+        lines.append(f"- {name}: {json.dumps(v['periods'])}")
+
+    lines += ['','## 2026 monthly sequence']
+    for name,v in f.items():
+        lines.append(f"- {name}: {json.dumps(v['periods'])}")
+
+    lines += ['','## Stateful reachability delta vs BASE_LAB045 — historical']
+    for name,x in hm.items():
+        lines.append('- '+name+': '+json.dumps(x))
+
+    lines += ['','## Stateful reachability delta vs BASE_LAB045 — 2026']
+    for name,x in fm.items():
+        lines.append('- '+name+': '+json.dumps(x))
 
     lines += ['','## Limitations']+[f"- {x}" for x in result['limitations']]
     (OUT/'REPORT.md').write_text('\n'.join(lines))
