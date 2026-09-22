@@ -1,15 +1,14 @@
 {
   "lab": "CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046",
+  "preregistration": "PREREG.md committed before this replay; only the six registered variants are decision-tested.",
   "base": "v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained",
   "method": "Full stateful causal replay for every variant; skipped signals alter occupancy and future reachability.",
   "pre_registered_gates": {
-    "SKIP_RAPID_REPEAT_LE30M": "skip signal if same-side |Z|>=1 extreme occurred <=30m ago",
+    "SKIP_RAPID_REPEAT_30": "skip signal if same-side |Z|>=1 extreme occurred <=30m ago",
     "SKIP_HIGH_VOL": "skip causal HIGH_VOL from lagged 30d ATR%-tercile state",
-    "SKIP_RAPID30_PLUS_HIGHVOL": "apply both skips",
+    "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": "apply both toxic-state skips",
     "Z100_125_ONLY": "accept only 1.00<=|Z|<1.25",
-    "Z100_125_SKIP_HIGHVOL": "low-Z bucket plus skip HIGH_VOL",
-    "Z100_125_SKIP_RAPID30": "low-Z bucket plus skip rapid repeat",
-    "Z100_125_SKIP_BOTH": "low-Z bucket plus both toxic-state skips"
+    "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": "low-Z bucket plus both toxic-state skips"
   },
   "historical": {
     "V192_CANONICAL_CONTROL": {
@@ -292,7 +291,7 @@
         "TIME": 33
       }
     },
-    "SKIP_RAPID_REPEAT_LE30M": {
+    "SKIP_RAPID_REPEAT_30": {
       "all": {
         "N": 3805,
         "WR": 0.7342969776609723,
@@ -476,7 +475,7 @@
         "TIME": 10
       }
     },
-    "SKIP_RAPID30_PLUS_HIGHVOL": {
+    "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
       "all": {
         "N": 2967,
         "WR": 0.7280080889787665,
@@ -660,191 +659,7 @@
         "TIME": 25
       }
     },
-    "Z100_125_SKIP_HIGHVOL": {
-      "all": {
-        "N": 4452,
-        "WR": 0.701707097933513,
-        "EV": -0.015904811353295467,
-        "PF": 0.9425703411776123,
-        "SumR": -70.80822014487141,
-        "MaxDD_R": 108.72583619693262,
-        "R_DD": -0.6512547764325133,
-        "MaxConsecutiveLosses": 6
-      },
-      "periods": {
-        "2021": {
-          "N": 915,
-          "WR": 0.7289617486338797,
-          "EV": 0.017222914456553037,
-          "PF": 1.0683951235263176,
-          "SumR": 15.75896672774603,
-          "MaxDD_R": 22.470779987755748,
-          "R_DD": 0.7013092886109444,
-          "MaxConsecutiveLosses": 5
-        },
-        "2022": {
-          "N": 837,
-          "WR": 0.6774193548387096,
-          "EV": -0.01591985626169473,
-          "PF": 0.9457506643330043,
-          "SumR": -13.32491969103849,
-          "MaxDD_R": 33.531894296194885,
-          "R_DD": -0.3973804633086467,
-          "MaxConsecutiveLosses": 6
-        },
-        "2023": {
-          "N": 882,
-          "WR": 0.7165532879818595,
-          "EV": -0.0026245368084301677,
-          "PF": 0.9899083574991573,
-          "SumR": -2.314841465035408,
-          "MaxDD_R": 17.348408771128906,
-          "R_DD": -0.13343249490914405,
-          "MaxConsecutiveLosses": 6
-        },
-        "2024": {
-          "N": 907,
-          "WR": 0.6945975744211687,
-          "EV": -0.016546613582488847,
-          "PF": 0.9410014994639934,
-          "SumR": -15.007778519317384,
-          "MaxDD_R": 25.625676660436767,
-          "R_DD": -0.5856539407011151,
-          "MaxConsecutiveLosses": 5
-        },
-        "2025": {
-          "N": 911,
-          "WR": 0.6893523600439078,
-          "EV": -0.06138270822966648,
-          "PF": 0.7952888514955837,
-          "SumR": -55.91964719722616,
-          "MaxDD_R": 68.63386616834998,
-          "R_DD": -0.8147529830253554,
-          "MaxConsecutiveLosses": 4
-        }
-      },
-      "side": {
-        "BUY": {
-          "N": 2260,
-          "WR": 0.6946902654867256,
-          "EV": -0.02080716307930856,
-          "PF": 0.9269650555799044,
-          "SumR": -47.024188559237345,
-          "MaxDD_R": 75.67123539634709,
-          "R_DD": -0.6214275254386473,
-          "MaxConsecutiveLosses": 5
-        },
-        "SELL": {
-          "N": 2192,
-          "WR": 0.708941605839416,
-          "EV": -0.010850379373008246,
-          "PF": 0.9596262797947798,
-          "SumR": -23.784031585634075,
-          "MaxDD_R": 50.9651264881859,
-          "R_DD": -0.4666726686364134,
-          "MaxConsecutiveLosses": 6
-        }
-      },
-      "exit_reasons": {
-        "PROTECTED_STOP": 2879,
-        "SL": 1166,
-        "EXIT_Z": 400,
-        "TIME": 7
-      }
-    },
-    "Z100_125_SKIP_RAPID30": {
-      "all": {
-        "N": 2652,
-        "WR": 0.7368024132730016,
-        "EV": 0.028533742955510356,
-        "PF": 1.1179973816348028,
-        "SumR": 75.67148631801346,
-        "MaxDD_R": 30.90863172594537,
-        "R_DD": 2.4482315163273047,
-        "MaxConsecutiveLosses": 6
-      },
-      "periods": {
-        "2021": {
-          "N": 620,
-          "WR": 0.7435483870967742,
-          "EV": 0.031381387403964005,
-          "PF": 1.1383977576674051,
-          "SumR": 19.456460190457683,
-          "MaxDD_R": 13.708364795722044,
-          "R_DD": 1.4193129873906947,
-          "MaxConsecutiveLosses": 6
-        },
-        "2022": {
-          "N": 495,
-          "WR": 0.7515151515151515,
-          "EV": 0.06592968284250758,
-          "PF": 1.2982674251639936,
-          "SumR": 32.63519300704125,
-          "MaxDD_R": 10.49316340983407,
-          "R_DD": 3.110138642885894,
-          "MaxConsecutiveLosses": 3
-        },
-        "2023": {
-          "N": 471,
-          "WR": 0.7473460721868365,
-          "EV": 0.025944803537963173,
-          "PF": 1.111063542707486,
-          "SumR": 12.220002466380654,
-          "MaxDD_R": 23.547172054102333,
-          "R_DD": 0.518958388646577,
-          "MaxConsecutiveLosses": 5
-        },
-        "2024": {
-          "N": 562,
-          "WR": 0.7206405693950177,
-          "EV": 0.03988140835528595,
-          "PF": 1.1524084568577087,
-          "SumR": 22.413351495670703,
-          "MaxDD_R": 15.530407482496656,
-          "R_DD": 1.4431914630013012,
-          "MaxConsecutiveLosses": 5
-        },
-        "2025": {
-          "N": 504,
-          "WR": 0.7222222222222222,
-          "EV": -0.021931588971303262,
-          "PF": 0.917640289661214,
-          "SumR": -11.053520841536844,
-          "MaxDD_R": 22.87851212666192,
-          "R_DD": -0.48313984669726,
-          "MaxConsecutiveLosses": 5
-        }
-      },
-      "side": {
-        "BUY": {
-          "N": 1347,
-          "WR": 0.7357089829250185,
-          "EV": 0.05782513044200038,
-          "PF": 1.2353408512524817,
-          "SumR": 77.89045070537452,
-          "MaxDD_R": 16.745885874302488,
-          "R_DD": 4.651318615810098,
-          "MaxConsecutiveLosses": 6
-        },
-        "SELL": {
-          "N": 1305,
-          "WR": 0.7379310344827587,
-          "EV": -0.0017003558523839557,
-          "PF": 0.9928496466506057,
-          "SumR": -2.218964387361062,
-          "MaxDD_R": 43.052523647584835,
-          "R_DD": -0.05154086681479685,
-          "MaxConsecutiveLosses": 5
-        }
-      },
-      "exit_reasons": {
-        "PROTECTED_STOP": 1796,
-        "SL": 606,
-        "EXIT_Z": 230,
-        "TIME": 20
-      }
-    },
-    "Z100_125_SKIP_BOTH": {
+    "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
       "all": {
         "N": 2034,
         "WR": 0.732055063913471,
@@ -1248,7 +1063,7 @@
         "TIME": 1
       }
     },
-    "SKIP_RAPID_REPEAT_LE30M": {
+    "SKIP_RAPID_REPEAT_30": {
       "all": {
         "N": 399,
         "WR": 0.7293233082706767,
@@ -1451,7 +1266,7 @@
         "EXIT_Z": 19
       }
     },
-    "SKIP_RAPID30_PLUS_HIGHVOL": {
+    "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
       "all": {
         "N": 316,
         "WR": 0.7468354430379747,
@@ -1655,210 +1470,7 @@
         "TIME": 3
       }
     },
-    "Z100_125_SKIP_HIGHVOL": {
-      "all": {
-        "N": 477,
-        "WR": 0.7568134171907757,
-        "EV": 0.03974161751721573,
-        "PF": 1.166093076723422,
-        "SumR": 18.956751555711904,
-        "MaxDD_R": 9.680166633538702,
-        "R_DD": 1.958308392133745,
-        "MaxConsecutiveLosses": 4
-      },
-      "periods": {
-        "2026-03": {
-          "N": 89,
-          "WR": 0.7303370786516854,
-          "EV": -0.02377757673870005,
-          "PF": 0.9127723783783044,
-          "SumR": -2.1162043297443045,
-          "MaxDD_R": 7.697997934577737,
-          "R_DD": -0.2749032083054704,
-          "MaxConsecutiveLosses": 3
-        },
-        "2026-04": {
-          "N": 86,
-          "WR": 0.7906976744186046,
-          "EV": 0.039522975479147814,
-          "PF": 1.1959177514272612,
-          "SumR": 3.398975891206712,
-          "MaxDD_R": 6.538229528752206,
-          "R_DD": 0.5198618182888102,
-          "MaxConsecutiveLosses": 3
-        },
-        "2026-05": {
-          "N": 87,
-          "WR": 0.7586206896551724,
-          "EV": 0.033186242938527434,
-          "PF": 1.1390381428911134,
-          "SumR": 2.887203135651887,
-          "MaxDD_R": 7.722438801586511,
-          "R_DD": 0.3738719347388981,
-          "MaxConsecutiveLosses": 3
-        },
-        "2026-06": {
-          "N": 58,
-          "WR": 0.7068965517241379,
-          "EV": 0.011697743637222419,
-          "PF": 1.0416014386181747,
-          "SumR": 0.6784691309589003,
-          "MaxDD_R": 4.81453217389403,
-          "R_DD": 0.14092109190541546,
-          "MaxConsecutiveLosses": 4
-        },
-        "2026-07": {
-          "N": 88,
-          "WR": 0.7954545454545454,
-          "EV": 0.15858106096702596,
-          "PF": 1.7619270861532346,
-          "SumR": 13.955133365098284,
-          "MaxDD_R": 4.089750626701427,
-          "R_DD": 3.412221095826017,
-          "MaxConsecutiveLosses": 4
-        },
-        "2026-08": {
-          "N": 69,
-          "WR": 0.7391304347826086,
-          "EV": 0.0022199182976873704,
-          "PF": 1.0089399554891068,
-          "SumR": 0.15317436254042857,
-          "MaxDD_R": 7.429313477608209,
-          "R_DD": 0.0206175662128261,
-          "MaxConsecutiveLosses": 3
-        }
-      },
-      "side": {
-        "BUY": {
-          "N": 224,
-          "WR": 0.7410714285714286,
-          "EV": 0.009137897193477637,
-          "PF": 1.0362650866502658,
-          "SumR": 2.0468889713389906,
-          "MaxDD_R": 7.6136433678804,
-          "R_DD": 0.2688448712969904,
-          "MaxConsecutiveLosses": 3
-        },
-        "SELL": {
-          "N": 253,
-          "WR": 0.7707509881422925,
-          "EV": 0.06683740151926056,
-          "PF": 1.2931114805832713,
-          "SumR": 16.90986258437292,
-          "MaxDD_R": 6.88374612730253,
-          "R_DD": 2.456491316160614,
-          "MaxConsecutiveLosses": 4
-        }
-      },
-      "exit_reasons": {
-        "PROTECTED_STOP": 343,
-        "SL": 111,
-        "EXIT_Z": 23
-      }
-    },
-    "Z100_125_SKIP_RAPID30": {
-      "all": {
-        "N": 269,
-        "WR": 0.7137546468401487,
-        "EV": -0.057963186255892675,
-        "PF": 0.79576771347852,
-        "SumR": -15.59209710283513,
-        "MaxDD_R": 17.3290750066487,
-        "R_DD": -0.8997651113433845,
-        "MaxConsecutiveLosses": 4
-      },
-      "periods": {
-        "2026-03": {
-          "N": 48,
-          "WR": 0.6458333333333334,
-          "EV": -0.09819130802348508,
-          "PF": 0.7139981037672409,
-          "SumR": -4.713182785127284,
-          "MaxDD_R": 10.0386926801024,
-          "R_DD": -0.46950165079455414,
-          "MaxConsecutiveLosses": 3
-        },
-        "2026-04": {
-          "N": 40,
-          "WR": 0.775,
-          "EV": -0.014860253821103587,
-          "PF": 0.9350538532294534,
-          "SumR": -0.5944101528441434,
-          "MaxDD_R": 4.677371297185999,
-          "R_DD": -0.12708209698933942,
-          "MaxConsecutiveLosses": 3
-        },
-        "2026-05": {
-          "N": 41,
-          "WR": 0.7317073170731707,
-          "EV": -0.04224315365688141,
-          "PF": 0.8452256321258336,
-          "SumR": -1.7319692999321377,
-          "MaxDD_R": 7.20001091151501,
-          "R_DD": -0.24055092710515083,
-          "MaxConsecutiveLosses": 2
-        },
-        "2026-06": {
-          "N": 44,
-          "WR": 0.6590909090909091,
-          "EV": -0.14572633029986248,
-          "PF": 0.5678084708806603,
-          "SumR": -6.411958533193949,
-          "MaxDD_R": 8.64602561037343,
-          "R_DD": -0.7416076266881437,
-          "MaxConsecutiveLosses": 4
-        },
-        "2026-07": {
-          "N": 51,
-          "WR": 0.7058823529411765,
-          "EV": 0.045848218044417854,
-          "PF": 1.161355999185242,
-          "SumR": 2.3382591202653105,
-          "MaxDD_R": 5.382011956070908,
-          "R_DD": 0.4344581802029917,
-          "MaxConsecutiveLosses": 2
-        },
-        "2026-08": {
-          "N": 45,
-          "WR": 0.7777777777777778,
-          "EV": -0.09952967671117617,
-          "PF": 0.5607047891748754,
-          "SumR": -4.478835452002928,
-          "MaxDD_R": 6.208629654161722,
-          "R_DD": -0.7213887285096331,
-          "MaxConsecutiveLosses": 2
-        }
-      },
-      "side": {
-        "BUY": {
-          "N": 138,
-          "WR": 0.6811594202898551,
-          "EV": -0.09557437032939427,
-          "PF": 0.6926068496086555,
-          "SumR": -13.189263105456408,
-          "MaxDD_R": 15.43334110178967,
-          "R_DD": -0.8545954513975567,
-          "MaxConsecutiveLosses": 4
-        },
-        "SELL": {
-          "N": 131,
-          "WR": 0.7480916030534351,
-          "EV": -0.01834224425479941,
-          "PF": 0.9281408247394067,
-          "SumR": -2.402833997378723,
-          "MaxDD_R": 7.6373192891362365,
-          "R_DD": -0.3146174601861484,
-          "MaxConsecutiveLosses": 4
-        }
-      },
-      "exit_reasons": {
-        "PROTECTED_STOP": 182,
-        "SL": 74,
-        "EXIT_Z": 10,
-        "TIME": 3
-      }
-    },
-    "Z100_125_SKIP_BOTH": {
+    "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
       "all": {
         "N": 210,
         "WR": 0.719047619047619,
@@ -1961,11 +1573,229 @@
       }
     }
   },
+  "matched_vs_base": {
+    "historical": {
+      "V192_CANONICAL_CONTROL": {
+        "N_base": 5402,
+        "N_variant": 1147,
+        "delta_N": -4255,
+        "removed_signal_count": 5352,
+        "added_signal_count": 1097,
+        "common_signal_count": 50,
+        "removed_trade_sumR": -0.661328313982743,
+        "added_trade_sumR": 130.08718558958626,
+        "common_signal_outcome_deltaR": -0.056729801989164386,
+        "full_sequence_deltaR": 130.69178410157986
+      },
+      "FULL_V191F_CONTROL": {
+        "N_base": 5402,
+        "N_variant": 5403,
+        "delta_N": 1,
+        "removed_signal_count": 485,
+        "added_signal_count": 486,
+        "common_signal_count": 4917,
+        "removed_trade_sumR": -20.067848252100262,
+        "added_trade_sumR": -23.89576215163391,
+        "common_signal_outcome_deltaR": -0.4674064943134072,
+        "full_sequence_deltaR": -4.2953203938470494
+      },
+      "SKIP_RAPID_REPEAT_30": {
+        "N_base": 5402,
+        "N_variant": 3805,
+        "delta_N": -1597,
+        "removed_signal_count": 4692,
+        "added_signal_count": 3095,
+        "common_signal_count": 710,
+        "removed_trade_sumR": -41.60231172581087,
+        "added_trade_sumR": 80.72088282468728,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 122.32319455049814
+      },
+      "SKIP_HIGH_VOL": {
+        "N_base": 5402,
+        "N_variant": 5127,
+        "delta_N": -275,
+        "removed_signal_count": 1694,
+        "added_signal_count": 1419,
+        "common_signal_count": 3708,
+        "removed_trade_sumR": -21.838532705454398,
+        "added_trade_sumR": -31.363368194554457,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": -9.52483548910007
+      },
+      "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+        "N_base": 5402,
+        "N_variant": 2967,
+        "delta_N": -2435,
+        "removed_signal_count": 4827,
+        "added_signal_count": 2392,
+        "common_signal_count": 575,
+        "removed_trade_sumR": -15.556620880219322,
+        "added_trade_sumR": 63.241516922403626,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 78.79813780262292
+      },
+      "Z100_125_ONLY": {
+        "N_base": 5402,
+        "N_variant": 5096,
+        "delta_N": -306,
+        "removed_signal_count": 4600,
+        "added_signal_count": 4294,
+        "common_signal_count": 802,
+        "removed_trade_sumR": -18.960591066053276,
+        "added_trade_sumR": -76.3010471156198,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": -57.34045604956652
+      },
+      "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+        "N_base": 5402,
+        "N_variant": 2034,
+        "delta_N": -3368,
+        "removed_signal_count": 5093,
+        "added_signal_count": 1725,
+        "common_signal_count": 309,
+        "removed_trade_sumR": -18.99079588070711,
+        "added_trade_sumR": 45.730597416509525,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 64.72139329721661
+      }
+    },
+    "forward_2026_shadow": {
+      "V192_CANONICAL_CONTROL": {
+        "N_base": 550,
+        "N_variant": 135,
+        "delta_N": -415,
+        "removed_signal_count": 537,
+        "added_signal_count": 122,
+        "common_signal_count": 13,
+        "removed_trade_sumR": -19.54494180604948,
+        "added_trade_sumR": 19.288834276931205,
+        "common_signal_outcome_deltaR": 5.815637240207074,
+        "full_sequence_deltaR": 44.649413323187744
+      },
+      "FULL_V191F_CONTROL": {
+        "N_base": 550,
+        "N_variant": 550,
+        "delta_N": 0,
+        "removed_signal_count": 58,
+        "added_signal_count": 58,
+        "common_signal_count": 492,
+        "removed_trade_sumR": -6.613329249673476,
+        "added_trade_sumR": -9.03353987290463,
+        "common_signal_outcome_deltaR": 0.2339145692246277,
+        "full_sequence_deltaR": -2.186296054006533
+      },
+      "SKIP_RAPID_REPEAT_30": {
+        "N_base": 550,
+        "N_variant": 399,
+        "delta_N": -151,
+        "removed_signal_count": 475,
+        "added_signal_count": 324,
+        "common_signal_count": 75,
+        "removed_trade_sumR": -24.488878126031466,
+        "added_trade_sumR": -9.281209539143822,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 15.207668586887639
+      },
+      "SKIP_HIGH_VOL": {
+        "N_base": 550,
+        "N_variant": 520,
+        "delta_N": -30,
+        "removed_signal_count": 138,
+        "added_signal_count": 108,
+        "common_signal_count": 412,
+        "removed_trade_sumR": -13.35187983091594,
+        "added_trade_sumR": 2.6317516348148744,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 15.98363146573081
+      },
+      "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+        "N_base": 550,
+        "N_variant": 316,
+        "delta_N": -234,
+        "removed_signal_count": 493,
+        "added_signal_count": 259,
+        "common_signal_count": 57,
+        "removed_trade_sumR": -25.659670097277438,
+        "added_trade_sumR": 7.141822501398127,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 32.801492598675566
+      },
+      "Z100_125_ONLY": {
+        "N_base": 550,
+        "N_variant": 537,
+        "delta_N": -13,
+        "removed_signal_count": 450,
+        "added_signal_count": 437,
+        "common_signal_count": 100,
+        "removed_trade_sumR": -19.300757219322122,
+        "added_trade_sumR": 5.887131541407431,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 25.187888760729546
+      },
+      "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+        "N_base": 550,
+        "N_variant": 210,
+        "delta_N": -340,
+        "removed_signal_count": 520,
+        "added_signal_count": 180,
+        "common_signal_count": 30,
+        "removed_trade_sumR": -21.49948122965969,
+        "added_trade_sumR": 1.3759608997331298,
+        "common_signal_outcome_deltaR": 0.0,
+        "full_sequence_deltaR": 22.875442129392813
+      }
+    }
+  },
+  "decisions": {
+    "BASE_LAB045": {
+      "verdict": "FAILED",
+      "positive_historical_years": 3,
+      "historical_years_total": 5,
+      "positive_2026_months": 2,
+      "forward_months_total": 6
+    },
+    "SKIP_RAPID_REPEAT_30": {
+      "verdict": "FAILED",
+      "positive_historical_years": 5,
+      "historical_years_total": 5,
+      "positive_2026_months": 3,
+      "forward_months_total": 6
+    },
+    "SKIP_HIGH_VOL": {
+      "verdict": "FAILED",
+      "positive_historical_years": 3,
+      "historical_years_total": 5,
+      "positive_2026_months": 3,
+      "forward_months_total": 6
+    },
+    "SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+      "verdict": "SUPPORTED",
+      "positive_historical_years": 4,
+      "historical_years_total": 5,
+      "positive_2026_months": 4,
+      "forward_months_total": 6
+    },
+    "Z100_125_ONLY": {
+      "verdict": "FAILED",
+      "positive_historical_years": 2,
+      "historical_years_total": 5,
+      "positive_2026_months": 4,
+      "forward_months_total": 6
+    },
+    "Z100_125_SKIP_RAPID_REPEAT_30_AND_HIGH_VOL": {
+      "verdict": "MIXED",
+      "positive_historical_years": 4,
+      "historical_years_total": 5,
+      "positive_2026_months": 3,
+      "forward_months_total": 6
+    }
+  },
   "limitations": [
     "BTCUSDT only; ETH/SOL transfer not established.",
     "Historical 2021-2025 uses 1m OHLC; 2026 Mar-Aug uses second OHLC.",
     "2026 is reused forward-shadow/stress, not pristine OOS.",
-    "All gates and thresholds were preregistered from LAB045; no threshold search is performed here.",
+    "All gate thresholds were fixed before this replay; no threshold search is performed here.",
     "Every candidate is a full stateful rerun; skipped signals change occupancy, pause state and future reachability.",
     "v191 MT5 is tick/timer-driven; this uses the same common research approximation as LAB043-045.",
     "v192 is immutable reference and reconstructed on the common replay frame.",
