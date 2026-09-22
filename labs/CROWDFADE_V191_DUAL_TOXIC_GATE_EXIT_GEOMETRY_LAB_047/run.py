@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 from numba import njit
 
-# LAB047_TRIGGER_AFTER_WORKFLOW\nROOT=Path(__file__).resolve().parent
+# LAB047_TRIGGER_AFTER_WORKFLOW
+ROOT=Path(__file__).resolve().parent
 DATA=ROOT/'data'
 OUT=ROOT/'output'
 OUT.mkdir(parents=True,exist_ok=True)
