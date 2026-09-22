@@ -4964,3 +4964,251 @@ Requirements:
 - no exit changes.
 
 Do not code v191g until LAB046B is complete.
+
+
+---
+
+# LAB046 — V191 PREREGISTERED TOXIC STATE GATES
+
+Status: **DONE — FIRST FULL-STATEFUL POSITIVE v191 SUBPOPULATION FOUND; RAPID-REPEAT + HIGH-VOL COMBINATION IS THE LEADING CROSS-SAMPLE CANDIDATE**
+
+Path:
+`labs/CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046/`
+
+Successful GitHub Actions run:
+`35780113434`
+
+Full-stateful runner commit:
+`675e7cdc6e216ad96ff5b8f5aee8fcee233adc16`
+
+Frozen base:
+- v191d;
+- freshness <=45m;
+- max pre-confirm adverse <=0.75 ATR;
+- ExitZ retained;
+- SL1.5 ATR;
+- BE0.5 / lock0.15;
+- trail2.5 / gap0.5;
+- hold6h.
+
+No exit changes.
+No threshold search.
+Every candidate was rerun statefully so skipped trades changed occupancy and future signal reachability.
+
+## Controls
+
+v192 immutable canonical control:
+- historical: N1147, EV +0.1148R, PF1.239, Sum +131.72R, DD16.86R, R/DD7.811, 5/5 positive years;
+- 2026: N135, EV +0.1963R, PF1.431, Sum +26.50R, DD6.49R, R/DD4.084, 6/6 positive months.
+
+Full v191f:
+- historical -3.26R, PF0.998;
+- 2026 -20.34R, PF0.871.
+
+LAB045 base:
+- historical +1.03R, PF1.001;
+- 2026 -18.15R, PF0.882.
+
+## Variant results
+
+### Skip rapid same-side extreme <=30m
+
+Historical:
+- N3805
+- EV **+0.0324R**
+- PF **1.131**
+- Sum **+123.36R**
+- DD **22.70R**
+- R/DD **5.433**
+- **5/5 years positive**
+  - 2021 +20.72R
+  - 2022 +18.22R
+  - 2023 +34.96R
+  - 2024 +8.76R
+  - 2025 +40.70R
+
+2026:
+- N399
+- EV -0.0074R
+- PF0.972
+- Sum **-2.94R**
+- DD14.52R
+- 3/6 positive months.
+
+Interpretation:
+- rapid-repeat <=30m is a very real historical toxic state;
+- removing it completely repairs historical v191 robustness;
+- but the rule alone does not transport strongly enough to 2026.
+
+### Skip HIGH_VOL only
+
+Historical:
+- N5127
+- Sum -8.49R
+- PF0.994
+
+2026:
+- N520
+- Sum -2.17R
+- PF0.985
+
+Interpretation:
+- HIGH_VOL is toxic diagnostically, but a standalone hard gate is not sufficient once stateful reachability is respected.
+
+### Skip rapid<=30m + HIGH_VOL
+
+Historical:
+- N2967
+- EV **+0.0269R**
+- PF **1.105**
+- Sum **+79.83R**
+- DD **20.47R**
+- R/DD **3.900**
+- 4/5 positive years;
+- only 2024 is slightly negative at **-1.82R**.
+
+2026:
+- N316
+- EV **+0.0464R**
+- PF **1.189**
+- Sum **+14.65R**
+- DD **9.59R**
+- R/DD **1.528**
+- 4/6 positive months;
+- Mar -2.95R;
+- Apr +2.13R;
+- May +0.95R;
+- Jun +5.69R;
+- Jul +9.68R;
+- Aug -0.85R.
+
+Interpretation:
+**this is the strongest cross-sample v191 candidate found so far.**
+It is positive in both historical and 2026 stateful replay, with high frequency, and eliminates the severe 2025 failure.
+
+Still not production:
+- 2024 is slightly negative;
+- 2/6 2026 months are negative;
+- efficiency remains below v192.
+
+### Z1.00–1.25 only
+
+Historical stateful replay:
+- N5096
+- EV -0.0110R
+- PF0.959
+- Sum **-56.31R**
+- DD93.00R
+
+2026:
+- N537
+- EV +0.0131R
+- PF1.051
+- Sum +7.04R
+
+Critical result:
+LAB045's fixed-sequence positive Z1.00–1.25 bucket **does not survive full stateful reachability**.
+Selecting only low-Z changes occupancy and exposes a different later signal sequence.
+Therefore:
+- do NOT promote Z1.00–1.25-only;
+- this is a strong demonstration that diagnostic bucket EV is not causal strategy EV.
+
+### Z1.00–1.25 + skip HIGH_VOL
+
+Historical:
+- -70.81R, PF0.943.
+
+2026:
+- +18.96R, PF1.166.
+
+Fails transport badly.
+
+### Z1.00–1.25 + skip rapid<=30m
+
+Historical:
+- +75.67R, PF1.118;
+- 2025 -11.05R.
+
+2026:
+- -15.59R, PF0.796.
+
+Fails forward transport.
+
+### Z1.00–1.25 + both skips
+
+Historical:
+- N2034
+- EV +0.0323R
+- PF1.128
+- Sum +65.75R
+- DD21.86R
+- 4/5 positive years;
+- 2025 -5.47R.
+
+2026:
+- N210
+- EV +0.0225R
+- PF1.082
+- Sum +4.73R
+- DD13.48R
+- 3/6 positive months.
+
+Positive aggregate in both samples, but inferior to the unrestricted-Z dual toxic gate.
+
+## LAB046 core conclusion
+
+The v191 edge is **not** "Z1.00-1.25 only."
+
+The strongest causal structure is:
+
+> v191 crowd signal
+> + freshness <=45m
+> + pre-confirm adverse <=0.75 ATR
+> + **skip rapid same-side crowd repetition <=30m**
+> + **skip causal HIGH_VOL**
+
+This produces:
+- historical +79.83R / PF1.105 / DD20.47R;
+- 2026 +14.65R / PF1.189 / DD9.59R;
+- N2967 historical and N316 forward.
+
+This is the first v191 candidate in the current research lineage that is:
+- positive historical aggregate;
+- positive 2026 aggregate;
+- high-frequency;
+- free of the catastrophic 2025 failure;
+- obtained with preregistered gates and full stateful reachability.
+
+However v192 remains superior in quality:
+- v192 hist R/DD7.811 vs candidate3.900;
+- v192 2026 R/DD4.084 vs candidate1.528;
+- v192 5/5 years and 6/6 2026 months.
+
+Therefore v191 should be treated as a **secondary/high-frequency lane**, not a replacement for v192.
+
+## Next clean LAB
+
+**LAB047 — V191_DUAL_TOXIC_GATE_EXIT_GEOMETRY**
+
+Freeze the LAB046 leading signal population exactly:
+- freshness45;
+- adverse<=0.75;
+- skip rapid repeat<=30m;
+- skip HIGH_VOL;
+- ExitZ retained at baseline control.
+
+Then test only exit geometry, without changing entry selection:
+1. current v191 management control:
+   - SL1.5
+   - BE0.5/0.15
+   - trail2.5/0.5
+   - H6
+   - ExitZ0.75
+2. true scalp candidates on the *validated positive population only*:
+   - shorter time-stop;
+   - compact TP/SL candidates;
+   - no threshold retuning of entry state.
+3. retain v192 as immutable reference.
+
+Goal:
+determine whether the positive high-frequency candidate is naturally better as a scalp engine, or whether current v191 management already captures most of its edge.
