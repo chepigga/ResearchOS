@@ -3843,3 +3843,36 @@ Do NOT during this ablation:
 After ablation:
 - only the surviving minimal change set may become a v191g candidate;
 - v191f currently stays on chart as forward diagnostic, not production-promoted.
+
+
+---
+
+# CANONICAL CONTROL BASELINE — FROZEN
+
+Effective immediately, `CrowdFadeMulti_v192_Confirm.mq5` is the **immutable canonical control baseline** for all future CrowdFade LABs, ablations, forward comparisons, and production-candidate evaluations.
+
+Rules:
+- do not modify, overwrite, retune, or reinterpret `CrowdFadeMulti_v192_Confirm.mq5`;
+- every future LAB must report results relative to this control baseline whenever comparable data/logic permit;
+- if a LAB uses a different population/entry shell, the report must still state explicitly how it differs from v192 and must not call the new version 'baseline' without qualification;
+- v191d / v191e / v191f / v200+ are experimental or descendant branches, not replacements for the canonical control;
+- any proposed promotion must show whether it improves or degrades versus v192 on the same evaluation frame where feasible;
+- no future optimization may silently change the v192 control parameters.
+
+Frozen v192 control geometry currently recorded in project research:
+- Z threshold = 2.50 symmetric;
+- completed M15 confirmation = 0.25 ATR;
+- passive retrace = 0.60 ATR;
+- limit-only pending TTL = 20m;
+- SL = 4.5 ATR;
+- TP = 10 ATR;
+- max hold = 24h;
+- max 3 trades/day;
+- inherited 1 ATR anti-repeat gate;
+- no BE / no trailing in the canonical v192 control.
+
+Reference historical research state associated with this canonical geometry:
+- 2021–2025 historical: N 1227, EV +0.106435R, PF 1.210426, SumR +130.596R;
+- 2026 reused forward-shadow: N 136, EV +0.211108R, PF 1.467315, SumR +28.711R, 6/6 positive months.
+
+This section is a control lock. Future research may compare against it, but must not mutate it.
