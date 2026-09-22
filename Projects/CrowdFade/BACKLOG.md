@@ -4658,3 +4658,309 @@ Require:
 - no new threshold optimization.
 
 Only after LAB046, if a stable positive v191 population exists, test scalp geometry on that population in LAB047.
+
+
+---
+
+# LAB046 — V191 PREREGISTERED TOXIC STATE GATES
+
+Status: **DONE — HARD RAPID-REPEAT FILTER PASSES ATTRIBUTION; 0.25x TOXIC RISK-TIER PRESERVES FREQUENCY AND TURNS BOTH SAMPLES POSITIVE. FULL STATEFUL REPLAY STILL REQUIRED.**
+
+Path:
+`labs/CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046/`
+
+Workflow:
+`.github/workflows/crowdfade-lab046.yml`
+
+Successful GitHub Actions run:
+`35778691229`
+
+Runner commit:
+`c90444739ec7c28aaf0730b066e4a951580423c3`
+
+Workflow commit:
+`c7fbe01d6bdbf27a34210e3c1f77eb6e0db43397`
+
+Frozen base:
+- v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained;
+- no exit change;
+- no threshold search.
+
+IMPORTANT methodology caveat:
+- LAB046 uses the identical LAB045 trade sequence, then applies hard selection / risk weights;
+- therefore this validates attribution and portfolio weighting on the same reachable trades;
+- it is **not yet a full causal occupancy/reachability rerun**;
+- any passing candidate must be rerun statefully before EA promotion.
+
+## Base
+
+Historical 2021–2025:
+- N5402
+- Sum +1.03R
+- EV +0.0002R
+- PF1.001
+- DD59.97R
+
+2026 Mar–Aug:
+- N550
+- Sum -18.15R
+- EV -0.0330R
+- PF0.882
+- DD42.65R
+
+## Hard gates
+
+### Skip rapid same-side repeat <=30m
+
+Historical:
+- N1002
+- kept **18.5%**
+- EV **+0.0360R**
+- PF **1.156**
+- Sum **+36.10R**
+- DD **14.90R**
+- R/DD 2.424
+- all 5 historical years positive:
+  - 2021 +14.22R
+  - 2022 +4.70R
+  - 2023 +11.59R
+  - 2024 +3.57R
+  - 2025 +2.03R
+
+2026:
+- N101
+- kept **18.4%**
+- EV **+0.0963R**
+- PF **1.594**
+- Sum **+9.73R**
+- DD **5.00R**
+- positive months 4/6:
+  - Mar +3.32
+  - Apr +3.32
+  - May -1.39
+  - Jun +3.93
+  - Jul +0.63
+  - Aug -0.08
+
+Interpretation:
+rapid-repeat <=30m is the strongest large-sample toxic state.
+Hard filtering repairs edge but reduces frequency by ~81.5%.
+
+### Skip HIGH_VOL only
+
+Historical:
+- N4152
+- Sum +22.53R
+- PF1.020
+- DD54.55R
+
+2026:
+- N440
+- Sum -0.92R
+- PF0.992
+- DD31.22R
+
+Interpretation:
+high-vol filter helps materially but is insufficient alone.
+
+### Skip rapid30 + HIGH_VOL
+
+Historical:
+- N765
+- kept14.2%
+- EV +0.0392R
+- PF1.165
+- Sum +30.00R
+- DD13.87R
+
+2026:
+- N78
+- kept14.2%
+- EV **+0.1493R**
+- PF **2.026**
+- Sum **+11.64R**
+- DD **3.67R**
+- 5/6 2026 months positive; May negative.
+
+Quality is strong, but frequency is very low.
+
+### Z1.00–1.25 only
+
+Historical:
+- N1261
+- kept23.3%
+- EV +0.0299R
+- PF1.127
+- Sum +37.74R
+- DD12.57R
+- 5/5 years positive
+
+2026:
+- N137
+- kept24.9%
+- EV +0.0368R
+- PF1.183
+- Sum +5.04R
+- DD5.46R
+- 4/6 months positive
+
+### Z1.00–1.25 + skip rapid30 + HIGH_VOL
+
+Historical:
+- N400
+- kept7.4%
+- EV **+0.0716R**
+- PF **1.350**
+- Sum +28.64R
+- DD **8.06R**
+- 2025 slightly negative (-0.70R)
+
+2026:
+- N42
+- kept7.6%
+- EV **+0.1281R**
+- PF **1.867**
+- Sum +5.38R
+- DD **2.80R**
+- 4/6 months positive
+
+Very clean but frequency too low for the user's v191 objective.
+
+## Risk-tier branch — preserve trade count
+
+### Toxic states at 0.25x, clean states at 1.0x
+
+Definition:
+- rapid-repeat <=30m OR HIGH_VOL => 0.25x
+- otherwise => 1.0x
+- all trades retained
+
+Historical:
+- raw N **5402** retained
+- effective risk units 1924.25
+- average risk multiplier 0.356
+- weighted Sum **+22.76R**
+- PF **1.046**
+- DD **19.16R**
+- R/DD 1.188
+- years:
+  - 2021 +16.97
+  - 2022 +3.28
+  - 2023 +5.49
+  - 2024 +7.58
+  - 2025 **-10.56**
+- 4/5 positive years
+
+2026:
+- raw N **550** retained
+- effective risk units 196
+- average risk multiplier 0.356
+- weighted Sum **+4.19R**
+- PF **1.089**
+- DD **9.48R**
+- months:
+  - Mar +5.97
+  - Apr +3.78
+  - May -6.04
+  - Jun +2.60
+  - Jul +0.84
+  - Aug -2.96
+- 4/6 positive months
+
+This is the most important frequency-preserving result:
+**all signals remain, but capital exposure is cut ~64%; aggregate flips positive in both historical and 2026.**
+
+### Toxic states at 0.50x
+
+Historical:
+- Sum +15.52R
+- PF1.019
+- DD27.72R
+
+2026:
+- Sum -3.25R
+- PF0.961
+- DD20.54R
+
+Conclusion:
+0.50x is not enough suppression.
+
+### Z-aware + toxic risk tier
+
+Map:
+- Z1.00–1.25 =>1.0x
+- Z1.25–2.00 =>0.5x
+- Z>=2.00 =>0.25x
+- toxic state caps any trade at0.25x
+
+Historical:
+- N5402 retained
+- effective units1718
+- Sum +21.17R
+- PF1.048
+- DD16.27R
+
+2026:
+- N550 retained
+- effective units175.75
+- Sum +0.67R
+- PF1.015
+- DD9.49R
+
+This improves DD but gives less forward PnL than simple toxic0.25x.
+
+## LAB046 decision
+
+Strongest quality / low-frequency candidate:
+**HARD_SKIP_RAPID30_HIGHVOL**
+- hist PF1.165 / DD13.87
+- 2026 PF2.026 / DD3.67
+- but only ~14% signals retained.
+
+Strongest simple hard-gate candidate:
+**HARD_SKIP_RAPID30**
+- 5/5 positive years;
+- 2026 +9.73R;
+- retains ~18.5% of signals.
+
+Strongest frequency-preserving candidate:
+**RISK_TIER_TOXIC_025**
+- retains 100% raw trade frequency;
+- hist +22.76R / PF1.046 / DD19.16;
+- 2026 +4.19R / PF1.089 / DD9.48;
+- average exposure only ~0.356x;
+- 2025 and May/Aug 2026 remain negative.
+
+Key conclusion:
+> v191 frequency does not need to disappear.
+> The data support keeping signal frequency while heavily suppressing risk on rapid-repeat/high-vol states.
+
+However:
+- risk-tier result is not production-valid yet;
+- because occupancy/reachability was held fixed;
+- full stateful replay is required.
+
+## Next required LAB
+
+**LAB046B — FULL_STATEFUL_REACHABILITY_OF_LAB046_WINNERS**
+
+Statefully rerun:
+1. BASE LAB045;
+2. HARD_SKIP_RAPID30;
+3. HARD_SKIP_RAPID30_HIGHVOL;
+4. RISK_TIER_TOXIC_025;
+5. RISK_TIER_Z_AND_TOXIC;
+6. immutable v192 control.
+
+Requirements:
+- skipped trades must free occupancy;
+- later signals can become reachable;
+- risk-tier does not alter occupancy;
+- full equity/DD sequence;
+- annual 2021–2025;
+- monthly 2026;
+- compare raw frequency and effective risk units;
+- no threshold changes;
+- no exit changes.
+
+Do not code v191g until LAB046B is complete.
