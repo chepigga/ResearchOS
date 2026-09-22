@@ -6,124 +6,212 @@ import pandas as pd
 ROOT=Path(__file__).resolve().parent
 DATA=ROOT/'data'; OUT=ROOT/'output'; OUT.mkdir(parents=True,exist_ok=True)
 
-# Reuse LAB045 enriched causal diagnostics and LAB044 frozen base replay.
+# Reuse LAB045/LAB044/LAB043 validated data loaders and v191/v192 management.
 p45=Path(__file__).resolve().parents[1]/'CROWDFADE_V191_POSITIVE_SUBPOPULATION_ATTRIBUTION_LAB_045'/'run.py'
-spec=importlib.util.spec_from_file_location('lab045',p45)
-lab45=importlib.util.module_from_spec(spec); spec.loader.exec_module(lab45)
-lab45.DATA=DATA
-lab45.lab44.DATA=DATA
-lab45.lab44.lab43.DATA=DATA
+spec45=importlib.util.spec_from_file_location('lab045',p45)
+lab045=importlib.util.module_from_spec(spec45); spec45.loader.exec_module(lab045)
+lab045.DATA=DATA
+lab045.lab44.DATA=DATA
+lab045.lab44.lab43.DATA=DATA
 
-# LAB046 is a pre-registered causal gate/risk-layer validation.
-# Base shell is fixed LAB045:
-# v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained.
-# No exit changes, no threshold search.
+lab44=lab045.lab44
+lab43=lab44.lab43
 
-VARIANTS = [
-    'BASE_LAB045',
-    'HARD_SKIP_RAPID30',
-    'HARD_SKIP_HIGHVOL',
-    'HARD_SKIP_RAPID30_HIGHVOL',
-    'HARD_Z100_125_ONLY',
-    'HARD_Z100_125_PLUS_SKIP_RAPID30_HIGHVOL',
-    'RISK_TIER_TOXIC_025',
-    'RISK_TIER_TOXIC_050',
-    'RISK_TIER_Z_AND_TOXIC'
-]
+BASE=0
+SKIP_RAPID30=1
+SKIP_HIGH_VOL=2
+SKIP_BOTH=3
+Z100_125_ONLY=4
+Z100_125_SKIP_HIGHVOL=5
+Z100_125_SKIP_RAPID30=6
+Z100_125_SKIP_BOTH=7
 
-def base_enriched(raw,ft,fz,start,end,label):
-    df,p = lab45.enrich_base(raw,ft,fz,start,end,label+'_base')
-    return df,p
+NAMES={
+0:'BASE_LAB045',
+1:'SKIP_RAPID_REPEAT_LE30M',
+2:'SKIP_HIGH_VOL',
+3:'SKIP_RAPID30_PLUS_HIGHVOL',
+4:'Z100_125_ONLY',
+5:'Z100_125_SKIP_HIGHVOL',
+6:'Z100_125_SKIP_RAPID30',
+7:'Z100_125_SKIP_BOTH'
+}
 
-def flags(df):
-    x=df.copy()
-    x['is_rapid30']=(x['mins_since_prior_same_extreme'].notna() & (x['mins_since_prior_same_extreme']<=30.0))
-    x['is_highvol']=(x['vol_regime']=='HIGH_VOL')
-    x['is_z100_125']=((x['signal_abs_z']>=1.00)&(x['signal_abs_z']<1.25))
-    x['is_z125_200']=((x['signal_abs_z']>=1.25)&(x['signal_abs_z']<2.00))
-    x['is_z200_plus']=(x['signal_abs_z']>=2.00)
-    x['toxic_any']=x['is_rapid30']|x['is_highvol']
-    return x
+def build_signal_features(p):
+    ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5=p
+    atrpct=A5/C5
+    s=pd.Series(atrpct)
+    q33=s.shift(1).rolling(8640,min_periods=2880).quantile(0.33).to_numpy()
+    q67=s.shift(1).rolling(8640,min_periods=2880).quantile(0.67).to_numpy()
+    vol=np.zeros(len(dt5),np.int8)  # -1 low, 0 mid/unknown, +1 high
+    for j in range(len(dt5)):
+        if np.isfinite(q33[j]) and np.isfinite(q67[j]):
+            if atrpct[j] <= q33[j]:
+                vol[j]=-1
+            elif atrpct[j] >= q67[j]:
+                vol[j]=1
+            else:
+                vol[j]=0
 
-def apply_variant(df,name):
-    x=flags(df).copy()
-    if name=='BASE_LAB045':
-        x['risk_mult']=1.0
-        return x
+    gap=np.full(len(dt5),np.nan)
+    last_pos=-10**18; last_neg=-10**18
+    for j,(t,z) in enumerate(zip(dt5,Z5)):
+        if z>=1.0:
+            if last_pos>-10**17:
+                gap[j]=(t-last_pos)/60.0
+            last_pos=t
+        elif z<=-1.0:
+            if last_neg>-10**17:
+                gap[j]=(t-last_neg)/60.0
+            last_neg=t
+    return vol,gap
 
-    if name=='HARD_SKIP_RAPID30':
-        x=x[~x.is_rapid30].copy(); x['risk_mult']=1.0; return x
-    if name=='HARD_SKIP_HIGHVOL':
-        x=x[~x.is_highvol].copy(); x['risk_mult']=1.0; return x
-    if name=='HARD_SKIP_RAPID30_HIGHVOL':
-        x=x[~x.toxic_any].copy(); x['risk_mult']=1.0; return x
-    if name=='HARD_Z100_125_ONLY':
-        x=x[x.is_z100_125].copy(); x['risk_mult']=1.0; return x
-    if name=='HARD_Z100_125_PLUS_SKIP_RAPID30_HIGHVOL':
-        x=x[x.is_z100_125 & ~x.toxic_any].copy(); x['risk_mult']=1.0; return x
+def gate_allows(variant,z,vol_state,gap_min):
+    az=abs(z)
+    rapid=np.isfinite(gap_min) and gap_min<=30.0
+    high=(vol_state==1)
+    lowz=(az>=1.0 and az<1.25)
 
-    if name=='RISK_TIER_TOXIC_025':
-        x['risk_mult']=np.where(x.toxic_any,0.25,1.0)
-        return x
-    if name=='RISK_TIER_TOXIC_050':
-        x['risk_mult']=np.where(x.toxic_any,0.50,1.0)
-        return x
-    if name=='RISK_TIER_Z_AND_TOXIC':
-        # Preserve all trades, but concentrate risk in the only cross-sample positive Z bucket.
-        # Pre-registered map: Z1.00-1.25=1.0x, Z1.25-2.00=0.5x, Z>=2.00=0.25x;
-        # any toxic state caps risk at 0.25x.
-        rm=np.where(x.is_z100_125,1.0,np.where(x.is_z125_200,0.5,0.25))
-        rm=np.minimum(rm,np.where(x.toxic_any,0.25,1.0))
-        x['risk_mult']=rm
-        return x
-    raise ValueError(name)
+    if variant==BASE: return True
+    if variant==SKIP_RAPID30: return not rapid
+    if variant==SKIP_HIGH_VOL: return not high
+    if variant==SKIP_BOTH: return (not rapid) and (not high)
+    if variant==Z100_125_ONLY: return lowz
+    if variant==Z100_125_SKIP_HIGHVOL: return lowz and (not high)
+    if variant==Z100_125_SKIP_RAPID30: return lowz and (not rapid)
+    if variant==Z100_125_SKIP_BOTH: return lowz and (not rapid) and (not high)
+    return True
 
-def seq_metrics(df):
-    if len(df)==0:
-        return {'N':0,'WR':0.0,'EV':0.0,'PF':0.0,'SumR':0.0,'MaxDD_R':0.0,'R_DD':0.0,'MaxConsecutiveLosses':0,
-                'AvgRiskMult':0.0,'EffectiveTradeUnits':0.0}
-    r=(df.R.to_numpy(float)*df.risk_mult.to_numpy(float))
-    m=lab45.lab44.lab43.metrics(r)
-    m['RawEV']=float(df.R.mean())
-    m['AvgRiskMult']=float(df.risk_mult.mean())
-    m['EffectiveTradeUnits']=float(df.risk_mult.sum())
-    m['N_raw']=int(len(df))
-    return m
+def sim_variant(p,variant):
+    ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5=p
+    vol,gap=build_signal_features(p)
+    rows=[]
+    k=0;day=-1;dc=0;nextts=0;last=0.;la=0.;has=False
 
-def period_metrics(df,kind):
-    q=df.copy()
-    t=pd.to_datetime(q.signal_ts,unit='s',utc=True)
-    q['_period']=t.dt.year.astype(str) if kind=='year' else t.dt.strftime('%Y-%m')
-    return {str(k):seq_metrics(g) for k,g in q.groupby('_period')}
+    while k<len(dt5)-3:
+        t=dt5[k]
+        if t<nextts:
+            k+=1; continue
+        d=t//86400
+        if d!=day:
+            day=d; dc=0
+        if dc>=lab44.MAXDAY:
+            k+=1; continue
 
-def risk_mix(df):
-    vc=df.risk_mult.value_counts().sort_index()
-    return {str(float(k)):int(v) for k,v in vc.items()}
+        z0=Z5[k]
+        side=-1 if z0>=lab44.V191_Z else (1 if z0<=-lab44.V191_Z else 0)
+        if side==0:
+            k+=1; continue
+
+        # Preregistered gate is evaluated at the original signal state, before occupancy changes.
+        if not gate_allows(variant,z0,vol[k],gap[k]):
+            k+=1; continue
+
+        sig=C5[k]; atr=A5[k]
+        if has and abs(sig-last)<lab44.PAUSE_ATR*la:
+            k+=1; continue
+
+        # Frozen LAB045 base: freshness45 + pre-confirm adverse<=0.75.
+        target=sig+side*lab44.V191_CONFIRM_ATR*atr
+        ps=np.searchsorted(ts,t+1)
+        pe=np.searchsorted(ts,t+2700,'right')
+        ci=-1; maxadv=0.; maxfav=0.
+        for q in range(ps,min(len(ts),pe)):
+            adv=((H[q]-sig) if side<0 else (sig-L[q]))/atr
+            fav=((sig-L[q]) if side<0 else (H[q]-sig))/atr
+            if adv>maxadv: maxadv=adv
+            if fav>maxfav: maxfav=fav
+            if maxadv>0.75:
+                ci=-2
+                break
+            if (side>0 and C[q]>=target) or (side<0 and C[q]<=target):
+                ci=q
+                break
+
+        if ci<0:
+            k+=1; continue
+
+        zi=np.searchsorted(dt5,ts[ci],'right')-1
+        if zi<0:
+            k+=1; continue
+        cz=Z5[zi]
+
+        # Original v191d confirmation consistency; ExitZ retained.
+        if (side>0 and cz>=0.75) or (side<0 and cz<=-0.75):
+            k=np.searchsorted(dt5,ts[ci])+1
+            continue
+
+        entry=C[ci]
+        rr,ex,reason=lab43.manage_v191(ts,H,L,C,dt5,Z5,ci,side,entry,atr,0.75)
+        rows.append({
+            'R':float(rr),
+            'signal_ts':int(t),
+            'entry_ts':int(ts[ci]),
+            'exit_ts':int(ts[ex]),
+            'side':int(side),
+            'signal_z':float(z0),
+            'signal_abs_z':float(abs(z0)),
+            'confirm_z':float(cz),
+            'confirm_age_min':float((ts[ci]-t)/60.0),
+            'max_adverse_atr':float(maxadv),
+            'response_ratio':float(maxfav/(maxadv+1e-9)),
+            'vol_state':int(vol[k]),
+            'prior_same_extreme_gap_min':float(gap[k]) if np.isfinite(gap[k]) else np.nan,
+            'exit_reason':lab43.REASONS.get(int(reason),'?')
+        })
+
+        dc+=1
+        last=entry; la=atr; has=True
+        nextts=ts[ex]+1
+        k=np.searchsorted(dt5,nextts)
+
+    return pd.DataFrame(rows)
+
+def metrics(df):
+    return lab43.metrics(df.R.to_numpy(float)) if len(df) else {
+        'N':0,'WR':0.,'EV':0.,'PF':0.,'SumR':0.,'MaxDD_R':0.,'R_DD':0.,'MaxConsecutiveLosses':0}
+
+def period_stats(df,mode):
+    if len(df)==0: return {}
+    t=pd.to_datetime(df.signal_ts,unit='s',utc=True)
+    key=t.dt.year.astype(str) if mode=='year' else t.dt.strftime('%Y-%m')
+    return {str(k):metrics(g) for k,g in df.groupby(key)}
+
+def summarize(df,mode):
+    return {
+      'all':metrics(df),
+      'periods':period_stats(df,mode),
+      'side':{
+        'BUY':metrics(df[df.side>0]),
+        'SELL':metrics(df[df.side<0])},
+      'exit_reasons':{str(k):int(v) for k,v in df.exit_reason.value_counts().items()} if len(df) else {}
+    }
 
 def run_period(raw,ft,fz,start,end,label):
-    base,_=base_enriched(raw,ft,fz,start,end,label)
+    p=lab43.prep(raw,ft,fz,start,end)
     out={}
-    for name in VARIANTS:
-        v=apply_variant(base,name)
-        v.to_csv(OUT/f'{label}_{name}.csv',index=False)
-        out[name]={
-            'all':seq_metrics(v),
-            'periods':period_metrics(v,'year' if label=='historical' else 'month'),
-            'risk_mix':risk_mix(v),
-            'kept_fraction':float(len(v)/len(base)) if len(base) else 0.0
-        }
+
+    d192=lab43.df192(lab43.sim_v192(*p))
+    d192.to_csv(OUT/f'{label}_V192_CANONICAL_CONTROL.csv',index=False)
+    out['V192_CANONICAL_CONTROL']=lab43.summarize(d192,'year' if label=='historical' else 'month')
+
+    full=lab44.make_df(lab44.sim(*p,lab44.FULL_V191F))
+    full.to_csv(OUT/f'{label}_FULL_V191F_CONTROL.csv',index=False)
+    out['FULL_V191F_CONTROL']=lab44.summarize(full,'year' if label=='historical' else 'month')
+
+    for v in range(8):
+        d=sim_variant(p,v)
+        d.to_csv(OUT/f'{label}_{NAMES[v]}.csv',index=False)
+        out[NAMES[v]]=summarize(d,'year' if label=='historical' else 'month')
     return out
 
 def fmt(m):
-    return (f"N={m.get('N_raw',m.get('N',0))} Eff={m.get('EffectiveTradeUnits',0):.1f} "
-            f"WR={m['WR']:.1%} EVw={m['EV']:+.4f} PF={m['PF']:.3f} "
-            f"Sum={m['SumR']:+.2f}R DD={m['MaxDD_R']:.2f} R/DD={m['R_DD']:.3f} "
-            f"AvgRisk={m.get('AvgRiskMult',1.0):.3f}")
+    return f"N={m['N']} WR={m['WR']:.1%} EV={m['EV']:+.4f} PF={m['PF']:.3f} Sum={m['SumR']:+.2f}R DD={m['MaxDD_R']:.2f} R/DD={m['R_DD']:.3f} MCL={m['MaxConsecutiveLosses']}"
 
 def main():
-    ft,fz=lab45.lab44.lab43.load_flow()
-    hist=lab45.lab44.lab43.load_hist()
-    sec=lab45.lab44.lab43.load_sec()
+    ft,fz=lab43.load_flow()
+    hist=lab43.load_hist()
+    sec=lab43.load_sec()
 
     h=run_period(hist,ft,fz,
         int(pd.Timestamp('2021-01-01',tz='UTC').timestamp()),
@@ -134,47 +222,48 @@ def main():
 
     result={
       'lab':'CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046',
-      'base_shell':'v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained',
-      'variants':{
-        'HARD_SKIP_RAPID30':'skip if prior same-side |Z|>=1 extreme occurred <=30m ago',
-        'HARD_SKIP_HIGHVOL':'skip causal HIGH_VOL regime',
-        'HARD_SKIP_RAPID30_HIGHVOL':'skip either rapid repeat or HIGH_VOL',
-        'HARD_Z100_125_ONLY':'only 1.00<=|Z|<1.25',
-        'HARD_Z100_125_PLUS_SKIP_RAPID30_HIGHVOL':'Z1.00-1.25 and non-toxic only',
-        'RISK_TIER_TOXIC_025':'all trades retained; toxic_any=0.25x, otherwise1.0x',
-        'RISK_TIER_TOXIC_050':'all trades retained; toxic_any=0.50x, otherwise1.0x',
-        'RISK_TIER_Z_AND_TOXIC':'all trades retained; Z1.00-1.25=1x, 1.25-2.00=.5x, >=2=.25x; toxic_any caps at .25x'
+      'base':'v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained',
+      'method':'Full stateful causal replay for every variant; skipped signals alter occupancy and future reachability.',
+      'pre_registered_gates':{
+        'SKIP_RAPID_REPEAT_LE30M':'skip signal if same-side |Z|>=1 extreme occurred <=30m ago',
+        'SKIP_HIGH_VOL':'skip causal HIGH_VOL from lagged 30d ATR%-tercile state',
+        'SKIP_RAPID30_PLUS_HIGHVOL':'apply both skips',
+        'Z100_125_ONLY':'accept only 1.00<=|Z|<1.25',
+        'Z100_125_SKIP_HIGHVOL':'low-Z bucket plus skip HIGH_VOL',
+        'Z100_125_SKIP_RAPID30':'low-Z bucket plus skip rapid repeat',
+        'Z100_125_SKIP_BOTH':'low-Z bucket plus both toxic-state skips'
       },
-      'historical':h,'forward_2026_shadow':f,
+      'historical':h,
+      'forward_2026_shadow':f,
       'limitations':[
-        'BTCUSDT only.',
-        '2021-2025 uses 1m OHLC; 2026 Mar-Aug uses second OHLC.',
+        'BTCUSDT only; ETH/SOL transfer not established.',
+        'Historical 2021-2025 uses 1m OHLC; 2026 Mar-Aug uses second OHLC.',
         '2026 is reused forward-shadow/stress, not pristine OOS.',
-        'All thresholds and risk multipliers were preregistered from LAB045; no within-LAB optimization.',
-        'This LAB applies gates/risk weights to the frozen LAB045 trade sequence. It therefore validates selection/risk attribution on identical signal reachability, not a full re-simulation where skipped trades free occupancy and create new later signals.',
-        'A full stateful reachability replay is required before EA promotion if any variant passes.',
-        'v192 remains immutable canonical control and is not modified here.'
-      ]}
+        'All gates and thresholds were preregistered from LAB045; no threshold search is performed here.',
+        'Every candidate is a full stateful rerun; skipped signals change occupancy, pause state and future reachability.',
+        'v191 MT5 is tick/timer-driven; this uses the same common research approximation as LAB043-045.',
+        'v192 is immutable reference and reconstructed on the common replay frame.',
+        'Flat 0.5bps research cost proxy; broker-specific IC/GetLeveraged execution remains a separate forward-validation question.'
+      ]
+    }
 
     (OUT/'summary.json').write_text(json.dumps(result,indent=2,default=float))
     rows=[]
     for period,d in [('historical',h),('2026',f)]:
         for name,v in d.items():
-            rows.append({'period':period,'variant':name,**v['all'],'kept_fraction':v['kept_fraction']})
+            rows.append({'period':period,'variant':name,**v['all']})
     pd.DataFrame(rows).to_csv(OUT/'comparison.csv',index=False)
 
     lines=['# LAB046 — V191 PREREGISTERED TOXIC STATE GATES','',
       'Base: **v191d + freshness45 + adverse<=0.75 ATR + ExitZ retained**.',
       '',
-      'No exit change. No threshold search. Hard-gate and risk-tier branches are compared.',
-      '',
-      'IMPORTANT: this pass uses the identical LAB045 trade sequence with selection/risk weighting; any passing candidate must get a full stateful reachability replay before EA promotion.',
+      '**Full stateful causal rerun** for every candidate. No threshold search and no exit changes.',
       '',
       '## Full sample']
     for period,d in [('Historical 2021–2025',h),('2026 Mar–Aug shadow',f)]:
         lines += ['',f'### {period}']
         for name,v in d.items():
-            lines.append(f"- {name}: {fmt(v['all'])}; kept={v['kept_fraction']:.1%}; risk_mix={json.dumps(v['risk_mix'])}")
+            lines.append(f"- {name}: {fmt(v['all'])}")
 
     lines += ['','## Period consistency']
     for period,d in [('Historical',h),('2026',f)]:
