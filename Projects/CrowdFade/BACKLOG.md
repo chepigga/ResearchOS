@@ -3876,3 +3876,254 @@ Reference historical research state associated with this canonical geometry:
 - 2026 reused forward-shadow: N 136, EV +0.211108R, PF 1.467315, SumR +28.711R, 6/6 positive months.
 
 This section is a control lock. Future research may compare against it, but must not mutate it.
+
+
+---
+
+# LAB043 — v191d → v191e → v191f CAUSAL ABLATION
+
+Status: **DONE — v191 family remains non-robust; adverse gate is the only strongly beneficial v191f component; response gate gives back part of the gain**
+
+Path:
+`labs/CROWDFADE_V191D_TO_V191F_ABLATION_LAB_043/`
+
+Workflow:
+`.github/workflows/crowdfade-lab043.yml`
+
+Successful GitHub Actions run:
+`35776230524`
+
+Runner commit:
+`95bf9ee89f8c1acd96e6a7abb98e71de77da86e2`
+
+Workflow commit:
+`d768bb3b837705902eb647aacfed8d83e3385b4c`
+
+Immutable reference:
+`CrowdFadeMulti_v192_Confirm.mq5`
+
+Important replay caveat:
+- v192 control is reconstructed from frozen documented geometry on the same research frame;
+- exact trade count differs from earlier canonical report (1147 vs 1227) because this LAB uses the common LAB043 replay clock / data preparation rather than the earlier exact v192 research runner;
+- despite this, direction is preserved: v192 is strongly positive in all historical years and all 2026 months in this replay.
+
+## Full-sample comparison
+
+### Historical 2021–2025
+
+v192 canonical control:
+- N 1147
+- WR 44.7%
+- EV **+0.1148R**
+- PF **1.239**
+- Sum **+131.72R**
+- DD **16.86R**
+- R/DD **7.811**
+- 5/5 positive years
+
+v191d control:
+- N 5405
+- WR 67.5%
+- EV **-0.0459R**
+- PF **0.847**
+- Sum **-248.07R**
+- DD **264.09R**
+
+v191e step 1 — ExitZ OFF only:
+- N 5404
+- EV **-0.0544R**
+- PF 0.826
+- Sum **-293.79R**
+- DD 300.17R
+- delta vs v191d: **-45.72R**
+
+v191e step 2 — same-side confirm:
+- N 5405
+- EV -0.0525R
+- PF 0.831
+- Sum **-283.83R**
+- delta vs ExitZ-off-only: **+9.97R**
+- still materially worse than v191d
+
+v191f step 1 — freshness 45m:
+- N 5405
+- EV -0.0315R
+- PF 0.894
+- Sum **-170.22R**
+- DD 190.22R
+- delta vs v191e exact: **+113.61R**
+- strong improvement, but still negative
+
+v191f step 2 — minimum confirm |Z| >=0.75:
+- N 5405
+- EV -0.0284R
+- PF 0.905
+- Sum **-153.63R**
+- delta: **+16.59R**
+- modest historical improvement
+
+v191f step 3 — max adverse <=0.75 ATR:
+- N 5403
+- WR 72.2%
+- EV **+0.0024R**
+- PF **1.009**
+- Sum **+13.15R**
+- DD **51.77R**
+- delta: **+166.78R**
+- this is by far the strongest repair component in the ablation
+
+v191f step 4 — response ratio >=0.50:
+- N 5403
+- WR 72.1%
+- EV **-0.0006R**
+- PF 0.998
+- Sum **-3.26R**
+- DD 52.95R
+- delta vs adverse-only: **-16.41R**
+- response gate gives back part of the adverse-gate improvement
+
+### 2026 Mar–Aug reused forward-shadow
+
+v192 canonical control:
+- N 135
+- EV **+0.1963R**
+- PF **1.431**
+- Sum **+26.50R**
+- DD **6.49R**
+- 6/6 months positive
+
+v191d:
+- N 552
+- EV -0.0489R
+- PF 0.831
+- Sum **-27.00R**
+- DD 39.44R
+
+v191e ExitZ OFF:
+- Sum **-26.54R**
+- delta vs v191d **+0.46R**
+- essentially neutral in 2026 but historically harmful
+
+v191e same-side:
+- Sum **-32.27R**
+- delta **-5.73R**
+- harmful in 2026
+
+v191f freshness45:
+- Sum **-33.41R**
+- delta **-1.14R**
+- no forward benefit despite large historical improvement
+
+v191f min |Z|0.75:
+- Sum **-41.40R**
+- delta **-7.99R**
+- forward harmful
+
+v191f max adverse0.75:
+- Sum **-24.15R**
+- delta **+17.25R**
+- strongest forward repair component too
+
+v191f response>=0.50:
+- Sum **-20.34R**
+- delta **+3.81R**
+- improves 2026 vs adverse-only, but historical result deteriorates from +13.15R to -3.26R
+
+## Exit mechanics
+
+Historical v191d:
+- protected-stop exits 3383
+- full SL 1529
+- ExitZ 459
+- time 34
+- median confirm age 6m
+- p90 58m
+- max 180m
+
+Full v191f:
+- protected-stop exits 3863
+- full SL 1476
+- time 64
+- median confirm age 4m
+- p90 20m
+- max 45m
+
+2026 v191d:
+- protected-stop 369
+- full SL 152
+- ExitZ 29
+- time 2
+- median confirm age 4.48m
+- p90 44.2m
+- max 158.75m
+
+Full v191f:
+- protected-stop 392
+- full SL 154
+- time 4
+- median confirm age 3.06m
+- p90 17.55m
+- max 43.93m
+
+Interpretation:
+- freshness successfully removes stale confirmations mechanically;
+- however freshness by itself does not restore forward expectancy;
+- the decisive quality discriminator is pre-confirmation adverse excursion, not age alone.
+
+## Causal sequence effects
+
+Important:
+trade counts remain near ~5400 historical and ~550 forward because removing one event changes occupancy and makes different later signals reachable.
+
+Therefore:
+- simple “removed trades were bad” logic is insufficient;
+- each step materially changes future signal reachability.
+
+Largest historical sequence changes:
+- freshness45: +113.61R
+- max-adverse0.75: **+166.78R**
+- response0.50: **-16.41R**
+
+Largest 2026 sequence changes:
+- max-adverse0.75: **+17.25R**
+- min confirm Z: -7.99R
+- same-side confirm: -5.73R
+- response0.50: +3.81R
+
+## LAB043 conclusions
+
+1. **v192 remains the only clearly robust control.**
+2. v191d is not historically profitable in this common replay frame.
+3. Disabling ExitZ is NOT a robust improvement:
+   - historically strongly worse;
+   - forward approximately neutral.
+4. Same-side confirmation is NOT independently supported:
+   - small historical recovery after ExitZ-off;
+   - forward worse.
+5. 45m freshness is mechanically sensible and strongly improves historical path, but does not improve 2026 on its own.
+6. Minimum confirm |Z|>=0.75 is not robust; it hurts 2026.
+7. **Max adverse <=0.75 ATR is the strongest and only cross-sample repair component.**
+8. The response-ratio >=0.50 gate is mixed:
+   - historical worsens vs adverse-only;
+   - 2026 improves.
+9. Full v191f is still not production-valid.
+10. Do not promote v191g yet.
+
+## Next recommended research
+
+Run a minimal repair LAB from the least-modified v191 shell:
+- v191d + adverse0.75 only;
+- v191d + freshness45 + adverse0.75;
+- v191d + adverse0.75 with ExitZ retained;
+- v191d + adverse0.75 with ExitZ OFF;
+- compare with full v191f and immutable v192.
+
+Purpose:
+identify whether we can preserve v191 frequency while using only the one component that demonstrated cross-sample value.
+
+Do NOT add:
+- trend filter;
+- dual-mode exits;
+- response-score optimization;
+- new SL/BE/trailing settings;
+until this minimal repair test is complete.
