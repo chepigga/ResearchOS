@@ -5449,3 +5449,344 @@ Rules:
 - test exit/management dimensions separately and preregister them before replay;
 - preserve full stateful replay and historical-year / 2026-month reporting;
 - keep immutable v192 as reference control.
+
+
+---
+
+# LAB047 — V191 DUAL TOXIC GATE EXIT GEOMETRY
+
+Status: **DONE — CONVENTIONAL SCALP GEOMETRY REJECTED; CURRENT CONTROL REMAINS ROBUST; TRAILING IS THE ONLY MAJOR OPEN MANAGEMENT LEVER**
+
+Path:
+`labs/CROWDFADE_V191_DUAL_TOXIC_GATE_EXIT_GEOMETRY_LAB_047/`
+
+Pre-registration commit:
+`4ccd7c459eb0d4a4a0a457f6d56fd978ec5e5cba`
+
+Successful GitHub Actions run:
+`35789396315`
+
+Output commit:
+`be9576cd2298f814709ef97759e470181ca34d4f`
+
+Frozen entry population:
+- exact LAB046 SUPPORTED dual toxic-state lane;
+- skip RAPID_REPEAT<=30m OR HIGH_VOL;
+- freshness45;
+- max pre-confirm adverse<=0.75 ATR;
+- v191 |Z|>=1.00 signal;
+- confirmation0.30 ATR;
+- pause1 ATR;
+- max3/day;
+- no entry threshold changes.
+
+Every exit candidate was replayed statefully.
+Changed exits were allowed to change occupancy and downstream signal reachability.
+
+Preregistered control:
+- SL1.5 ATR;
+- TP off;
+- BE arm0.5 / lock0.15 ATR;
+- trail arm2.5 / gap0.5 ATR;
+- ExitZ0.75;
+- H6.
+
+Control parity against LAB046 passed exactly.
+
+## Decision table
+
+### CONTROL_V191 — SUPPORTIVE
+
+Historical 2021–2025:
+- N2967
+- EV +0.0269R
+- PF1.105
+- Sum +79.83R
+- DD20.47R
+- R/DD3.900
+- 4/5 positive years
+
+2026 Mar–Aug:
+- N316
+- EV +0.0464R
+- PF1.189
+- Sum +14.65R
+- DD9.59R
+- R/DD1.528
+- 4/6 positive months
+
+Median hold:
+- historical 26m
+- 2026 24m
+
+Important:
+although max hold is 6h, typical v191 trades already behave as short-duration trades because BE/trailing/ExitZ terminate most positions quickly.
+
+### EXITZ_OFF — SUPPORTIVE, BUT NOT AN UPGRADE
+
+Historical:
+- N2957
+- EV +0.0220R
+- PF1.084
+- Sum +64.92R
+- DD25.46R
+- R/DD2.550
+- 4/5 positive years
+
+2026:
+- N315
+- EV +0.0553R
+- PF1.224
+- Sum +17.41R
+- DD9.26R
+- R/DD1.879
+- 4/6 positive months
+
+Interpretation:
+removing ExitZ helps the 2026 aggregate slightly but hurts historical Sum/R-DD and DD.
+No reason to remove ExitZ from the frozen control yet.
+
+### BE_OFF — MIXED
+
+Historical:
+- N2937
+- EV +0.0743R
+- PF1.142
+- Sum +218.35R
+- DD25.36R
+- R/DD8.610
+- 5/5 positive years
+
+2026:
+- N315
+- EV +0.0278R
+- PF1.050
+- Sum +8.74R
+- DD24.26R
+- R/DD0.361
+- 4/6 positive months
+
+Median hold expands to:
+- historical 66m
+- 2026 58.6m
+
+Interpretation:
+removing BE creates a very different, lower-WR / larger-winner strategy.
+Historical result is strong, but it does not transport cleanly to 2026 and DD deteriorates heavily.
+Keep BE in the control.
+
+### TRAIL_OFF — MIXED, STRONGEST RESEARCH SIGNAL
+
+Historical:
+- N2936
+- EV **+0.0370R**
+- PF **1.145**
+- Sum **+108.62R**
+- DD **34.81R**
+- R/DD3.121
+- **5/5 positive years**
+
+2026:
+- N312
+- EV **+0.2168R**
+- PF **1.872**
+- Sum **+67.65R**
+- DD **12.21R**
+- R/DD **5.541**
+- **6/6 positive months**
+
+Why verdict is MIXED rather than SUPPORTIVE:
+- DD is worse than CONTROL in BOTH historical and 2026;
+- this violates the preregistered DD guard.
+
+Matched common-signal effect is real:
+- historical common-signal outcome delta vs control: **+20.94R**;
+- 2026 common-signal outcome delta: **+58.84R**.
+So the improvement is mainly exit behavior, not merely occupancy/reachability.
+
+Exit structure:
+- control protected-stop exits: historical 2014 / 2026 220;
+- trail-off protected-stop exits: historical 1789 / 2026 189;
+- trail-off produces more TIME and ExitZ exits and allows a right tail to mature.
+
+However TRAIL_OFF is strongly right-tail dependent.
+
+Historical:
+- max trade +16.26R;
+- top5 positive trades +63.53R;
+- top10 +109.73R, slightly exceeding total net +108.62R.
+
+2026:
+- max trade **+41.43R**;
+- top5 +68.78R vs total net +67.65R;
+- the +41.43R trade alone is ~61% of total net result.
+
+Largest forward winner:
+- signal 2026-08-19 12:40 UTC;
+- TRAIL_OFF held full 6h and returned +41.43R;
+- CONTROL trailing protected it after ~2.6m for only +1.51R.
+
+Important robustness note:
+- removing the single +41.43R outlier still leaves forward TRAIL_OFF at about **+26.22R**;
+- but period-level results are tail dependent: some individual years/months lose their positive sign after removing their best trade.
+Therefore TRAIL_OFF is a strong causal hypothesis, not a production promotion.
+
+### HOLD_3H — SUPPORTIVE, BUT DOMINATED BY CONTROL
+
+Historical:
+- N2969
+- Sum +72.23R
+- PF1.096
+- DD23.41R
+- R/DD3.086
+
+2026:
+- N317
+- Sum +10.90R
+- PF1.140
+- DD9.54R
+- R/DD1.142
+
+4/5 years and 4/6 months positive.
+
+Shortening H6 to H3 loses:
+- historical -7.61R full sequence;
+- 2026 -3.76R.
+
+No evidence that a shorter 3h time-stop improves the lane.
+
+### HOLD_2H — MIXED
+
+Historical +68.15R / PF1.091 / DD23.01R.
+2026 +10.05R / PF1.130 / DD9.70R.
+
+Also worse than control.
+No promotion.
+
+### TP_1R — MIXED / REJECT AS SCALP GEOMETRY
+
+Historical:
+- +13.44R
+- PF1.018
+- DD38.93R
+- only 3/5 positive years
+
+2026:
+- +8.29R
+- PF1.107
+- only 3/6 positive months
+
+Full-sequence delta vs control:
+- historical **-66.39R**
+- 2026 **-6.36R**
+
+A compact 1R target destroys much of the right-tail edge.
+
+### TP_1.5R — MIXED / REJECT AS SCALP GEOMETRY
+
+Historical:
+- +37.24R
+- PF1.049
+- DD24.01R
+
+2026:
+- +12.44R
+- PF1.160
+- only 2/6 positive months
+
+Full-sequence delta:
+- historical -42.59R
+- 2026 -2.22R
+
+Also inferior to control.
+
+### SL1 + TP1 — FAILED
+
+Historical:
+- EV -0.0326R
+- PF0.908
+- Sum **-97.92R**
+- DD118.71R
+- 0/5 positive years
+
+2026 remains slightly positive, but historical failure is decisive.
+
+### SL1 + TP1.5 — FAILED
+
+Historical:
+- EV -0.0114R
+- PF0.968
+- Sum **-34.15R**
+- DD70.82R
+
+2026:
+- essentially flat +0.26R / PF1.002.
+
+Tightening SL from1.5 ATR to1.0 ATR is decisively rejected.
+
+## LAB047 core conclusion
+
+The LAB046 v191 lane is **not a conventional fixed-TP / tighter-stop scalp engine**.
+
+The data reject:
+- tighter 1.0 ATR stop;
+- fixed TP1R;
+- fixed TP1.5R;
+- shorter H2/H3 as an improvement.
+
+The present H6 is mostly a ceiling, not the typical hold:
+median actual hold is only ~24–26 minutes.
+
+The current management shell therefore already behaves like a fast strategy while preserving rare large moves.
+
+The only strong unresolved management lever is the **trailing stop**.
+
+Current trail:
+- arm2.5 ATR;
+- gap0.5 ATR.
+
+LAB047 shows that fully removing it:
+- creates materially larger right-tail winners;
+- improves aggregate PnL and forward consistency;
+- but increases DD and tail concentration.
+
+Therefore do NOT simply switch trailing OFF in production.
+
+## Frozen v191 state after LAB047
+
+Keep as current validated control:
+- LAB046 dual toxic-state gate;
+- SL1.5 ATR;
+- BE0.5 / lock0.15;
+- ExitZ0.75;
+- H6;
+- no fixed TP;
+- existing trail2.5 / gap0.5 until further causal validation.
+
+Do not adopt:
+- SL1;
+- TP1R;
+- TP1.5R;
+- H2/H3 as optimization;
+- BE_OFF;
+- TRAIL_OFF directly.
+
+## Next clean LAB
+
+**LAB048 — V191_TRAILING_RIGHT_TAIL_PARETO**
+
+Purpose:
+find whether a preregistered delayed/wider trailing family can retain part of TRAIL_OFF's right tail without accepting its full DD/tail concentration.
+
+Required design:
+- freeze LAB046 entry/gates;
+- keep SL1.5, BE0.5/0.15, ExitZ0.75, H6;
+- change only trailing arm/gap;
+- include CONTROL and TRAIL_OFF anchors;
+- no fixed TP;
+- no stop tightening;
+- full stateful replay;
+- report normal metrics plus top-trade concentration / trimmed diagnostics;
+- retain immutable v192 reference.
+
+Do not choose arm/gap thresholds post hoc from LAB047 trade paths. Pre-register a small mechanistic grid before execution.
