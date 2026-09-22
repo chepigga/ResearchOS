@@ -369,7 +369,7 @@ def classify(h,f,h_control,f_control):
 def run_period(raw,ft,fz,start,end,label):
     p=lab43.prep(raw,ft,fz,start,end)
     ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5=p
-    _,rapid,highvol,_,_,_=lab046.causal_gate_state(dt5,C5,Z5,A5)
+    vol,gap=lab046.build_signal_features(p)\n    rapid=(np.isfinite(gap)&(gap<=30.0)).astype(np.int8)\n    highvol=(vol==1).astype(np.int8)
 
     out={}
     frames={}
