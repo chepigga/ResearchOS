@@ -4664,7 +4664,7 @@ Only after LAB046, if a stable positive v191 population exists, test scalp geome
 
 # LAB046 — V191 PREREGISTERED TOXIC STATE GATES
 
-Status: **DONE — HARD RAPID-REPEAT FILTER PASSES ATTRIBUTION; 0.25x TOXIC RISK-TIER PRESERVES FREQUENCY AND TURNS BOTH SAMPLES POSITIVE. FULL STATEFUL REPLAY STILL REQUIRED.**
+Status: **SUPERSEDED PRELIMINARY ATTRIBUTION — NON-STATEFUL; DO NOT USE FOR PROMOTION. SEE FINAL STATEFUL REPLAY BELOW.**
 
 Path:
 `labs/CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046/`
@@ -5212,3 +5212,240 @@ Then test only exit geometry, without changing entry selection:
 
 Goal:
 determine whether the positive high-frequency candidate is naturally better as a scalp engine, or whether current v191 management already captures most of its edge.
+
+
+---
+
+# LAB046 FINAL — V191 PREREGISTERED TOXIC STATE GATES / FULL STATEFUL REPLAY
+
+Status: **DONE — RAPID_REPEAT<=30m + HIGH_VOL JOINT VETO = SUPPORTED; LOW-Z RESTRICTION NOT REQUIRED**
+
+Path:
+`labs/CROWDFADE_V191_PREREGISTERED_TOXIC_STATE_GATES_LAB_046/`
+
+Pre-registration commit:
+`9613ad8f910dac62164b5bf58aa36a9d1a027e0d`
+
+Preregistered runner alignment commit:
+`916c05e77f4c086bbd3d10dbebda182dfdbb0b68`
+
+Fresh replay:
+- executed after the preregistration commit;
+- exact LAB045 base parity is asserted against LAB044 `FRESH45_ADV`;
+- full chronological/stateful replay;
+- skipped signals alter occupancy, ATR pause, day-cap state, future reachability, trade order, equity and DD;
+- no exit changes;
+- no threshold search;
+- only six preregistered decision variants enter the verdict table.
+
+Frozen base:
+- v191d;
+- freshness <=45m;
+- max pre-confirm adverse <=0.75 ATR;
+- ExitZ 0.75 retained;
+- SL1.5 ATR;
+- BE arm0.5 / lock0.15;
+- trail arm2.5 / gap0.5;
+- hold6h;
+- pause1.0 ATR;
+- max3 trades/day;
+- 0.5bps research cost proxy.
+
+Preregistered verdict rule:
+- **SUPPORTED**: EV>0 and PF>1 in both aggregate samples, >=4/5 positive historical years and >=4/6 positive 2026 months;
+- **MIXED**: aggregate positive in both, but period-consistency fails;
+- **FAILED**: EV<=0 or PF<=1 in either aggregate sample.
+
+## Decision table
+
+### BASE_LAB045 — FAILED
+Historical:
+- N5402
+- EV +0.0002R
+- PF1.001
+- Sum +1.03R
+- DD59.97R
+- positive years 3/5
+
+2026:
+- N550
+- EV -0.0330R
+- PF0.882
+- Sum -18.15R
+- DD42.65R
+- positive months 2/6
+
+### SKIP_RAPID_REPEAT_30 — FAILED
+Historical:
+- N3805
+- EV +0.0324R
+- PF1.131
+- Sum +123.36R
+- DD22.70R
+- positive years 5/5
+
+2026:
+- N399
+- EV -0.0074R
+- PF0.972
+- Sum -2.94R
+- DD14.52R
+- positive months 3/6
+
+Interpretation:
+rapid-repeat veto alone strongly repairs historical behavior and DD, but does not cross the preregistered forward threshold.
+
+### SKIP_HIGH_VOL — FAILED
+Historical:
+- N5127
+- EV -0.0017R
+- PF0.994
+- Sum -8.49R
+- DD63.81R
+- positive years 3/5
+
+2026:
+- N520
+- EV -0.0042R
+- PF0.985
+- Sum -2.17R
+- DD29.63R
+- positive months 3/6
+
+Interpretation:
+HIGH_VOL alone is insufficient and slightly negative in both aggregate samples.
+
+### SKIP_RAPID_REPEAT_30_AND_HIGH_VOL — SUPPORTED
+
+Historical 2021–2025:
+- N2967
+- WR72.80%
+- EV **+0.0269R**
+- PF **1.105**
+- Sum **+79.83R**
+- DD **20.47R**
+- R/DD **3.900**
+- MCL6
+- positive years **4/5**
+
+2026 Mar–Aug shadow:
+- N316
+- WR74.68%
+- EV **+0.0464R**
+- PF **1.189**
+- Sum **+14.65R**
+- DD **9.59R**
+- R/DD **1.528**
+- MCL4
+- positive months **4/6**
+
+Frequency retention vs LAB045 base:
+- historical: 2967 / 5402 = **54.9%**
+- 2026: 316 / 550 = **57.5%**
+
+This is the only preregistered v191 gate that satisfies the full SUPPORTED rule.
+
+### Z1.00–1.25 ONLY — FAILED
+Historical:
+- N5096
+- EV -0.0110R
+- PF0.959
+- Sum -56.31R
+- DD93.00R
+- positive years 2/5
+
+2026:
+- N537
+- EV +0.0131R
+- PF1.051
+- Sum +7.04R
+- DD11.31R
+- positive months 4/6
+
+Important:
+the positive LAB045 post-hoc Z1.00–1.25 bucket does **not** survive full stateful replay as a stand-alone gate. This is a direct example of why filtered trade-row attribution is not equivalent to causal engine replay.
+
+### Z1.00–1.25 + RAPID30 + HIGH_VOL veto — MIXED
+Historical:
+- N2034
+- EV +0.0323R
+- PF1.128
+- Sum +65.75R
+- DD21.86R
+- positive years 4/5
+
+2026:
+- N210
+- EV +0.0225R
+- PF1.082
+- Sum +4.73R
+- DD13.48R
+- positive months 3/6
+
+Interpretation:
+aggregate edge survives, but monthly forward consistency misses the preregistered requirement. The Z restriction is therefore not promoted.
+
+## Reachability result — critical
+
+The stateful replay changes the trade population massively.
+
+For the SUPPORTED joint gate vs BASE_LAB045:
+
+Historical:
+- base N5402 -> gate N2967;
+- removed base signal IDs: 4827;
+- newly reachable signal IDs: 2392;
+- common signal IDs: only 575;
+- full-sequence delta: **+78.80R**.
+
+2026:
+- base N550 -> gate N316;
+- removed base signal IDs: 493;
+- newly reachable signal IDs: 259;
+- common signal IDs: only 57;
+- full-sequence delta: **+32.80R**.
+
+Therefore:
+**post-hoc filtering of the LAB045 trade ledger is not a valid proxy for this gate.**
+Skipping toxic states changes occupancy and unlocks a different downstream sequence.
+
+This also supersedes the preliminary non-stateful LAB046 attribution/risk-tier numbers above for any promotion decision.
+
+## Comparison controls
+
+Immutable v192 control remains positive:
+- historical: N1147, EV +0.1148R, PF1.239, Sum +131.72R, DD16.86R;
+- 2026: N135, EV +0.1963R, PF1.431, Sum +26.50R, DD6.49R.
+
+Full v191f remains negative:
+- historical: N5403, EV -0.0006R, PF0.998, Sum -3.26R;
+- 2026: N550, EV -0.0370R, PF0.871, Sum -20.34R.
+
+The LAB046 joint toxic-state gate therefore salvages the v191 frequency shell causally, but does not replace the separate v192 lineage.
+
+## Frozen conclusion
+
+For the next v191 research step, freeze:
+- base = LAB045 causal shell;
+- gate = **skip signal when RAPID_REPEAT<=30m OR HIGH_VOL**;
+- no Z1.00–1.25 restriction;
+- exits remain unchanged until a separate LAB.
+
+Do not promote to production directly from LAB046.
+
+## Next LAB
+
+**LAB047 — V191_TOXIC_GATED_SCALP_GEOMETRY**
+
+Use only the SUPPORTED LAB046 population:
+`SKIP_RAPID_REPEAT_30_AND_HIGH_VOL`.
+
+Purpose:
+test whether the existing v191 exit/management geometry is still truncating edge after toxic-state removal.
+
+Rules:
+- keep signal and toxic-state gate frozen;
+- no new signal threshold search;
+- test exit/management dimensions separately and preregister them before replay;
+- preserve full stateful replay and historical-year / 2026-month reporting;
+- keep immutable v192 as reference control.
