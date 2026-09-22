@@ -3570,3 +3570,276 @@ GitHub implementation commit:
 
 Compile status:
 **MetaEditor compiler unavailable in current environment; user must compile in MT5/MetaEditor before attaching to demo chart.**
+
+
+---
+
+# 2026-09-22 — v191 LIVE FAILURE / v191f REPAIR / LAB042 RECOVERY STATE
+
+## Live finding — IC Markets vs GetLeveraged
+
+Status: **IMPORTANT — SAME CORE ISSUE, DIFFERENT BROKER PATH SEVERITY**
+
+Observed on 2026-09-22:
+- v191 produced many small winners and materially larger full-stop losses;
+- IC Markets path was much worse than GetLeveraged;
+- GetLeveraged often reached early BE/trailing protection before reversal;
+- IC often failed to reach the same small favorable excursion and therefore took the full stop;
+- conclusion: v191 outcome is highly path-dependent near the CFD noise floor.
+
+Interpretation:
+- this is not just a bad exit problem;
+- current v191 entry/confirmation is too sensitive to local M5 noise / rotational chop;
+- early BE can mask this by converting marginal excursions into tiny winners;
+- removing BE without fixing entry/episode selection could convert those tiny winners into full losses.
+
+Today’s qualitative market regime:
+- wide volatile rotation / chop rather than a clean one-direction trend;
+- BTC/ETH/SOL repeatedly reversed locally;
+- v191 frequently alternated BUY/SELL inside the same broader session;
+- many 0.30 ATR confirmations behaved like local noise rather than durable reversal.
+
+Important live examples:
+- v191 could confirm trades 20–115 minutes after original signal;
+- one SOL episode was observed with an original signal effectively >5h old before eventual entry;
+- currentZ same-side consistency alone was insufficient to guarantee the signal still belonged to the same market episode.
+
+## v191e patch
+
+Status: **CREATED BEFORE v191f; KEEP FOR ABLATION — DO NOT OVERWRITE**
+
+Changes relative to v191d:
+1. ExitZ: 0.75 -> 0.0 (normalization exit disabled).
+2. confirmation side consistency tightened:
+   - BUY confirm only if currentZ < 0;
+   - SELL confirm only if currentZ > 0;
+   - opposite/zero-side transition cancels confirmation.
+
+Everything else frozen:
+- SL 1.5 ATR;
+- Hold 6h;
+- BE arm 0.5 ATR / lock 0.15 ATR;
+- trail arm 2.5 ATR / gap 0.5 ATR;
+- risk shell unchanged.
+
+## v191f broker-robust episode-gate candidate
+
+File: CrowdFadeMulti_v191f_BROKER_ROBUST_EPISODE_GATE.mq5
+
+Status: **USER ATTACHED TO CHART FOR LIVE FORWARD TEST**
+
+Changes on top of v191e:
+- confirmation max age / episode TTL = 45 minutes;
+- |currentZ| >= 0.75 required at confirmation;
+- same-side Z remains required;
+- max adverse excursion before confirmation = 0.75 ATR;
+- minimum response ratio = 0.50;
+- response logic uses normalized mid-price / ATR rather than raw bid/ask decision state to reduce broker spread sensitivity;
+- SL / BE / trailing / hold / risk shell otherwise unchanged.
+
+Current intended portfolio:
+- user explicitly wants BTC + ETH + SOL kept live;
+- do **not** remove ETH from future v191f lineage by default;
+- ETH is intentionally retained as a stress-test because it showed the clearest live whipsaw and broker-path divergence.
+
+## Trend finding from live day
+
+v200 H1/H4 diagnostic state repeatedly showed H1=1 H4=1 (bullish) during 2026-09-22.
+
+Live qualitative observation:
+- several losing SELLs were against the bullish H1/H4 state;
+- later BUYs were with trend;
+- however BUYs aligned with H1/H4 also lost earlier in the day;
+- therefore trend alignment is informative but not sufficient by itself.
+
+Do NOT promote a hard trend filter from one live day.
+
+## Dual-mode hypothesis
+
+Idea discussed:
+- keep frequent CrowdFade entry engine;
+- manage trades differently by regime.
+
+Candidate architecture:
+- ALIGNED_WITH_TREND: wider/current v191 management; allow right tail;
+- CHOP/MIXED: shorter hold / earlier trailing / smaller stop candidate;
+- ALIGNED_COUNTERTREND: possible scalp profile / lower risk candidate.
+
+User asked to TEST before modifying EA.
+
+# LAB042 — V191F_DUAL_MODE_REGIME_EXECUTION
+
+Status: **DONE — DUAL-MODE SCALP ARCHITECTURE REJECTED; IMPORTANT BASELINE FAILURE DISCOVERED**
+
+Path: labs/CROWDFADE_V191F_DUAL_MODE_REGIME_EXECUTION_LAB_042/
+Workflow: .github/workflows/crowdfade-lab042.yml
+Successful GitHub Actions run: 35773453707
+Runner commit: 24c3859ef522ae2ebf4682d3af7209cdfc4badc1
+Workflow commit: 067a96807d79099969eec8f488d8ae53b9dc90e2
+
+## LAB042 question
+
+Can v191f keep frequent entries while using short-horizon scalp management outside aligned-with-trend states to reduce chop DD without destroying expectancy?
+
+## Frozen v191f entry shell used in LAB042
+
+- Z threshold = 1.00;
+- confirmation = +0.30 ATR;
+- confirmation max age = 45m;
+- same-side confirmation required;
+- minimum |currentZ| = 0.75;
+- max adverse excursion before confirm = 0.75 ATR;
+- response ratio >= 0.50;
+- pause = 1 ATR;
+- max 3 trades/day;
+- BTCUSDT only in historical research replay.
+
+Baseline management:
+- SL 1.5 ATR;
+- BE arm 0.5 ATR;
+- BE lock 0.15 ATR;
+- trail arm 2.5 ATR;
+- trail gap 0.5 ATR;
+- hold 6h.
+
+Pre-registered scalp profile:
+- SL 1.0 ATR;
+- BE 0.5 / 0.15;
+- trail arm 0.5 ATR;
+- trail gap 0.5 ATR;
+- hold 30m;
+- optional TP 0.8 ATR.
+
+## LAB042 full-sample results
+
+### Historical 2021–2025
+- BASELINE_V191F: N5403, WR72.1%, EV -0.0006R, PF0.998, Sum -3.26R, DD52.95R, R/DD -0.062, MCL6.
+- DUAL_A scalp COUNTER+MIXED: N5404, EV -0.0283R, PF0.911, Sum -152.99R, DD156.23R.
+- DUAL_B + TP0.8: EV -0.0441R, PF0.862, Sum -238.40R, DD241.00R.
+- DUAL_C scalp only ALIGNED_COUNTER + TP0.8: EV -0.0166R, PF0.944, Sum -89.87R, DD93.52R.
+- ALL_SCALP: EV -0.0818R, PF0.760, Sum -442.00R, DD444.61R.
+
+### 2026 Mar–Aug reused forward-shadow
+- BASELINE_V191F: N550, WR71.6%, EV -0.0370R, PF0.871, Sum -20.34R, DD35.38R.
+- DUAL_A: Sum -17.23R, PF0.900, DD28.78R.
+- DUAL_B: Sum -20.17R, PF0.884, DD32.40R.
+- DUAL_C: Sum -19.91R, PF0.881, DD32.76R.
+- ALL_SCALP: Sum -35.15R, PF0.816, DD43.15R.
+
+## LAB042 regime result — important
+
+Historical v191f baseline:
+- ALIGNED_COUNTER: N1612, EV +0.0054R, PF1.020, Sum +8.71R.
+- ALIGNED_WITH: N2140, EV -0.0011R, PF0.996, Sum -2.29R.
+- MIXED: N1651, EV -0.0059R, PF0.978, Sum -9.68R.
+
+2026 v191f baseline:
+- ALIGNED_COUNTER: N175, EV +0.0269R, PF1.116, Sum +4.71R.
+- ALIGNED_WITH: N228, EV -0.0405R, PF0.861, Sum -9.24R.
+- MIXED: N147, EV -0.1075R, PF0.683, Sum -15.80R.
+
+Interpretation:
+- on the v191f population, ALIGNED_COUNTER is the best bucket;
+- do not transplant the v200 trend conclusion directly into v191f;
+- do not hard-code only-with-H1/H4-trend into v191f.
+
+## LAB042 verdict
+
+1. Proposed dual-mode scalp execution is REJECTED.
+2. SL1.0 + early trail0.5 + 30m hold destroys historical expectancy.
+3. TP0.8 ATR makes it worse.
+4. Apparent 2026 DD improvement in DUAL_A is not transport-robust.
+5. Do not patch v191f with dual-mode exits from this LAB.
+6. More important: v191f baseline itself is not historically validated.
+7. New v191f gates may have damaged old v191 edge through reachability/occupancy interactions.
+
+Historical yearly v191f baseline:
+- 2021 +20.02R
+- 2022 -10.86R
+- 2023 -3.18R
+- 2024 +24.24R
+- 2025 -33.48R
+
+2026 monthly v191f baseline:
+- Mar +9.32R
+- Apr -0.47R
+- May -14.78R
+- Jun +1.53R
+- Jul +0.70R
+- Aug -16.65R
+
+Therefore v191f remains DEMO / diagnostic only until change attribution is understood.
+
+# NEXT REQUIRED RESEARCH — v191d → v191e → v191f ABLATION
+
+Status: **NEXT / USER REQUESTED — DO THIS BEFORE ANY MORE v191 EVOLUTION**
+
+Primary goal:
+identify exactly which change broke or improved expectancy and whether the live repair should be retained.
+
+Required sequence — same data, same execution shell, full stateful equity sequence:
+
+1. v191d control
+   - ExitZ = 0.75;
+   - original v191d confirm consistency: BUY cancel only if currentZ >= +0.75; SELL cancel only if currentZ <= -0.75;
+   - confirm max 36 M5 bars / nominal 3h;
+   - SL1.5 / BE0.5 lock0.15 / trail2.5 gap0.5 / H6.
+
+2. v191e step 1 — ExitZ OFF only
+   - everything from v191d unchanged;
+   - ExitZ = 0;
+   - isolates removal of early crowd-normalization exit.
+
+3. v191e step 2 — same-side confirm
+   - ExitZ remains OFF;
+   - BUY requires currentZ < 0; SELL requires currentZ > 0;
+   - everything else frozen;
+   - exact intended v191e state.
+
+4. v191f freshness only
+   - add max confirmation age 45m;
+   - no adverse/response/min-|Z| gate yet.
+
+5. v191f + min confirm Z
+   - add |currentZ| >= 0.75.
+
+6. v191f + adverse gate
+   - add max adverse <=0.75 ATR.
+
+7. v191f + response gate
+   - add response ratio >=0.50;
+   - should reproduce full v191f.
+
+Required outputs for every step:
+- N / trades per month;
+- WR;
+- EV;
+- PF;
+- SumR;
+- MaxDD;
+- R/DD;
+- max consecutive losses;
+- yearly 2021–2025;
+- 2026 Mar–Aug monthly;
+- BUY / SELL split;
+- confirmation age distribution;
+- exit reason distribution: SL / BE / TRAIL / ExitZ / TIME;
+- matched-trade analysis where possible: disappeared trades, newly reachable trades, contribution vs sequence effects.
+
+Critical methodological rule:
+Do not treat simple filtered-trade diagnostics as causal performance. Every ablation step must be a full stateful rerun because removing/shortening trades changes occupancy, pause eligibility, max-trades/day, future reachability, and equity/DD sequence.
+
+Primary selection question:
+Which minimum set of live-repair changes improves broker robustness / removes stale contradictory entries without destroying the historical v191 edge?
+
+Do NOT during this ablation:
+- optimize thresholds;
+- change SL/BE/trailing;
+- add trend filters;
+- add dual-mode exits;
+- remove ETH from live config;
+- modify v200.
+
+After ablation:
+- only the surviving minimal change set may become a v191g candidate;
+- v191f currently stays on chart as forward diagnostic, not production-promoted.
