@@ -4354,3 +4354,307 @@ Candidate next LAB:
 - first diagnostic only, then one separately preregistered causal gate/risk LAB if a stable cross-period state exists.
 
 Do not optimize thresholds inside diagnostic LAB045.
+
+
+---
+
+# LAB045 — V191 POSITIVE SUBPOPULATION ATTRIBUTION
+
+Status: **DONE — DIAGNOSTIC ONLY; LOWER-Z + EPISODE-SPACING SIGNAL EMERGES, HIGH-VOL / RAPID-REPEAT STATES ARE TOXIC**
+
+Path:
+`labs/CROWDFADE_V191_POSITIVE_SUBPOPULATION_ATTRIBUTION_LAB_045/`
+
+Workflow:
+`.github/workflows/crowdfade-lab045.yml`
+
+Successful GitHub Actions run:
+`35777735802`
+
+Runner commit:
+`fc26962ce6998d9d62ef82dd7d299fc5d9d64942`
+
+Workflow commit:
+`336da5ce057739d4d64d3fb9a7e5c52deb76b1e9`
+
+Frozen diagnostic base:
+- v191d;
+- freshness <=45m;
+- max pre-confirm adverse <=0.75 ATR;
+- ExitZ retained;
+- SL1.5 ATR;
+- BE arm0.5 / lock0.15;
+- trail arm2.5 / gap0.5;
+- hold6h;
+- no new execution or risk changes.
+
+Baseline:
+- historical 2021–2025: N5402, EV +0.0002R, PF1.001, Sum +1.03R, DD59.97R;
+- 2026 Mar–Aug shadow: N550, EV -0.0330R, PF0.882, Sum -18.15R, DD42.65R.
+
+This LAB is diagnostic only. No bucket is production-promoted directly.
+
+## Strongest cross-sample positive one-dimensional states
+
+### Z 1.00–1.25
+Historical:
+- N1261
+- EV **+0.0299R**
+- PF **1.127**
+- Sum +37.74R
+- DD12.57R
+
+2026:
+- N137
+- EV **+0.0368R**
+- PF **1.183**
+- Sum +5.04R
+
+Important:
+- this contradicts the intuition that larger v191 Z is automatically better;
+- v191 and v192 are different populations/geometries;
+- do not infer that v192 Z2.50 edge is invalid.
+
+### Confirmation 15–30m
+Historical:
+- N626
+- EV +0.0110R
+- PF1.049
+
+2026:
+- N63
+- EV +0.0536R
+- PF1.290
+
+Not enough by itself for promotion; useful for attribution.
+
+### Response ratio 0.75–1.00
+Historical:
+- N486
+- EV +0.0079R
+- PF1.032
+
+2026:
+- N61
+- EV +0.0587R
+- PF1.282
+
+Weak historical edge; diagnostic only.
+
+### FIRST_OR_RESET episode (>3h since prior same-side extreme)
+Historical:
+- N551
+- EV **+0.0517R**
+- PF **1.232**
+- Sum +28.48R
+
+2026:
+- N58
+- EV +0.0054R
+- PF1.031
+- only marginally positive forward.
+
+### Prior same-side extreme gap 30–90m
+Historical:
+- N272
+- EV **+0.0444R**
+- PF1.199
+
+2026:
+- N31
+- EV **+0.1524R**
+- PF1.924
+
+Sample forward is small but sign is stable.
+
+### Prior same-side extreme gap >180m
+Historical:
+- N550
+- EV +0.0491R
+- PF1.220
+
+2026:
+- N58
+- EV +0.0054R
+- PF1.031
+
+This is effectively the FIRST/RESET population.
+
+## Strongest cross-sample negative / toxic states
+
+### Prior same-side extreme gap <=30m
+Historical:
+- N4400
+- EV **-0.0080R**
+- PF0.971
+- Sum -35.07R
+
+2026:
+- N449
+- EV **-0.0621R**
+- PF0.798
+- Sum -27.88R
+
+This is the cleanest large-sample toxic state found in LAB045:
+**rapid repeated crowd extremes inside 30 minutes are negative in both samples.**
+
+### HIGH_VOL regime
+Historical:
+- N1250
+- EV **-0.0172R**
+- PF0.934
+- Sum -21.49R
+
+2026:
+- N110
+- EV **-0.1566R**
+- PF0.506
+- Sum -17.23R
+
+Strong cross-sample toxicity.
+Vol regime is causal:
+- ATR/price;
+- lagged 30-day rolling terciles;
+- current observation does not define its own threshold.
+
+### Confirmation 5–15m
+Historical:
+- N1369
+- EV -0.0156R
+- PF0.942
+
+2026:
+- N131
+- EV **-0.1193R**
+- PF0.680
+
+Counterintuitive: fastest is not always best, and this middle-fast bucket is clearly weak in both samples.
+
+### Z 2.00–2.50
+Historical:
+- N854
+- EV -0.0204R
+- PF0.931
+
+2026:
+- N96
+- EV **-0.1157R**
+- PF0.661
+
+Again: do not transfer this result to v192. This is the v191 execution shell.
+
+## Unstable dimensions — do not gate yet
+
+Side:
+- BUY historical positive, forward negative;
+- SELL negative both but not enough to justify side-only rule.
+
+Adverse sub-buckets inside the already-capped <=0.75 population:
+- ordering flips between historical and 2026;
+- do not optimize adverse threshold from these slices.
+
+Trend relation:
+- no one-dimensional trend bucket is cleanly positive in both samples;
+- ALIGNED_COUNTER is near flat historical and slightly positive 2026;
+- ALIGNED_WITH negative in both aggregate;
+- MIXED historical slightly positive, 2026 clearly negative.
+No hard trend rule from this alone.
+
+Z persistence:
+- strong historical pockets fail to transfer to 2026;
+- do not gate on persistence ratio yet.
+
+Response magnitude:
+- bucket ordering is unstable;
+- especially response 2.0+ is near-flat historical but bad in 2026.
+Do not optimize response threshold.
+
+## Pre-registered interactions
+
+### Z 1.00–1.25 × REPEAT_WITHIN_3H
+Historical:
+- N972
+- EV **+0.0117R**
+- PF1.047
+- Sum +11.38R
+
+2026:
+- N105
+- EV **+0.0724R**
+- PF1.355
+- Sum +7.60R
+
+This is notable:
+- lower-Z repeated states are not inherently bad;
+- the broad repeat toxicity is concentrated in other contexts / very rapid recurrence;
+- exact time-since-prior-extreme appears more informative than binary FIRST/REPEAT.
+
+### FIRST_OR_RESET × ALIGNED_COUNTER
+Historical:
+- N203
+- EV +0.0132R
+- PF1.057
+
+2026:
+- N21
+- EV **+0.1261R**
+- PF3.597
+
+Interesting but forward sample too small for direct promotion.
+
+### Confirmation 15–30m × adverse 0.15–0.30
+Historical:
+- N94
+- EV +0.0222R
+- PF1.107
+
+2026:
+- N11
+- EV +0.4409R
+- PF5.774
+
+Too small forward; hypothesis only.
+
+## Key interpretation
+
+The main v191 problem is now more specific:
+
+> **it is not simply “low Z = noise”.**
+> The v191 shell actually has its cleanest cross-sample one-dimensional positive bucket at Z 1.00–1.25.
+
+The strongest negative information is:
+1. **same-side crowd extreme repeated within <=30m**;
+2. **HIGH_VOL regime**;
+3. **5–15m confirmation bucket**;
+4. **Z 2.00–2.50 inside the v191 shell**.
+
+This suggests v191 may be salvageable not as a generic scalp engine, but as a **low-Z episodic mean-reversion engine that avoids rapid crowd persistence and high-vol continuation states**.
+
+Do NOT yet change exit geometry.
+
+## Recommended next causal validation
+
+**LAB046 — V191_PREREGISTERED_TOXIC_STATE_GATES**
+
+Use frozen LAB045 base and full stateful replay.
+
+Pre-register only these gates, no threshold search:
+1. skip prior-same-extreme gap <=30m;
+2. skip HIGH_VOL;
+3. combine 1 + 2;
+4. optional diagnostic: restrict Z to 1.00–1.25 only;
+5. combine Z1.00–1.25 with skip HIGH_VOL / rapid-repeat.
+
+Compare against:
+- LAB045 base;
+- full v191f;
+- immutable v192 control.
+
+Require:
+- full causal reachability/equity sequence;
+- historical yearly;
+- 2026 monthly;
+- no exit changes;
+- no new threshold optimization.
+
+Only after LAB046, if a stable positive v191 population exists, test scalp geometry on that population in LAB047.
