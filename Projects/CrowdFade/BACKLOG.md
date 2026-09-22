@@ -4127,3 +4127,230 @@ Do NOT add:
 - response-score optimization;
 - new SL/BE/trailing settings;
 until this minimal repair test is complete.
+
+
+---
+
+# LAB044 — MINIMAL ADVERSE REPAIR
+
+Status: **DONE — ADVERSE GATE IS REAL, BUT MINIMAL REPAIR DOES NOT RESTORE A ROBUST v191 EDGE**
+
+Path:
+`labs/CROWDFADE_V191_MINIMAL_ADVERSE_REPAIR_LAB_044/`
+
+Workflow:
+`.github/workflows/crowdfade-lab044.yml`
+
+Successful GitHub Actions run:
+`35776770783`
+
+Runner commit:
+`748955b071696b2fe20c51c69f35fe4eb605f8b1`
+
+Workflow commit:
+`24bef807c3f2e3ee532ca1aa17232e1f4cb01c76`
+
+Immutable control:
+`CrowdFadeMulti_v192_Confirm.mq5`
+
+## LAB044 question
+
+Can the v191 high-frequency shell be repaired using only the cross-sample adverse-excursion signal, optionally with 45m freshness and/or ExitZ OFF, without changing stop/BE/trailing geometry?
+
+No threshold optimization was allowed.
+
+Frozen:
+- adverse threshold = 0.75 ATR;
+- freshness threshold = 45m;
+- v191 SL1.5 / BE0.5 lock0.15 / trail2.5 gap0.5 / hold6h;
+- v192 unchanged.
+
+## Full sample
+
+### Historical 2021–2025
+
+v192 canonical:
+- N1147
+- EV +0.1148R
+- PF 1.239
+- Sum +131.72R
+- DD 16.86R
+- R/DD 7.811
+- 5/5 years positive
+
+v191d:
+- Sum -248.07R
+- PF 0.847
+- DD 264.09R
+
+v191d + adverse0.75:
+- N5402
+- EV -0.0046R
+- PF 0.983
+- Sum **-24.60R**
+- DD **67.83R**
+- improvement vs v191d = **+223.47R**
+
+v191d + freshness45 + adverse0.75:
+- N5402
+- EV **+0.0002R**
+- PF **1.001**
+- Sum **+1.03R**
+- DD **59.97R**
+- improvement vs v191d = **+249.10R**
+- best historical minimal-repair variant by total PnL
+
+v191d + adverse0.75 + ExitZ OFF:
+- Sum -41.22R
+- PF 0.973
+- DD 74.78R
+
+v191d + freshness45 + adverse0.75 + ExitZ OFF:
+- Sum -19.38R
+- PF 0.987
+- DD 62.17R
+
+full v191f:
+- Sum -3.26R
+- PF 0.998
+- DD 52.95R
+
+### 2026 Mar–Aug reused forward-shadow
+
+v192:
+- Sum +26.50R
+- PF 1.431
+- DD 6.49R
+- 6/6 months positive
+
+v191d:
+- Sum -27.00R
+- PF 0.831
+- DD 39.44R
+
+v191d + adverse0.75:
+- Sum **-19.79R**
+- PF 0.873
+- DD 43.02R
+- delta vs v191d +7.21R
+
+v191d + freshness45 + adverse0.75:
+- Sum **-18.15R**
+- PF **0.882**
+- DD 42.65R
+- delta vs v191d +8.86R
+- best minimal variant by forward PnL
+
+v191d + adverse0.75 + ExitZ OFF:
+- Sum -20.75R
+- PF 0.869
+- DD 40.72R
+
+v191d + freshness45 + adverse0.75 + ExitZ OFF:
+- Sum -18.18R
+- PF 0.884
+- DD **39.25R**
+- nearly same PnL as ExitZ-retained variant, slightly lower DD
+
+full v191f:
+- Sum -20.34R
+- PF 0.871
+- DD **35.38R**
+- lowest DD among v191 candidates here, but still negative expectancy
+
+## Period consistency
+
+Best historical minimal repair — v191d + freshness45 + adverse0.75:
+- 2021 +16.19R
+- 2022 -3.86R
+- 2023 +8.82R
+- 2024 +20.87R
+- 2025 **-40.99R**
+
+Therefore:
+- only 3/5 historical years positive;
+- 2025 remains a major unresolved regime failure.
+
+2026 same variant:
+- Mar +14.47R
+- Apr +5.16R
+- May **-14.17R**
+- Jun -5.78R
+- Jul -1.54R
+- Aug **-16.28R**
+
+Only 2/6 months positive.
+
+## Mechanical finding
+
+Adverse gate strongly reduces poor episode participation:
+- v191d historical DD: 264.09R
+- adverse-only DD: 67.83R
+- freshness+adverse DD: 59.97R
+
+Confirmation age:
+- v191d hist median 6m, p90 58m, max180m
+- freshness+adverse hist median4m, p90 21m, max45m
+- v191d 2026 median4.48m, p90 44.2m, max158.75m
+- freshness+adverse 2026 median3.19m, p90 19.35m, max44.25m
+
+Thus:
+- adverse gate is a real causal quality discriminator;
+- freshness makes episode identity cleaner;
+- but these changes do not create a robust profitable v191 system.
+
+## ExitZ conclusion
+
+Retaining ExitZ is slightly better historically:
+- freshness+adverse + ExitZ retained = +1.03R
+- same with ExitZ OFF = -19.38R
+
+In 2026:
+- retained = -18.15R / DD42.65R
+- OFF = -18.18R / DD39.25R
+
+Interpretation:
+- ExitZ OFF is not justified as a general improvement;
+- retain ExitZ for any future minimal-repair research unless a separate exit LAB proves otherwise.
+
+## LAB044 verdict
+
+1. **Adverse <=0.75 ATR is validated as useful signal-quality information.**
+2. **Freshness45 + adverse0.75 is the best minimal-repair configuration tested.**
+3. It almost repairs historical aggregate PnL to flat, but not robustness:
+   - PF1.001;
+   - only 3/5 positive years;
+   - 2025 -40.99R.
+4. Forward 2026 remains clearly negative:
+   - -18.15R;
+   - PF0.882;
+   - only 2/6 positive months.
+5. ExitZ should NOT be removed based on current evidence.
+6. Full v191f is not superior on expectancy; its main advantage is lower DD.
+7. **Do not promote any v191 candidate to production.**
+8. v192 remains the only robust control.
+
+## Research implication
+
+The failure is now localized more clearly:
+- stale/noisy episode participation explains a large fraction of v191 losses;
+- however even after removing those episodes, the remaining v191 frequency population has no robust positive expectancy;
+- therefore the missing edge is not just stale confirmation;
+- the next research must target **which v191 trade sub-populations actually contain positive expectancy**, without changing exits first.
+
+Candidate next LAB:
+**LAB045 — V191_POSITIVE_SUBPOPULATION_ATTRIBUTION**
+- freeze v191d + freshness45 + adverse0.75 + ExitZ retained;
+- no new filters initially;
+- diagnose by:
+  - Z magnitude buckets;
+  - side;
+  - confirmation speed;
+  - adverse/favorable path ratio;
+  - H1/H4 relation;
+  - volatility regime;
+  - repeated episode / first-vs-repeat;
+  - time since prior crowd extreme;
+- first diagnostic only, then one separately preregistered causal gate/risk LAB if a stable cross-period state exists.
+
+Do not optimize thresholds inside diagnostic LAB045.
