@@ -775,6 +775,230 @@ double JsonNum(const string src, const int from, const string key, int &endPos)
   }
 
 //+------------------------------------------------------------------+
+//+------------------------------------------------------------------+
+//| STRICT LAB046-049 Binance reference helpers                      |
+//+------------------------------------------------------------------+
+string CleanJsonToken(string x)
+  {
+   StringReplace(x,"\"","");
+   StringReplace(x," ","");
+   StringReplace(x,"\r","");
+   StringReplace(x,"\n","");
+   return x;
+  }
+
+bool ParseKlineBody(const string body,long &ot[],double &hh[],double &ll[],double &cc[])
+  {
+   ArrayResize(ot,0);ArrayResize(hh,0);ArrayResize(ll,0);ArrayResize(cc,0);
+   int pos=0,n=StringLen(body);
+   while(pos<n)
+     {
+      int a=StringFind(body,"[",pos);
+      if(a<0) break;
+      if(a+1<n && StringGetCharacter(body,a+1)==91){pos=a+1;continue;} // outer [[
+      int b=StringFind(body,"]",a+1);
+      if(b<0) break;
+      string row=StringSubstr(body,a+1,b-a-1);
+      string f[];
+      int nf=StringSplit(row,',',f);
+      if(nf>=5)
+        {
+         string t0=CleanJsonToken(f[0]);
+         string th=CleanJsonToken(f[2]);
+         string tl=CleanJsonToken(f[3]);
+         string tc=CleanJsonToken(f[4]);
+         long tm=(long)StringToInteger(t0);
+         double h=StringToDouble(th),l=StringToDouble(tl),c=StringToDouble(tc);
+         if(tm>0 && h>0.0 && l>0.0 && c>0.0)
+           {
+            int k=ArraySize(ot);
+            ArrayResize(ot,k+1);ArrayResize(hh,k+1);ArrayResize(ll,k+1);ArrayResize(cc,k+1);
+            ot[k]=tm;hh[k]=h;ll[k]=l;cc[k]=c;
+           }
+        }
+      pos=b+1;
+     }
+   return ArraySize(ot)>0;
+  }
+
+bool FetchBinanceM5History(const string bin,const long endMs,long &ot[],double &hh[],double &ll[],double &cc[])
+  {
+   ArrayResize(ot,0);ArrayResize(hh,0);ArrayResize(ll,0);ArrayResize(cc,0);
+   long span=(long)LAB_FETCH_BARS*(long)LAB_M5_MS;
+   long cursor=endMs-span;
+   if(cursor<0) cursor=0;
+   for(int page=0;page<8 && cursor<=endMs;page++)
+     {
+      string url=API_HOST+KLINE_PATH+"?symbol="+bin+"&interval=5m&startTime="+IntegerToString(cursor)
+                +"&endTime="+IntegerToString(endMs)+"&limit=1500";
+      char post[],result[];string rh="";
+      ResetLastError();
+      int code=WebRequest("GET",url,"",InpWebTimeoutMs,post,result,rh);
+      if(code!=200)
+        {
+         PrintFormat("STRICT_KLINE_FETCH_FAIL %s page=%d http=%d err=%d",bin,page,code,GetLastError());
+         return false;
+        }
+      string body=CharArrayToString(result,0,WHOLE_ARRAY,CP_UTF8);
+      long pt[];double ph[],pl[],pc[];
+      if(!ParseKlineBody(body,pt,ph,pl,pc)) return false;
+      int got=ArraySize(pt);
+      for(int i=0;i<got;i++)
+        {
+         int k=ArraySize(ot);
+         if(k>0 && pt[i]<=ot[k-1]) continue;
+         ArrayResize(ot,k+1);ArrayResize(hh,k+1);ArrayResize(ll,k+1);ArrayResize(cc,k+1);
+         ot[k]=pt[i];hh[k]=ph[i];ll[k]=pl[i];cc[k]=pc[i];
+        }
+      if(got<1500) break;
+      cursor=pt[got-1]+LAB_M5_MS;
+     }
+   return ArraySize(ot)>=LAB_VOL_MIN+50;
+  }
+
+double Quantile67(double &a[])
+  {
+   int n=ArraySize(a);
+   if(n<=0) return 0.0;
+   ArraySort(a);
+   double p=(n-1)*0.67;
+   int lo=(int)MathFloor(p),hi=(int)MathCeil(p);
+   if(lo<0) lo=0;if(hi>=n) hi=n-1;
+   if(lo==hi) return a[lo];
+   double w=p-lo;
+   return a[lo]*(1.0-w)+a[hi]*w;
+  }
+
+// Exact LAB046 HIGH_VOL construction from Binance 5m price history.
+// Signal decision time = flow source period start + 300s.
+// ATR% = latest completed M15 ATR14 / completed signal M5 close.
+// q67 uses prior 8640 M5 ATR% observations only (shift 1), min history 2880.
+bool BuildStrictSignalMarketState(const int idx,const long sourceMs,
+                                  double &signalClose,double &signalAtr,
+                                  double &atrPct,double &q67,bool &highVol)
+  {
+   signalClose=0.0;signalAtr=0.0;atrPct=0.0;q67=0.0;highVol=false;
+   long decisionMs=sourceMs+LAB_M5_MS;
+   long endMs=decisionMs-1;
+
+   long ot[];double hh[],ll[],cc[];
+   if(!FetchBinanceM5History(g_sym[idx].binance,endMs,ot,hh,ll,cc)) return false;
+   int n=ArraySize(ot);
+   if(n<LAB_VOL_MIN+50) return false;
+
+   int sig=-1;
+   for(int i=n-1;i>=0;i--)
+     {
+      if(ot[i]<=sourceMs){sig=i;break;}
+     }
+   if(sig<0) return false;
+   signalClose=cc[sig];
+
+   // Aggregate complete Binance M15 bars from M5 history.
+   long e15[];double h15[],l15[],c15[];
+   long curBucket=-1;double gh=0.0,gl=0.0,gc=0.0;int gcnt=0;
+   for(int i=0;i<n;i++)
+     {
+      long bucket=ot[i]/LAB_M15_MS;
+      if(curBucket<0){curBucket=bucket;gh=hh[i];gl=ll[i];gc=cc[i];gcnt=1;}
+      else if(bucket==curBucket)
+        {
+         if(hh[i]>gh) gh=hh[i];
+         if(ll[i]<gl) gl=ll[i];
+         gc=cc[i];gcnt++;
+        }
+      else
+        {
+         if(gcnt==3)
+           {
+            int k=ArraySize(e15);
+            ArrayResize(e15,k+1);ArrayResize(h15,k+1);ArrayResize(l15,k+1);ArrayResize(c15,k+1);
+            e15[k]=(curBucket+1)*LAB_M15_MS;h15[k]=gh;l15[k]=gl;c15[k]=gc;
+           }
+         curBucket=bucket;gh=hh[i];gl=ll[i];gc=cc[i];gcnt=1;
+        }
+     }
+   if(gcnt==3)
+     {
+      int k=ArraySize(e15);
+      ArrayResize(e15,k+1);ArrayResize(h15,k+1);ArrayResize(l15,k+1);ArrayResize(c15,k+1);
+      e15[k]=(curBucket+1)*LAB_M15_MS;h15[k]=gh;l15[k]=gl;c15[k]=gc;
+     }
+
+   int m=ArraySize(e15);
+   if(m<20) return false;
+   double atr15[];ArrayResize(atr15,m);
+   for(int i=0;i<m;i++) atr15[i]=0.0;
+   double tr[];ArrayResize(tr,m);
+   for(int i=0;i<m;i++)
+     {
+      double pc=(i>0)?c15[i-1]:c15[i];
+      tr[i]=MathMax(h15[i]-l15[i],MathMax(MathAbs(h15[i]-pc),MathAbs(l15[i]-pc)));
+      if(i>=13)
+        {
+         double sm=0.0;
+         for(int j=i-13;j<=i;j++) sm+=tr[j];
+         atr15[i]=sm/14.0;
+        }
+     }
+
+   double ap[];ArrayResize(ap,n);
+   int mi=0,last=-1;
+   for(int j=0;j<n;j++)
+     {
+      long avail=ot[j]+LAB_M5_MS;
+      while(mi<m && e15[mi]<=avail){last=mi;mi++;}
+      if(last>=0 && atr15[last]>0.0 && cc[j]>0.0) ap[j]=atr15[last]/cc[j];
+      else ap[j]=0.0;
+     }
+
+   // signal ATR mapped from latest completed M15 at signal clock
+   int smi=-1;
+   for(int i=m-1;i>=0;i--) if(e15[i]<=decisionMs){smi=i;break;}
+   if(smi<0 || atr15[smi]<=0.0) return false;
+   signalAtr=atr15[smi];
+   atrPct=signalAtr/signalClose;
+
+   int from=MathMax(0,sig-LAB_VOL_WIN);
+   double hist[];ArrayResize(hist,0);
+   for(int i=from;i<sig;i++)
+     {
+      if(ap[i]>0.0 && MathIsValidNumber(ap[i]))
+        {
+         int k=ArraySize(hist);ArrayResize(hist,k+1);hist[k]=ap[i];
+        }
+     }
+   if(ArraySize(hist)<LAB_VOL_MIN)
+     {
+      // LAB046: UNKNOWN is not HIGH_VOL.
+      q67=0.0;highVol=false;
+      return true;
+     }
+   q67=Quantile67(hist);
+   highVol=(q67>0.0 && atrPct>=q67);
+   return true;
+  }
+
+bool FetchStrictRefPrice(const int idx,double &px,long &tm)
+  {
+   px=0.0;tm=0;
+   string url=API_HOST+TICKER_PATH+"?symbol="+g_sym[idx].binance;
+   char post[],result[];string rh="";
+   int timeout=MathMin(InpWebTimeoutMs,1000);
+   ResetLastError();
+   int code=WebRequest("GET",url,"",timeout,post,result,rh);
+   if(code!=200) return false;
+   string body=CharArrayToString(result,0,WHOLE_ARRAY,CP_UTF8);
+   int e=-1,et=-1;
+   px=JsonNum(body,0,"price",e);
+   double td=JsonNum(body,0,"time",et);
+   if(td>0.0) tm=(long)td; else tm=(long)TimeGMT()*1000;
+   if(px<=0.0) return false;
+   g_sym[idx].refLastPrice=px;g_sym[idx].refLastPriceMs=tm;
+   return true;
+  }
+
+//+------------------------------------------------------------------+
 bool FetchOne(const int idx)
   {
    g_sym[idx].lastAttempt=TimeCurrent();
@@ -792,17 +1016,13 @@ bool FetchOne(const int idx)
       if(e==4014) g_sym[idx].err+=" — додайте "+API_HOST+" у WebRequest";
       return false;
      }
-   if(code!=200)
-     {
-      g_sym[idx].err=StringFormat("HTTP %d",code);
-      return false;
-     }
+   if(code!=200){g_sym[idx].err=StringFormat("HTTP %d",code);return false;}
 
    string body=CharArrayToString(result,0,WHOLE_ARRAY,CP_UTF8);
    if(StringLen(body)<20){g_sym[idx].err="порожня відповідь";return false;}
 
-   double rr[]; ArrayResize(rr,MAX_POINTS);
-   long tsms[]; ArrayResize(tsms,MAX_POINTS);
+   double rr[];ArrayResize(rr,MAX_POINTS);
+   long tsms[];ArrayResize(tsms,MAX_POINTS);
    int cnt=0,pos=0,e2=0;
    while(cnt<MAX_POINTS)
      {
@@ -814,28 +1034,51 @@ bool FetchOne(const int idx)
       double td=JsonNum(body,k,"timestamp",et);
       if(r>0.0)
         {
-         rr[cnt]=r;
-         tsms[cnt]=(et>0)?(long)td:0;
-         cnt++;
+         rr[cnt]=r;tsms[cnt]=(et>0)?(long)td:0;cnt++;
         }
       pos=e2;
      }
-   if(cnt<20){g_sym[idx].err=StringFormat("лише %d точок",cnt);return false;}
+   if(cnt<80){g_sym[idx].err=StringFormat("лише %d точок",cnt);return false;}
 
    int win=(InpZWindowHours*3600)/BIN_STEP_S;
    if(win<10) win=10;
-   int from=cnt-win; if(from<0) from=0;
-   double sum=0.0,sum2=0.0; int n=0;
+   int from=cnt-win;if(from<0) from=0;
+   double sum=0.0,sum2=0.0;int n=0;
    for(int i=from;i<cnt;i++){sum+=rr[i];sum2+=rr[i]*rr[i];n++;}
-   if(n<10){g_sym[idx].err="замало для смуги";return false;}
-   double mean=sum/n;
-   double var=sum2/n-mean*mean;
-   if(var<=0.0){g_sym[idx].err="нульова дисперсія";return false;}
+   double mean=sum/n,var=sum2/n-mean*mean;
+   if(n<10 || var<=0.0){g_sym[idx].err="invalid z window";return false;}
    double sd=MathSqrt(var);
    if(sd<1e-12){g_sym[idx].err="sd=0";return false;}
+   double zNew=(rr[cnt-1]-mean)/sd;
 
-   int win40=(40*3600)/BIN_STEP_S; if(win40>cnt) win40=cnt;
-   double s40=0.0,s40b=0.0; int n40=0;
+   // Exact RAPID_REPEAT_30 from completed M5 crowd stream, independent of trade reachability.
+   double zhist[];ArrayResize(zhist,cnt);
+   for(int i=0;i<cnt;i++) zhist[i]=0.0;
+   for(int i=win-1;i<cnt;i++)
+     {
+      double sm=0.0,sm2=0.0;
+      for(int j=i-win+1;j<=i;j++){sm+=rr[j];sm2+=rr[j]*rr[j];}
+      double mu=sm/win,v=sm2/win-mu*mu;
+      if(v>0.0) zhist[i]=(rr[i]-mu)/MathSqrt(v);
+     }
+   bool rapid=false;double gap=-1.0;
+   int sign=(zNew>=1.0)?1:((zNew<=-1.0)?-1:0);
+   if(sign!=0)
+     {
+      for(int i=cnt-2;i>=win-1;i--)
+        {
+         bool same=(sign>0 && zhist[i]>=1.0) || (sign<0 && zhist[i]<=-1.0);
+         if(same)
+           {
+            gap=(double)(tsms[cnt-1]-tsms[i])/60000.0;
+            rapid=(gap<=30.0);
+            break;
+           }
+        }
+     }
+
+   int win40=(40*3600)/BIN_STEP_S;if(win40>cnt) win40=cnt;
+   double s40=0.0,s40b=0.0;int n40=0;
    for(int i=cnt-win40;i<cnt;i++) if(i>=0){s40+=rr[i];s40b+=rr[i]*rr[i];n40++;}
    double z40=0.0;
    if(n40>=20)
@@ -844,9 +1087,8 @@ bool FetchOne(const int idx)
       if(v40>0.0){double sd40=MathSqrt(v40);if(sd40>1e-12) z40=(rr[cnt-1]-m40)/sd40;}
      }
 
-   double zNew=(rr[cnt-1]-mean)/sd;
-   bool wasActive=((g_sym[idx].z>=InpZThreshold) || (g_sym[idx].z<=-InpZThreshold)) && g_sym[idx].ok;
-   bool nowActive=((zNew>=InpZThreshold) || (zNew<=-InpZThreshold));
+   bool wasActive=((g_sym[idx].z>=InpZThreshold)||(g_sym[idx].z<=-InpZThreshold)) && g_sym[idx].ok;
+   bool nowActive=((zNew>=InpZThreshold)||(zNew<=-InpZThreshold));
    if(nowActive && !wasActive){g_sym[idx].sigSince=TimeCurrent();g_sym[idx].durBars=0;GVWrite(GVKey("SIG_"+g_sym[idx].broker),(double)g_sym[idx].sigSince);}
    if(!nowActive){g_sym[idx].sigSince=0;g_sym[idx].durBars=0;GVWrite(GVKey("SIG_"+g_sym[idx].broker),0.0);}
    if(nowActive && wasActive)
@@ -857,15 +1099,11 @@ bool FetchOne(const int idx)
       g_sym[idx].durBars=(bb>40)?40:((bb<0)?0:bb);
      }
 
-   g_sym[idx].ratio=rr[cnt-1];
-   g_sym[idx].mean=mean;
-   g_sym[idx].sd=sd;
-   g_sym[idx].z40=z40;
-   g_sym[idx].z=zNew;
-   g_sym[idx].ok=true;
-   g_sym[idx].err="";
-   g_sym[idx].lastFetch=TimeCurrent();
-   g_sym[idx].sourceTimeMs=tsms[cnt-1];
+   g_sym[idx].ratio=rr[cnt-1];g_sym[idx].mean=mean;g_sym[idx].sd=sd;
+   g_sym[idx].z40=z40;g_sym[idx].z=zNew;
+   g_sym[idx].rapidRepeat30=rapid;g_sym[idx].priorSameExtremeGapMin=gap;
+   g_sym[idx].ok=true;g_sym[idx].err="";
+   g_sym[idx].lastFetch=TimeCurrent();g_sym[idx].sourceTimeMs=tsms[cnt-1];
    return true;
   }
 
