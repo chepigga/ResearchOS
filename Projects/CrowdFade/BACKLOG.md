@@ -6317,3 +6317,181 @@ Compare empirical cost distribution directly with LAB049 cost envelope:
 
 If real execution is safely below the break-even envelope, proceed with frozen 3.5 and 5.0 side-by-side shadow/demo validation.
 If real execution is near/above that envelope, do not retune entries/exits to rescue the paper edge; execution/venue is the primary problem.
+
+
+---
+
+# LAB050 — V191 REAL EXECUTION COST AUDIT
+
+Status: **DONE — TWO-BROKER OBSERVATIONAL AUDIT; GETLEVERAGED CLEANER CURRENT SAMPLE, IC TAIL RISK MATERIAL.**
+
+Path:
+`labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/`
+
+Method commit:
+`51ab6072ecdbb9b4e53756ad0de0c9037a8c6506`
+
+Results commit:
+`6106c797e4393b01e0e6353e02df10be08cf0825`
+
+Primary sample:
+only current V191 trades marked `CF191...`.
+
+Excluded:
+- `CF200...`;
+- older generic `CrowdFade`;
+- unmarked/manual trades.
+
+## Critical limitation
+
+Both current V191 lineages enter via market orders.
+
+The MT5 history reports do NOT preserve:
+- contemporaneous bid/ask snapshot;
+- requested market price.
+
+Therefore exact entry spread and entry slippage cannot be reconstructed.
+
+LAB050 measures an **observed lower-bound execution cost**:
+- commission/swap;
+- plus realized slippage on exits explicitly executed through stop orders.
+
+This is converted into the same flat-bps equivalent used by LAB049.
+
+## GetLeveraged
+
+Sample:
+- 58 CF191 entries;
+- 56 closed;
+- 2 open;
+- period 18–22 Sep 2026;
+- BTC32 / ETH6 / SOL18 closed;
+- 46 stop exits.
+
+Commission:
+- current CF191 commission = 0;
+- only explicit cost is one BTC overnight swap = $2.05.
+
+Fill latency:
+- median 0s;
+- p95 1s;
+- max 1s at MT5 report resolution.
+
+Stop-fill slippage:
+- median 0.51bps;
+- p90 1.98bps;
+- p95 2.57bps;
+- worst 16.63bps;
+- >2bps: 5/46 = 10.9%;
+- >5bps: 2/46 = 4.3%.
+
+Observed LAB049-equivalent lower-bound:
+**0.68bps**
+
+After removing the single worst stop:
+**0.54bps**
+
+By symbol:
+- BTC: **0.53bps** floor;
+- SOL: **0.61bps** floor;
+- ETH: **3.27bps** floor.
+
+Interpretation:
+BTC/SOL leave meaningful room below LAB049 3.5/5.0 historical break-even.
+ETH execution is not validated and shows dangerous tail slippage.
+
+## IC Markets
+
+Sample:
+- 20 CF191 entries;
+- 19 closed;
+- 1 open;
+- period 21–22 Sep 2026;
+- BTC7 / ETH7 / SOL5 closed;
+- 16 stop exits.
+
+Commission/swap:
+- 0 in current CF191 sample.
+
+Fill latency:
+- median 0s;
+- p95 1s;
+- max 1s.
+
+Stop-fill slippage:
+- median 0.62bps;
+- p90 4.92bps;
+- p95 9.08bps;
+- worst 20.81bps;
+- >2bps: 6/16 = 37.5%;
+- >5bps: 2/16 = 12.5%.
+
+Observed LAB049-equivalent lower-bound:
+**2.24bps**
+
+After removing the single worst ETH stop:
+**1.23bps**
+
+By symbol:
+- BTC: **1.73bps** floor;
+- SOL: **0.63bps** floor;
+- ETH: **4.15bps** floor.
+
+Interpretation:
+the full IC sample already exceeds the LAB049 historical break-even envelope before unobserved entry spread is added.
+But N19 is small and one ETH tail event materially affects the aggregate.
+
+## LAB049 comparison
+
+Historical approximate cost-only break-even:
+- control2.5: ~1.48bps;
+- balanced3.5: ~1.75bps;
+- aggressive5.0: ~1.85bps.
+
+GetLeveraged full observed floor 0.68bps leaves:
+- ~1.07bps unobserved-cost budget for 3.5;
+- ~1.17bps for 5.0.
+
+IC full observed floor 2.24bps:
+- already exceeds both 3.5 and 5.0 historical break-even.
+
+IC excluding worst ETH event:
+- 1.23bps;
+- still requires confirmation from a much larger sample because entry spread is not measured.
+
+## Cross-broker exact matches
+
+Only 3 identical CF191 comment+symbol entry pairs exist.
+
+Relative GetLeveraged fill:
+- BTC buy: -2.77bps worse;
+- SOL sell: +4.87bps better;
+- BTC sell: +0.39bps better.
+
+N3 is too small for broker ranking and quote feeds differ.
+
+## Frozen conclusion after LAB050
+
+Do not retune V191.
+
+Current execution preference:
+1. **GetLeveraged is the cleaner venue candidate for frozen 3.5/0.5 shadow/demo validation**, especially BTC/SOL.
+2. Keep 5.0/0.5 as the aggressive comparison arm.
+3. IC Markets requires more execution data before promotion.
+4. ETH is an execution warning on both brokers and should not be considered validated from these samples.
+
+## Required implementation before next true cost audit
+
+Add V191 execution telemetry:
+- bid/ask at decision;
+- bid/ask immediately before OrderSend;
+- requested order price/type;
+- actual fill;
+- entry spread bps;
+- entry slippage bps;
+- exit requested price;
+- exit fill;
+- commission/swap;
+- millisecond latency.
+
+Without these fields, MT5 history can only produce a lower-bound cost audit.
