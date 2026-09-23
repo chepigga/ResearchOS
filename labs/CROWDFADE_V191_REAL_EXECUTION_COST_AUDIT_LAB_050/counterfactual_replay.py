@@ -71,7 +71,7 @@ def load_symbol(sym):
     mu=m.ratio.rolling(72,min_periods=72).mean()
     sd=m.ratio.rolling(72,min_periods=72).std(ddof=0)
     m['z']=(m.ratio-mu)/sd.replace(0,np.nan)
-    m['ts']=(m.t.view('int64')//10**9).astype(np.int64)
+    m['ts']=(m.t.astype('int64')//10**9).astype(np.int64)
 
     # completed M15 ATR14, same geometry as research
     ts=q.ts.to_numpy(np.int64); H=q.h.to_numpy(float); L=q.l.to_numpy(float); C=q.c.to_numpy(float)
