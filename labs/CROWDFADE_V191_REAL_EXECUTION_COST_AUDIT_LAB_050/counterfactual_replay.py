@@ -220,7 +220,8 @@ def main():
     summary={'signals':int(len(df)),'entered':int((df.entry_status=='ENTER').sum()),
              'status_counts':df.entry_status.value_counts().to_dict(),'variants':{}}
     for name in ARMS:
-        x=pd.to_numeric(df.get(f'{name}_net_R'),errors='coerce').dropna()
+        col=f'{name}_net_R'
+        x=pd.to_numeric(df[col],errors='coerce').dropna() if col in df.columns else pd.Series(dtype=float)
         summary['variants'][name]={
           'N':int(len(x)),'SumR':float(x.sum()),'EV':float(x.mean()) if len(x) else None,
           'WR':float((x>0).mean()) if len(x) else None,
