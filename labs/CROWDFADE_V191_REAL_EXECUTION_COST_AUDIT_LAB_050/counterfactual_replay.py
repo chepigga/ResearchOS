@@ -71,7 +71,7 @@ def load_symbol(sym):
     mu=m.ratio.rolling(72,min_periods=72).mean()
     sd=m.ratio.rolling(72,min_periods=72).std(ddof=0)
     m['z']=(m.ratio-mu)/sd.replace(0,np.nan)
-    m['ts']=(m.t.astype('int64')//10**9).astype(np.int64)
+    m['ts']=m['t'].map(lambda x:int(x.timestamp())).astype(np.int64)
 
     # completed M15 ATR14, same geometry as research
     ts=q.ts.to_numpy(np.int64); H=q.h.to_numpy(float); L=q.l.to_numpy(float); C=q.c.to_numpy(float)
@@ -228,10 +228,12 @@ def main():
         }
     (OUT/'summary.json').write_text(json.dumps(summary,indent=2))
     print(json.dumps(summary,indent=2))
-    print(df[['comment','symbol','side','entry_status','lab_entry_utc',
-      'CONTROL_2P5_reason','CONTROL_2P5_net_R',
-      'BALANCED_3P5_reason','BALANCED_3P5_net_R',
-      'AGGRESSIVE_5P0_reason','AGGRESSIVE_5P0_net_R']].to_string(index=False))
+    cols=['comment','symbol','side','entry_status','lab_entry_utc']
+    for name in ARMS:
+        for suffix in ['reason','net_R']:
+            c=f'{name}_{suffix}'
+            if c in df.columns: cols.append(c)
+    print(df[cols].to_string(index=False))
 
 if __name__=='__main__':
     main()
