@@ -6571,3 +6571,70 @@ Highest-priority repair:
 7. add immutable build/config ID and millisecond telemetry.
 
 Do not tune new entry thresholds before strict parity is restored.
+
+
+---
+
+# V191 STRICT LAB PARITY BUILD
+
+Status: **IMPLEMENTED — NEXT DEMO/SHADOW BASELINE**
+
+Source:
+`Projects/CrowdFade/CrowdFadeMulti_v191_STRICT_LAB_PARITY.mq5`
+
+Implementation doc:
+`Projects/CrowdFade/V191_STRICT_LAB_PARITY_IMPLEMENTATION.md`
+
+Core implementation commits:
+- seed from latest v191f: `5416fc27243fb8f45083b7b07cef6986ebbf0a7e`
+- frozen strict defaults: `4f84d2884f92cd89687460865bc1bc9473fd475b`
+- Binance reference / toxic gates: `6ccc0c3c4a4881ea0def9246b44a39b45698f40c`
+- continuous confirm + frozen management: `168dcc92b42ee36791f260d80415ed1aa73409af`
+- fill-state transport guard: `96b61ee7bb0c183ee5dee53f2bba071905afbec1`
+- isolated/persistent causal state: `c572c479deb981dd4ca1f8268d05910226860dd0`
+- strict telemetry: `6fb700d9153572b802b9d1a70c8cf895181b3d33`
+- pending-confirm persistence: `59d20ac017f97fc26daeb96e7c72e653480235d6`
+- implementation documentation: `27abc8bff5853bfef482a001aa1c6394f107de1b`
+
+Frozen default:
+- BTCUSDT research-validated lane
+- Z1.00
+- RAPID_REPEAT_30 veto
+- causal HIGH_VOL q67 veto
+- confirm0.30
+- freshness45m
+- adverse0.75
+- v191d confirm consistency
+- signal ATR frozen
+- SL1.5
+- BE0.5/0.15
+- ExitZ0.75
+- H6
+- no TP
+- trail3.5/0.5 default
+- fixed risk; score OFF
+- no spread-based signal gate
+- UTC max3/day
+- ATR pause1.0
+
+Strict build uses Binance decision geometry and broker execution transport.
+
+Do not use v191f as the next parity baseline.
+
+## Next required step
+
+1. Compile in MetaEditor.
+2. Run strict build simultaneously on GetLeveraged and IC demo/shadow.
+3. Collect strict signal/execution CSVs.
+4. Verify exact per-signal parity:
+   - source timestamp
+   - decision timestamp
+   - rapid/high-vol gate
+   - signal close/ATR
+   - confirm timestamp/Z/adverse
+   - broker fill
+   - BE/trail modifications
+   - ExitZ/time exit
+5. Only after parity PASS compare broker execution cost.
+
+No entry threshold retuning before this validation.
