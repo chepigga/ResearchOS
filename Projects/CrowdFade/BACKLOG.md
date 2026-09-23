@@ -6537,3 +6537,37 @@ New frozen conclusion:
 
 Next engineering work:
 make V191 live reproduce frozen confirmation/entry/SL/BE/ExitZ/trailing/H6 mechanics exactly before any further signal retuning.
+
+
+---
+
+# V191 LIVE vs LAB PARITY AUDIT
+
+Status: **DONE — MATERIAL NON-PARITY FOUND**
+
+Audit file:
+`labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/LIVE_VS_LAB_PARITY_AUDIT.md`
+
+Audit commit:
+`2eb4f267e1d83230966c894b7eff64f7a5a381d0`
+
+Main findings:
+- confirmation logic is gated to new broker M5 bars, so the 1s timer does not provide 1s confirmation decisions;
+- order comment CF191 timestamp is not frozen at signal arm and can refer to a newer Binance source point at order-send time;
+- live price/ATR geometry is broker-native while LAB046–049 geometry is Binance-reference;
+- live stop/BE/trail use entry/current ATR, not the signal ATR snapshot used by research replay;
+- LAB046 RAPID_REPEAT_30 and HIGH_VOL vetoes are absent from current v191f;
+- current v191f adds same-side-Z / minAbsZ / response-ratio gates not present in LAB046;
+- current v191f default ExitZ=0.00 while LAB047–049 / LAB050 balanced counterfactual uses ExitZ=0.75;
+- v191f still writes v191d CSV filenames and declares property version 1.92, making lineage attribution ambiguous.
+
+Highest-priority repair:
+1. freeze original signal source timestamp;
+2. evaluate active confirmation continuously on timer/ticks rather than once per M5 bar;
+3. freeze and use research-consistent signal ATR;
+4. restore exact LAB046 RAPID_REPEAT_30 + HIGH_VOL gates;
+5. restore ExitZ0.75 for strict parity;
+6. separate strict-parity build from any experimental same-side/minAbsZ/response gates;
+7. add immutable build/config ID and millisecond telemetry.
+
+Do not tune new entry thresholds before strict parity is restored.
