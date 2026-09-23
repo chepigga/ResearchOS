@@ -273,3 +273,23 @@ Before further parameter tuning, build one strict parity version and validate th
 - exit reason
 
 within expected transport/slippage tolerance.
+
+
+---
+
+## Timestamp-semantics correction after strict implementation
+
+Binance documentation defines the `globalLongShortAccountRatio.timestamp` field as the **end time of the ratio period**.
+
+LAB043/046 price/flow alignment uses:
+`searchsorted(flow_time, M5_availability, left) - 1`.
+
+Therefore a flow source point ending at `T` is intentionally used at the next completed price-M5 decision `T+5m`.
+
+Consequences:
+- strict live signal decision ID is `flow_source_timestamp + 300s`;
+- the corresponding signal price is the Binance M5 close of the bar `[T, T+5m]`;
+- the old live order comment used the then-current flow `sourceTimeMs`, not the original armed decision ID, so broker-report `CF191...` timestamps cannot be used as exact original signal timestamps;
+- the earlier empirical observation “comment → fill ≈5m” must **not** by itself be interpreted as a 5-minute confirmation delay.
+
+The separate code-level finding remains valid: old v191f checked active confirmation only when a new broker M5 bar appeared. The strict build removes that broker-M5 gate and evaluates an armed confirmation every scheduler pass.
