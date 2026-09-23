@@ -257,7 +257,7 @@ input double InpMaxAccountMarginPct = 12.0;   // HARD CAP: projected TOTAL accou
 input double InpMinMarginLotFrac = 0.00;      // 0=allow under-risking after safety clamp; never inflate notional to hit risk target
 input double InpMinVolumeLotFrac = 0.00;      // 0=allow broker cap but LOUDLY log under-sizing; >0 can enforce minimum fraction
 input int    InpSlippagePts   = 50;       // Прослизання
-input long   InpMagic         = 77001;    // Magic
+input long   InpMagic         = 77191;    // STRICT LAB parity isolated magic
 
 //--- безпека -------------------------------------------------------
 input group "=== БЕЗПЕКА ==="
@@ -270,7 +270,7 @@ input bool   InpVerbose       = true;     // Детальний лог
 input group "=== [v1.62] EXECUTION PARITY ==="
 input int    InpExecTimerMs        = 1000;    // Детермінований management scheduler, мс
 input int    InpWebTimeoutMs       = 4000;    // Timeout for flow/history; ticker uses <=1000ms
-input int    InpMaxFeedAgeSec      = 900;     // Не відкривати/не signal-exit на старих Binance даних
+input int    InpMaxFeedAgeSec      = 600;     // STRICT: causal flow state freshness
 input int    InpChaseMaxRetries    = 3;       // Повтори ТОГО САМОГО chase target при технічній відмові
 input bool   InpCloseOnDailyHalt   = true;    // Prop safety: закрити позиції при daily DD stop
 input bool   InpPersistState       = true;    // Зберігати cooldown/DD/trailing між restart/VPS sync
@@ -397,7 +397,7 @@ long     c_sig=0, c_thr=0, c_pause=0, c_maxpos=0, c_side=0,
 //--- persistent keys ------------------------------------------------
 string GVPrefix()
   {
-   return StringFormat("CF162_%I64d_%I64d_", AccountInfoInteger(ACCOUNT_LOGIN), InpMagic);
+   return StringFormat("CF191P_%I64d_%I64d_", AccountInfoInteger(ACCOUNT_LOGIN), InpMagic);
   }
 string GVKey(const string suffix) { return GVPrefix() + suffix; }
 string GVOrderKey(const ulong ticket,const string suffix)
@@ -708,6 +708,11 @@ int OnInit()
       g_sym[i].lastTrade=(saved>0.0)?(datetime)saved:RecoverLastOrderTime(g_sym[i].broker);
       if(g_sym[i].lastTrade>0) GVWrite(GVLastTradeKey(g_sym[i].broker),(double)g_sym[i].lastTrade);
       g_sym[i].sigSince=(datetime)GVRead(GVKey("SIG_"+g_sym[i].broker),0.0);
+      g_sym[i].lastEntryPrice=GVRead(GVKey("LEP_"+g_sym[i].broker),0.0);
+      g_sym[i].lastEntryAtr=GVRead(GVKey("LEA_"+g_sym[i].broker),0.0);
+      g_sym[i].dayTradeCode=(int)GVRead(GVKey("DTD_"+g_sym[i].broker),-1.0);
+      g_sym[i].dayTradeCount=(int)GVRead(GVKey("DTC_"+g_sym[i].broker),0.0);
+      g_sym[i].lastSignalSourceMs=(long)GVRead(GVKey("LSS_"+g_sym[i].broker),0.0);
      }
 
    if(InpWriteCsv)
@@ -1979,6 +1984,8 @@ void RegisterEntry(const int idx, const double entryPrice, const double atr)
    GVWrite(GVLastTradeKey(g_sym[idx].broker),(double)g_sym[idx].lastTrade);
    g_sym[idx].lastEntryPrice=entryPrice;
    g_sym[idx].lastEntryAtr=(atr>0.0)?atr:g_sym[idx].lastEntryAtr;
+   GVWrite(GVKey("LEP_"+g_sym[idx].broker),g_sym[idx].lastEntryPrice);
+   GVWrite(GVKey("LEA_"+g_sym[idx].broker),g_sym[idx].lastEntryAtr);
 
    int dc=DayCodeNow();
    if(g_sym[idx].dayTradeCode!=dc)
@@ -1987,6 +1994,14 @@ void RegisterEntry(const int idx, const double entryPrice, const double atr)
       g_sym[idx].dayTradeCount=0;
      }
    g_sym[idx].dayTradeCount++;
+   GVWrite(GVKey("DTD_"+g_sym[idx].broker),(double)g_sym[idx].dayTradeCode);
+   GVWrite(GVKey("DTC_"+g_sym[idx].broker),(double)g_sym[idx].dayTradeCount);
+  }
+
+void MarkStrictSourceProcessed(const int idx,const long sourceMs)
+  {
+   MarkStrictSourceProcessed(idx,sourceMs);
+   GVWrite(GVKey("LSS_"+g_sym[idx].broker),(double)sourceMs);
   }
 
 //+------------------------------------------------------------------+
@@ -2111,12 +2126,12 @@ void TryEnter(const int idx)
    else if(z<=-InpZThreshold) side=1;
 
    // Every completed source point is processed exactly once.
-   if(side==0){g_sym[idx].lastSignalSourceMs=sourceMs;c_thr++;return;}
+   if(side==0){MarkStrictSourceProcessed(idx,sourceMs);c_thr++;return;}
 
    // LAB046 gate 1: same-sign previous completed M5 extreme <=30m.
    if(g_sym[idx].rapidRepeat30)
      {
-      g_sym[idx].lastSignalSourceMs=sourceMs;
+      MarkStrictSourceProcessed(idx,sourceMs);
       LogExec("STRICT_SKIP_RAPID30",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
               StringFormat("signal=%I64d source=%I64d gap=%.1fm z=%+.3f",decisionSec,sourceMs,g_sym[idx].priorSameExtremeGapMin,z));
       return;
@@ -2134,7 +2149,7 @@ void TryEnter(const int idx)
    // LAB046 gate 2: HIGH_VOL; UNKNOWN is not HIGH_VOL.
    if(highVol)
      {
-      g_sym[idx].lastSignalSourceMs=sourceMs;
+      MarkStrictSourceProcessed(idx,sourceMs);
       LogExec("STRICT_SKIP_HIGHVOL",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
               StringFormat("signal=%I64d atrPct=%.8f q67=%.8f z=%+.3f",decisionSec,atrPct,q67,z));
       return;
@@ -2143,19 +2158,19 @@ void TryEnter(const int idx)
    // Frozen freshness <=45m measured from LAB decision time.
    if(nowUtc-decisionSec>2700)
      {
-      g_sym[idx].lastSignalSourceMs=sourceMs;
+      MarkStrictSourceProcessed(idx,sourceMs);
       LogExec("STRICT_SKIP_STALE_SIGNAL",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
               StringFormat("signal=%I64d age=%I64d",decisionSec,nowUtc-decisionSec));
       return;
      }
 
    // Frozen pause=1 signal ATR and max 3 trades / UTC day.
-   if(!CanEnterByPauseAndDay(idx,sigClose)){g_sym[idx].lastSignalSourceMs=sourceMs;return;}
-   if(HasAnyFor(sym)){g_sym[idx].lastSignalSourceMs=sourceMs;return;}
+   if(!CanEnterByPauseAndDay(idx,sigClose)){MarkStrictSourceProcessed(idx,sourceMs);return;}
+   if(HasAnyFor(sym)){MarkStrictSourceProcessed(idx,sourceMs);return;}
    int nb,ns;int tot=CountExposure(nb,ns);
-   if(tot>=InpMaxPositions){g_sym[idx].lastSignalSourceMs=sourceMs;c_maxpos++;return;}
-   if(side<0 && ns>=InpMaxPerSide){g_sym[idx].lastSignalSourceMs=sourceMs;c_side++;return;}
-   if(side>0 && nb>=InpMaxPerSide){g_sym[idx].lastSignalSourceMs=sourceMs;c_side++;return;}
+   if(tot>=InpMaxPositions){MarkStrictSourceProcessed(idx,sourceMs);c_maxpos++;return;}
+   if(side<0 && ns>=InpMaxPerSide){MarkStrictSourceProcessed(idx,sourceMs);c_side++;return;}
+   if(side>0 && nb>=InpMaxPerSide){MarkStrictSourceProcessed(idx,sourceMs);c_side++;return;}
 
    // Arm the one deployable real-time confirmation thesis from this exact LAB signal state.
    g_sym[idx].confActive=true;
@@ -2172,7 +2187,7 @@ void TryEnter(const int idx)
    g_sym[idx].confAtrPct=atrPct;
    g_sym[idx].confHighVol=highVol;
    g_sym[idx].confBarsLeft=InpConfirmMaxBars;
-   g_sym[idx].lastSignalSourceMs=sourceMs;
+   MarkStrictSourceProcessed(idx,sourceMs);
 
    LogExec("STRICT_CONFIRM_ARM",sym,0,(side>0)?"BUY":"SELL",sigClose,0,0,0,0,
            StringFormat("signal=%I64d source=%I64d z=%+.3f atr=%.8f atrPct=%.8f q67=%.8f rapidGap=%.1f",
