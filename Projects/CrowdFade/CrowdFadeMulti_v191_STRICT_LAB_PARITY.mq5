@@ -219,7 +219,7 @@ input double InpPauseATR       = 1.00;     // для ATR: мін. рух цін�
 input int    InpMaxTradesPerDay= 3;        // макс угод на пару за день (0=без ліміту)
 
 input group "=== [v1.40] Вага позиції за багатофакторною моделлю ==="
-input bool   InpUseScore      = true;     // вмикати зважування
+input bool   InpUseScore      = false;    // STRICT LAB parity: fixed risk, no research-external score weighting
 input double InpScoreGain     = 0.60;     // сила зважування (0 = вимкнено)
 input double InpScoreMinW     = 0.40;     // мін множник лота
 input double InpScoreMaxW     = 2.00;     // макс множник лота
@@ -243,7 +243,7 @@ input group "=== РИЗИК ==="
 input double InpRiskPct       = 0.25;     // Ризик на угоду, % балансу
 input int    InpMaxPositions  = 3;        // МАКС одночасних позицій (крипта корельована!)
 input int    InpMaxPerSide    = 2;        // Макс позицій в один бік
-input double InpMaxSpreadATR  = 0.30;     // Спред-гейт у частках ATR
+input double InpMaxSpreadATR  = 0.00;     // STRICT: disabled as signal gate; >0 enables execution-only safety gate
 input double InpMaxDailyDDPct = 3.00;     // Денна просадка -> стоп на день
 input double InpMaxTotalDDPct = 8.00;     // Загальна просадка -> стоп EA
 input double InpMaxLot        = 0.0;      // Optional manual lot ceiling; 0 = DISABLED (critical for broker parity)
