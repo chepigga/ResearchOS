@@ -5790,3 +5790,270 @@ Required design:
 - retain immutable v192 reference.
 
 Do not choose arm/gap thresholds post hoc from LAB047 trade paths. Pre-register a small mechanistic grid before execution.
+
+
+---
+
+# LAB048 — V191 TRAILING RIGHT-TAIL PARETO
+
+Status: **DONE — DELAYED TRAILING ARM WORKS; WIDER GAP DOES NOT. TWO ROBUST PARETO CANDIDATES IDENTIFIED.**
+
+Path:
+`labs/CROWDFADE_V191_TRAILING_RIGHT_TAIL_PARETO_LAB_048/`
+
+Pre-registration commit:
+`cb4304a9ff1ff408302dcbf05a23d10c35e097ba`
+
+Successful GitHub Actions run:
+`35827888622`
+
+Output commit:
+`1c439709007d42fc6ff67fb5bd11f7e4c5aea2cb`
+
+Frozen state:
+- exact LAB046 dual toxic-state entry/gating;
+- SL1.5 ATR;
+- no fixed TP;
+- BE arm0.5 / lock0.15 ATR;
+- ExitZ0.75;
+- H6;
+- only trail arm/gap changed.
+
+Preregistered grid:
+- CONTROL 2.5 / 0.5;
+- 3.5 / 0.5;
+- 5.0 / 0.5;
+- 2.5 / 1.0;
+- 3.5 / 1.0;
+- 5.0 / 1.0;
+- TRAIL_OFF anchor.
+
+Hard parity checks:
+- CONTROL matched LAB047 control exactly;
+- TRAIL_OFF matched LAB047 TRAIL_OFF exactly.
+
+Every variant was replayed statefully, so changed exits altered occupancy and future reachability.
+
+## Core result
+
+The useful dimension is **delaying the trail arm**, not widening the trail gap.
+
+### CONTROL 2.5 / 0.5 — BASE_ROBUST_ONLY
+
+Historical:
+- N2967
+- EV +0.0269R
+- PF1.105
+- Sum +79.83R
+- DD20.47R
+- R/DD3.900
+- 4/5 positive years
+
+2026:
+- N316
+- EV +0.0464R
+- PF1.189
+- Sum +14.65R
+- DD9.59R
+- R/DD1.528
+- 4/6 positive months
+
+Forward after removing top5 winners:
+- +3.74R
+
+### A3.5 / G0.5 — **ROBUST_PARETO**
+
+Historical:
+- N2946
+- EV **+0.0341R**
+- PF **1.133**
+- Sum **+100.46R**
+- DD **21.06R**
+- R/DD **4.771**
+- **5/5 positive years**
+- all 5/5 years remain positive after removing each year's best trade
+- aggregate after removing top5 trades: **+78.74R**
+
+2026:
+- N314
+- EV **+0.0706R**
+- PF **1.286**
+- Sum **+22.17R**
+- DD **9.93R**
+- R/DD **2.232**
+- **5/6 positive months**
+- 3/6 months remain positive after removing each month's best trade
+- aggregate after removing top5 trades: **+6.28R**
+
+Relative to control:
+- historical +20.63R full-sequence;
+- 2026 +7.52R;
+- historical DD rises only +0.59R;
+- forward DD rises only +0.35R.
+
+Matched common-signal delta:
+- historical +13.96R;
+- 2026 +9.64R.
+
+Interpretation:
+**best balanced candidate.**
+It captures materially more right tail while keeping DD close to control and preserving the strongest period robustness of the grid.
+
+### A5.0 / G0.5 — **ROBUST_PARETO**
+
+Historical:
+- N2940
+- EV **+0.0368R**
+- PF **1.145**
+- Sum **+108.23R**
+- DD **33.14R**
+- R/DD3.265
+- 4/5 positive years
+- 2024 remains negative at -7.90R
+- aggregate after removing top5 trades: **+78.50R**
+
+2026:
+- N312
+- EV **+0.0894R**
+- PF **1.360**
+- Sum **+27.90R**
+- DD **9.30R**
+- R/DD **3.000**
+- **6/6 positive months**
+- aggregate after removing top5 trades: **+8.01R**
+
+Relative to control:
+- historical +28.40R;
+- 2026 +13.25R.
+
+Interpretation:
+**stronger right-tail capture / more aggressive candidate.**
+Forward performance is clearly stronger than 3.5/0.5, but historical DD expands materially to 33.14R, close to TRAIL_OFF's 34.81R.
+This is not the same balanced risk profile as 3.5/0.5.
+
+### A2.5 / G1.0 — BASE_ROBUST_ONLY, INFERIOR
+
+Historical:
+- +69.07R
+- PF1.092
+- DD28.48R
+
+2026:
+- +12.09R
+- PF1.156
+- DD10.25R
+
+Widening the gap from0.5 to1.0 without delaying the arm hurts both samples versus control.
+No promotion.
+
+### A3.5 / G1.0 — FAILED BASE ROBUSTNESS
+
+Historical:
+- +86.06R
+- PF1.115
+- 5/5 positive years
+
+2026:
+- +15.38R
+- PF1.198
+- only 3/6 positive months
+
+Fails preregistered consistency despite positive aggregates.
+
+### A5.0 / G1.0 — ROBUST_PARETO BY RULE, SECONDARY
+
+Historical:
+- +89.91R
+- PF1.120
+- DD33.74R
+
+2026:
+- +27.26R
+- PF1.351
+- DD9.20R
+- 6/6 positive months
+
+It passes the formal robust-Pareto rule, but compared with A5.0/G0.5:
+- historical SumR is lower;
+- historical R/DD is lower;
+- historical DD is slightly higher;
+- forward SumR and R/DD are slightly lower;
+- forward DD is only marginally better.
+
+Therefore the 1.0 ATR gap adds no convincing value.
+Keep it as a recorded robust secondary result, not a primary candidate.
+
+### TRAIL_OFF — PARETO_ELIGIBLE, NOT ROBUST_PARETO
+
+Historical:
+- +108.62R
+- PF1.145
+- DD34.81R
+- 5/5 positive years
+
+2026:
+- +67.65R
+- PF1.872
+- DD12.21R
+- 6/6 positive months
+
+But forward tail concentration remains extreme:
+- max trade +41.43R;
+- top1 = 28.5% of gross positive R;
+- top5 = 47.4% of gross positive R;
+- after removing top5 winners: **-1.13R**.
+
+This is why TRAIL_OFF fails ROBUST_PARETO even though headline PnL is highest.
+
+## Mechanistic conclusion
+
+LAB048 answers the LAB047 question:
+
+> The current 2.5 ATR trail arm is too early.
+> The edge is improved by allowing winners more room **before trailing starts**.
+
+The data do **not** support:
+- simply widening gap to1.0 ATR;
+- removing trailing completely.
+
+The clean right-tail mechanism is:
+- keep gap compact at0.5 ATR;
+- arm later.
+
+This preserves the existing BE protection while allowing more mature winners.
+
+## Frozen candidates after LAB048
+
+Primary balanced research candidate:
+**TRAIL ARM 3.5 ATR / GAP 0.5 ATR**
+
+Aggressive/right-tail research candidate:
+**TRAIL ARM 5.0 ATR / GAP 0.5 ATR**
+
+Current production/research control remains:
+**2.5 / 0.5**
+until external validation.
+
+Do not interpolate 4.0/4.5 ATR post hoc from LAB048.
+Do not switch TRAIL_OFF into production.
+
+## Next clean step
+
+**LAB049 — V191_TRAIL_ARM_ROBUSTNESS_STRESS**
+
+Freeze exactly three arms:
+- CONTROL 2.5 / 0.5;
+- BALANCED candidate 3.5 / 0.5;
+- AGGRESSIVE candidate 5.0 / 0.5.
+
+No new arm search.
+
+Stress only robustness / execution assumptions:
+- cost/slippage stress;
+- delayed-entry / execution perturbation;
+- right-tail clipping diagnostics;
+- stateful replay;
+- historical yearly + 2026 monthly;
+- immutable v192 reference.
+
+After stress, if 3.5/0.5 and/or 5.0/0.5 survive, move those frozen configurations to side-by-side demo/shadow validation rather than continuing threshold optimization.
