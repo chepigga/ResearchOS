@@ -1,0 +1,22 @@
+name: Export V191 strict parity source
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lab/crowdfade-execution-5y-positive-005
+    paths:
+      - '.github/workflows/export-v191-strict.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v191-strict-source
+          path: Projects/CrowdFade/CrowdFadeMulti_v191_STRICT_LAB_PARITY.mq5
+          retention-days: 7
