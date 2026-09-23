@@ -2111,6 +2111,19 @@ void TryEnter(const int idx)
               StringFormat("OK signal=%I64d source=%I64d refEntry=%.8f signalATR=%.8f origZ=%+.3f confirmZ=%+.3f adv=%.3f q67=%.8f atrPct=%.8f",
                            decisionSec,g_sym[idx].confSourceTimeMs,refPx,sigAtr,g_sym[idx].confZ,z,
                            g_sym[idx].confMaxAdvATR,g_sym[idx].confVolQ67,g_sym[idx].confAtrPct));
+      if(g_csv!=INVALID_HANDLE)
+        {
+         FileWrite(g_csv,
+                   TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),
+                   TimeToString(TimeGMT(),TIME_DATE|TIME_SECONDS),
+                   IntegerToString(g_sym[idx].confSourceTimeMs),IntegerToString(decisionSec),
+                   sym,g_sym[idx].binance,
+                   DoubleToString(g_sym[idx].ratio,6),DoubleToString(g_sym[idx].mean,6),
+                   DoubleToString(g_sym[idx].sd,6),DoubleToString(z,4),
+                   DoubleToString(sigAtr,8),DoubleToString(refPx,8),(side<0)?"SELL":"BUY",
+                   DoubleToString(entry,8),DoubleToString(stop,8),DoubleToString(lot,4),"STRICT_ENTRY",IntegerToString((long)ord));
+         FileFlush(g_csv);
+        }
       return;
      }
 
@@ -2192,6 +2205,19 @@ void TryEnter(const int idx)
    LogExec("STRICT_CONFIRM_ARM",sym,0,(side>0)?"BUY":"SELL",sigClose,0,0,0,0,
            StringFormat("signal=%I64d source=%I64d z=%+.3f atr=%.8f atrPct=%.8f q67=%.8f rapidGap=%.1f",
                         decisionSec,sourceMs,z,sigAtr,atrPct,q67,g_sym[idx].priorSameExtremeGapMin));
+   if(g_csv!=INVALID_HANDLE)
+     {
+      FileWrite(g_csv,
+                TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),
+                TimeToString(TimeGMT(),TIME_DATE|TIME_SECONDS),
+                IntegerToString(sourceMs),IntegerToString(decisionSec),
+                sym,g_sym[idx].binance,
+                DoubleToString(g_sym[idx].ratio,6),DoubleToString(g_sym[idx].mean,6),
+                DoubleToString(g_sym[idx].sd,6),DoubleToString(z,4),
+                DoubleToString(sigAtr,8),DoubleToString(sigClose,8),(side<0)?"SELL":"BUY",
+                "0","0","0","STRICT_ARM","0");
+      FileFlush(g_csv);
+     }
   }
 
 void DrawPanel()
