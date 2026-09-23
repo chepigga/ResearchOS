@@ -1700,7 +1700,9 @@ void ManagePositions()
       ulong tk=PositionGetTicket(i);if(!PositionSelectByTicket(tk)) continue;
       if(PositionGetInteger(POSITION_MAGIC)!=InpMagic) continue;
       string s=PositionGetString(POSITION_SYMBOL);
+      int si=SymIndex(s);if(si<0) continue;
       long ptype=PositionGetInteger(POSITION_TYPE);
+      int side=(ptype==POSITION_TYPE_BUY)?1:-1;
       datetime opened=(datetime)PositionGetInteger(POSITION_TIME);
       ulong posId=PositionIdSelected();
       double op=PositionGetDouble(POSITION_PRICE_OPEN);
@@ -1711,112 +1713,85 @@ void ManagePositions()
       if(op<=0.0 || closePx<=0.0) continue;
       double baseAtr=PositionBaseAtr(posId,s,op,csl);
 
-      // [v1.70] БЕЗЗБИТОК: після руху InpBreakEvenAtATR перенести стоп у ПЛЮС.
-      // Виміряно (BTC/SOL/ETH, 1.25/1.0/arm2.5): +1.0 -> +0.3 ATR дає
-      //   WR 51.2% -> 61.1%, найдовша серія програшів 16 -> 11,
-      //   R/DD 60.4 -> 53.3 (-12%). Це ОБМІН комфорту на прибуток.
-      // УВАГА: перенесення рівно в НУЛЬ робить гірше (WR падає до 37-47%),
-      // бо вихід у нуль не рахується виграшем. Lock має бути > 0.
-      if(InpBreakEvenAtATR>0.0 && InpBreakEvenLock>0.0 && baseAtr>0.0)
+      // STRICT LAB geometry is driven by Binance reference excursion, not broker CFD excursion.
+      double refPx=0.0;long refMs=0;
+      bool refOk=FetchStrictRefPrice(si,refPx,refMs);
+      double refEntry=GVRead(GVPosKey(posId,"REF_ENTRY"),0.0);
+      if(refEntry<=0.0 && refOk){refEntry=refPx;GVWrite(GVPosKey(posId,"REF_ENTRY"),refEntry);}
+      double fav=0.0;
+      if(refOk && refEntry>0.0 && baseAtr>0.0)
         {
-         double prof=(ptype==POSITION_TYPE_BUY)?(closePx-op):(op-closePx);
-         if(prof>=InpBreakEvenAtATR*baseAtr)
-           {
-            double lvl=(ptype==POSITION_TYPE_BUY)?(op+InpBreakEvenLock*baseAtr)
-                                                 :(op-InpBreakEvenLock*baseAtr);
-            lvl=NormalizePriceTick(s,lvl,(ptype==POSITION_TYPE_BUY)?-1:+1);
-            bool better=(ptype==POSITION_TYPE_BUY)?(csl<=0.0 || lvl>csl):(csl<=0.0 || lvl<csl);
-            double tick=SymbolInfoDouble(s,SYMBOL_TRADE_TICK_SIZE);
-            if(tick<=0.0) tick=SymbolInfoDouble(s,SYMBOL_POINT);
-            if(csl>0.0 && MathAbs(lvl-csl)<tick*0.51) better=false;
-            double md=MinTradeDistance(s,true);
-            bool dist=(ptype==POSITION_TYPE_BUY)?(q.bid-lvl>=md):(lvl-q.ask>=md);
-            if(better && dist)
-              {
-               g_trade.SetTypeFillingBySymbol(s);
-               bool b=g_trade.PositionModify(tk,lvl,tp);uint rc=g_trade.ResultRetcode();
-               double actual=0.0;
-               bool verified=(b && RetcodeAccepted(rc) && VerifyPositionSL(tk,lvl,actual));
-               LogExec("BREAKEVEN",s,tk,(ptype==POSITION_TYPE_BUY)?"BUY":"SELL",0,lvl,0,actual,rc,verified?"OK":"FAIL");
-               if(verified){c_be++;csl=actual;}
-               else if(InpVerbose) PrintFormat("BREAKEVEN %s #%I64u fail ret=%u %s",s,tk,rc,g_trade.ResultRetcodeDescription());
-              }
-           }
-        }
+         string kp=GVPosKey(posId,"REF_PEAK");
+         double refPeak=GVRead(kp,refEntry);
+         if(side>0){if(refPx>refPeak) refPeak=refPx;fav=(refPeak-refEntry)/baseAtr;}
+         else      {if(refPx<refPeak) refPeak=refPx;fav=(refEntry-refPeak)/baseAtr;}
+         GVWrite(kp,refPeak);
 
-      // [v1.62] REAL PRICE PEAK + frozen ATR snapshot.
-      if(InpTrailOn && InpTrailATR>0.0 && baseAtr>0.0)
-        {
-         double peak=PositionPeakPrice(posId,ptype,op,closePx);
-         double mfe=(ptype==POSITION_TYPE_BUY)?(peak-op)/baseAtr:(op-peak)/baseAtr;
-         if(mfe>=InpTrailArmATR)
+         // Frozen BE: arm +0.50 ATR, lock +0.15 ATR.
+         if(InpBreakEvenAtATR>0.0 && InpBreakEvenLock>0.0 && fav>=InpBreakEvenAtATR)
            {
-            double lvl=(ptype==POSITION_TYPE_BUY)?peak-InpTrailATR*baseAtr:peak+InpTrailATR*baseAtr;
-            lvl=NormalizePriceTick(s,lvl,(ptype==POSITION_TYPE_BUY)?-1:+1);
-            bool better=(ptype==POSITION_TYPE_BUY)?(csl<=0.0 || lvl>csl):(csl<=0.0 || lvl<csl);
+            double lvl=op+side*InpBreakEvenLock*baseAtr;
+            lvl=NormalizePriceTick(s,lvl,(side>0)?-1:+1);
+            bool better=(side>0)?(csl<=0.0 || lvl>csl):(csl<=0.0 || lvl<csl);
             double tick=SymbolInfoDouble(s,SYMBOL_TRADE_TICK_SIZE);if(tick<=0.0) tick=SymbolInfoDouble(s,SYMBOL_POINT);
             if(csl>0.0 && MathAbs(lvl-csl)<tick*0.51) better=false;
             double md=MinTradeDistance(s,true);
-            bool dist=(ptype==POSITION_TYPE_BUY)?(q.bid-lvl>=md):(lvl-q.ask>=md);
+            bool dist=(side>0)?(q.bid-lvl>=md):(lvl-q.ask>=md);
             if(better && dist)
               {
                g_trade.SetTypeFillingBySymbol(s);
                bool b=g_trade.PositionModify(tk,lvl,tp);uint rc=g_trade.ResultRetcode();
                double actual=0.0;bool verified=(b && RetcodeAccepted(rc) && VerifyPositionSL(tk,lvl,actual));
-               LogExec("TRAIL",s,tk,(ptype==POSITION_TYPE_BUY)?"BUY":"SELL",0,lvl,0,actual,rc,verified?"OK":"FAIL");
+               LogExec("BREAKEVEN",s,tk,(side>0)?"BUY":"SELL",0,lvl,0,actual,rc,
+                       verified?StringFormat("OK ref=%.8f fav=%.3f",refPx,fav):"FAIL");
+               if(verified){c_be++;csl=actual;}
+              }
+           }
+
+         // LAB048/049 family: frozen 0.50 ATR gap; arm is configured (default BALANCED=3.50).
+         if(InpTrailOn && InpTrailATR>0.0 && fav>=InpTrailArmATR)
+           {
+            double protectedMove=(fav-InpTrailATR)*baseAtr;
+            double lvl=op+side*protectedMove;
+            lvl=NormalizePriceTick(s,lvl,(side>0)?-1:+1);
+            bool better=(side>0)?(csl<=0.0 || lvl>csl):(csl<=0.0 || lvl<csl);
+            double tick=SymbolInfoDouble(s,SYMBOL_TRADE_TICK_SIZE);if(tick<=0.0) tick=SymbolInfoDouble(s,SYMBOL_POINT);
+            if(csl>0.0 && MathAbs(lvl-csl)<tick*0.51) better=false;
+            double md=MinTradeDistance(s,true);
+            bool dist=(side>0)?(q.bid-lvl>=md):(lvl-q.ask>=md);
+            if(better && dist)
+              {
+               g_trade.SetTypeFillingBySymbol(s);
+               bool b=g_trade.PositionModify(tk,lvl,tp);uint rc=g_trade.ResultRetcode();
+               double actual=0.0;bool verified=(b && RetcodeAccepted(rc) && VerifyPositionSL(tk,lvl,actual));
+               LogExec("TRAIL",s,tk,(side>0)?"BUY":"SELL",0,lvl,0,actual,rc,
+                       verified?StringFormat("OK ref=%.8f fav=%.3f arm=%.2f",refPx,fav,InpTrailArmATR):"FAIL");
                if(verified){c_trail++;csl=actual;}
-               else if(InpVerbose) PrintFormat("TRAIL %s #%I64u fail ret=%u %s",s,tk,rc,g_trade.ResultRetcodeDescription());
               }
            }
         }
 
-      // Partial exit: one-shot flag is persistent; no repeated partial closes.
-      if(InpPartialClose && InpPartialFrac>0.05 && InpPartialFrac<0.95 && baseAtr>0.0)
-        {
-         string kp=GVPosKey(posId,"PARTIAL");
-         if(GVRead(kp,0.0)<0.5)
-           {
-            double prof=(ptype==POSITION_TYPE_BUY)?closePx-op:op-closePx;
-            if(prof>=InpPartialAtATR*baseAtr)
-              {
-               double vol=PositionGetDouble(POSITION_VOLUME);
-               double part=NormVol(s,vol*InpPartialFrac);
-               double vmin=SymbolInfoDouble(s,SYMBOL_VOLUME_MIN);
-               if(part>=vmin && (vol-part)>=vmin)
-                 {
-                  bool b=g_trade.PositionClosePartial(tk,part);uint rc=g_trade.ResultRetcode();
-                  LogExec("PARTIAL",s,tk,(ptype==POSITION_TYPE_BUY)?"BUY":"SELL",0,0,0,0,rc,b?"sent":"fail");
-                  if(b && RetcodeAccepted(rc)){GVWrite(kp,1.0);c_partial++;}
-                 }
-              }
-           }
-        }
-
+      // Frozen ExitZ=0.75: use causal latest Binance crowd state.
       bool closed=false;
-      if(InpExitZ>0.0)
+      if(InpExitZ>0.0 && IsFeedFresh(si))
         {
-         int si=SymIndex(s);
-         if(si>=0 && IsFeedFresh(si))
+         double z=g_sym[si].z;
+         bool hit=(side>0)?(z>=InpExitZ):(z<=-InpExitZ);
+         if(hit)
            {
-            double z=g_sym[si].z;
-            bool against=(ptype==POSITION_TYPE_SELL)?(z<=-InpExitZ):(z>=InpExitZ);
-            if(against)
-              {
-               bool b=g_trade.PositionClose(tk);uint rc=g_trade.ResultRetcode();
-               LogExec("SIGNAL_EXIT",s,tk,(ptype==POSITION_TYPE_BUY)?"BUY":"SELL",0,0,0,0,rc,StringFormat("z=%+.3f",z));
-               if(b && RetcodeAccepted(rc)){c_sigexit++;PrintFormat("SIGNAL_EXIT %s: z=%+.2f",s,z);closed=true;}
-               else PrintFormat("SIGNAL_EXIT %s fail ret=%u %s",s,rc,g_trade.ResultRetcodeDescription());
-              }
+            bool b=g_trade.PositionClose(tk);uint rc=g_trade.ResultRetcode();
+            LogExec("SIGNAL_EXIT",s,tk,(side>0)?"BUY":"SELL",0,0,0,0,rc,StringFormat("z=%+.3f",z));
+            if(b && RetcodeAccepted(rc)){c_sigexit++;closed=true;}
            }
         }
       if(closed) continue;
 
+      // Frozen max hold H6 from actual execution time.
       if(TimeCurrent()-opened>=(datetime)(InpHoldHours*3600))
         {
          bool b=g_trade.PositionClose(tk);uint rc=g_trade.ResultRetcode();
-         LogExec("TIME_EXIT",s,tk,(ptype==POSITION_TYPE_BUY)?"BUY":"SELL",0,0,0,0,rc,"hold");
-         if(b && RetcodeAccepted(rc)){c_timeexit++;PrintFormat("TIME_EXIT %s after %dh",s,InpHoldHours);}
-         else PrintFormat("TIME_EXIT %s fail ret=%u %s",s,rc,g_trade.ResultRetcodeDescription());
+         LogExec("TIME_EXIT",s,tk,(side>0)?"BUY":"SELL",0,0,0,0,rc,"hold");
+         if(b && RetcodeAccepted(rc)) c_timeexit++;
         }
      }
   }
@@ -1898,7 +1873,7 @@ double ScoreWeight(const int idx, const int side, const double atr, const double
 int DayCodeNow()
   {
    MqlDateTime dt;
-   TimeToStruct(TimeCurrent(),dt);
+   TimeToStruct(TimeGMT(),dt); // STRICT LAB daily cap is UTC-day based
    return dt.year*10000+dt.mon*100+dt.day;
   }
 
@@ -1993,337 +1968,189 @@ void TryEnter(const int idx)
    if(!IsFeedFresh(idx)) return;
 
    string sym=g_sym[idx].broker;
-   // [v1.90] БАР РІШЕННЯ M5
-   datetime bt=iTime(sym,PERIOD_M5,0);
-   if(bt==0 || bt==g_sym[idx].lastBar) return;
-   g_sym[idx].lastBar=bt;
-   c_sig++;
-
-   double atr=AtrOf(idx);
-   if(atr<=0.0) return;
-   MqlTick q;
-   if(!SymbolInfoTick(sym,q) || q.ask<=0.0 || q.bid<=0.0) return;
-   double spr=q.ask-q.bid;
-   if(spr<=0.0 || spr>InpMaxSpreadATR*atr){c_spread++;return;}
-
    double z=g_sym[idx].z;
 
-   // ========== [v1.91] CONFIRMATION STATE MACHINE ==========
-   if(InpUseConfirm)
+   // A. Active strict confirmation is evaluated EVERY scheduler pass (~1s),
+   // not only on a new broker M5 bar.
+   if(g_sym[idx].confActive)
      {
-      // --- A. Already waiting for confirmation ---
-      if(g_sym[idx].confActive)
+      int side=g_sym[idx].confSide;
+      double sigPx=g_sym[idx].confSignalPrice;
+      double sigAtr=g_sym[idx].confAtr;
+      long decisionSec=(long)g_sym[idx].confSignalTime;
+      long ageSec=(long)TimeGMT()-decisionSec;
+
+      if(ageSec>2700)
         {
-         int side=g_sym[idx].confSide;
-         double sigPx=g_sym[idx].confSignalPrice;
-         double sigAtr=g_sym[idx].confAtr;
-         int ageSec=(g_sym[idx].confSignalTime>0)?(int)(TimeCurrent()-g_sym[idx].confSignalTime):0;
-
-         // [v1.91f] Track response in ATR units from MID price, not bid/ask, to reduce broker-spread sensitivity.
-         double mid=0.5*(q.bid+q.ask);
-         if(sigAtr>0.0 && g_sym[idx].confSignalMid>0.0)
-           {
-            double thesisMoveATR=(side<0)?((g_sym[idx].confSignalMid-mid)/sigAtr)
-                                         :((mid-g_sym[idx].confSignalMid)/sigAtr);
-            if(thesisMoveATR>g_sym[idx].confMaxFavATR) g_sym[idx].confMaxFavATR=thesisMoveATR;
-            if(-thesisMoveATR>g_sym[idx].confMaxAdvATR) g_sym[idx].confMaxAdvATR=-thesisMoveATR;
-           }
-
-         g_sym[idx].confBarsLeft--;
-         if(g_sym[idx].confBarsLeft<=0 || (InpConfirmMaxAgeMin>0 && ageSec>InpConfirmMaxAgeMin*60))
-           {
-            double rr=g_sym[idx].confMaxFavATR/(g_sym[idx].confMaxAdvATR+1e-9);
-            g_sym[idx].confActive=false;
-            PrintFormat("CONFIRM_TIMEOUT %s side=%s age=%ds fav=%.2fATR adv=%.2fATR response=%.2f",
-                        sym,(side<0)?"SELL":"BUY",ageSec,g_sym[idx].confMaxFavATR,g_sym[idx].confMaxAdvATR,rr);
-            return;
-           }
-
-         // If price first continues too far WITH the crowd, this is no longer a clean reversal episode.
-         if(InpConfirmMaxAdverseATR>0.0 && g_sym[idx].confMaxAdvATR>InpConfirmMaxAdverseATR)
-           {
-            double rr=g_sym[idx].confMaxFavATR/(g_sym[idx].confMaxAdvATR+1e-9);
-            g_sym[idx].confActive=false;
-            PrintFormat("CONFIRM_CANCEL_ADVERSE %s side=%s age=%ds fav=%.2fATR adv=%.2fATR response=%.2f",
-                        sym,(side<0)?"SELL":"BUY",ageSec,g_sym[idx].confMaxFavATR,g_sym[idx].confMaxAdvATR,rr);
-            return;
-           }
-
-         double confDist=InpConfirmATR*sigAtr;
-         bool confirmed=false;
-         if(side<0)
-           { if(q.bid<=sigPx-confDist) confirmed=true; }
-         else
-           { if(q.ask>=sigPx+confDist) confirmed=true; }
-
-         if(!confirmed) return;
-
-         // [v1.91d] Confirmation has fired. Re-check the CURRENT crowd state before order send.
-         // This does NOT retune the signal: it only prevents opening a position that would
-         // already satisfy the existing SIGNAL_EXIT rule on the same state snapshot.
-         double originalZ=g_sym[idx].confZ;
-         double signalAtr=g_sym[idx].confAtr;
-         double currentAtr=atr;
-         double atrExpansion=(signalAtr>0.0)?(currentAtr/signalAtr):0.0;
-         int confirmAgeSec=(g_sym[idx].confSignalTime>0)?(int)(TimeCurrent()-g_sym[idx].confSignalTime):0;
-         // [v1.91e] Do not enter after the crowd thesis has already crossed neutral.
-         // BUY thesis originates from negative Z and must still have current Z < 0.
-         // SELL thesis originates from positive Z and must still have current Z > 0.
-         // This is an entry-consistency safety gate only; it does not change the arm threshold.
-         bool sameCrowdSide=(side<0)?(z>0.0):(z<0.0);
-         if(!sameCrowdSide)
-           {
-            g_sym[idx].confActive=false;
-            string note=StringFormat("origZ=%+.3f currentZ=%+.3f age=%ds signalATR=%.8f currentATR=%.8f atrExpansion=%.4f",
-                                     originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion);
-            LogExec("CONFIRM_CANCEL_SIDE",sym,0,(side<0)?"SELL":"BUY",0,0,0,0,0,note);
-            PrintFormat("CONFIRM_CANCEL_SIDE %s side=%s origZ=%+.2f currentZ=%+.2f age=%ds signalATR=%.5f currentATR=%.5f ATRx=%.2f",
-                        sym,(side<0)?"SELL":"BUY",originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion);
-            return;
-           }
-
-         // [v1.91f] The crowd edge must still be materially present, not merely same-sign noise near zero.
-         if(InpConfirmMinAbsZ>0.0 && MathAbs(z)<InpConfirmMinAbsZ)
-           {
-            g_sym[idx].confActive=false;
-            double rr=g_sym[idx].confMaxFavATR/(g_sym[idx].confMaxAdvATR+1e-9);
-            PrintFormat("CONFIRM_CANCEL_WEAK_Z %s side=%s origZ=%+.2f currentZ=%+.2f age=%ds fav=%.2fATR adv=%.2fATR response=%.2f",
-                        sym,(side<0)?"SELL":"BUY",originalZ,z,confirmAgeSec,g_sym[idx].confMaxFavATR,g_sym[idx].confMaxAdvATR,rr);
-            return;
-           }
-
-         // [v1.91f] A 0.30 ATR touch alone is not enough in chop: require clean response vs adverse excursion.
-         double responseRatio=g_sym[idx].confMaxFavATR/(g_sym[idx].confMaxAdvATR+1e-9);
-         if(InpConfirmMinResponseRatio>0.0 && responseRatio<InpConfirmMinResponseRatio)
-           {
-            g_sym[idx].confActive=false;
-            PrintFormat("CONFIRM_CANCEL_NOISE %s side=%s origZ=%+.2f currentZ=%+.2f age=%ds fav=%.2fATR adv=%.2fATR response=%.2f",
-                        sym,(side<0)?"SELL":"BUY",originalZ,z,confirmAgeSec,g_sym[idx].confMaxFavATR,g_sym[idx].confMaxAdvATR,responseRatio);
-            return;
-           }
-
-         // Legacy optional ExitZ self-contradiction check remains available if user manually enables InpExitZ > 0.
-         bool contradictsExit=(InpExitZ>0.0) && ((side<0)?(z<=-InpExitZ):(z>=InpExitZ));
-
-         if(contradictsExit)
-           {
-            g_sym[idx].confActive=false;
-            string note=StringFormat("origZ=%+.3f currentZ=%+.3f age=%ds signalATR=%.8f currentATR=%.8f atrExpansion=%.4f exitZ=%.3f",
-                                     originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion,InpExitZ);
-            LogExec("CONFIRM_CANCEL_Z",sym,0,(side<0)?"SELL":"BUY",0,0,0,0,0,note);
-            PrintFormat("CONFIRM_CANCEL_Z %s side=%s origZ=%+.2f currentZ=%+.2f age=%ds signalATR=%.5f currentATR=%.5f ATRx=%.2f",
-                        sym,(side<0)?"SELL":"BUY",originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion);
-            return;
-           }
-
-         string confirmDiag=StringFormat("origZ=%+.3f currentZ=%+.3f age=%ds signalATR=%.8f currentATR=%.8f atrExpansion=%.4f fav=%.3f adv=%.3f response=%.3f",
-                                         originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion,
-                                         g_sym[idx].confMaxFavATR,g_sym[idx].confMaxAdvATR,responseRatio);
-         LogExec("CONFIRM_OK",sym,0,(side<0)?"SELL":"BUY",0,0,0,0,0,confirmDiag);
-         if(InpVerbose)
-            PrintFormat("CONFIRM_OK %s side=%s origZ=%+.2f currentZ=%+.2f age=%ds signalATR=%.5f currentATR=%.5f ATRx=%.2f",
-                        sym,(side<0)?"SELL":"BUY",originalZ,z,confirmAgeSec,signalAtr,currentAtr,atrExpansion);
-
-         // Confirmed → enter
          g_sym[idx].confActive=false;
-
-         if(!CanEnterByPauseAndDay(idx,(side<0)?q.bid:q.ask)) return;
-         if(HasAnyFor(sym)) return;
-
-         int nb,ns;int tot=CountExposure(nb,ns);
-         if(tot>=InpMaxPositions){c_maxpos++;return;}
-         if(side<0 && ns>=InpMaxPerSide){c_side++;return;}
-         if(side>0 && nb>=InpMaxPerSide){c_side++;return;}
-
-         double entry,stop;
-         if(InpConfirmMarket)
-           {
-            entry=(side<0)?q.bid:q.ask;
-           }
-         else
-           {
-            double ref=(side<0)?q.bid:q.ask;
-            entry=(side<0)?ref-InpConfirmLimitATR*atr:ref+InpConfirmLimitATR*atr;
-           }
-         stop=(side<0)?entry+InpStopATR*atr:entry-InpStopATR*atr;
-         entry=NormalizePriceTick(sym,entry,(side<0)?+1:-1);
-         stop =NormalizePriceTick(sym,stop,(side<0)?+1:-1);
-
-         double md=MinTradeDistance(sym,false);
-         if(MathAbs(stop-entry)<md) return;
-
-         double wgt=ScoreWeight(idx,side,atr,entry);
-         double rawLot=0.0,brokerLot=0.0,actualRiskPct=0.0;
-         double lot=PrepareRiskLot(sym,side,entry,stop,wgt,rawLot,brokerLot,actualRiskPct);
-         if(lot<=0.0){c_lot++;return;}
-
-         string act="DRYRUN";ulong ord=0;uint rc=0;
-         if(!InpDryRun)
-           {
-            string sig=StringFormat("CF191%s%I64d",(side<0)?"S":"B",g_sym[idx].sourceTimeMs/1000);
-            g_trade.SetTypeFillingBySymbol(sym);
-            c_sent++;
-            bool basic=false;
-            if(InpConfirmMarket)
-              {
-               basic=(side<0)?g_trade.Sell(lot,sym,0.0,stop,0.0,sig)
-                             :g_trade.Buy (lot,sym,0.0,stop,0.0,sig);
-              }
-            else
-              {
-               datetime exp=TimeCurrent()+(datetime)(InpOrderValidHrs*3600);
-               basic=(side<0)?g_trade.SellLimit(lot,entry,sym,stop,0.0,ORDER_TIME_SPECIFIED,exp,sig)
-                             :g_trade.BuyLimit (lot,entry,sym,stop,0.0,ORDER_TIME_SPECIFIED,exp,sig);
-              }
-            rc=g_trade.ResultRetcode();ord=g_trade.ResultOrder();
-            bool ok=basic && RetcodeAccepted(rc) && ord>0;
-            if(!ok)
-              {
-               c_fail++;act="FAIL";
-               PrintFormat("%s order fail ret=%u %s",sym,rc,g_trade.ResultRetcodeDescription());
-               LogExec("ORDER_SEND",sym,ord,(side<0)?"SELL":"BUY",entry,stop,0,0,rc,
-                       StringFormat("FAIL %s",confirmDiag));
-              }
-            else
-              {
-               double ap=0.0,asl=0.0;bool verified=VerifyOrderState(ord,entry,stop,ap,asl);
-               RegisterEntry(idx,entry,atr);
-               GVWrite(GVOrderKey(ord,"ATR"),atr);
-               GVWrite(GVOrderKey(ord,"CHASE_DONE"),0.0);
-               act=InpConfirmMarket?((side<0)?"SELL_MKT":"BUY_MKT"):((side<0)?"SELL_LIMIT":"BUY_LIMIT");
-               LogExec("ORDER_SEND",sym,ord,(side<0)?"SELL":"BUY",entry,stop,ap,asl,rc,
-                       StringFormat("%s %s",verified?"OK":"VERIFY_FAIL",confirmDiag));
-               int dg=(int)SymbolInfoInteger(sym,SYMBOL_DIGITS);
-               PrintFormat("%s %s #%I64u lot=%.4f units=%.4f risk=%.3f%% @%.*f stop=%.*f z=%+.2f origZ=%+.2f w=%.2f CONFIRM age=%ds ATRx=%.2f",
-                           sym,act,ord,lot,lot*SymbolInfoDouble(sym,SYMBOL_TRADE_CONTRACT_SIZE),actualRiskPct,dg,entry,dg,stop,z,originalZ,wgt,confirmAgeSec,atrExpansion);
-              }
-           }
-
-         if(g_csv!=INVALID_HANDLE)
-           {
-            FileWrite(g_csv,
-                      TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),
-                      TimeToString(TimeGMT(),TIME_DATE|TIME_SECONDS),
-                      IntegerToString(g_sym[idx].sourceTimeMs),sym,g_sym[idx].binance,
-                      DoubleToString(g_sym[idx].ratio,6),DoubleToString(g_sym[idx].mean,6),
-                      DoubleToString(g_sym[idx].sd,6),DoubleToString(z,4),
-                      DoubleToString(atr,8),DoubleToString(q.bid,8),(side<0)?"SELL":"BUY",
-                      DoubleToString(entry,8),DoubleToString(stop,8),DoubleToString(lot,4),act,IntegerToString((long)ord));
-            FileFlush(g_csv);
-           }
+         LogExec("STRICT_CONFIRM_TIMEOUT",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+                 StringFormat("signal=%I64d source=%I64d age=%I64d",decisionSec,g_sym[idx].confSourceTimeMs,ageSec));
          return;
         }
 
-      // --- B. No active confirm → look for new signal ---
+      double refPx=0.0;long refMs=0;
+      if(!FetchStrictRefPrice(idx,refPx,refMs)) return;
+
+      double adverse=(side<0)?((refPx-sigPx)/sigAtr):((sigPx-refPx)/sigAtr);
+      if(adverse>g_sym[idx].confMaxAdvATR) g_sym[idx].confMaxAdvATR=adverse;
+      if(g_sym[idx].confMaxAdvATR>InpConfirmMaxAdverseATR)
+        {
+         g_sym[idx].confActive=false;
+         LogExec("STRICT_CONFIRM_CANCEL_ADVERSE",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+                 StringFormat("signal=%I64d source=%I64d adv=%.3f",decisionSec,g_sym[idx].confSourceTimeMs,g_sym[idx].confMaxAdvATR));
+         return;
+        }
+
+      double target=sigPx+side*InpConfirmATR*sigAtr;
+      bool confirmed=(side>0)?(refPx>=target):(refPx<=target);
+      if(!confirmed) return;
+
+      // Exact v191d confirmation consistency: only opposite ExitZ contradiction cancels.
+      bool contradict=(side>0)?(z>=InpExitZ):(z<=-InpExitZ);
+      if(contradict)
+        {
+         g_sym[idx].confActive=false;
+         LogExec("STRICT_CONFIRM_CANCEL_Z",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+                 StringFormat("signal=%I64d origZ=%+.3f confirmZ=%+.3f",decisionSec,g_sym[idx].confZ,z));
+         return;
+        }
+
+      // From here the signal is valid. Any remaining block is execution/risk transport, not signal retuning.
+      g_sym[idx].confActive=false;
       if(HasAnyFor(sym)) return;
-
-      int side=0;
-      if(z>=InpZThreshold) side=-1;
-      else if(z<=-InpZThreshold) side=1;
-      if(side==0){c_thr++;return;}
-
-      if(!CanEnterByPauseAndDay(idx,(side<0)?q.bid:q.ask)) return;
-
       int nb,ns;int tot=CountExposure(nb,ns);
       if(tot>=InpMaxPositions){c_maxpos++;return;}
       if(side<0 && ns>=InpMaxPerSide){c_side++;return;}
       if(side>0 && nb>=InpMaxPerSide){c_side++;return;}
 
-      // Arm confirmation wait
-      g_sym[idx].confActive=true;
-      g_sym[idx].confSide=side;
-      g_sym[idx].confSignalPrice=(side<0)?q.bid:q.ask;
-      g_sym[idx].confSignalMid=0.5*(q.bid+q.ask);
-      g_sym[idx].confAtr=atr;
-      g_sym[idx].confZ=z;
-      g_sym[idx].confMaxFavATR=0.0;
-      g_sym[idx].confMaxAdvATR=0.0;
-      g_sym[idx].confSignalTime=TimeCurrent();
-      g_sym[idx].confBarsLeft=InpConfirmMaxBars;
+      MqlTick q;if(!SymbolInfoTick(sym,q) || q.ask<=0.0 || q.bid<=0.0) return;
+      double spr=q.ask-q.bid;
+      if(InpMaxSpreadATR>0.0 && (spr<=0.0 || spr>InpMaxSpreadATR*sigAtr))
+        {
+         c_spread++;
+         LogExec("STRICT_EXEC_SPREAD_SKIP",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+                 StringFormat("spread=%.8f signalATR=%.8f",spr,sigAtr));
+         return;
+        }
 
-      if(InpVerbose)
-         PrintFormat("CONFIRM_WAIT %s side=%s z=%+.2f px=%.5f atr=%.5f need=%.5f bars=%d",
-                     sym,(side<0?"SELL":"BUY"),z,
-                     g_sym[idx].confSignalPrice,atr,InpConfirmATR*atr,InpConfirmMaxBars);
-      return;
-     }
+      double entry=(side<0)?q.bid:q.ask;
+      double stop=entry-side*InpStopATR*sigAtr;
+      entry=NormalizePriceTick(sym,entry,(side<0)?+1:-1);
+      stop =NormalizePriceTick(sym,stop,(side<0)?+1:-1);
+      if(MathAbs(stop-entry)<MinTradeDistance(sym,false)) return;
 
-   // ========== LEGACY PATH (InpUseConfirm=false) ==========
-   int side=0;
-   if(z>=InpZThreshold) side=-1;
-   else if(z<=-InpZThreshold) side=1;
-   if(side==0){c_thr++;return;}
+      double rawLot=0.0,brokerLot=0.0,actualRiskPct=0.0;
+      double lot=PrepareRiskLot(sym,side,entry,stop,1.0,rawLot,brokerLot,actualRiskPct);
+      if(lot<=0.0){c_lot++;return;}
 
-   if(!CanEnterByPauseAndDay(idx,(side<0)?q.bid:q.ask)) return;
-   if(HasAnyFor(sym)) return;
-
-   int nb,ns;int tot=CountExposure(nb,ns);
-   if(tot>=InpMaxPositions){c_maxpos++;return;}
-   if(side<0 && ns>=InpMaxPerSide){c_side++;return;}
-   if(side>0 && nb>=InpMaxPerSide){c_side++;return;}
-
-   double ref=(side<0)?q.bid:q.ask;
-   double entry=(side<0)?ref+InpEntryOffsetATR*atr:ref-InpEntryOffsetATR*atr;
-   double stop =(side<0)?entry+InpStopATR*atr:entry-InpStopATR*atr;
-   entry=NormalizePriceTick(sym,entry,(side<0)?+1:-1);
-   stop =NormalizePriceTick(sym,stop,(side<0)?+1:-1);
-
-   double md=MinTradeDistance(sym,false);
-   if(side<0 && entry-q.ask<md) return;
-   if(side>0 && q.bid-entry<md) return;
-   if(MathAbs(stop-entry)<md) return;
-
-   double wgt=ScoreWeight(idx,side,atr,ref);
-   double rawLot=0.0,brokerLot=0.0,actualRiskPct=0.0;
-   double lot=PrepareRiskLot(sym,side,entry,stop,wgt,rawLot,brokerLot,actualRiskPct);
-   if(lot<=0.0){c_lot++;return;}
-
-   string act="DRYRUN";ulong ord=0;uint rc=0;
-   if(!InpDryRun)
-     {
-      datetime exp=TimeCurrent()+(datetime)(InpOrderValidHrs*3600);
-      string sig=StringFormat("CF191%s%I64d",(side<0)?"S":"B",g_sym[idx].sourceTimeMs/1000);
+      string sig=StringFormat("CF191%s%I64d",(side<0)?"S":"B",decisionSec);
       g_trade.SetTypeFillingBySymbol(sym);
       c_sent++;
-      bool basic=(side<0)
-        ?g_trade.SellLimit(lot,entry,sym,stop,0.0,ORDER_TIME_SPECIFIED,exp,sig)
-        :g_trade.BuyLimit(lot,entry,sym,stop,0.0,ORDER_TIME_SPECIFIED,exp,sig);
-      rc=g_trade.ResultRetcode();ord=g_trade.ResultOrder();
+      bool basic=(side<0)?g_trade.Sell(lot,sym,0.0,stop,0.0,sig)
+                         :g_trade.Buy (lot,sym,0.0,stop,0.0,sig);
+      uint rc=g_trade.ResultRetcode();ulong ord=g_trade.ResultOrder();
       bool ok=basic && RetcodeAccepted(rc) && ord>0;
       if(!ok)
         {
-         c_fail++;act="FAIL";
-         PrintFormat("%s order fail ret=%u %s",sym,rc,g_trade.ResultRetcodeDescription());
-         LogExec("ORDER_SEND",sym,ord,(side<0)?"SELL":"BUY",entry,stop,0,0,rc,"FAIL");
+         c_fail++;
+         LogExec("STRICT_ORDER_SEND",sym,ord,(side>0)?"BUY":"SELL",entry,stop,0,0,rc,
+                 StringFormat("FAIL signal=%I64d source=%I64d",decisionSec,g_sym[idx].confSourceTimeMs));
+         return;
         }
-      else
-        {
-         double ap=0.0,asl=0.0;bool verified=VerifyOrderState(ord,entry,stop,ap,asl);
-         RegisterEntry(idx,entry,atr);
-         GVWrite(GVOrderKey(ord,"ATR"),atr);
-         GVWrite(GVOrderKey(ord,"CHASE_DONE"),0.0);
-         act=(side<0)?"SELL_LIMIT":"BUY_LIMIT";
-         LogExec("ORDER_SEND",sym,ord,(side<0)?"SELL":"BUY",entry,stop,ap,asl,rc,verified?"OK":"VERIFY_FAIL");
-         int dg=(int)SymbolInfoInteger(sym,SYMBOL_DIGITS);
-         PrintFormat("%s %s #%I64u lot=%.4f @%.*f stop=%.*f z=%+.2f w=%.2f",sym,act,ord,lot,dg,entry,dg,stop,z,wgt);
-        }
+
+      RegisterEntry(idx,refPx,sigAtr); // LAB pause anchor = reference entry, frozen signal ATR.
+      GVWrite(GVOrderKey(ord,"ATR"),sigAtr);
+      GVWrite(GVOrderKey(ord,"REF_ENTRY"),refPx);
+      GVWrite(GVOrderKey(ord,"SIG_SOURCE_MS"),(double)g_sym[idx].confSourceTimeMs);
+      GVWrite(GVOrderKey(ord,"SIG_DECISION"),(double)decisionSec);
+
+      LogExec("STRICT_ORDER_SEND",sym,ord,(side>0)?"BUY":"SELL",entry,stop,0,0,rc,
+              StringFormat("OK signal=%I64d source=%I64d refEntry=%.8f signalATR=%.8f origZ=%+.3f confirmZ=%+.3f adv=%.3f q67=%.8f atrPct=%.8f",
+                           decisionSec,g_sym[idx].confSourceTimeMs,refPx,sigAtr,g_sym[idx].confZ,z,
+                           g_sym[idx].confMaxAdvATR,g_sym[idx].confVolQ67,g_sym[idx].confAtrPct));
+      return;
      }
 
-   if(g_csv!=INVALID_HANDLE)
+   // B. New signal state is keyed by the completed Binance flow source point, not broker M5.
+   long sourceMs=g_sym[idx].sourceTimeMs;
+   if(sourceMs<=0 || sourceMs==g_sym[idx].lastSignalSourceMs) return;
+   long decisionSec=sourceMs/1000+300; // LAB dt5 availability clock
+   long nowUtc=(long)TimeGMT();
+   if(nowUtc<decisionSec) return;
+
+   int side=0;
+   if(z>=InpZThreshold) side=-1;
+   else if(z<=-InpZThreshold) side=1;
+
+   // Every completed source point is processed exactly once.
+   if(side==0){g_sym[idx].lastSignalSourceMs=sourceMs;c_thr++;return;}
+
+   // LAB046 gate 1: same-sign previous completed M5 extreme <=30m.
+   if(g_sym[idx].rapidRepeat30)
      {
-      FileWrite(g_csv,
-                TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),
-                TimeToString(TimeGMT(),TIME_DATE|TIME_SECONDS),
-                IntegerToString(g_sym[idx].sourceTimeMs),sym,g_sym[idx].binance,
-                DoubleToString(g_sym[idx].ratio,6),DoubleToString(g_sym[idx].mean,6),
-                DoubleToString(g_sym[idx].sd,6),DoubleToString(z,4),
-                DoubleToString(atr,8),DoubleToString(q.bid,8),(side<0)?"SELL":"BUY",
-                DoubleToString(entry,8),DoubleToString(stop,8),DoubleToString(lot,4),act,IntegerToString((long)ord));
-      FileFlush(g_csv);
+      g_sym[idx].lastSignalSourceMs=sourceMs;
+      LogExec("STRICT_SKIP_RAPID30",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+              StringFormat("signal=%I64d source=%I64d gap=%.1fm z=%+.3f",decisionSec,sourceMs,g_sym[idx].priorSameExtremeGapMin,z));
+      return;
      }
+
+   // Exact Binance signal close + completed M15 ATR14 + lagged 30d q67.
+   double sigClose=0.0,sigAtr=0.0,atrPct=0.0,q67=0.0;bool highVol=false;
+   if(!BuildStrictSignalMarketState(idx,sourceMs,sigClose,sigAtr,atrPct,q67,highVol))
+     {
+      LogExec("STRICT_STATE_RETRY",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+              StringFormat("signal=%I64d source=%I64d",decisionSec,sourceMs));
+      return; // retry same source next scheduler pass
+     }
+
+   // LAB046 gate 2: HIGH_VOL; UNKNOWN is not HIGH_VOL.
+   if(highVol)
+     {
+      g_sym[idx].lastSignalSourceMs=sourceMs;
+      LogExec("STRICT_SKIP_HIGHVOL",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+              StringFormat("signal=%I64d atrPct=%.8f q67=%.8f z=%+.3f",decisionSec,atrPct,q67,z));
+      return;
+     }
+
+   // Frozen freshness <=45m measured from LAB decision time.
+   if(nowUtc-decisionSec>2700)
+     {
+      g_sym[idx].lastSignalSourceMs=sourceMs;
+      LogExec("STRICT_SKIP_STALE_SIGNAL",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
+              StringFormat("signal=%I64d age=%I64d",decisionSec,nowUtc-decisionSec));
+      return;
+     }
+
+   // Frozen pause=1 signal ATR and max 3 trades / UTC day.
+   if(!CanEnterByPauseAndDay(idx,sigClose)){g_sym[idx].lastSignalSourceMs=sourceMs;return;}
+   if(HasAnyFor(sym)){g_sym[idx].lastSignalSourceMs=sourceMs;return;}
+   int nb,ns;int tot=CountExposure(nb,ns);
+   if(tot>=InpMaxPositions){g_sym[idx].lastSignalSourceMs=sourceMs;c_maxpos++;return;}
+   if(side<0 && ns>=InpMaxPerSide){g_sym[idx].lastSignalSourceMs=sourceMs;c_side++;return;}
+   if(side>0 && nb>=InpMaxPerSide){g_sym[idx].lastSignalSourceMs=sourceMs;c_side++;return;}
+
+   // Arm the one deployable real-time confirmation thesis from this exact LAB signal state.
+   g_sym[idx].confActive=true;
+   g_sym[idx].confSide=side;
+   g_sym[idx].confSignalPrice=sigClose;
+   g_sym[idx].confSignalMid=sigClose;
+   g_sym[idx].confAtr=sigAtr;
+   g_sym[idx].confZ=z;
+   g_sym[idx].confMaxFavATR=0.0;
+   g_sym[idx].confMaxAdvATR=0.0;
+   g_sym[idx].confSignalTime=(datetime)decisionSec;
+   g_sym[idx].confSourceTimeMs=sourceMs;
+   g_sym[idx].confVolQ67=q67;
+   g_sym[idx].confAtrPct=atrPct;
+   g_sym[idx].confHighVol=highVol;
+   g_sym[idx].confBarsLeft=InpConfirmMaxBars;
+   g_sym[idx].lastSignalSourceMs=sourceMs;
+
+   LogExec("STRICT_CONFIRM_ARM",sym,0,(side>0)?"BUY":"SELL",sigClose,0,0,0,0,
+           StringFormat("signal=%I64d source=%I64d z=%+.3f atr=%.8f atrPct=%.8f q67=%.8f rapidGap=%.1f",
+                        decisionSec,sourceMs,z,sigAtr,atrPct,q67,g_sym[idx].priorSameExtremeGapMin));
   }
 
-//+------------------------------------------------------------------+
 void DrawPanel()
   {
    int nb=0,ns=0;int ex=CountExposure(nb,ns);
