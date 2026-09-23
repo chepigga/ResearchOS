@@ -6057,3 +6057,263 @@ Stress only robustness / execution assumptions:
 - immutable v192 reference.
 
 After stress, if 3.5/0.5 and/or 5.0/0.5 survive, move those frozen configurations to side-by-side demo/shadow validation rather than continuing threshold optimization.
+
+
+---
+
+# LAB049 — V191 TRAIL ARM ROBUSTNESS STRESS
+
+Status: **DONE — ALL THREE CONFIGS FAIL THE PRE-REGISTERED 2BPS STRESS GATE; 3.5/0.5 AND 5.0/0.5 STILL DOMINATE CONTROL UNDER MODERATE COST / DELAY STRESS. NO DEMO PROMOTION BY LAB049 RULE.**
+
+Path:
+`labs/CROWDFADE_V191_TRAIL_ARM_ROBUSTNESS_STRESS_LAB_049/`
+
+Pre-registration commit:
+`4af9ecdee9c846a951c4d19ca9d65a1d6bf1e057`
+
+Successful GitHub Actions run:
+`35828614679`
+
+Output commit:
+`9cb074e5f78ca5e59131536e0f5cb25f29fdfc95`
+
+Frozen configurations:
+- CONTROL 2.5 / 0.5;
+- BALANCED 3.5 / 0.5;
+- AGGRESSIVE 5.0 / 0.5.
+
+No new trail search.
+
+Frozen strategy state:
+- LAB046 dual toxic-state gate;
+- SL1.5 ATR;
+- TP off;
+- BE0.5 / lock0.15;
+- ExitZ0.75;
+- H6;
+- all entry logic unchanged.
+
+Stress scenarios were preregistered:
+- S0: 0.5bps / 0s delay;
+- S1: 1.0bps / 0s;
+- S2: 2.0bps / 0s;
+- S3: 0.5bps / 60s;
+- S4: 0.5bps / 180s;
+- S5: 2.0bps / 180s.
+
+S0 hard parity against LAB048 passed for all three frozen configurations.
+
+## Formal preregistered verdict
+
+All three:
+**FAILED_STRESS**
+
+Reason:
+the STRESS_SURVIVOR rule required EV>0 and PF>1 in both historical and 2026 under ALL six scenarios.
+At 2bps cost, historical aggregate becomes negative for every arm.
+
+Therefore LAB049 does NOT authorize promotion to side-by-side demo under the preregistered rule.
+
+This verdict is not relaxed post hoc.
+
+## S0 baseline confirmation
+
+CONTROL 2.5:
+- historical +79.83R / PF1.105 / DD20.47 / R-DD3.900
+- 2026 +14.65R / PF1.189 / DD9.59 / R-DD1.528
+
+BALANCED 3.5:
+- historical +100.46R / PF1.133 / DD21.06 / R-DD4.771
+- 2026 +22.17R / PF1.286 / DD9.93 / R-DD2.232
+
+AGGRESSIVE 5.0:
+- historical +108.23R / PF1.145 / DD33.14 / R-DD3.265
+- 2026 +27.90R / PF1.360 / DD9.30 / R-DD3.000
+
+LAB048 result is reproduced exactly.
+
+## S1 — 1bps cost stress
+
+CONTROL:
+- historical +39.23R / PF1.051
+- 2026 +8.78R / PF1.111
+
+BALANCED 3.5:
+- historical **+60.16R / PF1.079**
+- 2026 **+16.32R / PF1.206**
+
+AGGRESSIVE 5.0:
+- historical **+68.03R / PF1.090**
+- 2026 **+22.10R / PF1.279**
+
+Interpretation:
+both delayed-arm candidates remain clearly positive and retain a material advantage over control at 1bps.
+
+Period detail:
+- 3.5 historical remains 5/5 positive, although 2024 is only +0.16R;
+- 5.0 forward remains 6/6 positive at 1bps.
+
+## S2 — 2bps cost stress
+
+CONTROL:
+- historical **-41.98R / PF0.947**
+- 2026 **-2.96R / PF0.965**
+
+BALANCED 3.5:
+- historical **-20.44R / PF0.974**
+- 2026 **+4.63R / PF1.056**
+
+AGGRESSIVE 5.0:
+- historical **-12.37R / PF0.984**
+- 2026 **+10.48R / PF1.126**
+
+Interpretation:
+2bps is beyond the historical cost tolerance of the entire V191 lane.
+
+The later arms are more cost-resistant than control, but neither is historical-positive at 2bps.
+
+Approximate post-hoc cost-only aggregate break-even (linear diagnostic, NOT a promotion rule):
+- CONTROL: historical ~1.48bps; forward ~1.75bps
+- BALANCED 3.5: historical ~1.75bps; forward ~2.40bps
+- AGGRESSIVE 5.0: historical ~1.85bps; forward ~2.90bps
+
+Thus later trailing increases the economic cost margin, but not enough to clear the preregistered 2bps historical stress.
+
+## S3 — 60s delayed entry
+
+CONTROL:
+- historical +98.64R / PF1.129
+- 2026 **-11.01R / PF0.878**
+
+BALANCED:
+- historical +123.26R / PF1.163
+- 2026 **+5.74R / PF1.064**
+
+AGGRESSIVE:
+- historical +129.37R / PF1.171
+- 2026 **+3.79R / PF1.043**
+
+Important:
+60s delay is NOT a monotonic adverse penalty in historical data; it changes entry price/occupancy and actually improves historical aggregate.
+Therefore delay scenarios must be interpreted as execution perturbations, not literal slippage penalties.
+
+Forward is more informative here:
+- control breaks;
+- both 3.5 and 5.0 remain aggregate positive.
+
+## S4 — 180s delayed entry
+
+CONTROL:
+- historical +119.60R / PF1.165
+- 2026 +3.01R / PF1.039
+
+BALANCED:
+- historical +107.01R / PF1.148
+- 2026 +13.77R / PF1.180
+
+AGGRESSIVE:
+- historical +112.34R / PF1.157
+- 2026 +17.26R / PF1.225
+
+Again delay is path-dependent rather than simply adverse.
+The candidates remain much stronger than control in forward.
+
+## S5 — 2bps + 180s combined adverse scenario
+
+CONTROL:
+- historical **-2.84R / PF0.996 / DD50.82R**
+- 2026 **-14.43R / PF0.826 / DD21.54R**
+- positive periods: 3/5 years, 2/6 months
+
+BALANCED 3.5:
+- historical **-14.61R / PF0.981 / DD71.38R**
+- 2026 **-3.59R / PF0.957 / DD14.97R**
+- positive periods: 3/5 years, 3/6 months
+
+AGGRESSIVE 5.0:
+- historical **-8.60R / PF0.989 / DD74.12R**
+- 2026 **+0.05R / PF1.001 / DD13.42R**
+- positive periods: 3/5 years, 4/6 months
+
+None passes.
+
+Aggressive 5.0 is the most resilient forward under this extreme combined scenario, but historical remains negative and DD is too high.
+Do not promote from this result.
+
+## Tail stress
+
+At S0:
+- BALANCED +3R clipping:
+  - historical +86.92R
+  - forward +21.13R
+- AGGRESSIVE +3R clipping:
+  - historical +39.22R
+  - forward +20.05R
+
+So both LAB048 candidates are genuinely positive without their largest right-tail trades under baseline assumptions.
+
+At S5:
+- all configs fail +3R clipped aggregate;
+- all configs are negative after removing top5 winners.
+
+Therefore the severe combined stress eliminates the robust right-tail margin, not merely one outlier.
+
+## Core LAB049 conclusion
+
+LAB048's geometry conclusion still holds:
+**later trail arms are better than 2.5 ATR.**
+
+But LAB049 adds a critical economic constraint:
+
+> V191 is a low-margin / high-frequency lane whose edge is highly sensitive to all-in execution cost.
+
+At 1bps:
+- 3.5 and 5.0 remain viable in aggregate;
+- both materially outperform control.
+
+At 2bps:
+- historical edge is gone for every configuration.
+
+Therefore the next question is no longer "which trail arm should be tuned?"
+The next question is:
+**what all-in cost/slippage does the actual broker execution produce for this V191 lane?**
+
+## Frozen research state after LAB049
+
+Do NOT:
+- search new trail arms;
+- interpolate 4.0/4.5;
+- loosen the 2bps criterion after seeing failure;
+- promote 3.5 or 5.0 to production.
+
+Retain frozen configurations:
+- 2.5/0.5 control;
+- 3.5/0.5 balanced research candidate;
+- 5.0/0.5 aggressive research candidate.
+
+## Next clean step
+
+**LAB050 — V191_REAL_EXECUTION_COST_AUDIT**
+
+Purpose:
+measure the actual all-in execution burden from demo/live broker logs before any further strategy tuning.
+
+Needed measurements:
+- signal/decision timestamp;
+- requested/observed market price;
+- fill price;
+- spread at entry/exit if available;
+- slippage;
+- commission;
+- effective round-trip cost in bps;
+- effective cost expressed in initial R;
+- latency / fill delay distribution;
+- separate broker/symbol/session buckets.
+
+Compare empirical cost distribution directly with LAB049 cost envelope:
+- ~1bps: candidates survive;
+- ~1.75-1.85bps: historical aggregate break-even area for 3.5/5.0;
+- 2bps: historical failure.
+
+If real execution is safely below the break-even envelope, proceed with frozen 3.5 and 5.0 side-by-side shadow/demo validation.
+If real execution is near/above that envelope, do not retune entries/exits to rescue the paper edge; execution/venue is the primary problem.
