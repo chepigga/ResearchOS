@@ -6638,3 +6638,82 @@ Do not use v191f as the next parity baseline.
 5. Only after parity PASS compare broker execution cost.
 
 No entry threshold retuning before this validation.
+
+
+---
+
+# LAB051 — V200_FIXED_ENTRY_TRAILING
+
+Status: **COMPLETE — TRAILING DOES NOT IMPROVE V200 EDGE**
+
+Path:
+`labs/CROWDFADE_V200_FIXED_ENTRY_TRAILING_LAB_051/`
+
+Prereg:
+`65046f704b83c19b925314468b5a3b07c7d834bf`
+
+Runner:
+`83c09f7c3acaba0afa3a4a1ca6ab96eb5a0d251f`
+
+Workflow:
+`fb2271166806a5b2b2f5fefc43b02ddc18b19d05`
+
+Run:
+`35895210003`
+
+Exact fixed-entry parity:
+- historical = **1642 trades / +122.39971058R**
+- 2026 Mar-Aug = **176 trades / +17.11523678R**
+- exact baseline parity PASS.
+
+Frozen:
+- Z2.05
+- M15 confirm 0.25 ATR
+- retrace 0.60 ATR
+- pending TTL20m
+- SL4.5 ATR
+- TP10 ATR
+- H24
+- flat risk
+- same frozen entries for every variant.
+
+Results:
+
+CONTROL:
+- hist EV +0.07454 / Sum +122.40R / DD 19.83R / RDD 6.17
+- fwd EV +0.09725 / Sum +17.12R / DD 8.34R / RDD 2.05
+
+V191f-style T25_G05:
+- hist EV +0.03684 / Sum +60.49R / DD 13.58R
+- fwd EV +0.02143 / Sum +3.77R / DD 5.44R
+- raises WR strongly but cuts total expectancy by roughly half historically and ~78% forward.
+
+T35_G05:
+- hist +91.55R
+- fwd +6.64R
+- still materially worse than CONTROL.
+
+T50_G05:
+- hist +108.25R
+- fwd +6.56R
+- still worse.
+
+T80_G10:
+- hist +120.69R, near control but 2023 slightly negative (4/5 years)
+- fwd +11.83R, 5/6 months
+- lower total edge than CONTROL.
+
+T80_G20:
+- hist +110.73R, 4/5 years
+- fwd +12.57R
+- lower edge than CONTROL.
+
+Conclusion:
+- ordinary trailing converts large right-tail winners into more frequent smaller winners;
+- V191f-style arm2.5/gap0.5 is especially incompatible with V200 because V200 initial risk is 4.5 ATR;
+- no tested trail improves both historical and forward-shadow economics;
+- keep V200 core trailing **OFF**;
+- do not modify entries or production core from this LAB.
+
+Potential future research only if desired:
+partial TP at 10 ATR + small runner, because this can preserve the validated TP10 core while testing extra right-tail capture.
