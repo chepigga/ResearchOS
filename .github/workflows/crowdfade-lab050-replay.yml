@@ -1,0 +1,69 @@
+name: CrowdFade LAB050 live signal counterfactual replay
+
+on:
+  push:
+    branches:
+      - lab/crowdfade-execution-5y-positive-005
+    paths:
+      - 'labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/counterfactual_replay.py'
+      - 'labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/live_signal_ids.csv'
+      - '.github/workflows/crowdfade-lab050-replay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip numpy pandas
+
+      - name: Download Binance reference data
+        shell: bash
+        run: |
+          set -euo pipefail
+          LAB="labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050"
+          for SYM in BTCUSDT ETHUSDT SOLUSDT; do
+            mkdir -p "$LAB/replay_data/$SYM/klines" "$LAB/replay_data/$SYM/metrics"
+            for D in 2026-09-17 2026-09-18 2026-09-19 2026-09-20 2026-09-21 2026-09-22; do
+              K="${SYM}-1m-${D}.zip"
+              M="${SYM}-metrics-${D}.zip"
+              curl -fL --retry 5 --retry-delay 2                 -o "$LAB/replay_data/$SYM/klines/$K"                 "https://data.binance.vision/data/futures/um/daily/klines/$SYM/1m/$K"
+              curl -fL --retry 5 --retry-delay 2                 -o "$LAB/replay_data/$SYM/metrics/$M"                 "https://data.binance.vision/data/futures/um/daily/metrics/$SYM/$M"
+            done
+          done
+
+      - name: Run per-signal replay
+        run: python labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/counterfactual_replay.py
+
+      - name: Upload outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: crowdfade-lab050-counterfactual
+          path: labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/counterfactual_output/
+          retention-days: 30
+
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name "ResearchOS Lab Runner"
+          git config user.email "researchos-lab@users.noreply.github.com"
+          git add labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/counterfactual_output/
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "lab(CrowdFade): record LAB050 live signal counterfactual replay"
+            git push origin HEAD:lab/crowdfade-execution-5y-positive-005
+          fi
