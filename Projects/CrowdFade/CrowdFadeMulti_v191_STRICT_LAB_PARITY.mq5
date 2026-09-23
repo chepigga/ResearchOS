@@ -713,6 +713,23 @@ int OnInit()
       g_sym[i].dayTradeCode=(int)GVRead(GVKey("DTD_"+g_sym[i].broker),-1.0);
       g_sym[i].dayTradeCount=(int)GVRead(GVKey("DTC_"+g_sym[i].broker),0.0);
       g_sym[i].lastSignalSourceMs=(long)GVRead(GVKey("LSS_"+g_sym[i].broker),0.0);
+
+      if(GVRead(GVKey("CA_"+g_sym[i].broker),0.0)>0.5)
+        {
+         g_sym[i].confSide=(int)GVRead(GVKey("CSIDE_"+g_sym[i].broker),0.0);
+         g_sym[i].confSignalPrice=GVRead(GVKey("CPX_"+g_sym[i].broker),0.0);
+         g_sym[i].confSignalMid=g_sym[i].confSignalPrice;
+         g_sym[i].confAtr=GVRead(GVKey("CATR_"+g_sym[i].broker),0.0);
+         g_sym[i].confZ=GVRead(GVKey("CZ_"+g_sym[i].broker),0.0);
+         g_sym[i].confSignalTime=(datetime)GVRead(GVKey("CT_"+g_sym[i].broker),0.0);
+         g_sym[i].confSourceTimeMs=(long)GVRead(GVKey("CSRC_"+g_sym[i].broker),0.0);
+         g_sym[i].confMaxAdvATR=GVRead(GVKey("CADV_"+g_sym[i].broker),0.0);
+         g_sym[i].confVolQ67=GVRead(GVKey("CQ67_"+g_sym[i].broker),0.0);
+         g_sym[i].confAtrPct=GVRead(GVKey("CAPCT_"+g_sym[i].broker),0.0);
+         long age=(long)TimeGMT()-(long)g_sym[i].confSignalTime;
+         g_sym[i].confActive=(g_sym[i].confSide!=0 && g_sym[i].confSignalPrice>0.0 && g_sym[i].confAtr>0.0 && age>=0 && age<=2700);
+         if(!g_sym[i].confActive) GVWrite(GVKey("CA_"+g_sym[i].broker),0.0);
+        }
      }
 
    if(InpWriteCsv)
@@ -903,7 +920,7 @@ double Quantile67(double &a[])
   }
 
 // Exact LAB046 HIGH_VOL construction from Binance 5m price history.
-// Signal decision time = flow source period start + 300s.
+// Binance ratio timestamp is period END; LAB strict-left alignment uses it at the NEXT M5 decision => source +300s.
 // ATR% = latest completed M15 ATR14 / completed signal M5 close.
 // q67 uses prior 8640 M5 ATR% observations only (shift 1), min history 2880.
 bool BuildStrictSignalMarketState(const int idx,const long sourceMs,
@@ -1504,7 +1521,7 @@ void UpdateGuards()
       if(dd>=InpMaxDailyDDPct && !g_haltDay)
         {
          g_haltDay=true;GVWrite(GVKey("HALTDAY"),1.0);
-         for(int ci=0;ci<g_symCount;ci++) g_sym[ci].confActive=false;
+         for(int ci=0;ci<g_symCount;ci++) ClearStrictConfirm(ci);
          PrintFormat("СТОП НА ДЕНЬ: %.2f%%",dd);
         }
      }
@@ -2004,6 +2021,28 @@ void MarkStrictSourceProcessed(const int idx,const long sourceMs)
    GVWrite(GVKey("LSS_"+g_sym[idx].broker),(double)sourceMs);
   }
 
+void PersistStrictConfirm(const int idx)
+  {
+   if(!InpPersistState) return;
+   string b=g_sym[idx].broker;
+   GVWrite(GVKey("CA_"+b),g_sym[idx].confActive?1.0:0.0);
+   GVWrite(GVKey("CSIDE_"+b),(double)g_sym[idx].confSide);
+   GVWrite(GVKey("CPX_"+b),g_sym[idx].confSignalPrice);
+   GVWrite(GVKey("CATR_"+b),g_sym[idx].confAtr);
+   GVWrite(GVKey("CZ_"+b),g_sym[idx].confZ);
+   GVWrite(GVKey("CT_"+b),(double)g_sym[idx].confSignalTime);
+   GVWrite(GVKey("CSRC_"+b),(double)g_sym[idx].confSourceTimeMs);
+   GVWrite(GVKey("CADV_"+b),g_sym[idx].confMaxAdvATR);
+   GVWrite(GVKey("CQ67_"+b),g_sym[idx].confVolQ67);
+   GVWrite(GVKey("CAPCT_"+b),g_sym[idx].confAtrPct);
+  }
+
+void ClearStrictConfirm(const int idx)
+  {
+   g_sym[idx].confActive=false;
+   PersistStrictConfirm(idx);
+  }
+
 //+------------------------------------------------------------------+
 void TryEnter(const int idx)
   {
@@ -2025,7 +2064,7 @@ void TryEnter(const int idx)
 
       if(ageSec>2700)
         {
-         g_sym[idx].confActive=false;
+         ClearStrictConfirm(idx);
          LogExec("STRICT_CONFIRM_TIMEOUT",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
                  StringFormat("signal=%I64d source=%I64d age=%I64d",decisionSec,g_sym[idx].confSourceTimeMs,ageSec));
          return;
@@ -2035,10 +2074,10 @@ void TryEnter(const int idx)
       if(!FetchStrictRefPrice(idx,refPx,refMs)) return;
 
       double adverse=(side<0)?((refPx-sigPx)/sigAtr):((sigPx-refPx)/sigAtr);
-      if(adverse>g_sym[idx].confMaxAdvATR) g_sym[idx].confMaxAdvATR=adverse;
+      if(adverse>g_sym[idx].confMaxAdvATR){g_sym[idx].confMaxAdvATR=adverse;PersistStrictConfirm(idx);}
       if(g_sym[idx].confMaxAdvATR>InpConfirmMaxAdverseATR)
         {
-         g_sym[idx].confActive=false;
+         ClearStrictConfirm(idx);
          LogExec("STRICT_CONFIRM_CANCEL_ADVERSE",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
                  StringFormat("signal=%I64d source=%I64d adv=%.3f",decisionSec,g_sym[idx].confSourceTimeMs,g_sym[idx].confMaxAdvATR));
          return;
@@ -2052,14 +2091,14 @@ void TryEnter(const int idx)
       bool contradict=(side>0)?(z>=InpExitZ):(z<=-InpExitZ);
       if(contradict)
         {
-         g_sym[idx].confActive=false;
+         ClearStrictConfirm(idx);
          LogExec("STRICT_CONFIRM_CANCEL_Z",sym,0,(side>0)?"BUY":"SELL",0,0,0,0,0,
                  StringFormat("signal=%I64d origZ=%+.3f confirmZ=%+.3f",decisionSec,g_sym[idx].confZ,z));
          return;
         }
 
       // From here the signal is valid. Any remaining block is execution/risk transport, not signal retuning.
-      g_sym[idx].confActive=false;
+      ClearStrictConfirm(idx);
       if(HasAnyFor(sym)) return;
       int nb,ns;int tot=CountExposure(nb,ns);
       if(tot>=InpMaxPositions){c_maxpos++;return;}
@@ -2201,6 +2240,7 @@ void TryEnter(const int idx)
    g_sym[idx].confHighVol=highVol;
    g_sym[idx].confBarsLeft=InpConfirmMaxBars;
    MarkStrictSourceProcessed(idx,sourceMs);
+   PersistStrictConfirm(idx);
 
    LogExec("STRICT_CONFIRM_ARM",sym,0,(side>0)?"BUY":"SELL",sigClose,0,0,0,0,
            StringFormat("signal=%I64d source=%I64d z=%+.3f atr=%.8f atrPct=%.8f q67=%.8f rapidGap=%.1f",
