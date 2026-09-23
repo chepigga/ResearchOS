@@ -629,6 +629,34 @@ int OnInit()
    if(InpMaxPositions < 1 || InpMaxPerSide < 1 || InpExecTimerMs < 100)
      { Print("ПОМИЛКА: ліміти позицій/таймера"); return INIT_PARAMETERS_INCORRECT; }
 
+   // STRICT LAB parity guard: refuse accidental strategy drift.
+   string pm=InpPauseMode; StringToUpper(pm); StringReplace(pm," ","");
+   bool armOk=(MathAbs(InpTrailArmATR-2.50)<1e-9 || MathAbs(InpTrailArmATR-3.50)<1e-9 || MathAbs(InpTrailArmATR-5.00)<1e-9);
+   bool strictOk=
+      MathAbs(InpZThreshold-1.00)<1e-9 &&
+      MathAbs(InpConfirmATR-0.30)<1e-9 &&
+      InpConfirmMaxAgeMin==45 &&
+      MathAbs(InpConfirmMaxAdverseATR-0.75)<1e-9 &&
+      MathAbs(InpConfirmMinAbsZ)<1e-12 &&
+      MathAbs(InpConfirmMinResponseRatio)<1e-12 &&
+      InpUseConfirm && InpConfirmMarket &&
+      MathAbs(InpStopATR-1.50)<1e-9 &&
+      MathAbs(InpBreakEvenAtATR-0.50)<1e-9 &&
+      MathAbs(InpBreakEvenLock-0.15)<1e-9 &&
+      InpTrailOn && MathAbs(InpTrailATR-0.50)<1e-9 && armOk &&
+      MathAbs(InpExitZ-0.75)<1e-9 &&
+      InpHoldHours==6 &&
+      pm=="ATR" && MathAbs(InpPauseATR-1.00)<1e-9 &&
+      InpMaxTradesPerDay==3 &&
+      !InpPartialClose && !InpChaseOrder && !InpUseScore &&
+      MathAbs(InpMaxSpreadATR)<1e-12;
+   if(!strictOk)
+     {
+      Print("STRICT_PARITY_CONFIG_FAIL: parameters differ from LAB046-049 frozen shell.");
+      Print("Allowed trail arms: 2.5 / 3.5 / 5.0, gap fixed 0.5; default build uses 3.5.");
+      return INIT_PARAMETERS_INCORRECT;
+     }
+
    g_trade.SetExpertMagicNumber((ulong)InpMagic);
    g_trade.SetDeviationInPoints((ulong)InpSlippagePts);
    g_trade.SetAsyncMode(false);
@@ -691,7 +719,7 @@ int OnInit()
         {
          bool empty=(FileSize(g_csv)==0);
          FileSeek(g_csv,0,SEEK_END);
-         if(empty) FileWrite(g_csv,"time_server","time_utc","source_ms","broker","binance","ratio","mean","sd","z","atr","bid","side","entry","stop","lot","action","order_ticket");
+         if(empty) FileWrite(g_csv,"time_server","time_utc","source_ms","signal_decision","broker","binance","ratio","mean","sd","z","signal_atr","ref_price","side","broker_entry","stop","lot","action","order_ticket");
          FileFlush(g_csv);
         }
      }
@@ -2268,21 +2296,56 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
    if(HistoryDealGetInteger(trans.deal,DEAL_MAGIC)!=InpMagic) return;
    long entry=HistoryDealGetInteger(trans.deal,DEAL_ENTRY);
    if(entry!=DEAL_ENTRY_IN && entry!=DEAL_ENTRY_INOUT) return;
+
    ulong posId=(ulong)HistoryDealGetInteger(trans.deal,DEAL_POSITION_ID);
    ulong order=(ulong)HistoryDealGetInteger(trans.deal,DEAL_ORDER);
    string sym=HistoryDealGetString(trans.deal,DEAL_SYMBOL);
    double px=HistoryDealGetDouble(trans.deal,DEAL_PRICE);
+
    double atr=GVRead(GVOrderKey(order,"ATR"),0.0);
-   if(atr<=0.0)
-     {
-      int si=SymIndex(sym);if(si>=0) atr=AtrOf(si);
-     }
+   double refEntry=GVRead(GVOrderKey(order,"REF_ENTRY"),0.0);
+   double sourceMs=GVRead(GVOrderKey(order,"SIG_SOURCE_MS"),0.0);
+   double decision=GVRead(GVOrderKey(order,"SIG_DECISION"),0.0);
+
    if(posId>0)
      {
       if(atr>0.0) GVWrite(GVPosKey(posId,"ATR"),atr);
-      if(px>0.0) GVWrite(GVPosKey(posId,"PEAK"),px);
+      if(refEntry>0.0)
+        {
+         GVWrite(GVPosKey(posId,"REF_ENTRY"),refEntry);
+         GVWrite(GVPosKey(posId,"REF_PEAK"),refEntry);
+        }
+      if(sourceMs>0.0) GVWrite(GVPosKey(posId,"SIG_SOURCE_MS"),sourceMs);
+      if(decision>0.0) GVWrite(GVPosKey(posId,"SIG_DECISION"),decision);
       GVWrite(GVPosKey(posId,"PARTIAL"),0.0);
+
+      // Market fill may differ from pre-send quote. Re-anchor initial 1.5 ATR SL to ACTUAL fill,
+      // while preserving the frozen Binance signal ATR.
+      if(atr>0.0 && px>0.0 && PositionSelect(sym))
+        {
+         long ptype=PositionGetInteger(POSITION_TYPE);
+         int side=(ptype==POSITION_TYPE_BUY)?1:-1;
+         ulong ptk=(ulong)PositionGetInteger(POSITION_TICKET);
+         double tp=PositionGetDouble(POSITION_TP);
+         double desired=px-side*InpStopATR*atr;
+         desired=NormalizePriceTick(sym,desired,(side>0)?-1:+1);
+         MqlTick q;
+         if(SymbolInfoTick(sym,q))
+           {
+            double md=MinTradeDistance(sym,true);
+            bool dist=(side>0)?(q.bid-desired>=md):(desired-q.ask>=md);
+            if(dist)
+              {
+               g_trade.SetTypeFillingBySymbol(sym);
+               bool b=g_trade.PositionModify(ptk,desired,tp);uint rc=g_trade.ResultRetcode();
+               double actual=0.0;bool verified=(b && RetcodeAccepted(rc) && VerifyPositionSL(ptk,desired,actual));
+               LogExec("STRICT_FILL_SL_ALIGN",sym,ptk,(side>0)?"BUY":"SELL",px,desired,px,actual,rc,verified?"OK":"FAIL");
+              }
+           }
+        }
      }
-   LogExec("FILL",sym,order,"",px,0,px,0,(uint)result.retcode,StringFormat("pos=%I64u atr=%.8f",posId,atr));
+
+   LogExec("FILL",sym,order,"",px,0,px,0,(uint)result.retcode,
+           StringFormat("pos=%I64u signalATR=%.8f refEntry=%.8f source=%.0f decision=%.0f",posId,atr,refEntry,sourceMs,decision));
   }
 //+------------------------------------------------------------------+
