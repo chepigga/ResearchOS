@@ -176,15 +176,15 @@
 //|                                                                   |
 //+------------------------------------------------------------------+
 #property copyright "ResearchOS"
-#property version   "1.92"
+#property version   "1.93"
 #property strict
-#property description "CrowdFade v1.91f broker-robust fresh-episode + noise gate."
+#property description "CrowdFade V191 STRICT LAB046-049 parity / BALANCED 3.5-0.5."
 
 #include <Trade\Trade.mqh>
 
 //--- символи -------------------------------------------------------
 input group "=== СИМВОЛИ ==="
-input string InpPairs = "BTCUSD:BTCUSDT;SOLUSD:SOLUSDT";
+input string InpPairs = "BTCUSD:BTCUSDT"; // LAB046-049 validated default universe
                                           // брокер:Binance через ;
 
 //--- сигнал --------------------------------------------------------
@@ -197,7 +197,7 @@ input double InpStopATR       = 1.50;     // [v1.91] краще з confirm (бу
 input int    InpHoldHours     = 6;        // [v1.10] Тримання, годин (було 24)
 input int    InpPauseHours    = 6;        // [v1.91] мін. години (для Hours / hybrid)
 input int    InpAtrPeriod     = 14;       // ATR на M15
-input double InpExitZ         = 0.00;     // [v1.91e] default OFF: do not cut winners on crowd normalization
+input double InpExitZ         = 0.75;     // STRICT LAB parity
 input bool   InpChaseOrder    = false;    // [v1.80] ВИМКНЕНО: шкодить (див. шапку)
 input int    InpChaseAfterBars= 4;        // [v1.30] через скільки барів M15
 input double InpChaseToATR    = 0.40;     // [v1.30] новий відступ від ціни, ATR
@@ -205,11 +205,11 @@ input double InpChaseToATR    = 0.40;     // [v1.30] новий відступ �
 input group "=== [v1.91] ПІДТВЕРДЖЕННЯ ВІДКАТУ ==="
 input bool   InpUseConfirm     = true;     // вмикати підтвердження відкату
 input double InpConfirmATR     = 0.30;     // live v1.91 setting seen in journal: 0.30 ATR
-input int    InpConfirmMaxBars = 9;        // [v1.91f] hard bar-age cap: 9 M5 bars ~=45 min
+input int    InpConfirmMaxBars = 9;        // display/diagnostic only; strict freshness is wall-clock 45m
 input int    InpConfirmMaxAgeMin = 45;       // [v1.91f] wall-clock cap; broker-session/sparse-bar safe
-input double InpConfirmMinAbsZ = 0.75;       // [v1.91f] edge must still be materially present at confirm
+input double InpConfirmMinAbsZ = 0.00;       // STRICT parity: disabled; LAB uses only opposite ExitZ contradiction
 input double InpConfirmMaxAdverseATR = 0.75; // [v1.91f] cancel if price first runs too far WITH crowd
-input double InpConfirmMinResponseRatio = 0.50; // [v1.91f] favorable/adverse excursion quality gate
+input double InpConfirmMinResponseRatio = 0.00; // STRICT parity: disabled
 input bool   InpConfirmMarket  = true;     // true=market після confirm, false=limit
 input double InpConfirmLimitATR= 0.10;     // додатковий відступ якщо limit
 
@@ -236,7 +236,7 @@ input double InpBreakEvenLock = 0.15;     // [v1.80] МУСИТЬ бути > с�
 input group "=== [v1.60] Трейлінг-стоп ==="
 input bool   InpTrailOn       = true;     // вмикати трейлінг
 input double InpTrailATR      = 0.50;     // відстань від піку, ATR
-input double InpTrailArmATR   = 2.50;     // [v1.70]
+input double InpTrailArmATR   = 3.50;     // LAB048/049 BALANCED candidate; use 2.50 for LAB047 control
 
 //--- ризик ---------------------------------------------------------
 input group "=== РИЗИК ==="
@@ -263,13 +263,13 @@ input long   InpMagic         = 77001;    // Magic
 input group "=== БЕЗПЕКА ==="
 input bool   InpDemoOnly      = false;    // [v1.70] дефолт: реальний рахунок ДОЗВОЛЕНО
 input bool   InpDryRun        = false;    // true = тільки лог, без ордерів
-input int    InpRefreshSec    = 60;       // Період опитування Binance
+input int    InpRefreshSec    = 15;       // flow poll; completed 5m source is still processed only once
 input bool   InpWriteCsv      = true;     // Журнал сигналів у CSV
 input bool   InpVerbose       = true;     // Детальний лог
 
 input group "=== [v1.62] EXECUTION PARITY ==="
 input int    InpExecTimerMs        = 1000;    // Детермінований management scheduler, мс
-input int    InpWebTimeoutMs       = 4000;    // Timeout WebRequest
+input int    InpWebTimeoutMs       = 4000;    // Timeout for flow/history; ticker uses <=1000ms
 input int    InpMaxFeedAgeSec      = 900;     // Не відкривати/не signal-exit на старих Binance даних
 input int    InpChaseMaxRetries    = 3;       // Повтори ТОГО САМОГО chase target при технічній відмові
 input bool   InpCloseOnDailyHalt   = true;    // Prop safety: закрити позиції при daily DD stop
@@ -280,6 +280,13 @@ input bool   InpWriteExecutionCsv  = true;    // Детальний execution tr
 //--- константи -----------------------------------------------------
 #define API_HOST    "https://fapi.binance.com"
 #define API_PATH    "/futures/data/globalLongShortAccountRatio"
+#define KLINE_PATH  "/fapi/v1/klines"
+#define TICKER_PATH "/fapi/v1/ticker/price"
+#define LAB_M5_MS   300000
+#define LAB_M15_MS  900000
+#define LAB_VOL_WIN 8640
+#define LAB_VOL_MIN 2880
+#define LAB_FETCH_BARS 8725
 #define MAX_POINTS  500
 #define BIN_PERIOD  "5m"
 #define BIN_STEP_S  300
@@ -324,7 +331,12 @@ struct SymState
    double   sd;
    datetime lastFetch;          // останній УСПІШНИЙ локальний fetch
    datetime lastAttempt;        // остання спроба WebRequest
-   long     sourceTimeMs;       // timestamp останньої Binance 5m точки
+   long     sourceTimeMs;       // timestamp останньої Binance flow 5m точки
+   long     lastSignalSourceMs;   // source point already processed by strict signal state machine
+   bool     rapidRepeat30;        // LAB046 exact same-sign prior extreme <=30m
+   double   priorSameExtremeGapMin;
+   double   refLastPrice;         // current Binance last trade price
+   long     refLastPriceMs;
    datetime lastTrade;          // час постановки останньої заявки (cooldown anchor)
    datetime lastBar;
    datetime sigSince;
@@ -340,7 +352,11 @@ struct SymState
    double   confZ;              // Z snapshot на момент постановки confirmation thesis
    double   confMaxFavATR;      // [v1.91f] max thesis-direction excursion since arm
    double   confMaxAdvATR;      // [v1.91f] max crowd-direction excursion since arm
-   datetime confSignalTime;
+   datetime confSignalTime;      // STRICT: LAB decision time = source period start + 300s
+   long     confSourceTimeMs;      // ORIGINAL flow source timestamp frozen at arm
+   double   confVolQ67;            // causal lagged q67 ATR%
+   double   confAtrPct;            // current signal ATR%
+   bool     confHighVol;
    int      confBarsLeft;       // скільки M5 барів залишилось
    // [v1.91] adaptive pause + daily limit
    double   lastEntryPrice;     // ціна останнього входу (для ATR-паузи)
@@ -550,7 +566,10 @@ int ParsePairs()
       g_sym[cnt].ok        = false;
       g_sym[cnt].atrHandle = hnd;
       g_sym[cnt].z = 0; g_sym[cnt].ratio = 0; g_sym[cnt].mean = 0; g_sym[cnt].sd = 0;
-      g_sym[cnt].lastFetch = 0; g_sym[cnt].lastAttempt = 0; g_sym[cnt].sourceTimeMs = 0; g_sym[cnt].lastTrade = 0; g_sym[cnt].lastBar = 0;
+      g_sym[cnt].lastFetch = 0; g_sym[cnt].lastAttempt = 0; g_sym[cnt].sourceTimeMs = 0; g_sym[cnt].lastSignalSourceMs=0;
+      g_sym[cnt].rapidRepeat30=false; g_sym[cnt].priorSameExtremeGapMin=-1.0;
+      g_sym[cnt].refLastPrice=0.0; g_sym[cnt].refLastPriceMs=0;
+      g_sym[cnt].lastTrade = 0; g_sym[cnt].lastBar = 0;
       g_sym[cnt].sigSince = 0;
       g_sym[cnt].z40 = 0.0; g_sym[cnt].durBars = 0;
       g_sym[cnt].err = "";
@@ -563,6 +582,8 @@ int ParsePairs()
       g_sym[cnt].confMaxFavATR = 0;
       g_sym[cnt].confMaxAdvATR = 0;
       g_sym[cnt].confSignalTime = 0;
+      g_sym[cnt].confSourceTimeMs = 0;
+      g_sym[cnt].confVolQ67 = 0.0; g_sym[cnt].confAtrPct=0.0; g_sym[cnt].confHighVol=false;
       g_sym[cnt].confBarsLeft = 0;
       g_sym[cnt].lastEntryPrice = 0;
       g_sym[cnt].lastEntryAtr = 0;
@@ -663,7 +684,7 @@ int OnInit()
 
    if(InpWriteCsv)
      {
-      string fn="CrowdFade_signals_v191d_consistency_vol_diag.csv";
+      string fn="CrowdFade_signals_v191_STRICT_LAB_PARITY.csv";
       g_csv=FileOpen(fn,FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_COMMON|FILE_SHARE_READ,';');
       if(g_csv==INVALID_HANDLE) PrintFormat("CSV не відкрито, error=%d",GetLastError());
       else
@@ -676,7 +697,7 @@ int OnInit()
      }
    if(InpWriteExecutionCsv)
      {
-      g_execCsv=FileOpen("CrowdFade_execution_v191d_consistency_vol_diag.csv",FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_COMMON|FILE_SHARE_READ,';');
+      g_execCsv=FileOpen("CrowdFade_execution_v191_STRICT_LAB_PARITY.csv",FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_COMMON|FILE_SHARE_READ,';');
       if(g_execCsv==INVALID_HANDLE) PrintFormat("Execution CSV не відкрито, error=%d",GetLastError());
       else
         {
@@ -688,7 +709,7 @@ int OnInit()
      }
 
    EventSetMillisecondTimer(InpExecTimerMs);
-   PrintFormat("INIT_OK CrowdFadeMulti v1.91f BROKER_ROBUST_EPISODE_GATE | symbols=%d | z=%.2f | max exposure=%d | scheduler=%dms",
+   PrintFormat("INIT_OK CrowdFade V191 STRICT_LAB_PARITY | symbols=%d | z=%.2f | max exposure=%d | scheduler=%dms",
                g_symCount,InpZThreshold,InpMaxPositions,InpExecTimerMs);
    PrintFormat("  state signal: window %dh | pause %dh | hold %dh | exit z=%.2f",
                InpZWindowHours,InpPauseHours,InpHoldHours,InpExitZ);
@@ -702,7 +723,8 @@ int OnInit()
    if(InpTrailOn) PrintFormat("  TRAIL: %.2f ATR from REAL peak, arm %.2f ATR, ATR snapshot at entry/chase",InpTrailATR,InpTrailArmATR);
    PrintFormat("  RISK_PARITY: manualMaxLot=%.2f | commissionRT=%.2fbps | maxNotional=%.1f%%eq | adaptiveMargin=%s freeSafety=%.1f%% | maxNewMargin=%.1f%%eq | maxAccountMargin=%.1f%%eq",
                InpMaxLot,EffectiveCommissionRoundTurnBps(),InpMaxNotionalPctEquity,InpAdaptiveMarginLot?"ON":"OFF",InpMarginSafetyPct,InpMaxNewTradeMarginPct,InpMaxAccountMarginPct);
-   Print("  v1.91f: fresh-episode gate + ATR-normalized response/noise gate; default universe BTC+SOL; exits/risk shell unchanged.");
+   Print("  STRICT: LAB046 dual gate + frozen signal ATR + continuous Binance-price confirm + ExitZ0.75.");
+   Print("  IMPORTANT: LAB046-049 statistical validation is BTCUSDT only; extra configured symbols are algorithmic extrapolation.");
    return INIT_SUCCEEDED;
   }
 
