@@ -6495,3 +6495,45 @@ Add V191 execution telemetry:
 - millisecond latency.
 
 Without these fields, MT5 history can only produce a lower-bound cost audit.
+
+
+## LAB050 addendum — actual broker vs frozen LAB entry/exit
+
+Per-signal counterfactual replay completed on the exact live `CF191` signal IDs.
+
+Successful run:
+`35834250647`
+
+Detailed result:
+`labs/CROWDFADE_V191_REAL_EXECUTION_COST_AUDIT_LAB_050/ACTUAL_VS_LAB_COUNTERFACTUAL.md`
+
+75 unique signal+symbol pairs:
+- LAB ENTER 69;
+- LAB SKIP 6.
+
+Independent replay:
+- trail2.5/0.5: +10.324R;
+- trail3.5/0.5: +14.680R;
+- trail5.0/0.5: +18.267R.
+
+Same closed signals by broker:
+
+GetLeveraged:
+- actual -1.960R;
+- LAB3.5 +13.697R;
+- delta +15.656R;
+- actual median signal->entry 5m vs LAB3m.
+
+IC:
+- actual -10.451R;
+- LAB3.5 -0.123R;
+- delta +10.328R;
+- actual median signal->entry ~5m vs LAB2m.
+
+Six live trades rejected by LAB confirmation rules had combined actual result -2.618R.
+
+New frozen conclusion:
+**the primary live issue is LIVE/LAB execution-management parity, not just broker transaction cost.**
+
+Next engineering work:
+make V191 live reproduce frozen confirmation/entry/SL/BE/ExitZ/trailing/H6 mechanics exactly before any further signal retuning.
