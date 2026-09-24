@@ -18,7 +18,7 @@ def load_symbol(sym):
     start=int(pd.Timestamp("2026-09-24 00:00:00").timestamp()*1000)
     end=int(CUTOFF_UTC.timestamp()*1000)
     rows=[]; cur=start
-    url="https://fapi.binance.com/fapi/v1/klines"
+    url="https://data-api.binance.vision/api/v3/klines"
     while cur<=end:
         resp=requests.get(url,params={"symbol":sym,"interval":"1m","startTime":cur,"endTime":end,"limit":1500},timeout=20)
         resp.raise_for_status()
