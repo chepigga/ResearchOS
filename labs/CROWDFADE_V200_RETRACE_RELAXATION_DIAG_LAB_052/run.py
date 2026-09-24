@@ -1,6 +1,7 @@
 from pathlib import Path
-import io, zipfile, json
+import io, zipfile, json, time
 import numpy as np, pandas as pd
+import requests
 
 ROOT=Path("labs/CROWDFADE_V200_RETRACE_RELAXATION_DIAG_LAB_052")
 DATA=ROOT/"data"; OUT=ROOT/"output"; OUT.mkdir(parents=True,exist_ok=True)
@@ -12,11 +13,24 @@ TTL=pd.Timedelta(minutes=20)
 VARIANTS={"R060":0.60,"R040":0.40,"R020":0.20,"R000":0.00}
 
 def load_symbol(sym):
-    zp=DATA/f"{sym}-1m-2026-09-24.zip"
-    with zipfile.ZipFile(zp) as z:
-        with z.open(z.namelist()[0]) as f:
-            r=pd.read_csv(f,header=None)
-    # Binance kline schema: open time, O,H,L,C,...
+    # Current-day daily ZIP may not exist yet, so fetch the completed path directly
+    # from the official Binance USD-M klines endpoint up to our frozen cutoff.
+    start=int(pd.Timestamp("2026-09-24 00:00:00").timestamp()*1000)
+    end=int(CUTOFF_UTC.timestamp()*1000)
+    rows=[]; cur=start
+    url="https://fapi.binance.com/fapi/v1/klines"
+    while cur<=end:
+        resp=requests.get(url,params={"symbol":sym,"interval":"1m","startTime":cur,"endTime":end,"limit":1500},timeout=20)
+        resp.raise_for_status()
+        batch=resp.json()
+        if not batch: break
+        rows.extend(batch)
+        nxt=int(batch[-1][0])+60000
+        if nxt<=cur: break
+        cur=nxt
+        time.sleep(0.05)
+    if not rows: raise RuntimeError(f"no Binance klines for {sym}")
+    r=pd.DataFrame(rows)
     out=pd.DataFrame({
         "t":pd.to_datetime(pd.to_numeric(r.iloc[:,0],errors="coerce"),unit="ms",utc=True).dt.tz_localize(None),
         "o":pd.to_numeric(r.iloc[:,1],errors="coerce"),
