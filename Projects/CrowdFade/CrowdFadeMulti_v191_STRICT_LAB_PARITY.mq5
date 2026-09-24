@@ -176,7 +176,7 @@
 //|                                                                   |
 //+------------------------------------------------------------------+
 #property copyright "ResearchOS"
-#property version   "1.93"
+#property version   "1.95"
 #property strict
 #property description "CrowdFade V191 STRICT LAB046-049 parity / BALANCED 3.5-0.5."
 
@@ -261,7 +261,6 @@ input long   InpMagic         = 77191;    // STRICT LAB parity isolated magic
 
 //--- безпека -------------------------------------------------------
 input group "=== БЕЗПЕКА ==="
-input bool   InpDemoOnly      = false;    // [v1.70] дефолт: реальний рахунок ДОЗВОЛЕНО
 input bool   InpDryRun        = false;    // true = тільки лог, без ордерів
 input int    InpRefreshSec    = 15;       // flow poll; completed 5m source is still processed only once
 input bool   InpWriteCsv      = true;     // Журнал сигналів у CSV
@@ -617,11 +616,6 @@ datetime RecoverLastOrderTime(const string sym)
 
 int OnInit()
   {
-   if(InpDemoOnly && AccountInfoInteger(ACCOUNT_TRADE_MODE) == ACCOUNT_TRADE_MODE_REAL)
-     {
-      Print("ЗУПИНЕНО: InpDemoOnly=true, а рахунок РЕАЛЬНИЙ.");
-      return INIT_FAILED;
-     }
    if(InpZWindowHours < 2 || InpZWindowHours > 40)
      { Print("ПОМИЛКА: InpZWindowHours поза [2..40]"); return INIT_PARAMETERS_INCORRECT; }
    if(InpZThreshold <= 0.0 || InpStopATR <= 0.0 || InpRiskPct <= 0.0)
@@ -2017,7 +2011,7 @@ void RegisterEntry(const int idx, const double entryPrice, const double atr)
 
 void MarkStrictSourceProcessed(const int idx,const long sourceMs)
   {
-   MarkStrictSourceProcessed(idx,sourceMs);
+   g_sym[idx].lastSignalSourceMs=sourceMs;
    GVWrite(GVKey("LSS_"+g_sym[idx].broker),(double)sourceMs);
   }
 
