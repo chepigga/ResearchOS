@@ -17,14 +17,7 @@ jobs:
         with: {ref: lab/crowdfade-execution-5y-positive-005}
       - uses: actions/setup-python@v5
         with: {python-version: '3.11'}
-      - run: python -m pip install -q numpy pandas
-      - name: Download Binance 1m paths
-        run: |
-          D=labs/CROWDFADE_V200_RETRACE_RELAXATION_DIAG_LAB_052/data
-          mkdir -p "$D"
-          for S in BTCUSDT ETHUSDT SOLUSDT; do
-            wget -q "https://data.binance.vision/data/futures/um/daily/klines/$S/1m/$S-1m-2026-09-24.zip" -O "$D/$S-1m-2026-09-24.zip"
-          done
+      - run: python -m pip install -q numpy pandas requests
       - name: Run LAB052
         run: python labs/CROWDFADE_V200_RETRACE_RELAXATION_DIAG_LAB_052/run.py
       - name: Commit outputs
