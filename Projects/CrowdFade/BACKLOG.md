@@ -6904,3 +6904,94 @@ all V191 STRICT zero-trade observations collected before this fix are **invalid 
 6. V191 STRICT restarts from zero evidence after recursion fix.
 7. V200 remains frozen at retrace0.60 / SL4.5 / TP10 / H24 / no trail. Collect shadow evidence for R040/R020; do not loosen live core yet.
 
+
+
+---
+
+# 2026-09-24 — V200 RETRACE0.40 LIVE SHADOW TELEMETRY
+
+Status: **IMPLEMENTED — OBSERVATION ONLY, REAL CORE UNCHANGED**
+
+Source:
+`Projects/CrowdFade/CrowdFadeMulti_v200b_ACCOUNT_MODE_NEUTRAL_SHADOW040.mq5`
+
+Complete-source commit:
+`4d831f77a32ed4dd7de39d86ec2fb29516b87a5e`
+
+Purpose:
+observe whether a shallower passive retrace `0.40 ATR` would improve V200 fills/PnL WITHOUT changing real CORE orders.
+
+Real V200 remains frozen:
+- Z2.05;
+- confirm0.25 ATR;
+- real retrace = **0.60 ATR**;
+- TTL20m;
+- SL4.5 ATR;
+- TP10 ATR;
+- H24;
+- no BE;
+- no trail;
+- ExitZ OFF.
+
+Shadow:
+- `InpShadowRetraceEnabled=true`;
+- `InpShadowRetraceATR=0.40`;
+- same accepted CORE confirmation/setup;
+- same broker reference;
+- same signal ATR;
+- same lot as the accepted real 0.60 CORE pending order;
+- same TTL20m;
+- same SL4.5 / TP10 / H24;
+- broker-native Bid/Ask observation on the 1s scheduler;
+- BUY shadow limit fills only when broker Ask <= shadow entry;
+- SELL shadow limit fills only when broker Bid >= shadow entry;
+- long exits evaluated on Bid; short exits on Ask;
+- round-turn broker cost profile included in shadow net cash/R.
+
+Safety:
+- shadow code contains no `Buy`, `Sell`, `OrderSend`, `PositionModify`, or `PositionClose`;
+- it does not change exposure counters, cooldown, daily trade count, risk state, or real order geometry;
+- it continues observing even after the real EA reaches a DD halt;
+- active shadow state persists through MT5 global variables across restart.
+
+CSV:
+`CrowdFade_shadow_v200b_retrace040.csv`
+
+Events:
+- `SHADOW_ARM`
+- `SHADOW_FILL`
+- `SHADOW_REAL_FILL_SEEN`
+- `SHADOW_CLASSIFY`
+- `SHADOW_EXPIRE_NO_FILL`
+- `SHADOW_EXIT`
+
+Key classification:
+after real order TTL + 5s grace:
+- `ADDITIONAL_FILL` = shadow0.40 filled while real0.60 did not;
+- `SAME_SETUP_FILLED` = both filled.
+
+Telemetry includes:
+source ID, real order ticket, broker reference, ATR, shadow entry/SL/TP, same real lot, risk cash, broker Bid/Ask, fill classification, exit reason, gross R, net R, and net cash.
+
+## Retrospective 24 Sep diagnostic context
+
+LAB052 spot-price proxy comparison:
+- proxy R060: 3 fills / 7;
+- proxy R040: 5 fills / 7;
+- therefore **+2 additional fills on the same proxy path**;
+- the two proxy-only R040 additions still open at cutoff were:
+  - ETH BUY: **+0.12749R MTM**;
+  - SOL BUY: **+0.13692R MTM**;
+  - combined additional-fill MTM: **+0.26441R**.
+- because the shallower entry changes economics on common fills too, total R040 portfolio improvement vs proxy R060 was only **+0.21997R** at cutoff.
+
+Important limitation:
+the spot proxy did not reproduce actual IC R060 fills exactly (3 proxy vs 2 actual), so these are NOT exact broker-native results.
+The new live shadow telemetry is specifically intended to eliminate this ambiguity from the next setups.
+
+Decision:
+- keep real retrace0.60 frozen;
+- collect shadow0.40 on both IC and GetLeveraged;
+- compare additional-fill count and closed shadow PnL after at least 30–50 CORE confirmed setups;
+- do not promote 0.40 from one-day proxy evidence.
+
