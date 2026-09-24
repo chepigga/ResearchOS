@@ -1,0 +1,67 @@
+{
+  "lab": "CROWDFADE_V200_RETRACE_RELAXATION_DIAG_LAB_052",
+  "cutoff_server": "2026-09-24 22:44:00",
+  "server_utc_offset_h": 3,
+  "actual_report_fills_R060": 2,
+  "proxy_fills_R060": 3,
+  "proxy_fill_parity": false,
+  "summary": [
+    {
+      "variant": "R060",
+      "retrace_ATR": 0.6,
+      "fills": 3,
+      "fill_rate": 0.42857142857142855,
+      "SL": 2,
+      "TP": 0,
+      "OPEN": 1,
+      "NO_FILL": 4,
+      "sum_R_realized_closed": -1.9999999999999987,
+      "sum_R_mtm_cutoff_filled": -2.3328348946482547,
+      "mean_MFE_R_filled": 0.8168847352635518,
+      "mean_MAE_R_filled": 0.9485622314031162
+    },
+    {
+      "variant": "R040",
+      "retrace_ATR": 0.4,
+      "fills": 5,
+      "fill_rate": 0.7142857142857143,
+      "SL": 2,
+      "TP": 0,
+      "OPEN": 3,
+      "NO_FILL": 2,
+      "sum_R_realized_closed": -1.9999999999999987,
+      "sum_R_mtm_cutoff_filled": -2.1128696886834906,
+      "mean_MFE_R_filled": 0.567136842533056,
+      "mean_MAE_R_filled": 0.6988659619638933
+    },
+    {
+      "variant": "R020",
+      "retrace_ATR": 0.2,
+      "fills": 5,
+      "fill_rate": 0.7142857142857143,
+      "SL": 2,
+      "TP": 0,
+      "OPEN": 3,
+      "NO_FILL": 2,
+      "sum_R_realized_closed": -1.9999999999999987,
+      "sum_R_mtm_cutoff_filled": -2.246203022016829,
+      "mean_MFE_R_filled": 0.5433156275503062,
+      "mean_MAE_R_filled": 0.715869572087096
+    },
+    {
+      "variant": "R000",
+      "retrace_ATR": 0.0,
+      "fills": 7,
+      "fill_rate": 1.0,
+      "SL": 3,
+      "TP": 0,
+      "OPEN": 4,
+      "NO_FILL": 0,
+      "sum_R_realized_closed": -2.9999999999999982,
+      "sum_R_mtm_cutoff_filled": -1.747393210285598,
+      "mean_MFE_R_filled": 0.6946717012441137,
+      "mean_MAE_R_filled": 0.7131208495704903
+    }
+  ],
+  "note": "One-day diagnostic only; not sufficient to change V200 production parameters."
+}
