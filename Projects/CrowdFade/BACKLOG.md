@@ -6717,3 +6717,190 @@ Conclusion:
 
 Potential future research only if desired:
 partial TP at 10 ATR + small runner, because this can preserve the validated TP10 core while testing extra right-tail capture.
+
+
+---
+
+# 2026-09-24 — LIVE REPAIR / NORMALIZATION PASS
+
+Status: **IMPLEMENTED IN ORDER — V200 ACCOUNT MODE, V200 MISSED-FILL DIAGNOSTIC, V191g CANONICAL/POSITIVE-SKEW, V191 STRICT BUGFIX**
+
+## 1. V200 — account-mode restriction removed
+
+New source:
+`Projects/CrowdFade/CrowdFadeMulti_v200b_ACCOUNT_MODE_NEUTRAL.mq5`
+
+Commit:
+`911acb52950baa3d84d97b0b5b32e274ae177067`
+
+Change:
+- removed `InpDemoOnly`;
+- removed the OnInit block that rejected MT5 `ACCOUNT_TRADE_MODE_REAL`;
+- V200 may now initialize on demo, contest/simulation-real, or real accounts;
+- all existing risk shell / DD / margin caps remain;
+- frozen V200 entry and exit geometry was **not** changed by this patch.
+
+Reason:
+GetLeveraged exposes the account as MT5 REAL, so the previous safety guard prevented V200 from running there.
+
+## 2. LAB052 — V200 2026-09-24 passive-retrace relaxation diagnostic
+
+Path:
+`labs/CROWDFADE_V200_RETRACE_RELAXATION_DIAG_LAB_052/`
+
+Successful run:
+`36054710020`
+
+Frozen population:
+- seven actual IC V200 CORE confirmed/pending setups observed 2026-09-24;
+- signal selection unchanged;
+- SL4.5 / TP10 / H24 / trail OFF unchanged.
+
+Variants:
+- R060 = current retrace 0.60 ATR;
+- R040 = 0.40 ATR;
+- R020 = 0.20 ATR;
+- R000 = immediate confirmation-entry proxy.
+
+Current-day Binance USD-M path was unavailable to the runner (HTTP 451), so the successful diagnostic uses Binance spot 1m as a price-path proxy with each IC setup's reconstructed broker basis.
+Therefore this LAB is **diagnostic only**, not a production parameter-selection test.
+
+Proxy result to 2026-09-24 22:44 server:
+- R060: 3/7 proxy fills, MTM -2.333R;
+- R040: 5/7 fills, MTM -2.113R, delta +0.220R vs R060;
+- R020: 5/7 fills, MTM -2.246R, delta +0.087R;
+- R000: 7/7 fills, MTM -1.747R, but three full SLs and the apparent advantage depends on still-open MTM.
+
+Important:
+- actual IC report had only 2/7 R060 fills, while spot proxy reconstructed 3/7;
+- therefore exact fill parity FAILED and no retrace value can be promoted from LAB052;
+- at least one missed BTC BUY would have become a full -1R loss if forced to market;
+- shallower R040/R020 added late ETH/SOL fills, but they were only small open MTM at cutoff.
+
+Decision:
+**DO NOT loosen V200 production retrace yet.**
+Keep frozen 0.60 ATR / TTL20m.
+If desired, collect R040/R020 as shadow levels on future confirmed setups; do not change actual orders until a larger broker-native sample exists.
+
+Output SHAs:
+- summary.csv `877ead11679712d5791fe23f606e37cf8d0c92ef`
+- trade_counterfactual.csv `42862d1744114bf576ed0216a28f3f182c12e3e0`
+- summary.json `077d7c6227cf36206bedadd7648da68914e6c15f`
+
+## 3. V191f normalization → V191g CANONICAL POSITIVE SKEW
+
+New source:
+`Projects/CrowdFade/CrowdFadeMulti_v191g_CANONICAL_POSITIVE_SKEW.mq5`
+
+Commit:
+`a2d358b7cd7d3f0f3e87a48101c3ed12e98321d1`
+
+Purpose:
+make strategic decisions broker-neutral and chart-timeframe-neutral so IC and GetLeveraged should see the same crowd episode / price response. Broker feed remains execution transport only.
+
+Canonical decision engine:
+- crowd Z from Binance;
+- decision clock = completed Binance M5;
+- signal/reference price = Binance M5;
+- ATR = completed Binance M15 ATR14;
+- confirmation/adverse/response path = canonical Binance M5;
+- UTC day counter;
+- score weighting OFF;
+- broker spread no longer acts as a strategy gate by default;
+- no `iTime(sym, PERIOD_M5, 0)` dependency in the main decision state machine;
+- isolated magic `77192`;
+- isolated global-state prefix `CF191G_`;
+- order comments `CF191G...` freeze the Binance source ID.
+
+Broker-specific functions retained only where unavoidable:
+- market fill price;
+- protective broker SL;
+- SymbolInfo / contract / min lot / margin sizing;
+- actual slippage/spread.
+
+This should make signal/confirm reachability the same across brokers and independent of the chart timeframe. Exact broker fills can still differ.
+
+### V191g positive-skew management experiment
+
+24 Sep live V191f showed the bad payoff shape:
+many protected winners around +0.1R versus full losers around -1R.
+
+V191g deliberately removes this early-lock asymmetry.
+
+Frozen experimental defaults:
+- initial SL = 1.5 ATR = 1R;
+- no fixed TP;
+- old BE 0.5ATR / lock0.15ATR removed;
+- profit-lock arm = 3.0 ATR MFE = +2.0R;
+- lock = +2.25 ATR = +1.5R minimum protected winner;
+- trail arm = 3.5 ATR;
+- trail gap = 0.5 ATR;
+- H6 unchanged;
+- partial OFF;
+- ExitZ remains OFF, preserving v191f rather than STRICT semantics.
+
+Expected behavioral change:
+- lower headline WR is acceptable;
+- eliminate repeated +0.1R exits;
+- a protected winner should be materially larger than a full -1R loss;
+- later trail preserves right-tail movement.
+
+**Research status: EXPERIMENTAL / SHADOW.**
+The exact 3.0/2.25 profit-lock combination has NOT yet passed a dedicated historical/OOS LAB on the exact v191g entry population.
+Do not call this production-proven.
+Next research must compare the same canonical entries under old v191f exits vs positive-skew exits.
+
+## 4. V191 STRICT — recursion bug fixed + account mode neutral
+
+Source:
+`Projects/CrowdFade/CrowdFadeMulti_v191_STRICT_LAB_PARITY.mq5`
+
+Fix commit:
+`f0659f27457bca463701dbbf0a8232a868ff51ab`
+
+Critical bug fixed:
+previous:
+```cpp
+void MarkStrictSourceProcessed(const int idx,const long sourceMs)
+{
+    MarkStrictSourceProcessed(idx,sourceMs);
+    ...
+}
+```
+
+fixed:
+```cpp
+void MarkStrictSourceProcessed(const int idx,const long sourceMs)
+{
+    g_sym[idx].lastSignalSourceMs=sourceMs;
+    GVWrite(GVKey("LSS_"+g_sym[idx].broker),(double)sourceMs);
+}
+```
+
+Also removed the demo/real account restriction.
+
+Consequence:
+all V191 STRICT zero-trade observations collected before this fix are **invalid as strategy evidence** because the source-state path could recurse instead of completing.
+
+## NEXT VALIDATION ORDER
+
+1. Compile all three patched builds in MetaEditor:
+   - V200 account-neutral;
+   - V191g canonical positive-skew;
+   - V191 STRICT fixed.
+2. Put the SAME V191g build/inputs/symbol list on IC and GetLeveraged.
+3. First test is decision parity, not PnL:
+   - same Binance source IDs;
+   - same ARM timestamps;
+   - same confirm/cancel decisions;
+   - same signal ATR / canonical price;
+   - same side.
+4. Only after decision parity PASS compare:
+   - broker fill;
+   - spread/slippage;
+   - stop execution;
+   - PnL.
+5. V191g positive-skew must receive a dedicated fixed-entry/history LAB before promotion.
+6. V191 STRICT restarts from zero evidence after recursion fix.
+7. V200 remains frozen at retrace0.60 / SL4.5 / TP10 / H24 / no trail. Collect shadow evidence for R040/R020; do not loosen live core yet.
+
