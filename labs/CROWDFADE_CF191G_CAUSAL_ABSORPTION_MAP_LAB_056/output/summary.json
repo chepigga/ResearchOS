@@ -1,0 +1,172 @@
+{
+  "lab": "CROWDFADE_CF191G_CAUSAL_ABSORPTION_MAP_LAB_056",
+  "parity": {
+    "historical": {
+      "N": 5297,
+      "SumR": 700.3704107793633
+    },
+    "forward_2026": {
+      "N": 544,
+      "SumR": 35.49784078156513
+    }
+  },
+  "window_summary": [
+    {
+      "period": "historical",
+      "window_min": 5,
+      "control_N": 5297,
+      "mapped_N": 5297,
+      "control_EV": 0.1322202021482657,
+      "control_PF": 1.2256575126182987,
+      "adverse_N": 291,
+      "adverse_EV": 0.08073637855430454,
+      "adverse_PF": 1.1377973830719914,
+      "adverse_mfe60": 1.0582263774277323,
+      "adverse_mae60": 1.0597273040697561,
+      "supportive_N": 232,
+      "supportive_EV": 0.10062939739881335,
+      "supportive_PF": 1.1640299060811619,
+      "supportive_mfe60": 1.4282707542646547,
+      "supportive_mae60": 1.3711522181043647,
+      "supportive_minus_adverse_EV": 0.01989301884450881,
+      "adverse_MAE_minus_MFE": 0.0015009266420238365
+    },
+    {
+      "period": "historical",
+      "window_min": 15,
+      "control_N": 5297,
+      "mapped_N": 5297,
+      "control_EV": 0.1322202021482657,
+      "control_PF": 1.2256575126182987,
+      "adverse_N": 100,
+      "adverse_EV": 0.2320390122653194,
+      "adverse_PF": 1.4408416090565421,
+      "adverse_mfe60": 0.9603982603233403,
+      "adverse_mae60": 0.85497353587391,
+      "supportive_N": 55,
+      "supportive_EV": 0.03971733853619936,
+      "supportive_PF": 1.0616820212278484,
+      "supportive_mfe60": 1.1817014088355697,
+      "supportive_mae60": 1.321404510035107,
+      "supportive_minus_adverse_EV": -0.19232167372912004,
+      "adverse_MAE_minus_MFE": -0.1054247244494303
+    },
+    {
+      "period": "historical",
+      "window_min": 30,
+      "control_N": 5297,
+      "mapped_N": 5297,
+      "control_EV": 0.1322202021482657,
+      "control_PF": 1.2256575126182987,
+      "adverse_N": 32,
+      "adverse_EV": 0.30707347554204156,
+      "adverse_PF": 1.5191425188882062,
+      "adverse_mfe60": 1.1692198783368009,
+      "adverse_mae60": 1.031501753848671,
+      "supportive_N": 33,
+      "supportive_EV": -0.03275767043371169,
+      "supportive_PF": 0.94942782044291,
+      "supportive_mfe60": 1.1285058238476906,
+      "supportive_mae60": 1.5369599310627795,
+      "supportive_minus_adverse_EV": -0.33983114597575326,
+      "adverse_MAE_minus_MFE": -0.1377181244881298
+    },
+    {
+      "period": "forward_2026",
+      "window_min": 5,
+      "control_N": 544,
+      "mapped_N": 544,
+      "control_EV": 0.06525338378964178,
+      "control_PF": 1.1054907878098506,
+      "adverse_N": 29,
+      "adverse_EV": 0.2141431675686309,
+      "adverse_PF": 1.3385259203088515,
+      "adverse_mfe60": 1.3575518539916138,
+      "adverse_mae60": 0.9092516217156196,
+      "supportive_N": 25,
+      "supportive_EV": 0.5329733681308662,
+      "supportive_PF": 2.0884607567440776,
+      "supportive_mfe60": 2.215857455802624,
+      "supportive_mae60": 1.1281546273216552,
+      "supportive_minus_adverse_EV": 0.31883020056223527,
+      "adverse_MAE_minus_MFE": -0.44830023227599425
+    },
+    {
+      "period": "forward_2026",
+      "window_min": 15,
+      "control_N": 544,
+      "mapped_N": 544,
+      "control_EV": 0.06525338378964178,
+      "control_PF": 1.1054907878098506,
+      "adverse_N": 8,
+      "adverse_EV": 0.2963371241651518,
+      "adverse_PF": 1.5841409036333691,
+      "adverse_mfe60": 1.1671987699277193,
+      "adverse_mae60": 1.032078856462006,
+      "supportive_N": 6,
+      "supportive_EV": -0.1859061581206519,
+      "supportive_PF": 0.7257406967266257,
+      "supportive_mfe60": 1.437467673007659,
+      "supportive_mae60": 1.1860101071988514,
+      "supportive_minus_adverse_EV": -0.4822432822858037,
+      "adverse_MAE_minus_MFE": -0.13511991346571328
+    },
+    {
+      "period": "forward_2026",
+      "window_min": 30,
+      "control_N": 544,
+      "mapped_N": 544,
+      "control_EV": 0.06525338378964178,
+      "control_PF": 1.1054907878098506,
+      "adverse_N": 7,
+      "adverse_EV": 0.3168154063959458,
+      "adverse_PF": 1.5457620458564905,
+      "adverse_mfe60": 1.6227351886571297,
+      "adverse_mae60": 0.8574545401707858,
+      "supportive_N": 6,
+      "supportive_EV": 0.06523457328022246,
+      "supportive_PF": 1.1194408020607898,
+      "supportive_mfe60": 1.2141874530918555,
+      "supportive_mae60": 1.293868944329049,
+      "supportive_minus_adverse_EV": -0.2515808331157233,
+      "adverse_MAE_minus_MFE": -0.7652806484863439
+    }
+  ],
+  "stability": [
+    {
+      "window_min": 5,
+      "adverse_EV_below_control_both": false,
+      "supportive_EV_above_control_both": false,
+      "supportive_EV_gt_adverse_both": true,
+      "descriptive_absorption_pattern": false,
+      "historical_separation_EV": 0.01989301884450881,
+      "forward_2026_separation_EV": 0.31883020056223527
+    },
+    {
+      "window_min": 15,
+      "adverse_EV_below_control_both": false,
+      "supportive_EV_above_control_both": false,
+      "supportive_EV_gt_adverse_both": false,
+      "descriptive_absorption_pattern": false,
+      "historical_separation_EV": -0.19232167372912004,
+      "forward_2026_separation_EV": -0.4822432822858037
+    },
+    {
+      "window_min": 30,
+      "adverse_EV_below_control_both": false,
+      "supportive_EV_above_control_both": false,
+      "supportive_EV_gt_adverse_both": false,
+      "descriptive_absorption_pattern": false,
+      "historical_separation_EV": -0.33983114597575326,
+      "forward_2026_separation_EV": -0.2515808331157233
+    }
+  ],
+  "limitations": [
+    "Diagnostic quintiles use each evaluation period distribution; they are descriptive and not deployable thresholds.",
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "Binance taker-buy volume is aggressive-flow proxy; passive liquidity is inferred through failed price impact, not observed order-by-order.",
+    "OI archive is contextual only and not part of absorption bucket definitions.",
+    "No hard gate or risk multiplier is promoted from LAB056."
+  ]
+}

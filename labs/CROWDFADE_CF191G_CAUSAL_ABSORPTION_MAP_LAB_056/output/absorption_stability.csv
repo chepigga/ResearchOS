@@ -1,0 +1,4 @@
+window_min,adverse_EV_below_control_both,supportive_EV_above_control_both,supportive_EV_gt_adverse_both,descriptive_absorption_pattern,historical_separation_EV,forward_2026_separation_EV
+5,False,False,True,False,0.01989301884450881,0.31883020056223527
+15,False,False,False,False,-0.19232167372912004,-0.4822432822858037
+30,False,False,False,False,-0.33983114597575326,-0.2515808331157233
