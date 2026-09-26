@@ -49,7 +49,7 @@ def build(label,p):
         k=int(r.entry_k)
         vp.append(float(pct[k]) if k<len(pct) else np.nan)
         vr.append(float(vm[k]) if k<len(vm) else np.nan)
-        rr,ex,reason=lab53.manage_cf191g(dt5,H5,L5,C5,k,int(r.side),float(r.entry_price),float(r.atr))
+        rr,ex,reason=lab53.manage_cf191g(dt5,H5,L5,C5,k,int(r.side),float(C5[k]),float(A5[k]))
         er.append(REASON.get(int(reason),str(reason)))
     df['vol_metric_atr_pct']=vr
     df['vol_percentile_7d']=vp
