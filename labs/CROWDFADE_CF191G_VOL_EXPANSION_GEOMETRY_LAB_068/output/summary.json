@@ -1,0 +1,46 @@
+{
+  "lab": "LAB068_VOL_EXPANSION_GEOMETRY",
+  "checks": {
+    "2021_2023": {
+      "mid_N": 609,
+      "high_N": 516,
+      "high_fast0p5_lt_mid": false,
+      "high_expand1R60_lt_mid": true,
+      "high_failed_expand_gt_mid": true,
+      "high_right_tail_lt_mid": false,
+      "high_mfe60_lt_mid": true,
+      "high_mae60_gt_mid": false,
+      "delta_EV_R": 0.09947858807494145,
+      "delta_MFE60": -0.07293501480940523,
+      "delta_MAE60": -0.2213141460464647
+    },
+    "2024_2025": {
+      "mid_N": 467,
+      "high_N": 260,
+      "high_fast0p5_lt_mid": true,
+      "high_expand1R60_lt_mid": true,
+      "high_failed_expand_gt_mid": true,
+      "high_right_tail_lt_mid": true,
+      "high_mfe60_lt_mid": true,
+      "high_mae60_gt_mid": false,
+      "delta_EV_R": -0.1050108410274265,
+      "delta_MFE60": -0.29671850149453394,
+      "delta_MAE60": -0.13286093880420324
+    },
+    "2026": {
+      "mid_N": 105,
+      "high_N": 63,
+      "high_fast0p5_lt_mid": true,
+      "high_expand1R60_lt_mid": true,
+      "high_failed_expand_gt_mid": true,
+      "high_right_tail_lt_mid": true,
+      "high_mfe60_lt_mid": true,
+      "high_mae60_gt_mid": false,
+      "delta_EV_R": -0.3820060887305369,
+      "delta_MFE60": -0.3298506742148988,
+      "delta_MAE60": -0.0813634943285908
+    }
+  },
+  "classification_2026": "LOST_DIRECTIONAL_EXPANSION_UNDER_HIGH_ATR",
+  "note": "Diagnostic only; no action promoted."
+}
