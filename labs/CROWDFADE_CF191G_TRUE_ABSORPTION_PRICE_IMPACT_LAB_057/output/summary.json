@@ -1,0 +1,51 @@
+{
+  "lab": "CROWDFADE_CF191G_TRUE_ABSORPTION_PRICE_IMPACT_LAB_057",
+  "thresholds": {
+    "aggression_percentile": 0.9,
+    "impact_atr_abs_lt": 0.15,
+    "trailing_blocks": 288
+  },
+  "parity": {
+    "historical": {
+      "N": 5297,
+      "SumR": 700.3704107793633
+    },
+    "forward_2026": {
+      "N": 544,
+      "SumR": 35.49784078156513
+    }
+  },
+  "checks": {
+    "historical": {
+      "adverse_N": 4,
+      "supportive_N": 0,
+      "adverse_EV_below_control": true,
+      "adverse_PF_below_control": true,
+      "adverse_MFE_lower": false,
+      "adverse_MAE_higher": false,
+      "supportive_EV_gt_adverse": false,
+      "supportive_MFE_gt_adverse": false,
+      "supportive_MAE_lt_adverse": false
+    },
+    "forward_2026": {
+      "adverse_N": 2,
+      "supportive_N": 0,
+      "adverse_EV_below_control": false,
+      "adverse_PF_below_control": false,
+      "adverse_MFE_lower": false,
+      "adverse_MAE_higher": false,
+      "supportive_EV_gt_adverse": false,
+      "supportive_MFE_gt_adverse": false,
+      "supportive_MAE_lt_adverse": false
+    }
+  },
+  "mechanism_supported_on_primary_EV_PF_signs": false,
+  "limitations": [
+    "Diagnostic only; no stateful skip was tested.",
+    "High aggression is absolute quote-notional taker delta relative to prior 24h, not delta ratio.",
+    "Passive liquidity is inferred from failed price impact; full order book resting liquidity is not observed.",
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "Sample size of >=90th percentile + <0.15 ATR flags may be small."
+  ]
+}
