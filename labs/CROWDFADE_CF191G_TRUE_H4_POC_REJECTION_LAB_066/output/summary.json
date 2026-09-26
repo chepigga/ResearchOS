@@ -1,0 +1,35 @@
+{
+  "lab": "LAB066_TRUE_H4_POC_REJECTION",
+  "event_counts": {
+    "forward_2026": 21,
+    "historical": 221
+  },
+  "unique_aggtrade_days": 231,
+  "event_checks": {
+    "historical": {
+      "aligned_N": 66,
+      "opposite_N": 62,
+      "aligned_mean_ret4_gt_opposite": true,
+      "aligned_median_ret4_gt_opposite": false,
+      "aligned_mfe4_gt_opposite": true,
+      "aligned_mae4_lt_opposite": true
+    },
+    "forward_2026": {
+      "aligned_N": 10,
+      "opposite_N": 5,
+      "aligned_mean_ret4_gt_opposite": true,
+      "aligned_median_ret4_gt_opposite": true,
+      "aligned_mfe4_gt_opposite": true,
+      "aligned_mae4_lt_opposite": true
+    }
+  },
+  "primary_event_pattern_repeats_both_periods": false,
+  "cf191g_overlap_N": 61,
+  "limitations": [
+    "True POC uses exact aggTrade price levels weighted by quote notional.",
+    "q15-q85 is central 70% price mass, not standard market-profile Value Area.",
+    "Diagnostic only; no threshold/risk/entry/exit action.",
+    "CF191g overlap classes with N<20 historical or N<5 in 2026 are shadow-only.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS."
+  ]
+}
