@@ -299,7 +299,7 @@ def eval_predictions(d,prob,period,family):
     auc=float(roc_auc_score(y,prob)) if len(np.unique(y))>1 else np.nan
     brier=float(brier_score_loss(y,prob))
     x=d.copy();x['prob']=prob
-    x['q']=pd.qcut(x.prob,5,labels=['Q1','Q2','Q3','Q4','Q5'],duplicates='drop')
+    x['q']=pd.qcut(x.prob.rank(method='first'),5,labels=['Q1','Q2','Q3','Q4','Q5'])
     qrows=[]
     for q,g in x.groupby('q',observed=True):
         m=metrics_r(g.R.to_numpy(float))
