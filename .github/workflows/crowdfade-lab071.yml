@@ -1,0 +1,43 @@
+name: CrowdFade LAB071 LAB070 robustness
+
+on:
+  push:
+    branches: [ lab/crowdfade-execution-5y-positive-005 ]
+    paths:
+      - 'labs/CROWDFADE_CF191G_LAB070_ROBUSTNESS_LAB_071/**'
+      - '.github/workflows/crowdfade-lab071.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lab071:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -q numpy pandas numba tabulate
+      - name: Run LAB071
+        run: python labs/CROWDFADE_CF191G_LAB070_ROBUSTNESS_LAB_071/run.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CrowdFade-LAB071-robustness
+          path: labs/CROWDFADE_CF191G_LAB070_ROBUSTNESS_LAB_071/output/
+          retention-days: 30
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name "ResearchOS Lab Runner"
+          git config user.email "researchos-lab@users.noreply.github.com"
+          git add labs/CROWDFADE_CF191G_LAB070_ROBUSTNESS_LAB_071/output/
+          if git diff --cached --quiet; then echo "No changes"; else
+            git commit -m "lab(CrowdFade): record LAB071 robustness results"
+            git pull --rebase origin lab/crowdfade-execution-5y-positive-005
+            git push origin HEAD:lab/crowdfade-execution-5y-positive-005
+          fi
