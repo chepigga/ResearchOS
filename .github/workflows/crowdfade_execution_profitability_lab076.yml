@@ -1,0 +1,31 @@
+name: CrowdFade execution profitability LAB076
+on:
+  push:
+    branches: [lab/crowdfade-execution-5y-positive-005]
+    paths:
+      - 'labs/CROWDFADE_EXECUTION_PROFITABILITY_LAB_076/run.py'
+      - '.github/workflows/crowdfade_execution_profitability_lab076.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab076:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas numpy
+      - name: Run LAB076
+        run: python labs/CROWDFADE_EXECUTION_PROFITABILITY_LAB_076/run.py
+      - name: Commit outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_EXECUTION_PROFITABILITY_LAB_076/output
+          git diff --cached --quiet && exit 0
+          git commit -m 'lab(CrowdFade): record LAB076 execution profitability results'
+          git push
