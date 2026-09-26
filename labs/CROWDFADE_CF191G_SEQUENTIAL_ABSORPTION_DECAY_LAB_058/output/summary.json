@@ -1,0 +1,46 @@
+{
+  "lab": "CROWDFADE_CF191G_SEQUENTIAL_ABSORPTION_DECAY_LAB_058",
+  "parity": {
+    "historical": {
+      "N": 5297,
+      "SumR": 700.3704107793633
+    },
+    "forward_2026": {
+      "N": 544,
+      "SumR": 35.49784078156513
+    }
+  },
+  "checks": {
+    "historical": {
+      "adverse_N": 122,
+      "supportive_N": 3,
+      "adverse_EV_below_control": false,
+      "adverse_PF_below_control": false,
+      "adverse_MFE_lower": false,
+      "adverse_MAE_higher": true,
+      "supportive_EV_gt_adverse": true,
+      "supportive_MFE_gt_adverse": false,
+      "supportive_MAE_lt_adverse": false
+    },
+    "forward_2026": {
+      "adverse_N": 12,
+      "supportive_N": 1,
+      "adverse_EV_below_control": false,
+      "adverse_PF_below_control": false,
+      "adverse_MFE_lower": false,
+      "adverse_MAE_higher": false,
+      "supportive_EV_gt_adverse": false,
+      "supportive_MFE_gt_adverse": false,
+      "supportive_MAE_lt_adverse": true
+    }
+  },
+  "limitations": [
+    "Diagnostic only; no stateful veto tested.",
+    "Sequence uses Binance 1m taker quote-notional proxy, not full order-book resting liquidity.",
+    "Aggression magnitude is normalized by prior 1440 completed 1m bars.",
+    "Sequence percentiles use prior 288 completed 5m sequences only.",
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "Persistent 4-of-5 + double-tail corner may still be sample-limited."
+  ]
+}
