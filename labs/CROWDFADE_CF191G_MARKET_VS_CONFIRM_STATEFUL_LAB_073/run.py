@@ -116,11 +116,11 @@ def promotion(s,y):
     detail={}; ok=True
     for cost in ['IC','GETLEVERAGED']:
         for period in ['historical','forward_2026']:
-            b=s[(s.cost_model==cost)&(s.period==period)&(s.mode=='CONFIRM_CANONICAL')].iloc[0]
-            c=s[(s.cost_model==cost)&(s.period==period)&(s.mode=='MARKET_RAW')].iloc[0]
+            b=s[(s.cost_model==cost)&(s.period==period)&(s['mode']=='CONFIRM_CANONICAL')].iloc[0]
+            c=s[(s.cost_model==cost)&(s.period==period)&(s['mode']=='MARKET_RAW')].iloc[0]
             cond=(c.EV_R>=b.EV_R and c.PF>=b.PF and c.R_DD>=b.R_DD and c.MaxDD_R<=1.5*b.MaxDD_R and c.N>=200)
             detail[f'{cost}_{period}']=bool(cond); ok &= bool(cond)
-        yy=y[(y.cost_model==cost)&(y.mode=='MARKET_RAW')]
+        yy=y[(y.cost_model==cost)&(y['mode']=='MARKET_RAW')]
         pos=bool((yy.SumR>0).all()) and len(yy)>=5
         detail[f'{cost}_all_hist_years_positive']=pos; ok &= pos
     return {'candidate':'MARKET_RAW','promote':bool(ok),'detail':detail}
