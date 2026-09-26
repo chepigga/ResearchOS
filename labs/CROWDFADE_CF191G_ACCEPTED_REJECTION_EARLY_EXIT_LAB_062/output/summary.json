@@ -1,0 +1,261 @@
+{
+  "lab": "CROWDFADE_CF191G_ACCEPTED_REJECTION_EARLY_EXIT_LAB_062",
+  "rule": "first rejection within 15m + no reclaim for next 3 completed 1m bars -> exit on 3rd bar close",
+  "checks": {
+    "historical": {
+      "R_DD_not_worse": false,
+      "SumR_ge_98pct_control": false,
+      "PF_ge_control_or_DD_better": false,
+      "max_consecutive_losses_not_worse": false,
+      "positive_periods_not_worse": true,
+      "event_count_meaningful": true
+    },
+    "forward_2026": {
+      "R_DD_not_worse": true,
+      "SumR_ge_98pct_control": false,
+      "PF_ge_control_or_DD_better": true,
+      "max_consecutive_losses_not_worse": true,
+      "positive_periods_not_worse": true,
+      "event_count_meaningful": true
+    }
+  },
+  "PASS_BOTH_PERIODS": false,
+  "period_details": {
+    "historical_CONTROL": {
+      "2021": {
+        "N": 1071,
+        "WR": 0.3949579831932773,
+        "EV": 0.1047816244904003,
+        "PF": 1.1804912641118583,
+        "SumR": 112.22111982921871,
+        "MaxDD_R": 31.891715849898546,
+        "R_DD": 3.5188172488867733,
+        "MaxConsecutiveLosses": 11
+      },
+      "2022": {
+        "N": 1009,
+        "WR": 0.41526263627353815,
+        "EV": 0.21493777277952042,
+        "PF": 1.3835542093569597,
+        "SumR": 216.8722127345361,
+        "MaxDD_R": 24.828725214397195,
+        "R_DD": 8.734730070184211,
+        "MaxConsecutiveLosses": 9
+      },
+      "2023": {
+        "N": 1065,
+        "WR": 0.37934272300469485,
+        "EV": 0.1533408545562732,
+        "PF": 1.259280558271631,
+        "SumR": 163.30801010243096,
+        "MaxDD_R": 30.507009043610655,
+        "R_DD": 5.35313081229882,
+        "MaxConsecutiveLosses": 14
+      },
+      "2024": {
+        "N": 1075,
+        "WR": 0.3841860465116279,
+        "EV": 0.08937200379950219,
+        "PF": 1.1505812646557374,
+        "SumR": 96.07490408446486,
+        "MaxDD_R": 31.976920699122203,
+        "R_DD": 3.0045076881684296,
+        "MaxConsecutiveLosses": 9
+      },
+      "2025": {
+        "N": 1077,
+        "WR": 0.3788300835654596,
+        "EV": 0.10389430271932462,
+        "PF": 1.1725088691355123,
+        "SumR": 111.89416402871262,
+        "MaxDD_R": 22.657773501325117,
+        "R_DD": 4.938444813307389,
+        "MaxConsecutiveLosses": 14
+      }
+    },
+    "historical_ACCEPTED_REJECTION_EXIT_3M": {
+      "2021": {
+        "N": 1070,
+        "WR": 0.37009345794392523,
+        "EV": 0.09019204578624178,
+        "PF": 1.1654993697756177,
+        "SumR": 96.50548899127871,
+        "MaxDD_R": 38.754389394708056,
+        "R_DD": 2.4901821573908376,
+        "MaxConsecutiveLosses": 13
+      },
+      "2022": {
+        "N": 1014,
+        "WR": 0.3826429980276134,
+        "EV": 0.17246421988078336,
+        "PF": 1.3242553426000425,
+        "SumR": 174.87871895911434,
+        "MaxDD_R": 26.98033201692253,
+        "R_DD": 6.481711153496087,
+        "MaxConsecutiveLosses": 11
+      },
+      "2023": {
+        "N": 1064,
+        "WR": 0.35620300751879697,
+        "EV": 0.1424084417812244,
+        "PF": 1.2602495891198824,
+        "SumR": 151.52258205522276,
+        "MaxDD_R": 25.333576974055887,
+        "R_DD": 5.981097032227112,
+        "MaxConsecutiveLosses": 14
+      },
+      "2024": {
+        "N": 1078,
+        "WR": 0.35064935064935066,
+        "EV": 0.07428953230645471,
+        "PF": 1.1357582748423005,
+        "SumR": 80.08411582635819,
+        "MaxDD_R": 46.283907025077255,
+        "R_DD": 1.7302799390502517,
+        "MaxConsecutiveLosses": 13
+      },
+      "2025": {
+        "N": 1078,
+        "WR": 0.3358070500927644,
+        "EV": 0.05987114232601604,
+        "PF": 1.1034237356941852,
+        "SumR": 64.5410914274453,
+        "MaxDD_R": 31.0110958181406,
+        "R_DD": 2.0812257588682375,
+        "MaxConsecutiveLosses": 15
+      }
+    },
+    "forward_2026_CONTROL": {
+      "2026-03": {
+        "N": 93,
+        "WR": 0.45161290322580644,
+        "EV": 0.3158999077015703,
+        "PF": 1.5702590372343848,
+        "SumR": 29.378691416246035,
+        "MaxDD_R": 7.523688828700503,
+        "R_DD": 3.904825423424688,
+        "MaxConsecutiveLosses": 6
+      },
+      "2026-04": {
+        "N": 87,
+        "WR": 0.40229885057471265,
+        "EV": 0.18122974801149955,
+        "PF": 1.3093584460165673,
+        "SumR": 15.76698807700046,
+        "MaxDD_R": 9.940697775032458,
+        "R_DD": 1.586104761840924,
+        "MaxConsecutiveLosses": 7
+      },
+      "2026-05": {
+        "N": 93,
+        "WR": 0.3548387096774194,
+        "EV": -0.05914348057023328,
+        "PF": 0.9049085459111996,
+        "SumR": -5.500343693031695,
+        "MaxDD_R": 12.546522619903602,
+        "R_DD": -0.4383958694902473,
+        "MaxConsecutiveLosses": 5
+      },
+      "2026-06": {
+        "N": 89,
+        "WR": 0.34831460674157305,
+        "EV": 0.03676501338871114,
+        "PF": 1.0573658013609533,
+        "SumR": 3.2720861915952915,
+        "MaxDD_R": 20.554913776706556,
+        "R_DD": 0.15918754158450021,
+        "MaxConsecutiveLosses": 8
+      },
+      "2026-07": {
+        "N": 93,
+        "WR": 0.3870967741935484,
+        "EV": 0.1197316265744291,
+        "PF": 1.2002315955000422,
+        "SumR": 11.135041271421906,
+        "MaxDD_R": 13.17213572887135,
+        "R_DD": 0.8453482032542045,
+        "MaxConsecutiveLosses": 13
+      },
+      "2026-08": {
+        "N": 89,
+        "WR": 0.2696629213483146,
+        "EV": -0.20847890428839183,
+        "PF": 0.7079138071814668,
+        "SumR": -18.554622481666872,
+        "MaxDD_R": 27.632952848676055,
+        "R_DD": -0.6714672363563874,
+        "MaxConsecutiveLosses": 16
+      }
+    },
+    "forward_2026_ACCEPTED_REJECTION_EXIT_3M": {
+      "2026-03": {
+        "N": 93,
+        "WR": 0.44086021505376344,
+        "EV": 0.35753056178032144,
+        "PF": 1.6982099613063761,
+        "SumR": 33.2503422455699,
+        "MaxDD_R": 6.1449051591224455,
+        "R_DD": 5.411042381379631,
+        "MaxConsecutiveLosses": 6
+      },
+      "2026-04": {
+        "N": 87,
+        "WR": 0.3218390804597701,
+        "EV": 0.04265176736588364,
+        "PF": 1.0715176250272596,
+        "SumR": 3.7107037608318767,
+        "MaxDD_R": 9.746658315110235,
+        "R_DD": 0.3807154863610204,
+        "MaxConsecutiveLosses": 7
+      },
+      "2026-05": {
+        "N": 93,
+        "WR": 0.3225806451612903,
+        "EV": -0.07537526987428253,
+        "PF": 0.8748924387656143,
+        "SumR": -7.009900098308275,
+        "MaxDD_R": 13.11338716418077,
+        "R_DD": -0.5345605990690052,
+        "MaxConsecutiveLosses": 7
+      },
+      "2026-06": {
+        "N": 89,
+        "WR": 0.33707865168539325,
+        "EV": 0.060472649741226084,
+        "PF": 1.099590353848196,
+        "SumR": 5.3820658269691215,
+        "MaxDD_R": 19.855756867241034,
+        "R_DD": 0.27105820558513727,
+        "MaxConsecutiveLosses": 9
+      },
+      "2026-07": {
+        "N": 93,
+        "WR": 0.3655913978494624,
+        "EV": 0.0727590323672918,
+        "PF": 1.126643489887787,
+        "SumR": 6.766590010158137,
+        "MaxDD_R": 12.464737017369217,
+        "R_DD": 0.5428586259564969,
+        "MaxConsecutiveLosses": 13
+      },
+      "2026-08": {
+        "N": 89,
+        "WR": 0.2696629213483146,
+        "EV": -0.1059396034676525,
+        "PF": 0.825369018482184,
+        "SumR": -9.428624708621072,
+        "MaxDD_R": 17.866279446693454,
+        "R_DD": -0.5277329696287744,
+        "MaxConsecutiveLosses": 8
+      }
+    }
+  },
+  "limitations": [
+    "Full stateful replay; occupancy and future reachability change naturally.",
+    "Control management remains frozen M5 CF191g; accepted rejection is observed on completed Binance 1m closes.",
+    "If frozen control exit is before or at action timestamp, control exit wins.",
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "No softer stop/BE action tested in this LAB."
+  ]
+}
