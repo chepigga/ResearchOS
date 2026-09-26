@@ -1,0 +1,73 @@
+{
+  "lab": "LAB071_LAB070_FIXED_RULE_ROBUSTNESS",
+  "checks": {
+    "historical": {
+      "cost_1bps_R_DD_not_worse": true,
+      "cost_1bps_SumR_ge_98pct": false,
+      "bootstrap_median_R_DD_delta_gt_0": true,
+      "bootstrap_prob_R_DD_gt_0_ge_0p60": true
+    },
+    "forward_2026": {
+      "cost_1bps_R_DD_not_worse": true,
+      "cost_1bps_SumR_ge_98pct": true,
+      "bootstrap_median_R_DD_delta_gt_0": true,
+      "bootstrap_prob_R_DD_gt_0_ge_0p60": true
+    }
+  },
+  "DEMO_CANDIDATE": false,
+  "bootstrap": [
+    {
+      "period": "historical",
+      "replicates": 5000,
+      "block_len": 50,
+      "sumR_delta": {
+        "median": -12.450520699845868,
+        "p10": -27.135065327439623,
+        "p90": 1.2296120762235092
+      },
+      "maxDD_delta": {
+        "median": -1.5567341788819533,
+        "p10": -3.8204028978448066,
+        "p90": 0.500771760697956
+      },
+      "R_DD_delta": {
+        "median": 0.39299978685504566,
+        "p10": -0.7079568425023317,
+        "p90": 1.4695227050452782
+      },
+      "prob_R_DD_delta_gt_0": 0.6974,
+      "prob_SumR_delta_gt_0": 0.1234,
+      "prob_MaxDD_delta_lt_0": 0.843
+    },
+    {
+      "period": "forward_2026",
+      "replicates": 5000,
+      "block_len": 50,
+      "sumR_delta": {
+        "median": 1.1940387057450472,
+        "p10": -1.0446402381844202,
+        "p90": 3.3789403197861883
+      },
+      "maxDD_delta": {
+        "median": -0.3240323676300978,
+        "p10": -1.4471464080197336,
+        "p90": 0.8741270611022507
+      },
+      "R_DD_delta": {
+        "median": 0.05190096040437464,
+        "p10": -0.05233333456332394,
+        "p90": 0.2209369310668739
+      },
+      "prob_R_DD_delta_gt_0": 0.7478,
+      "prob_SumR_delta_gt_0": 0.7508,
+      "prob_MaxDD_delta_lt_0": 0.644
+    }
+  ],
+  "limitations": [
+    "Rule parameters are frozen from LAB070; no retuning.",
+    "Block bootstrap resamples paired 50-trade chronological blocks with wrap-around.",
+    "Extra cost stress is applied only to the 50% reduction leg.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "BTCUSDT only; broker-specific spread/slippage still requires demo validation."
+  ]
+}
