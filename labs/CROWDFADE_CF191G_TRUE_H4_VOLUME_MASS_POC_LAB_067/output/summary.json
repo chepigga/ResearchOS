@@ -1,0 +1,31 @@
+{
+  "lab": "LAB067_TRUE_H4_VOLUME_MASS_POC",
+  "checks": {
+    "historical": {
+      "confirmed_N": 37,
+      "contradicted_N": 55,
+      "confirmed_mean_ret4_gt_contradicted": false,
+      "confirmed_median_ret4_gt_contradicted": false,
+      "confirmed_mfe4_gt_contradicted": true,
+      "confirmed_mae4_lt_contradicted": true,
+      "sample_ok": true
+    },
+    "forward_2026": {
+      "confirmed_N": 4,
+      "contradicted_N": 4,
+      "confirmed_mean_ret4_gt_contradicted": false,
+      "confirmed_median_ret4_gt_contradicted": true,
+      "confirmed_mfe4_gt_contradicted": false,
+      "confirmed_mae4_lt_contradicted": true,
+      "sample_ok": false
+    }
+  },
+  "primary_pattern_repeats_and_sample_ok": false,
+  "cf191g_overlap_N": 61,
+  "limitations": [
+    "Uses frozen LAB066 true aggTrade profiles; no thresholds retuned.",
+    "Mass alignment is only rejected-side-third share versus opposite-side-third share.",
+    "Diagnostic only; no trading action.",
+    "2026 Mar-Aug is reused shadow/stress."
+  ]
+}
