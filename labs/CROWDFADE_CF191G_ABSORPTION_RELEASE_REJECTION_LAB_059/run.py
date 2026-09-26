@@ -115,6 +115,8 @@ def build_period(label,p,m1seq,m1full):
     if len(df)!=exp['N'] or abs(float(df.R.sum())-exp['SumR'])>1e-6:
         raise RuntimeError(f'control parity fail {label}')
     a=df[df.adverse_decay_corner].copy().reset_index(drop=True)
+    A5=p[10]
+    a['entry_atr']=A5[a.entry_k.to_numpy(np.int64)]
     if len(a)!=exp['absN']:
         raise RuntimeError(f'LAB058 adverse universe parity fail {label}: {len(a)} vs {exp["absN"]}')
     rows=[]
@@ -128,7 +130,7 @@ def build_period(label,p,m1seq,m1full):
         # Primary 3m local delayed-release replay only.
         if row['resolution_3m']=='RELEASE':
             dentry=float(row['resolution_close_3m']);dts=int(row['resolution_ts_3m'])
-            rr,ets,reason=manage_delayed_1m(m1full,dts,int(r.side),dentry,float(r.atr))
+            rr,ets,reason=manage_delayed_1m(m1full,dts,int(r.side),dentry,float(r.entry_atr))
             row['delayed_release_entry']=dentry
             row['delayed_release_R']=rr
             row['delayed_release_exit_ts']=ets
