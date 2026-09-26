@@ -216,7 +216,7 @@ def estat(ev):
       'total_given_up_R':float(ev.given_up_R.sum()),'net_local_delta_R':float(ev.delta_R.sum()),
       'original_initial_stop_share':float((ev.original_exit_reason=='INITIAL_STOP').mean()),
       'original_right_tail_share':float(ev.original_right_tail.mean()),
-      'immediate_close_share':float((ev.mode=='IMMEDIATE_AT_15M_CLOSE').mean())
+      'immediate_close_share':float((ev['mode']=='IMMEDIATE_AT_15M_CLOSE').mean())
     }
 
 def chk(period,cm,cpos,m,pos,n):
