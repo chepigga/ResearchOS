@@ -1,0 +1,306 @@
+{
+  "lab": "CROWDFADE_CF191G_CAUSAL_REGIME_IMPULSE_MODEL_LAB_054",
+  "parity": {
+    "historical": {
+      "N": 5297,
+      "SumR": 700.3704107793633
+    },
+    "forward_2026": {
+      "N": 544,
+      "SumR": 35.49784078156513
+    }
+  },
+  "target": "IMPULSE60 = +1.0 ATR before -0.5 ATR within 60m; same raw bar both => failure",
+  "families": {
+    "TREND_ONLY": [
+      "h1_state",
+      "h4_state",
+      "h1_h4_aligned",
+      "with_h1",
+      "with_h4",
+      "with_aligned"
+    ],
+    "PRICE_ONLY": [
+      "ret15_atr",
+      "ret30_atr",
+      "ret60_atr",
+      "eff30",
+      "eff60",
+      "range15_atr",
+      "range60_atr",
+      "close_loc15",
+      "close_loc60",
+      "pullback60_atr",
+      "atr_pct"
+    ],
+    "FLOW_ONLY": [
+      "oi_ch30",
+      "oi_ch60",
+      "taker_delta15",
+      "taker_delta30",
+      "taker_delta60",
+      "vol_exp15"
+    ],
+    "FULL": [
+      "h1_state",
+      "h4_state",
+      "h1_h4_aligned",
+      "with_h1",
+      "with_h4",
+      "with_aligned",
+      "ret15_atr",
+      "ret30_atr",
+      "ret60_atr",
+      "eff30",
+      "eff60",
+      "range15_atr",
+      "range60_atr",
+      "close_loc15",
+      "close_loc60",
+      "pullback60_atr",
+      "atr_pct",
+      "confirm_age_min",
+      "pre_fav_atr",
+      "pre_adv_atr",
+      "response_ratio",
+      "signal_z",
+      "confirm_z",
+      "delta_abs_z",
+      "oi_ch30",
+      "oi_ch60",
+      "taker_delta15",
+      "taker_delta30",
+      "taker_delta60",
+      "vol_exp15"
+    ]
+  },
+  "walkforward_scores": [
+    {
+      "period": "2024",
+      "family": "TREND_ONLY",
+      "N": 1075,
+      "AUC": 0.518693342571742,
+      "Brier": 0.21036050634483014,
+      "base_rate": 0.29953488372093023
+    },
+    {
+      "period": "2025",
+      "family": "TREND_ONLY",
+      "N": 1077,
+      "AUC": 0.5016292853278246,
+      "Brier": 0.21085349946320775,
+      "base_rate": 0.3008356545961003
+    },
+    {
+      "period": "2026",
+      "family": "TREND_ONLY",
+      "N": 544,
+      "AUC": 0.550899496282082,
+      "Brier": 0.21033528831975423,
+      "base_rate": 0.30330882352941174
+    },
+    {
+      "period": "2024",
+      "family": "PRICE_ONLY",
+      "N": 1075,
+      "AUC": 0.5169095873235835,
+      "Brier": 0.21038293072575756,
+      "base_rate": 0.29953488372093023
+    },
+    {
+      "period": "2025",
+      "family": "PRICE_ONLY",
+      "N": 1077,
+      "AUC": 0.5211950551702654,
+      "Brier": 0.21056040244844157,
+      "base_rate": 0.3008356545961003
+    },
+    {
+      "period": "2026",
+      "family": "PRICE_ONLY",
+      "N": 544,
+      "AUC": 0.535284240825138,
+      "Brier": 0.2104250774619692,
+      "base_rate": 0.30330882352941174
+    },
+    {
+      "period": "2024",
+      "family": "FLOW_ONLY",
+      "N": 1075,
+      "AUC": 0.501921918949461,
+      "Brier": 0.21056824455926512,
+      "base_rate": 0.29953488372093023
+    },
+    {
+      "period": "2025",
+      "family": "FLOW_ONLY",
+      "N": 1077,
+      "AUC": 0.4925155345695407,
+      "Brier": 0.21045464566822714,
+      "base_rate": 0.3008356545961003
+    },
+    {
+      "period": "2026",
+      "family": "FLOW_ONLY",
+      "N": 544,
+      "AUC": 0.5105301031422403,
+      "Brier": 0.21093447061518175,
+      "base_rate": 0.30330882352941174
+    },
+    {
+      "period": "2024",
+      "family": "FULL",
+      "N": 1075,
+      "AUC": 0.5192274380737918,
+      "Brier": 0.21037155299832822,
+      "base_rate": 0.29953488372093023
+    },
+    {
+      "period": "2025",
+      "family": "FULL",
+      "N": 1077,
+      "AUC": 0.5169281720853213,
+      "Brier": 0.2115519193796917,
+      "base_rate": 0.3008356545961003
+    },
+    {
+      "period": "2026",
+      "family": "FULL",
+      "N": 544,
+      "AUC": 0.560917885983849,
+      "Brier": 0.20854328088414315,
+      "base_rate": 0.30330882352941174
+    }
+  ],
+  "pooled_scores": [
+    {
+      "family": "TREND_ONLY",
+      "N": 2696,
+      "AUC": 0.5137322688366525,
+      "Brier": 0.2105523590832765,
+      "base_rate": 0.3008160237388724
+    },
+    {
+      "family": "PRICE_ONLY",
+      "N": 2696,
+      "AUC": 0.5224162461119815,
+      "Brier": 0.21046233164186656,
+      "base_rate": 0.3008160237388724
+    },
+    {
+      "family": "FLOW_ONLY",
+      "N": 2696,
+      "AUC": 0.4998295976738938,
+      "Brier": 0.2105967612390762,
+      "base_rate": 0.3008160237388724
+    },
+    {
+      "family": "FULL",
+      "N": 2696,
+      "AUC": 0.5262004206091965,
+      "Brier": 0.21047417709425248,
+      "base_rate": 0.3008160237388724
+    }
+  ],
+  "success": {
+    "pooled_AUC_ge_058": false,
+    "all_period_AUC_gt_052": false,
+    "Q5_impulse_gt_Q1_all_periods": true,
+    "Q5_EV_gt_Q1_at_least_2of3": false,
+    "FULL_within_002_of_best_family": true,
+    "PASS": false,
+    "period_Q1_Q5": [
+      {
+        "period": "2024",
+        "Q1_impulse": 0.3209302325581395,
+        "Q5_impulse": 0.3302325581395349,
+        "Q1_EV": 0.27370126866801375,
+        "Q5_EV": 0.10910955322342424
+      },
+      {
+        "period": "2025",
+        "Q1_impulse": 0.2777777777777778,
+        "Q5_impulse": 0.30092592592592593,
+        "Q1_EV": 0.1281185284288385,
+        "Q5_EV": 0.08820206494785589
+      },
+      {
+        "period": "2026",
+        "Q1_impulse": 0.28440366972477066,
+        "Q5_impulse": 0.3853211009174312,
+        "Q1_EV": -0.007730925159976947,
+        "Q5_EV": 0.2757772526646551
+      }
+    ]
+  },
+  "top_2026_full_coefficients": [
+    {
+      "feature": "ret60_atr",
+      "std_logit_coef": -0.16716956654644435,
+      "abs_coef": 0.16716956654644435
+    },
+    {
+      "feature": "pullback60_atr",
+      "std_logit_coef": -0.16526749795931198,
+      "abs_coef": 0.16526749795931198
+    },
+    {
+      "feature": "range60_atr",
+      "std_logit_coef": 0.15744987832143015,
+      "abs_coef": 0.15744987832143015
+    },
+    {
+      "feature": "eff60",
+      "std_logit_coef": 0.150651739412097,
+      "abs_coef": 0.150651739412097
+    },
+    {
+      "feature": "oi_ch60",
+      "std_logit_coef": 0.12461845146504522,
+      "abs_coef": 0.12461845146504522
+    },
+    {
+      "feature": "close_loc60",
+      "std_logit_coef": -0.10748301253339378,
+      "abs_coef": 0.10748301253339378
+    },
+    {
+      "feature": "eff30",
+      "std_logit_coef": 0.10415063293318112,
+      "abs_coef": 0.10415063293318112
+    },
+    {
+      "feature": "ret30_atr",
+      "std_logit_coef": -0.09858769065550725,
+      "abs_coef": 0.09858769065550725
+    },
+    {
+      "feature": "confirm_age_min",
+      "std_logit_coef": -0.09448264797392986,
+      "abs_coef": 0.09448264797392986
+    },
+    {
+      "feature": "oi_ch30",
+      "std_logit_coef": -0.08901247363248371,
+      "abs_coef": 0.08901247363248371
+    },
+    {
+      "feature": "pre_adv_atr",
+      "std_logit_coef": 0.06226676697266144,
+      "abs_coef": 0.06226676697266144
+    },
+    {
+      "feature": "pre_fav_atr",
+      "std_logit_coef": 0.06120778975332518,
+      "abs_coef": 0.06120778975332518
+    }
+  ],
+  "limitations": [
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2021-2025 path uses 1m OHLC; same-bar target ambiguity is scored conservatively as failure.",
+    "2026 Mar-Aug uses frozen 1-second price archive for CF191g path/targets and completed Binance 1m for flow features.",
+    "2026 Mar-Aug is reused forward-shadow/stress, not pristine OOS.",
+    "Flat 0.5bps research cost proxy; broker-specific CFD spread/slippage is not modeled.",
+    "Shadow scoring only; no hard veto or risk multiplier is promoted."
+  ]
+}
