@@ -1,0 +1,29 @@
+{
+  "lab": "LAB067_TRUE_POC_RIGHT_TAIL",
+  "checks": {
+    "2021_2023": {
+      "aligned_N": 39,
+      "opposite_N": 42,
+      "aligned_q90_ret4_gt_opposite": true,
+      "aligned_q90_mfe4_gt_opposite": true,
+      "aligned_median_ret4_gt_opposite": false
+    },
+    "2024_2025": {
+      "aligned_N": 27,
+      "opposite_N": 20,
+      "aligned_q90_ret4_gt_opposite": false,
+      "aligned_q90_mfe4_gt_opposite": true,
+      "aligned_median_ret4_gt_opposite": true
+    },
+    "2026": {
+      "aligned_N": 10,
+      "opposite_N": 5,
+      "aligned_q90_ret4_gt_opposite": true,
+      "aligned_q90_mfe4_gt_opposite": true,
+      "aligned_median_ret4_gt_opposite": true
+    }
+  },
+  "right_tail_advantage_repeats_all_splits": false,
+  "decision": "CLOSE_FOOTPRINT_POC_BRANCH",
+  "note": "Same LAB066 sample; robustness diagnostic, not independent OOS."
+}
