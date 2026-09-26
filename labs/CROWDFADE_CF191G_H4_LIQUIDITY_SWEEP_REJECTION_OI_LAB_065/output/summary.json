@@ -1,0 +1,33 @@
+{
+  "lab": "LAB065_H4_LIQUIDITY_SWEEP_REJECTION_OI",
+  "checks": {
+    "historical": {
+      "supportive_N": 32,
+      "adverse_N": 27,
+      "none_N": 5238,
+      "supportive_EV_gt_none": false,
+      "supportive_PF_gt_none": false,
+      "supportive_MFE60_gt_none": false,
+      "supportive_initial_stop_lt_none": true,
+      "adverse_EV_lt_supportive": false
+    },
+    "forward_2026": {
+      "supportive_N": 2,
+      "adverse_N": 0,
+      "none_N": 542,
+      "supportive_EV_gt_none": false,
+      "supportive_PF_gt_none": false,
+      "supportive_MFE60_gt_none": false,
+      "supportive_initial_stop_lt_none": false,
+      "adverse_EV_lt_supportive": false
+    }
+  },
+  "supportive_edge_repeats_both_periods": false,
+  "limitations": [
+    "No footprint POC/volume-at-price; OHLC rejection + H4 quote volume is only a proxy.",
+    "Only the latest completed H4 candle is mapped to each CF191g fill.",
+    "OI flush uses sign only; no magnitude threshold.",
+    "Diagnostic only; no entry/exit/risk action tested.",
+    "BTCUSDT only; 2026 Mar-Aug reused shadow/stress."
+  ]
+}
