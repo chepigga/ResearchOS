@@ -1,0 +1,27 @@
+{
+  "lab": "LAB064_CAUSAL_VOLATILITY_REGIME",
+  "checks": {
+    "historical": {
+      "mid_N": 1076,
+      "high_N": 776,
+      "high_EV_lt_mid": false,
+      "high_PF_lt_mid": false,
+      "high_MAE60_gt_mid": false,
+      "high_initial_stop_share_gt_mid": false
+    },
+    "forward_2026": {
+      "mid_N": 105,
+      "high_N": 63,
+      "high_EV_lt_mid": true,
+      "high_PF_lt_mid": true,
+      "high_MAE60_gt_mid": false,
+      "high_initial_stop_share_gt_mid": true
+    }
+  },
+  "simple_high_vol_penalty_repeats_both_periods": false,
+  "limitations": [
+    "Diagnostic only; no vol filter/risk change.",
+    "7d causal percentile excludes first 2016 M5 bars in each prepared evaluation series.",
+    "BTCUSDT only; 2026 Mar-Aug reused shadow/stress."
+  ]
+}
