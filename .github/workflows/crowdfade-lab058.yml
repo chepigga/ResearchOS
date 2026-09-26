@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -q numpy pandas numba tabulate
+      - run: python -m pip install -q numpy pandas numba scikit-learn tabulate
       - name: Download frozen inputs
         shell: bash
         run: |
