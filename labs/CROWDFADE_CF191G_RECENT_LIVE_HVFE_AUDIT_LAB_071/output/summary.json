@@ -1,0 +1,14 @@
+{
+  "N": 4,
+  "HVFE_N": 0,
+  "actual_losers": 3,
+  "HVFE_among_losers": 0,
+  "actual_winners": 1,
+  "HVFE_among_winners": 0,
+  "actual_sum_R": -2.349987700724389,
+  "exit15_shadow_sum_R": -2.349987700724389,
+  "stopcap075_shadow_sum_R": -2.349987700724389,
+  "actual_mean_R": -0.5874969251810972,
+  "exit15_shadow_mean_R": -0.5874969251810972,
+  "stopcap075_shadow_mean_R": -0.5874969251810972
+}
