@@ -1,0 +1,29 @@
+{
+  "lab": "CROWDFADE_CF191G_POST_ENTRY_REJECTION_RECLAIM_FAILURE_LAB_061",
+  "primary_window_min": 3,
+  "checks": {
+    "historical": {
+      "reclaimed_N": 874,
+      "no_reclaim_N": 865,
+      "NO_RECLAIM_EV_lt_RECLAIMED": true,
+      "NO_RECLAIM_PF_lt_RECLAIMED": true,
+      "NO_RECLAIM_MFE60_lt_RECLAIMED": true,
+      "NO_RECLAIM_MAE60_gt_RECLAIMED": true,
+      "NO_RECLAIM_initial_stop_share_gt_RECLAIMED": true,
+      "sample_ok": true
+    },
+    "forward_2026": {
+      "reclaimed_N": 97,
+      "no_reclaim_N": 84,
+      "NO_RECLAIM_EV_lt_RECLAIMED": true,
+      "NO_RECLAIM_PF_lt_RECLAIMED": true,
+      "NO_RECLAIM_MFE60_lt_RECLAIMED": true,
+      "NO_RECLAIM_MAE60_gt_RECLAIMED": true,
+      "NO_RECLAIM_initial_stop_share_gt_RECLAIMED": true,
+      "sample_ok": true
+    }
+  },
+  "primary_PASS_both_periods": true,
+  "STOP_EXIT_BRANCH": false,
+  "stop_rule": "If primary fails in either period or sample is insufficient, stop this rejection/reclaim exit branch."
+}
