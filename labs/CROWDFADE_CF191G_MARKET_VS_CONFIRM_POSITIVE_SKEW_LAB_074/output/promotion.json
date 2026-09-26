@@ -1,0 +1,12 @@
+{
+  "candidate": "MARKET_RAW",
+  "promote": false,
+  "detail": {
+    "IC_historical": true,
+    "IC_forward_2026": false,
+    "IC_all_5_hist_years_positive": true,
+    "GETLEVERAGED_historical": false,
+    "GETLEVERAGED_forward_2026": false,
+    "GETLEVERAGED_all_5_hist_years_positive": false
+  }
+}
