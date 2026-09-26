@@ -1,0 +1,32 @@
+{
+  "lab": "LAB063_EXITZ_CROWD_EDGE_DECAY",
+  "primary_horizon_min": 30,
+  "checks": {
+    "historical": {
+      "strong_N": 3588,
+      "sign_flip_N": 144,
+      "opp_extreme_N": 115,
+      "strong_EV_gt_signflip": false,
+      "strong_PF_gt_signflip": false,
+      "strong_MFE60_gt_signflip": false,
+      "strong_MAE60_lt_signflip": false,
+      "opp_extreme_not_better_EV_than_strong": false
+    },
+    "forward_2026": {
+      "strong_N": 405,
+      "sign_flip_N": 8,
+      "opp_extreme_N": 3,
+      "strong_EV_gt_signflip": false,
+      "strong_PF_gt_signflip": false,
+      "strong_MFE60_gt_signflip": false,
+      "strong_MAE60_lt_signflip": false,
+      "opp_extreme_not_better_EV_than_strong": true
+    }
+  },
+  "primary_pattern_repeats_both_periods": false,
+  "limitations": [
+    "Diagnostic only; no stateful ExitZ action tested.",
+    "Only states while the frozen control position remains open are classified.",
+    "BTCUSDT only; 2026 Mar-Aug is reused shadow/stress, not pristine OOS."
+  ]
+}
