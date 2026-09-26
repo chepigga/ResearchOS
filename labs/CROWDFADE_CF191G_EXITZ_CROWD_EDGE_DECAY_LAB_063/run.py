@@ -42,7 +42,7 @@ def build(label,p):
     t_below=[];t_flip=[];t_opp=[]
 
     for _,r in df.iterrows():
-        k=int(r.entry_k); side=int(r.side); et=int(r.entry_ts); entry=float(r.entry_price); atr=float(r.atr)
+        k=int(r.entry_k); side=int(r.side); et=int(r.entry_ts); entry=float(C5[k]); atr=float(A5[k])
         e0=-side*float(Z5[k]); entry_edge.append(e0)
         rr0,ex,reason=lab53.manage_cf191g(dt5,H5,L5,C5,k,side,entry,atr)
         xt=int(dt5[int(ex)]); exit_ts.append(xt); exit_reason.append(REASON.get(int(reason),str(reason)))
