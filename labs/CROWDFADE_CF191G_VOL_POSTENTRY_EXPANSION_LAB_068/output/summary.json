@@ -1,0 +1,57 @@
+{
+  "lab": "LAB068_VOL_POSTENTRY_EXPANSION",
+  "regime_checks": {
+    "historical": {
+      "mid_N": 1076,
+      "high_N": 776,
+      "high_expansion_lt_mid": false,
+      "high_eff_lt_mid": false,
+      "high_persist_lt_mid": false,
+      "high_expansion_state_share_lt_mid": false,
+      "high_failed_share_gt_mid": false,
+      "expansion_gap_high_minus_mid": 0.011893619333427832,
+      "eff_gap_high_minus_mid": 0.00195645181668715,
+      "persistent_share_gap_high_minus_mid": 0.0027449890775303742
+    },
+    "forward_2026": {
+      "mid_N": 105,
+      "high_N": 63,
+      "high_expansion_lt_mid": false,
+      "high_eff_lt_mid": false,
+      "high_persist_lt_mid": false,
+      "high_expansion_state_share_lt_mid": false,
+      "high_failed_share_gt_mid": true,
+      "expansion_gap_high_minus_mid": 0.015613303171257652,
+      "eff_gap_high_minus_mid": 0.01786418255649459,
+      "persistent_share_gap_high_minus_mid": 0.009523809523809518
+    }
+  },
+  "regime_shift_hypothesis_supported": false,
+  "high_vol_state_ordering_supported_both_periods": false,
+  "state_checks": {
+    "historical": {
+      "persistent_N": 93,
+      "failed_N": 416,
+      "persistent_EV_gt_failed": true,
+      "persistent_PF_gt_failed": true,
+      "persistent_post15_MFE_gt_failed": true,
+      "persistent_post15_MAE_lt_failed": false,
+      "persistent_right_tail_gt_failed": true
+    },
+    "forward_2026": {
+      "persistent_N": 9,
+      "failed_N": 36,
+      "persistent_EV_gt_failed": true,
+      "persistent_PF_gt_failed": true,
+      "persistent_post15_MFE_gt_failed": true,
+      "persistent_post15_MAE_lt_failed": true,
+      "persistent_right_tail_gt_failed": true
+    }
+  },
+  "limitations": [
+    "Diagnostic only; no stateful action.",
+    "Early-state features use exactly first 15 completed 1m bars after fill.",
+    "All-entry map includes market path even if frozen control exited before 15m; active15 subset is reported separately for management relevance.",
+    "BTCUSDT only; 2026 Mar-Aug reused shadow/stress."
+  ]
+}
