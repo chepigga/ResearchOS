@@ -1,10 +1,10 @@
-name: CrowdFade LAB069 high-vol failed-early exit
+name: CrowdFade LAB069 highvol failed early mgmt
 
 on:
   push:
     branches: [ lab/crowdfade-execution-5y-positive-005 ]
     paths:
-      - 'labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069/**'
+      - 'labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069/**'
       - '.github/workflows/crowdfade-lab069.yml'
   workflow_dispatch:
 
@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          LAB="labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069"
+          LAB="labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069"
           mkdir -p "$LAB/data/hist_1m" "$LAB/data/all_1m"
           curl -fL --retry 5 --retry-delay 3 -o "$LAB/data/BTCUSDT_flow_2021-01-2026-08.csv.zip" "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip"
           curl -fL --retry 5 --retry-delay 3 -o "$LAB/data/BTCUSDT_sec.csv.zip" "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip"
@@ -35,7 +35,7 @@ jobs:
           from pathlib import Path
           from urllib.request import urlretrieve
           import shutil,time
-          root=Path("labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069/data")
+          root=Path("labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069/data")
           base="https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/1m"
           for y in range(2021,2027):
               last=12 if y<=2025 else 8
@@ -50,20 +50,20 @@ jobs:
                   if y<=2025: shutil.copy2(p,root/"hist_1m"/name)
           PY
       - name: Run LAB069
-        run: python labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069/run.py
+        run: python labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069/run.py
       - uses: actions/upload-artifact@v4
         with:
-          name: CrowdFade-LAB069-high-vol-failed-early
-          path: labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069/output/
+          name: CrowdFade-LAB069-highvol-failed-early
+          path: labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069/output/
           retention-days: 30
       - name: Commit outputs
         shell: bash
         run: |
           git config user.name "ResearchOS Lab Runner"
           git config user.email "researchos-lab@users.noreply.github.com"
-          git add labs/CROWDFADE_CF191G_HIGH_VOL_FAILED_EARLY_STATEFUL_LAB_069/output/
+          git add labs/CROWDFADE_CF191G_HIGHVOL_FAILED_EARLY_MGMT_LAB_069/output/
           if git diff --cached --quiet; then echo "No changes"; else
-            git commit -m "lab(CrowdFade): record LAB069 high-vol failed-early results"
+            git commit -m "lab(CrowdFade): record LAB069 highvol failed-early results"
             git pull --rebase origin lab/crowdfade-execution-5y-positive-005
             git push origin HEAD:lab/crowdfade-execution-5y-positive-005
           fi
