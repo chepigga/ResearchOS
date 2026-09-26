@@ -1,0 +1,27 @@
+{
+  "lab": "LAB072",
+  "promoted": [
+    "MARKET_SIGNAL"
+  ],
+  "costs": {
+    "GROSS": {
+      "spread_bps": 0.0,
+      "stop_slip_bps": 0.0
+    },
+    "IC": {
+      "spread_bps": 0.597376,
+      "stop_slip_bps": 0.684253
+    },
+    "GETLEVERAGED": {
+      "spread_bps": 2.643809,
+      "stop_slip_bps": 0.291636
+    }
+  },
+  "methods": [
+    "MARKET_SIGNAL",
+    "CONFIRM_MARKET",
+    "RETRACE_LIMIT_5",
+    "RETRACE_LIMIT_10",
+    "RETRACE_LIMIT_15"
+  ]
+}

@@ -1,0 +1,5 @@
+method,promote,detail
+MARKET_SIGNAL,True,"{""GETLEVERAGED_forward_2026"": true, ""GETLEVERAGED_historical"": true, ""IC_forward_2026"": true, ""IC_historical"": true}"
+RETRACE_LIMIT_5,False,"{""GETLEVERAGED_annual_no_gt20pct_drop"": false, ""GETLEVERAGED_forward_2026"": false, ""GETLEVERAGED_historical"": false, ""IC_annual_no_gt20pct_drop"": false, ""IC_forward_2026"": false, ""IC_historical"": false}"
+RETRACE_LIMIT_10,False,"{""GETLEVERAGED_annual_no_gt20pct_drop"": false, ""GETLEVERAGED_forward_2026"": false, ""GETLEVERAGED_historical"": false, ""IC_annual_no_gt20pct_drop"": false, ""IC_forward_2026"": false, ""IC_historical"": false}"
+RETRACE_LIMIT_15,False,"{""GETLEVERAGED_annual_no_gt20pct_drop"": false, ""GETLEVERAGED_forward_2026"": false, ""GETLEVERAGED_historical"": false, ""IC_annual_no_gt20pct_drop"": false, ""IC_forward_2026"": false, ""IC_historical"": false}"
