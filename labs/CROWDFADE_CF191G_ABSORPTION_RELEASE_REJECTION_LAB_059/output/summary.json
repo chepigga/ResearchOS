@@ -1,0 +1,39 @@
+{
+  "lab": "CROWDFADE_CF191G_ABSORPTION_RELEASE_REJECTION_LAB_059",
+  "universe": {
+    "historical": 122,
+    "forward_2026": 12
+  },
+  "primary_horizon_min": 3,
+  "checks": {
+    "historical": {
+      "release_N": 42,
+      "rejection_N": 3,
+      "release_EV_gt_rejection": true,
+      "release_PF_gt_rejection": true,
+      "release_MFE60_gt_rejection": true,
+      "release_MAE60_lt_rejection": true,
+      "release_impulse60_gt_rejection": true,
+      "mean_delayed_minus_original_R": -0.43165652407704125
+    },
+    "forward_2026": {
+      "release_N": 4,
+      "rejection_N": 1,
+      "release_EV_gt_rejection": true,
+      "release_PF_gt_rejection": true,
+      "release_MFE60_gt_rejection": false,
+      "release_MAE60_lt_rejection": true,
+      "release_impulse60_gt_rejection": true,
+      "mean_delayed_minus_original_R": -0.6251501944798845
+    }
+  },
+  "all_primary_signs_repeat_both_periods": false,
+  "limitations": [
+    "Diagnostic only; no stateful wait/veto was tested.",
+    "Release/rejection uses completed 1m closes beyond the frozen 5m absorption range.",
+    "Delayed release replay is local/non-stateful and uses 1m management with frozen CF191g geometry.",
+    "BTCUSDT only; ETH/SOL transfer not established.",
+    "2026 Mar-Aug is reused shadow/stress, not pristine OOS.",
+    "Small rejection counts may limit inference."
+  ]
+}
