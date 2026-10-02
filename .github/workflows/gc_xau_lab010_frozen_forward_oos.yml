@@ -1,0 +1,37 @@
+name: GC XAU LAB010 Frozen Forward OOS
+on:
+  push:
+    branches:
+      - lab010-frozen-forward-oos-20261002
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: pip install pandas numpy tabulate
+      - name: Download frozen forward sources
+        run: |
+          curl -L --fail --retry 3 -o gc_ticks.zip "https://github.com/chepigga/ResearchOS/releases/download/GC/AMP_GC_HISTORY_EXPORTER_001_GCEZ26_20260806_182355__20260915_182355_TICKS.csv.zip"
+          curl -L --fail --retry 3 -o xau_m1_2026.csv "https://github.com/chepigga/ResearchOS/releases/download/GC/XAUUSD_M1_2026.csv"
+          ls -lh gc_ticks.zip xau_m1_2026.csv
+          head -3 xau_m1_2026.csv || true
+          unzip -l gc_ticks.zip | head -30
+      - name: Run frozen LAB010
+        run: python research/gc/lab010_frozen_forward_oos.py
+      - name: Show result
+        if: always()
+        run: |
+          find lab010_out -maxdepth 1 -type f -print -exec sh -c 'echo "---"; head -40 "$1"' _ {} \; || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GC_XAU_LAB010_FROZEN_FORWARD_OOS
+          path: lab010_out/
+          if-no-files-found: warn
