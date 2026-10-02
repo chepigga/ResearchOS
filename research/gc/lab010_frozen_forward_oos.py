@@ -268,6 +268,51 @@ for r in ev.itertuples(index=False):
     quality.append({"signal_time":r.signal_time,"side":r.side,"crowd_side":r.crowd_side,"outcome":outcome,"rev_i":rev_i,"cont_i":cont_i})
 Q=pd.DataFrame(quality)
 Q.to_csv(OUT/"LAB010_FORWARD_SIGNAL_QUALITY.csv",index=False)
+
+# Strict causal signal audit starting at signal_time, not contact_time.
+causal=[]
+xtidx=pd.Index(x.minute)
+for r in ev.itertuples(index=False):
+    si=xtidx.searchsorted(r.signal_time)
+    if si>=len(x) or x.minute.iloc[si]!=r.signal_time: continue
+    ref=float(x.close.iloc[si]); atr=float(r.atr_contact)
+    if not np.isfinite(atr) or atr<=0: continue
+    sgn=1 if r.side=="BUY" else -1
+    row={"signal_time":r.signal_time,"side":r.side,"ref":ref,"atr":atr}
+    first_fav=999; first_adv=999
+    end=min(len(x),si+61)
+    for k in range(si+1,end):
+        fav=((x.high.iloc[k]-ref)/atr) if sgn==1 else ((ref-x.low.iloc[k])/atr)
+        adv=((ref-x.low.iloc[k])/atr) if sgn==1 else ((x.high.iloc[k]-ref)/atr)
+        if fav>=1 and first_fav==999:first_fav=k-si
+        if adv>=1 and first_adv==999:first_adv=k-si
+    row["first_fav_1atr"]=first_fav; row["first_adv_1atr"]=first_adv
+    row["outcome_1atr"]="FAV" if first_fav<first_adv else ("ADV" if first_adv<first_fav else ("AMBIG" if first_fav<999 else "NONE"))
+    for h in [5,10,15,30,60]:
+        j=min(len(x)-1,si+h)
+        sl=x.iloc[si+1:j+1]
+        row[f"ret{h}_atr"]=sgn*(float(x.close.iloc[j])-ref)/atr
+        if len(sl):
+            row[f"mfe{h}_atr"]=((float(sl.high.max())-ref)/atr) if sgn==1 else ((ref-float(sl.low.min()))/atr)
+            row[f"mae{h}_atr"]=((ref-float(sl.low.min()))/atr) if sgn==1 else ((float(sl.high.max())-ref)/atr)
+        else:
+            row[f"mfe{h}_atr"]=np.nan; row[f"mae{h}_atr"]=np.nan
+    causal.append(row)
+CQ=pd.DataFrame(causal)
+CQ.to_csv(OUT/"LAB010_CAUSAL_SIGNAL_AUDIT_FROM_SIGNAL_TIME.csv",index=False)
+cs=[]
+if len(CQ):
+    for scope,z in [("ALL",CQ),("BUY",CQ[CQ.side=="BUY"]),("SELL",CQ[CQ.side=="SELL"])]:
+        resolved=z[z.outcome_1atr.isin(["FAV","ADV"])]
+        rr={"scope":scope,"n":len(z),"resolved":len(resolved),"fav_first_pct":100*(resolved.outcome_1atr=="FAV").mean() if len(resolved) else np.nan}
+        for h in [5,10,15,30,60]:
+            rr[f"mean_ret{h}_atr"]=z[f"ret{h}_atr"].mean()
+            rr[f"median_ret{h}_atr"]=z[f"ret{h}_atr"].median()
+            rr[f"mean_mfe{h}_atr"]=z[f"mfe{h}_atr"].mean()
+            rr[f"mean_mae{h}_atr"]=z[f"mae{h}_atr"].mean()
+        cs.append(rr)
+CS=pd.DataFrame(cs)
+CS.to_csv(OUT/"LAB010_CAUSAL_SIGNAL_SUMMARY_FROM_SIGNAL_TIME.csv",index=False)
 resolved=Q[Q.outcome.isin(["REV","CONT"])] if len(Q) else Q
 qsum={"signals":int(len(Q)),"resolved":int(len(resolved)),"reversal_rate_pct":float(100*(resolved.outcome=="REV").mean()) if len(resolved) else None}
 (OUT/"LAB010_SIGNAL_QUALITY_SUMMARY.json").write_text(json.dumps(qsum,indent=2))
