@@ -416,6 +416,54 @@ for filt in ["NONE","H1","H4","H1H4"]:
                          "N":len(z),"sumR":z.R.sum(),"meanR":z.R.mean(),"maxddR":dd.max(),
                          "augR":ms.get("2026-08",0.0),"sepR":ms.get("2026-09",0.0)})
 pd.DataFrame(grid).to_csv(OUT/"LAB010_FORWARD_MONETIZATION_GRID.csv",index=False)
+# Structural-stop forward grid.
+sgrid=[]
+for filt in ["NONE","H1","H4","H1H4"]:
+  for thr in [0.0,0.1,0.2,0.3,0.5]:
+    for wait in [3,5]:
+      for buf in [0.25,0.5,0.75]:
+        for rr0 in [1.5,2.0,2.5,3.0]:
+          for hold0 in [15,30]:
+            rs=[]
+            for r in ev.itertuples(index=False):
+              if r.side!="BUY": continue
+              if filt=="H1" and r.h1_trend_trade!=1: continue
+              if filt=="H4" and r.h4_trend_trade!=1: continue
+              if filt=="H1H4" and not (r.h1_trend_trade==1 and r.h4_trend_trade==1): continue
+              si=xti.searchsorted(r.signal_time)
+              if si>=len(x) or x.minute.iloc[si]!=r.signal_time: continue
+              ref=float(x.close.iloc[si]); atr0=float(r.atr_contact)
+              ei=None
+              for k in range(si+1,min(len(x)-1,si+wait+1)):
+                if (float(x.close.iloc[k])-ref)/atr0>=thr:
+                  ei=k+1; break
+              if ei is None: continue
+              entry=float(x.ask_open.iloc[ei]) if "ask_open" in x.columns else float(x.open.iloc[ei])
+              stop=float(r.level)-buf*atr0
+              if stop>=entry: continue
+              risk=entry-stop
+              if risk<=0 or risk>4*atr0: continue
+              tp=entry+rr0*risk
+              end=min(len(x),ei+hold0+1); gr=None; exi=None
+              for k in range(ei,end):
+                lo=float(x.low.iloc[k]); hi=float(x.high.iloc[k])
+                if lo<=stop and hi>=tp: gr=-1.; exi=k; break
+                if lo<=stop: gr=-1.; exi=k; break
+                if hi>=tp: gr=rr0; exi=k; break
+              if gr is None:
+                exi=end-1; gr=(float(x.close.iloc[exi])-entry)/risk
+              net=gr-7.0/(risk*100.0)
+              rs.append((x.minute.iloc[exi],net))
+            if len(rs)<3: continue
+            z=pd.DataFrame(rs,columns=["time","R"]).sort_values("time")
+            z["month"]=pd.to_datetime(z.time,utc=True).dt.to_period("M").astype(str)
+            eq=np.r_[0,z.R.cumsum().to_numpy()]; dd=np.maximum.accumulate(eq)-eq
+            ms=z.groupby("month").R.sum().to_dict()
+            sgrid.append({"filter":filt,"thr":thr,"wait":wait,"struct_buf":buf,"rr":rr0,"hold":hold0,
+                          "N":len(z),"sumR":z.R.sum(),"meanR":z.R.mean(),"maxddR":dd.max(),
+                          "augR":ms.get("2026-08",0.0),"sepR":ms.get("2026-09",0.0)})
+pd.DataFrame(sgrid).to_csv(OUT/"LAB010_FORWARD_MONETIZATION_STRUCT_GRID.csv",index=False)
+
 
 
 ev.to_csv(OUT/"LAB010_FORWARD_SIGNALS_WITH_REGIME.csv",index=False)
