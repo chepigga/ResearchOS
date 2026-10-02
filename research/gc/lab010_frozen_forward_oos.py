@@ -329,6 +329,51 @@ for rf in [0.5,0.75]:
         alls.append({"retr_frac":rf,"signals":len(z),"filled":int(z.filled.sum()),"fill_rate_pct":100*z.filled.mean(),"mean_R_per_signal":z.R.mean(),"sum_R":z.R.sum(),"mean_R_filled":z.loc[z.filled,"R"].mean() if z.filled.any() else np.nan})
 pd.DataFrame(alls).to_csv(OUT/"LAB010_FORWARD_SUMMARY_ALL.csv",index=False)
 
+# Exact monetization candidate from corrected historical replay:
+# M15 COLLAPSE, BUY only, H1&H4 trend aligned, +0.5 ATR response within 3m,
+# enter next M1 open, 2 ATR stop, TP 3R, max hold 30m.
+mon=[]
+xti=pd.Index(x.minute)
+for r in ev.itertuples(index=False):
+    if r.side!="BUY" or r.h1_trend_trade!=1 or r.h4_trend_trade!=1: continue
+    si=xti.searchsorted(r.signal_time)
+    if si>=len(x) or x.minute.iloc[si]!=r.signal_time: continue
+    ref=float(x.close.iloc[si]); atr0=float(r.atr_contact)
+    ei=None
+    for k in range(si+1,min(len(x)-1,si+4)):
+        if (float(x.close.iloc[k])-ref)/atr0>=0.5:
+            ei=k+1; break
+    if ei is None: continue
+    entry=float(x.ask_open.iloc[ei]) if "ask_open" in x.columns else float(x.open.iloc[ei])
+    stop=entry-2.0*atr0; risk=entry-stop; tp=entry+3.0*risk
+    end=min(len(x),ei+31); gr=None; reason=None; exi=None
+    for k in range(ei,end):
+        low=float(x.low.iloc[k]); high=float(x.high.iloc[k])
+        if low<=stop and high>=tp:
+            gr=-1.0; reason="SL_AMBIG"; exi=k; break
+        if low<=stop:
+            gr=-1.0; reason="SL"; exi=k; break
+        if high>=tp:
+            gr=3.0; reason="TP"; exi=k; break
+    if gr is None:
+        exi=end-1; exitp=float(x.close.iloc[exi]); gr=(exitp-entry)/risk; reason="TIME"
+    # conservative $7 RT/lot commission proxy
+    net=gr-7.0/(risk*100.0)
+    mon.append({"signal_time":r.signal_time,"entry_time":x.minute.iloc[ei],"exit_time":x.minute.iloc[exi],"R":net,"grossR":gr,"reason":reason,"h1_trend_trade":r.h1_trend_trade,"h4_trend_trade":r.h4_trend_trade})
+MON=pd.DataFrame(mon)
+MON.to_csv(OUT/"LAB010_MONETIZATION_CANDIDATE_FORWARD.csv",index=False)
+if len(MON):
+    MON["month"]=pd.to_datetime(MON.exit_time,utc=True).dt.to_period("M").astype(str)
+    ms=MON.groupby("month").agg(N=("R","size"),sumR=("R","sum"),meanR=("R","mean")).reset_index()
+    ms.to_csv(OUT/"LAB010_MONETIZATION_CANDIDATE_MONTHLY.csv",index=False)
+    rr=MON.sort_values("exit_time").R.to_numpy()
+    eq=np.r_[0,np.cumsum(rr)]; dd=np.maximum.accumulate(eq)-eq
+    days=MON.assign(day=pd.to_datetime(MON.exit_time,utc=True).dt.date).groupby("day").R.sum()
+    met={"N":int(len(MON)),"sumR":float(rr.sum()),"meanR":float(rr.mean()),"maxddR":float(dd.max()),"worstdayR":float(-min(0,days.min()))}
+else:
+    ms=pd.DataFrame(); met={"N":0}
+(OUT/"LAB010_MONETIZATION_CANDIDATE_METRICS.json").write_text(json.dumps(met,indent=2))
+
 ev.to_csv(OUT/"LAB010_FORWARD_SIGNALS_WITH_REGIME.csv",index=False)
 
 trades=[]
