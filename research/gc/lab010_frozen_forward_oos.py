@@ -249,6 +249,41 @@ x=x[x.minute>pd.Timestamp("2026-07-28",tz="UTC")].reset_index(drop=True)
 a,sat=alignment(g)
 ev=build_signals(a,sat,x)
 ev=enrich_cluster(ev,x)
+# Forward signal-quality audit independent of the invalid old cluster
+xtidx=pd.Index(x.minute)
+quality=[]
+for r in ev.itertuples(index=False):
+    ci=xtidx.searchsorted(r.contact_time)
+    if ci>=len(x) or x.minute.iloc[ci]!=r.contact_time: continue
+    end=min(len(x),ci+31); atr=float(r.atr_contact); level=float(r.level)
+    cont_i=999; rev_i=999
+    for k in range(ci,end):
+        if r.crowd_side==1:
+            cont=x.high.iloc[k]>=level+atr; rev=x.low.iloc[k]<=level-atr
+        else:
+            cont=x.low.iloc[k]<=level-atr; rev=x.high.iloc[k]>=level+atr
+        if cont and cont_i==999: cont_i=k-ci
+        if rev and rev_i==999: rev_i=k-ci
+    outcome="REV" if rev_i<cont_i else ("CONT" if cont_i<rev_i else ("AMBIG" if rev_i<999 else "NONE"))
+    quality.append({"signal_time":r.signal_time,"side":r.side,"crowd_side":r.crowd_side,"outcome":outcome,"rev_i":rev_i,"cont_i":cont_i})
+Q=pd.DataFrame(quality)
+Q.to_csv(OUT/"LAB010_FORWARD_SIGNAL_QUALITY.csv",index=False)
+resolved=Q[Q.outcome.isin(["REV","CONT"])] if len(Q) else Q
+qsum={"signals":int(len(Q)),"resolved":int(len(resolved)),"reversal_rate_pct":float(100*(resolved.outcome=="REV").mean()) if len(resolved) else None}
+(OUT/"LAB010_SIGNAL_QUALITY_SUMMARY.json").write_text(json.dumps(qsum,indent=2))
+
+alltr=[]
+for rf in [0.5,0.75]:
+    zz=simulate(ev,x,rf); zz["scope"]="ALL_REGIMES"; alltr.append(zz)
+ALLT=pd.concat(alltr,ignore_index=True) if alltr else pd.DataFrame()
+ALLT.to_csv(OUT/"LAB010_FORWARD_EXECUTION_ALL.csv",index=False)
+alls=[]
+for rf in [0.5,0.75]:
+    z=ALLT[ALLT.retr_frac==rf] if len(ALLT) else pd.DataFrame()
+    if len(z):
+        alls.append({"retr_frac":rf,"signals":len(z),"filled":int(z.filled.sum()),"fill_rate_pct":100*z.filled.mean(),"mean_R_per_signal":z.R.mean(),"sum_R":z.R.sum(),"mean_R_filled":z.loc[z.filled,"R"].mean() if z.filled.any() else np.nan})
+pd.DataFrame(alls).to_csv(OUT/"LAB010_FORWARD_SUMMARY_ALL.csv",index=False)
+
 ev.to_csv(OUT/"LAB010_FORWARD_SIGNALS_WITH_REGIME.csv",index=False)
 
 trades=[]
@@ -267,6 +302,6 @@ S=pd.DataFrame(summary); S.to_csv(OUT/"LAB010_FORWARD_SUMMARY.csv",index=False)
 
 meta={"gc_start":str(g.minute.min()),"gc_end":str(g.minute.max()),"gc_m1":len(g),"xau_start":str(x.minute.min()),"xau_end":str(x.minute.max()),"xau_m1":len(x),"saturations":len(sat),"frozen_signals_all_regimes":len(ev),"aligned_bias_local_pullback":int((ev.regime=="ALIGNED_BIAS_LOCAL_PULLBACK").sum()) if len(ev) else 0,"xau_columns":list(x.columns)}
 (OUT/"LAB010_META.json").write_text(json.dumps(meta,indent=2,default=str))
-report="# LAB010 Frozen Forward OOS\n\n"+json.dumps(meta,indent=2,default=str)+"\n\n"+(S.to_markdown(index=False) if len(S) else "NO EXECUTION CANDIDATES")+"\n"
+report="# LAB010 Frozen Forward OOS\n\n"+json.dumps(meta,indent=2,default=str)+"\n\n## Signal quality\n"+json.dumps(qsum,indent=2)+"\n\n## Old-cluster execution (diagnostic only)\n"+(S.to_markdown(index=False) if len(S) else "NO EXECUTION CANDIDATES")+"\n\n## All-signal execution\n"+(pd.DataFrame(alls).to_markdown(index=False) if len(alls) else "NONE")+"\n"
 (OUT/"LAB010_REPORT.md").write_text(report)
 print(report)
