@@ -466,6 +466,60 @@ pd.DataFrame(sgrid).to_csv(OUT/"LAB010_FORWARD_MONETIZATION_STRUCT_GRID.csv",ind
 
 
 
+# Frozen BUY resilient-response candidate from corrected historical TRAIN/VALID/POST:
+# BUY_COLLAPSE -> pre-response MAE <=0.25 ATR -> +0.4 ATR close response within 3m
+# -> next M1 open -> SL 2 ATR -> TP 3R -> max hold 30m.
+buy_rows=[]
+seen_buy=set()
+for r in ev.sort_values("signal_time").itertuples(index=False):
+    if r.side!="BUY": continue
+    st=pd.Timestamp(r.signal_time)
+    if st in seen_buy: continue
+    seen_buy.add(st)
+    si=xtidx.searchsorted(r.signal_time)
+    if si>=len(x) or x.minute.iloc[si]!=r.signal_time: continue
+    ref=float(x.close.iloc[si]); atr0=float(r.atr_contact)
+    if not np.isfinite(atr0) or atr0<=0: continue
+    ei=None; response_k=None; max_mae=0.0
+    for k in range(si+1,min(len(x)-1,si+4)):
+        mae=(ref-float(x.low.iloc[k]))/atr0
+        max_mae=max(max_mae,mae)
+        if max_mae>0.25:
+            break
+        if (float(x.close.iloc[k])-ref)/atr0>=0.4:
+            response_k=k; ei=k+1; break
+    if ei is None: continue
+    entry=float(x.ask_open.iloc[ei]) if "ask_open" in x.columns else float(x.open.iloc[ei])
+    stop=entry-2.0*atr0; risk=entry-stop; tp=entry+3.0*risk
+    end=min(len(x),ei+31); gr=None; reason=None; exi=None
+    for k in range(ei,end):
+        lo=float(x.low.iloc[k]); hi=float(x.high.iloc[k])
+        if lo<=stop:
+            gr=-1.0; reason="SL"; exi=k; break
+        if hi>=tp:
+            gr=3.0; reason="TP"; exi=k; break
+    if gr is None:
+        exi=end-1; gr=(float(x.close.iloc[exi])-entry)/risk; reason="TIME"
+    net=gr-7.0/(risk*100.0)
+    buy_rows.append({"signal_time":r.signal_time,"response_time":x.minute.iloc[response_k],
+                     "entry_time":x.minute.iloc[ei],"exit_time":x.minute.iloc[exi],
+                     "pre_mae_atr":max_mae,"R":net,"grossR":gr,"reason":reason})
+BUYF=pd.DataFrame(buy_rows)
+BUYF.to_csv(OUT/"LAB010_BUY_RESILIENT_RESPONSE_FORWARD.csv",index=False)
+if len(BUYF):
+    BUYF["month"]=pd.to_datetime(BUYF.exit_time,utc=True).dt.to_period("M").astype(str)
+    bm=BUYF.groupby("month").agg(N=("R","size"),sumR=("R","sum"),meanR=("R","mean"),
+                                 win_rate=("R",lambda s:(s>0).mean())).reset_index()
+    bm.to_csv(OUT/"LAB010_BUY_RESILIENT_RESPONSE_MONTHLY.csv",index=False)
+    rr=BUYF.sort_values("exit_time").R.to_numpy()
+    eq=np.r_[0,np.cumsum(rr)]; dd=np.maximum.accumulate(eq)-eq
+    bmet={"N":int(len(BUYF)),"sumR":float(rr.sum()),"meanR":float(rr.mean()),
+          "maxddR":float(dd.max()),"positive_months":int((bm.sumR>0).sum()),
+          "months":int(len(bm))}
+else:
+    bm=pd.DataFrame(); bmet={"N":0}
+(OUT/"LAB010_BUY_RESILIENT_RESPONSE_METRICS.json").write_text(json.dumps(bmet,indent=2))
+
 ev.to_csv(OUT/"LAB010_FORWARD_SIGNALS_WITH_REGIME.csv",index=False)
 
 trades=[]
