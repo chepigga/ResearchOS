@@ -1,0 +1,180 @@
+{
+  "lab": "LAB086_BURST_CONTINUATION_QUALITY",
+  "burst_threshold_price15_train_q75": 0.0074990324458864,
+  "quality_horizon_min": 15,
+  "features": {
+    "new_high_R": "higher better",
+    "ft_eff": "higher better",
+    "retrace_R": "lower better",
+    "time_above": "higher better",
+    "oi_cont15": "higher better"
+  },
+  "score": "mean of TRAIN empirical percentile ranks; unsupervised by P/L",
+  "train_quality_median": 52.215189873417714,
+  "quartile_edges": [
+    12.911392405063292,
+    32.689873417721515,
+    52.215189873417714,
+    70.0,
+    94.05063291139241
+  ],
+  "correlations": [
+    {
+      "era": "2021_2024",
+      "feature": "new_high_R",
+      "N": 158,
+      "rho_R": 0.31273170368094144,
+      "p": 6.318777547910594e-05
+    },
+    {
+      "era": "2021_2024",
+      "feature": "ft_eff",
+      "N": 158,
+      "rho_R": 0.2723519416331107,
+      "p": 0.0005363627184710436
+    },
+    {
+      "era": "2021_2024",
+      "feature": "retrace_R",
+      "N": 158,
+      "rho_R": -0.11167565972322581,
+      "p": 0.16242292483216456
+    },
+    {
+      "era": "2021_2024",
+      "feature": "time_above",
+      "N": 158,
+      "rho_R": 0.24854577962585567,
+      "p": 0.001638699365296783
+    },
+    {
+      "era": "2021_2024",
+      "feature": "oi_cont15",
+      "N": 158,
+      "rho_R": -0.028609937644422608,
+      "p": 0.7212124207761497
+    },
+    {
+      "era": "2021_2024",
+      "feature": "quality_score",
+      "N": 158,
+      "rho_R": 0.24419218468593704,
+      "p": 0.0019879730545889667
+    },
+    {
+      "era": "2025",
+      "feature": "new_high_R",
+      "N": 6,
+      "rho_R": 0.6,
+      "p": 0.208
+    },
+    {
+      "era": "2025",
+      "feature": "ft_eff",
+      "N": 6,
+      "rho_R": 0.4285714285714286,
+      "p": 0.3965014577259473
+    },
+    {
+      "era": "2025",
+      "feature": "retrace_R",
+      "N": 6,
+      "rho_R": 0.028571428571428574,
+      "p": 0.9571545189504373
+    },
+    {
+      "era": "2025",
+      "feature": "time_above",
+      "N": 6,
+      "rho_R": 0.4638168285219587,
+      "p": 0.35416429843623043
+    },
+    {
+      "era": "2025",
+      "feature": "oi_cont15",
+      "N": 6,
+      "rho_R": 0.6571428571428573,
+      "p": 0.1561749271137024
+    },
+    {
+      "era": "2025",
+      "feature": "quality_score",
+      "N": 6,
+      "rho_R": 0.48571428571428577,
+      "p": 0.3287230320699708
+    },
+    {
+      "era": "2026",
+      "feature": "new_high_R",
+      "N": 5,
+      "rho_R": 0.09999999999999999,
+      "p": 0.8728885715695384
+    },
+    {
+      "era": "2026",
+      "feature": "ft_eff",
+      "N": 5,
+      "rho_R": -0.3,
+      "p": 0.623837664781073
+    },
+    {
+      "era": "2026",
+      "feature": "retrace_R",
+      "N": 5,
+      "rho_R": -0.19999999999999998,
+      "p": 0.7470600781046621
+    },
+    {
+      "era": "2026",
+      "feature": "time_above",
+      "N": 5,
+      "rho_R": 0.19999999999999998,
+      "p": 0.7470600781046621
+    },
+    {
+      "era": "2026",
+      "feature": "oi_cont15",
+      "N": 5,
+      "rho_R": -0.7999999999999999,
+      "p": 0.10408803866182788
+    },
+    {
+      "era": "2026",
+      "feature": "quality_score",
+      "N": 5,
+      "rho_R": -0.09999999999999999,
+      "p": 0.8728885715695384
+    }
+  ],
+  "top_bottom": [
+    {
+      "era": "2021_2024",
+      "q20": 30.30379746835443,
+      "q80": 72.15189873417722,
+      "N_low": 32,
+      "N_high": 32,
+      "EV_low": 0.5582076583020075,
+      "EV_high": 1.6985948564738993,
+      "gap_high_minus_low": 1.1403871981718918,
+      "giveback_low": 0.5625,
+      "giveback_high": 0.15625,
+      "reach2_low": 0.40625,
+      "reach2_high": 0.84375
+    },
+    {
+      "era": "2025",
+      "q20": 30.30379746835443,
+      "q80": 72.15189873417722,
+      "N_low": 2,
+      "N_high": 1,
+      "EV_low": -0.23100377590831345,
+      "EV_high": 2.893737478689507,
+      "gap_high_minus_low": 3.1247412545978204,
+      "giveback_low": 0.5,
+      "giveback_high": 0.0,
+      "reach2_low": 0.0,
+      "reach2_high": 1.0
+    }
+  ],
+  "note": "Diagnostic only. Forward 2025/2026 burst samples are very small; no production management rule is promoted."
+}
