@@ -1,0 +1,30 @@
+{
+  "lab": "CROWDFADE_BUY_OI_TAKER_DECOMP_LAB_077",
+  "scope": "CF191g BUY only; signal and management frozen",
+  "N_BUY": 2923,
+  "baseline": {
+    "N": 2923,
+    "WR": 0.38966814916182,
+    "EV": 0.12746089056631094,
+    "PF": 1.2157272480291383,
+    "SumR": 372.56818312532687,
+    "MaxDD_R": 37.53790658887294,
+    "R_DD": 9.925118819379348,
+    "MaxConsecutiveLosses": 15
+  },
+  "primary_definitions": {
+    "oi_down": "dOI < -0.020%",
+    "oi_flat": "|dOI| <= 0.020%",
+    "oi_up": "dOI > +0.020%",
+    "taker_strong": "net taker delta > 0 (aggressive buy volume > aggressive sell volume)",
+    "taker_weak": "net taker delta <= 0",
+    "windows": "trailing 5m and 15m ending at entry"
+  },
+  "note_time_to_tp": "CF191g has no fixed TP. Report uses actual PROFIT_STOP exit time (reason=2), plus first passage to +3.0 ATR and +3.5 ATR management arms.",
+  "limitations": [
+    "Diagnostic/post-hoc decomposition; no production gate promoted.",
+    "Historical 2021-2025 uses 1m Binance klines; 2026 Mar-Aug is reused shadow/stress.",
+    "OI source cadence follows frozen flow archive; 5m/15m changes use as-of values.",
+    "Primary flat band is fixed at 0.02%; robustness table includes 0/0.01/0.02/0.05%."
+  ]
+}
