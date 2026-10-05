@@ -1,0 +1,158 @@
+{
+  "lab": "LAB079_NLE_2026_FAILURE_DECOMP",
+  "N_hist": 972,
+  "N_2026": 74,
+  "N_hist_1R": 654,
+  "N_2026_1R": 51,
+  "EV_hist": 0.1994489331435472,
+  "EV_2026": -0.13284788956561888,
+  "entry_fail_hist": 0.5967078189300411,
+  "entry_fail_2026": 0.6756756756756757,
+  "giveback1R_hist": 0.45871559633027525,
+  "giveback1R_2026": 0.5882352941176471,
+  "top_entry_2026": [
+    {
+      "period": "forward_2026",
+      "feature": "eff30",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.2635521021271463,
+      "good_mean": 0.4581001558949252,
+      "std_diff_bad_minus_good": -0.514585056573607,
+      "absd": 0.514585056573607
+    },
+    {
+      "period": "forward_2026",
+      "feature": "eff60",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.15587234004587072,
+      "good_mean": 0.27887247803033477,
+      "std_diff_bad_minus_good": -0.35010025289512725,
+      "absd": 0.35010025289512725
+    },
+    {
+      "period": "forward_2026",
+      "feature": "ret30_atr",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.5970319301737095,
+      "good_mean": 0.9248403043762355,
+      "std_diff_bad_minus_good": -0.29827889112894057,
+      "absd": 0.29827889112894057
+    },
+    {
+      "period": "forward_2026",
+      "feature": "taker_delta15",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.17509687119985773,
+      "good_mean": 0.15021222235476572,
+      "std_diff_bad_minus_good": 0.27956724596733146,
+      "absd": 0.27956724596733146
+    },
+    {
+      "period": "forward_2026",
+      "feature": "with_aligned",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.2,
+      "good_mean": 0.0,
+      "std_diff_bad_minus_good": 0.24861144225204396,
+      "absd": 0.24861144225204396
+    },
+    {
+      "period": "forward_2026",
+      "feature": "with_h1",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.3,
+      "good_mean": 0.125,
+      "std_diff_bad_minus_good": 0.1982486513308405,
+      "absd": 0.1982486513308405
+    },
+    {
+      "period": "forward_2026",
+      "feature": "with_h4",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.1,
+      "good_mean": -0.08333333333333333,
+      "std_diff_bad_minus_good": 0.19239124984649952,
+      "absd": 0.19239124984649952
+    },
+    {
+      "period": "forward_2026",
+      "feature": "ret60_atr",
+      "N_bad": 50,
+      "N_good": 24,
+      "bad_mean": 0.7811475703463151,
+      "good_mean": 1.0653910049131963,
+      "std_diff_bad_minus_good": -0.17567864392292215,
+      "absd": 0.17567864392292215
+    }
+  ],
+  "top_post1r_2026": [
+    {
+      "period": "forward_2026",
+      "feature": "p1_taker5",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.28273776037970777,
+      "good_mean": 0.23636929931033718,
+      "std_diff_bad_minus_good": 0.26528487530724776,
+      "absd": 0.26528487530724776
+    },
+    {
+      "period": "forward_2026",
+      "feature": "p1_px15",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.004592476201476558,
+      "good_mean": 0.003474129909502159,
+      "std_diff_bad_minus_good": 0.234876739752207,
+      "absd": 0.234876739752207
+    },
+    {
+      "period": "forward_2026",
+      "feature": "p1_px5",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.0032388406752119404,
+      "good_mean": 0.0024139654573331415,
+      "std_diff_bad_minus_good": 0.22540172284319435,
+      "absd": 0.22540172284319435
+    },
+    {
+      "period": "forward_2026",
+      "feature": "p1_oi5",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.0007889774465510535,
+      "good_mean": 0.0003139041339772127,
+      "std_diff_bad_minus_good": 0.13961091001989598,
+      "absd": 0.13961091001989598
+    },
+    {
+      "period": "forward_2026",
+      "feature": "p1_taker15",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.2008469463694888,
+      "good_mean": 0.2131307135173104,
+      "std_diff_bad_minus_good": -0.1053401040537389,
+      "absd": 0.1053401040537389
+    },
+    {
+      "period": "forward_2026",
+      "feature": "p1_oi15",
+      "N_bad": 30,
+      "N_good": 21,
+      "bad_mean": 0.002195942927317111,
+      "good_mean": 0.0020242159775703036,
+      "std_diff_bad_minus_good": 0.031331702882932425,
+      "absd": 0.031331702882932425
+    }
+  ],
+  "anti_curve_fit": "Quartiles/thresholds derived on 2021-2025 only; applied unchanged to 2026. No production rule promoted."
+}
