@@ -1,0 +1,89 @@
+{
+  "lab": "LAB082_NLE_CONTINUOUS_EXHAUSTION_SCORE",
+  "scope": "NLE trades that reached +1R only",
+  "features": {
+    "p1_oi15": "higher=more exhaustion",
+    "p1_px15": "higher=more exhaustion",
+    "p1_taker5": "higher=more exhaustion",
+    "atr_pct": "higher=more exhaustion",
+    "eff30": "lower=more exhaustion"
+  },
+  "score": "mean of five TRAIN empirical percentile components \u00d7100; no supervised fitting",
+  "train_q80": 61.58409785932722,
+  "train_q90": 68.61162079510704,
+  "historical_monotonicity": [
+    {
+      "period": "historical",
+      "target": "EV_R",
+      "spearman_rho": 0.8060606060606059,
+      "p_value": 0.004862061101964607
+    },
+    {
+      "period": "historical",
+      "target": "giveback1R",
+      "spearman_rho": -0.9451395216446113,
+      "p_value": 3.7079570817777176e-05
+    },
+    {
+      "period": "historical",
+      "target": "reach2R",
+      "spearman_rho": 0.2006088294144213,
+      "p_value": 0.5784061446498447
+    },
+    {
+      "period": "historical",
+      "target": "reach3R",
+      "spearman_rho": 0.2024692293161501,
+      "p_value": 0.574812552641861
+    }
+  ],
+  "forward_2026_monotonicity": [
+    {
+      "period": "forward_2026",
+      "target": "EV_R",
+      "spearman_rho": -0.6363636363636362,
+      "p_value": 0.04791172612997544
+    },
+    {
+      "period": "forward_2026",
+      "target": "giveback1R",
+      "spearman_rho": 0.6319494127140443,
+      "p_value": 0.049975087411338666
+    },
+    {
+      "period": "forward_2026",
+      "target": "reach2R",
+      "spearman_rho": -0.17848266192003245,
+      "p_value": 0.6217708405849937
+    },
+    {
+      "period": "forward_2026",
+      "target": "reach3R",
+      "spearman_rho": -0.48773795949628534,
+      "p_value": 0.15270755289164858
+    }
+  ],
+  "bootstrap_top_bottom": [
+    {
+      "period": "forward_2026",
+      "N_low": 11,
+      "N_high": 11,
+      "EV_low": 0.8359226176075651,
+      "EV_high": -0.22391429830875242,
+      "gap_high_minus_low": -1.0598369159163177,
+      "ci95_lo": -2.0064247202253704,
+      "ci95_hi": -0.04536768273885877
+    },
+    {
+      "period": "historical",
+      "N_low": 132,
+      "N_high": 131,
+      "EV_low": 0.5022654614101327,
+      "EV_high": 0.9988806693169867,
+      "gap_high_minus_low": 0.496615207906854,
+      "ci95_lo": 0.09540195913952344,
+      "ci95_hi": 0.8824227669298315
+    }
+  ],
+  "note": "Diagnostic only. Production promotion requires same directional monotonicity in forward data with adequate N."
+}
