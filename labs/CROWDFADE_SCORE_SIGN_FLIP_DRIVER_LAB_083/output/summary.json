@@ -1,0 +1,68 @@
+{
+  "lab": "LAB083_SCORE_SIGN_FLIP_DRIVER",
+  "driver_ranking": [
+    {
+      "component": "s_p1_taker5",
+      "rho_hist": -0.046872140166215034,
+      "rho_2026": -0.23076053058019394,
+      "sign_flip": false,
+      "delta_rho": -0.18388839041397892
+    },
+    {
+      "component": "s_p1_px15",
+      "rho_hist": 0.20271903598673002,
+      "rho_2026": 0.04176848600689183,
+      "sign_flip": false,
+      "delta_rho": -0.1609505499798382
+    },
+    {
+      "component": "s_eff30",
+      "rho_hist": -0.03730065215884053,
+      "rho_2026": -0.15304898842149522,
+      "sign_flip": false,
+      "delta_rho": -0.1157483362626547
+    },
+    {
+      "component": "s_atr_pct",
+      "rho_hist": 0.2604907645031143,
+      "rho_2026": 0.1530420620309583,
+      "sign_flip": false,
+      "delta_rho": -0.10744870247215602
+    },
+    {
+      "component": "s_p1_oi15",
+      "rho_hist": 0.17420654663196425,
+      "rho_2026": 0.2171689754572848,
+      "sign_flip": false,
+      "delta_rho": 0.04296242882532056
+    }
+  ],
+  "first_sustained_opposite_sign_by_quarter": [
+    {
+      "component": "s_atr_pct",
+      "baseline_sign": 1,
+      "first_two_quarter_opposite_sign": "2022Q1"
+    },
+    {
+      "component": "s_eff30",
+      "baseline_sign": -1,
+      "first_two_quarter_opposite_sign": "2023Q4"
+    },
+    {
+      "component": "s_p1_oi15",
+      "baseline_sign": 1,
+      "first_two_quarter_opposite_sign": "2024Q1"
+    },
+    {
+      "component": "s_p1_px15",
+      "baseline_sign": 1,
+      "first_two_quarter_opposite_sign": "2025Q2"
+    },
+    {
+      "component": "s_p1_taker5",
+      "baseline_sign": -1,
+      "first_two_quarter_opposite_sign": "2021Q2"
+    }
+  ],
+  "note": "Diagnostic only. Component percentiles are frozen from LAB082 TRAIN mapping; no refit on 2026."
+}
