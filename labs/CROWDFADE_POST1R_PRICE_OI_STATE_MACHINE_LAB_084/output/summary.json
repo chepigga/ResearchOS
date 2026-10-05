@@ -1,0 +1,41 @@
+{
+  "lab": "LAB084_POST1R_PRICE_BURST_OI_STATE_MACHINE",
+  "thresholds_train_q75": {
+    "px_q75": 0.0074990324458863505,
+    "oi_q75": 0.00419442446455215,
+    "taker_q75": 0.3173923186811106
+  },
+  "states": [
+    "S0_NO_PRICE_BURST",
+    "S1_PRICE_ONLY",
+    "S2_PRICE_OI",
+    "S3_PRICE_OI_TAKER"
+  ],
+  "regime_sensitive_ranking": [
+    {
+      "state": "S3_PRICE_OI_TAKER",
+      "EV_2021_2024": 1.1312501756483286,
+      "EV_2026": -1.0063159526591794,
+      "delta": -2.1375661283075083
+    },
+    {
+      "state": "S1_PRICE_ONLY",
+      "EV_2021_2024": 0.94579007449448,
+      "EV_2026": -1.0086260248666443,
+      "delta": -1.9544160993611244
+    },
+    {
+      "state": "S2_PRICE_OI",
+      "EV_2021_2024": 1.1788129573622679,
+      "EV_2026": -0.4041307185239164,
+      "delta": -1.5829436758861843
+    },
+    {
+      "state": "S0_NO_PRICE_BURST",
+      "EV_2021_2024": 0.6146965654892963,
+      "EV_2026": 0.3215853815266629,
+      "delta": -0.2931111839626334
+    }
+  ],
+  "note": "LOCK_1R and TIGHT_TRAIL are counterfactual management diagnostics after +1R, not production execution simulations."
+}
