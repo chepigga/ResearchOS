@@ -1,0 +1,18 @@
+{
+  "lab": "LAB081_NLE_REGIME_BREAK_TIMELINE",
+  "scope": "NLE trades that reached +1R; EXH_CORE frozen from LAB080",
+  "retrospective_best_breakpoint": {
+    "idx": 77,
+    "date": "2023-07-13",
+    "N_pre": 77,
+    "N_post": 42,
+    "EV_pre": 1.1930991308455021,
+    "EV_post": 0.6472627323497399,
+    "delta": -0.5458363984957623,
+    "score": 2.845502816647649
+  },
+  "first_negative_quarter": "2022Q4",
+  "first_two_consecutive_bad_quarters": null,
+  "first_3_consecutive_negative_12m_windows": null,
+  "note": "Breakpoint is retrospective diagnosis, not a production switch. Monthly buckets can be sparse; quarterly/rolling confirmation has priority."
+}
