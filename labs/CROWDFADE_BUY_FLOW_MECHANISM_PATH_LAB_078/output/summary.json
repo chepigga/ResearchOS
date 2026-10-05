@@ -1,0 +1,106 @@
+{
+  "lab": "CROWDFADE_BUY_FLOW_MECHANISM_PATH_LAB_078",
+  "scope": "CF191g BUY only; frozen signal/entry/current management; diagnostic path decomposition",
+  "primary_window_min": 15,
+  "replication_window_min": 5,
+  "definitions": {
+    "SHORT_COVERING": "Price>0 over window, taker_delta>0, dOI<-0.02%",
+    "NEW_LONG_EXPANSION": "Price>0 over window, taker_delta>0, dOI>+0.02%",
+    "FLOW_BUY_OI_FLAT": "Price>0, taker_delta>0, |dOI|<=0.02%",
+    "OI_DOWN_TAKER_WEAK": "dOI<-0.02%, taker_delta<=0",
+    "CONTROL_OTHER": "all remaining BUY trades"
+  },
+  "fixed_tp_test": "Same initial SL=1.5 ATR, 6h horizon, TP grid 1R/1.5R/2R/3R; same-bar SL/TP ambiguity resolves to SL.",
+  "checks": {
+    "15": {
+      "historical": {
+        "SC_N": 17,
+        "NLE_N": 52,
+        "SC_EV": -0.24822959172565556,
+        "NLE_EV": -0.20242043412067753,
+        "SC_MFE_60": 0.6212083103489087,
+        "NLE_MFE_60": 0.6820920621062101,
+        "SC_MFE_360": 1.7174668246010798,
+        "NLE_MFE_360": 2.572962313088918,
+        "SC_time_1R": 127.0,
+        "NLE_time_1R": 85.0,
+        "SC_giveback_1R": 0.29411764705882354,
+        "NLE_giveback_1R": 0.40384615384615385,
+        "SC_best_fixed_EV": -0.07143977993506362,
+        "NLE_best_fixed_EV": -0.10903674764380347
+      },
+      "forward_2026": {
+        "SC_N": 3,
+        "NLE_N": 3,
+        "SC_EV": -1.0150251517568285,
+        "NLE_EV": -1.0105726856206674,
+        "SC_MFE_60": 0.3866913603946442,
+        "NLE_MFE_60": 0.4050022280408281,
+        "SC_MFE_360": 1.6107847251189835,
+        "NLE_MFE_360": 0.736501523551501,
+        "SC_time_1R": 128.50833333333333,
+        "NLE_time_1R": null,
+        "SC_giveback_1R": 0.6666666666666666,
+        "NLE_giveback_1R": 0.0,
+        "SC_best_fixed_EV": 0.31841590154765376,
+        "NLE_best_fixed_EV": -1.010040491308019
+      },
+      "pooled": {
+        "SC_N": 20,
+        "NLE_N": 55,
+        "SC_EV": -0.3632489257303315,
+        "NLE_EV": -0.24650146602067696,
+        "SC_MFE_60": 0.586030767855769,
+        "NLE_MFE_60": 0.6669780711571892,
+        "SC_MFE_360": 1.7014645096787653,
+        "NLE_MFE_360": 2.4727917245686952,
+        "SC_time_1R": 127.0,
+        "NLE_time_1R": 85.0,
+        "SC_giveback_1R": 0.35,
+        "NLE_giveback_1R": 0.38181818181818183,
+        "SC_best_fixed_EV": -0.212961427712656,
+        "NLE_best_fixed_EV": -0.1581824063891243
+      }
+    },
+    "5": {
+      "historical": {
+        "SC_N": 53,
+        "NLE_N": 67,
+        "SC_EV": 0.08173847608815214,
+        "NLE_EV": 0.44708548769074774,
+        "SC_MFE_60": 0.8274588251963121,
+        "NLE_MFE_60": 0.965769382429396,
+        "SC_MFE_360": 2.562499734483781,
+        "NLE_MFE_360": 3.0012302873339474,
+        "SC_time_1R": 109.5,
+        "NLE_time_1R": 73.0,
+        "SC_giveback_1R": 0.41509433962264153,
+        "NLE_giveback_1R": 0.373134328358209,
+        "SC_best_fixed_EV": 0.04002659520014954,
+        "NLE_best_fixed_EV": 0.3661801340314815
+      },
+      "pooled": {
+        "SC_N": 53,
+        "NLE_N": 67,
+        "SC_EV": 0.08173847608815214,
+        "NLE_EV": 0.44708548769074774,
+        "SC_MFE_60": 0.8274588251963121,
+        "NLE_MFE_60": 0.965769382429396,
+        "SC_MFE_360": 2.562499734483781,
+        "NLE_MFE_360": 3.0012302873339474,
+        "SC_time_1R": 109.5,
+        "NLE_time_1R": 73.0,
+        "SC_giveback_1R": 0.41509433962264153,
+        "NLE_giveback_1R": 0.373134328358209,
+        "SC_best_fixed_EV": 0.04002659520014954,
+        "NLE_best_fixed_EV": 0.3661801340314815
+      }
+    }
+  },
+  "limitations": [
+    "Post-hoc mechanism decomposition; no dynamic exit promoted here.",
+    "2026 Mar-Aug is reused forward-shadow/stress, not pristine OOS.",
+    "Historical path resolution is 1m; 2026 uses the frozen high-resolution price archive where available via lineage.",
+    "Price/OI/taker states are trailing and causal at entry; future path is used only for labels/outcomes."
+  ]
+}
