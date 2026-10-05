@@ -31,7 +31,7 @@ def add_price_returns(df,p):
         j=np.searchsorted(ts,past_t,'right')-1
         out=np.full(len(df),np.nan)
         g=j>=0
-        out[g]=C[np.asarray(j[g],dtype=int)]/ep[g]-1.0
+        out[g]=ep[g]/C[np.asarray(j[g],dtype=int)]-1.0
         df[f'price_ch{w}']=out
     return df
 
