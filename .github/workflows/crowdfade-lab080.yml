@@ -1,0 +1,59 @@
+name: CrowdFade LAB080 NLE exhaustion after 1R
+on:
+  push:
+    branches: [lab/crowdfade-execution-5y-positive-005]
+    paths:
+      - 'labs/CROWDFADE_NLE_EXHAUSTION_AFTER_1R_LAB_080/**'
+      - '.github/workflows/crowdfade-lab080.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab080:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install --upgrade pip numpy pandas numba scikit-learn tabulate
+      - name: Download frozen data
+        shell: bash
+        run: |
+          set -euo pipefail
+          LAB="labs/CROWDFADE_NLE_EXHAUSTION_AFTER_1R_LAB_080"
+          mkdir -p "$LAB/data/hist_1m" "$LAB/data/all_1m"
+          curl -fL --retry 5 -o "$LAB/data/BTCUSDT_flow_2021-01-2026-08.csv.zip" "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip"
+          curl -fL --retry 5 -o "$LAB/data/BTCUSDT_sec.csv.zip" "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip"
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import urlretrieve
+          import shutil,time
+          root=Path("labs/CROWDFADE_NLE_EXHAUSTION_AFTER_1R_LAB_080/data")
+          base="https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/1m"
+          for y in range(2021,2027):
+              last=12 if y<=2025 else 8
+              for m in range(1,last+1):
+                  n=f"BTCUSDT-1m-{y}-{m:02d}.zip"; p=root/"all_1m"/n
+                  for a in range(5):
+                      try: urlretrieve(f"{base}/{n}",p); break
+                      except Exception:
+                          if p.exists(): p.unlink()
+                          if a==4: raise
+                          time.sleep(2+a)
+                  if y<=2025: shutil.copy2(p,root/"hist_1m"/n)
+          PY
+      - run: python labs/CROWDFADE_NLE_EXHAUSTION_AFTER_1R_LAB_080/run.py
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name "ResearchOS Lab Runner"
+          git config user.email "researchos-lab@users.noreply.github.com"
+          git add labs/CROWDFADE_NLE_EXHAUSTION_AFTER_1R_LAB_080/output/
+          if ! git diff --cached --quiet; then
+            git commit -m "lab(CrowdFade): record LAB080 NLE exhaustion after 1R"
+            git push origin HEAD:lab/crowdfade-execution-5y-positive-005
+          fi
