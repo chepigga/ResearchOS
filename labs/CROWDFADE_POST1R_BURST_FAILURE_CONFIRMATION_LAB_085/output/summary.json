@@ -1,0 +1,58 @@
+{
+  "lab": "LAB085_POST1R_BURST_FAILURE_CONFIRMATION",
+  "price_burst_threshold_train_q75": 0.0074990324458864,
+  "response_definition": {
+    "CONTINUE": ">= +0.25R after confirmation window",
+    "REJECT": "<= -0.25R",
+    "STALL": "between thresholds"
+  },
+  "windows_min": [
+    5,
+    10,
+    15
+  ],
+  "management_A": "CONTINUE current runner; STALL causal +0.75R floor; REJECT causal +1R floor",
+  "management_B": "CONTINUE current runner; STALL causal +0.75R floor; REJECT market exit at confirmation",
+  "historical_selected_candidate": "W5_LOCK",
+  "selected_2021_2024": {
+    "era": "2021_2024",
+    "strategy": "W5_LOCK",
+    "N": 561,
+    "EV_R": 0.7235213183328834,
+    "WR": 0.6310160427807486,
+    "PF": 3.0419817109980927,
+    "SumR": 405.8954595847476,
+    "MaxDD_R": 10.967118034554119
+  },
+  "selected_2025": {
+    "era": "2025",
+    "strategy": "W5_LOCK",
+    "N": 93,
+    "EV_R": 0.771625372384111,
+    "WR": 0.6021505376344086,
+    "PF": 3.0302384658795933,
+    "SumR": 71.76115963172232,
+    "MaxDD_R": 4.038157095512069
+  },
+  "selected_2026": {
+    "era": "2026",
+    "strategy": "W5_LOCK",
+    "N": 51,
+    "EV_R": 0.2791177547674045,
+    "WR": 0.49019607843137253,
+    "PF": 1.5391105982676097,
+    "SumR": 14.235005493137631,
+    "MaxDD_R": 6.059663559818919
+  },
+  "current_2026": {
+    "era": "2026",
+    "strategy": "CURRENT",
+    "N": 51,
+    "EV_R": 0.22677634151233175,
+    "WR": 0.45098039215686275,
+    "PF": 1.406980808321171,
+    "SumR": 11.56559341712892,
+    "MaxDD_R": 6.059663559818918
+  },
+  "note": "All response states use only information available at +5/+10/+15m after first +1R passage. Floors activate only after confirmation; if price is already below desired floor, replay exits at contemporaneous close rather than granting an impossible retroactive fill."
+}
