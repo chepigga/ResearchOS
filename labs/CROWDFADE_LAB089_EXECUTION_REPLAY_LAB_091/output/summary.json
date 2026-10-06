@@ -1,0 +1,38 @@
+{
+  "lab": "LAB091_LAB089_EXECUTION_REPLAY",
+  "frozen_trigger_q50": [
+    {
+      "side": "BUY",
+      "window_min": 15.0,
+      "dls_q50": 0.02126813839258385,
+      "doi_q50": 0.00255557325829865,
+      "reject_q50": 0.49055696545663846
+    },
+    {
+      "side": "SELL",
+      "window_min": 10.0,
+      "dls_q50": 0.0123825404840496,
+      "doi_q50": 0.0016377062940879,
+      "reject_q50": 0.3904050750016281
+    }
+  ],
+  "entry_modes": {
+    "MARKET": "next 1m open after LAB089 decision",
+    "RESP1": "1m response >= +0.10 ATR in trade direction, then next 1m open",
+    "RESP3": "3m response >= +0.10 ATR, then next 1m open",
+    "LIMIT": "0.25 ATR better-price retracement limit, TTL 10m"
+  },
+  "risk_model": "SL=1 ATR from actual fill; TP=1.5/2/2.5R; max hold=120m; same-bar SL/TP ambiguity resolved as SL",
+  "cost_sensitivity_bps_rt": [
+    0.0,
+    0.5,
+    2.0
+  ],
+  "ranking_basis": "historical, 0.5 bps round-trip proxy, ranked by EV then lower MaxDD",
+  "limitations": [
+    "Binance futures 1m execution proxy, not IC Markets broker-native spread/fills.",
+    "No concurrency/margin interaction; DD is sequential trade-outcome DD.",
+    "2026 Mar-Aug is reused diagnostic data, not pristine OOS.",
+    "Limit touch assumes fill at limit; real queue/slippage can be worse."
+  ]
+}

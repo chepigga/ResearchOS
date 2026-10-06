@@ -1,0 +1,409 @@
+side,rank_hist,mode,tpR,hist_N,hist_fill,hist_EV,hist_PF,hist_DD,fwd_N,fwd_fill,fwd_EV,fwd_PF,fwd_DD
+BUY,1,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode               MARKET
+tpR                   2.5
+cost_bps_rt           0.5
+signals               341
+fill_rate             1.0
+MFE_mean         1.629516
+MAE_mean         0.806734
+N                     341
+EV_R             0.418152
+WR               0.463343
+PF               1.799401
+SumR           142.589755
+MaxDD_R           15.9296
+Recovery         8.951245
+Name: 124, dtype: object>",2.5,341,1.0,0.4181517731918194,1.7994014473465048,15.92959961043347,0,,,,
+BUY,2,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                LIMIT
+tpR                   2.5
+cost_bps_rt           0.5
+signals               341
+fill_rate         0.83871
+MFE_mean         1.622202
+MAE_mean         0.856653
+N                     286
+EV_R             0.402194
+WR               0.465035
+PF               1.746788
+SumR           115.027508
+MaxDD_R         10.170856
+Recovery         11.30952
+Name: 115, dtype: object>",2.5,286,0.8387096774193549,0.402194083323699,1.746788078968553,10.170856350910888,0,,,,
+BUY,3,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode               MARKET
+tpR                   2.0
+cost_bps_rt           0.5
+signals               341
+fill_rate             1.0
+MFE_mean         1.446477
+MAE_mean         0.779918
+N                     341
+EV_R             0.362333
+WR               0.489736
+PF               1.726577
+SumR           123.555472
+MaxDD_R         16.656527
+Recovery         7.417841
+Name: 121, dtype: object>",2.0,341,1.0,0.3623327613986346,1.726577023453394,16.656527038192735,0,,,,
+BUY,4,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                LIMIT
+tpR                   2.0
+cost_bps_rt           0.5
+signals               341
+fill_rate         0.83871
+MFE_mean         1.485255
+MAE_mean         0.832188
+N                     286
+EV_R             0.329691
+WR               0.486014
+PF               1.637458
+SumR            94.291713
+MaxDD_R         10.248566
+Recovery         9.200479
+Name: 112, dtype: object>",2.0,286,0.8387096774193549,0.32969130448088474,1.6374579341040056,10.248566052294834,0,,,,
+BUY,5,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode               MARKET
+tpR                   1.5
+cost_bps_rt           0.5
+signals               341
+fill_rate             1.0
+MFE_mean          1.25525
+MAE_mean          0.70399
+N                     341
+EV_R             0.323995
+WR               0.542522
+PF               1.724952
+SumR           110.482182
+MaxDD_R         17.656527
+Recovery           6.2573
+Name: 118, dtype: object>",1.5,341,1.0,0.3239946684234349,1.72495150407732,17.656527038192607,0,,,,
+BUY,6,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP1
+tpR                   2.5
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.266862
+MFE_mean         1.529111
+MAE_mean         0.861267
+N                      91
+EV_R             0.296443
+WR               0.406593
+PF               1.506799
+SumR            26.976314
+MaxDD_R          8.003383
+Recovery         3.370614
+Name: 133, dtype: object>",2.5,91,0.2668621700879765,0.2964430160941338,1.5067990807545024,8.00338279165739,0,,,,
+BUY,7,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP1
+tpR                   2.0
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.266862
+MFE_mean         1.362276
+MAE_mean         0.810541
+N                      91
+EV_R              0.27706
+WR               0.450549
+PF               1.504313
+SumR             25.21243
+MaxDD_R          6.198679
+Recovery         4.067387
+Name: 130, dtype: object>",2.0,91,0.2668621700879765,0.27705967233026196,1.5043127199134831,6.1986792528372625,0,,,,
+BUY,8,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP3
+tpR                   2.0
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.378299
+MFE_mean         1.340378
+MAE_mean         0.834404
+N                     129
+EV_R             0.261598
+WR                0.44186
+PF               1.489037
+SumR            33.746109
+MaxDD_R          7.188452
+Recovery         4.694489
+Name: 139, dtype: object>",2.0,129,0.3782991202346041,0.2615977479895183,1.4890368227579145,7.188452157649564,0,,,,
+BUY,9,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                LIMIT
+tpR                   1.5
+cost_bps_rt           0.5
+signals               341
+fill_rate         0.83871
+MFE_mean         1.274221
+MAE_mean         0.785812
+N                     286
+EV_R             0.237271
+WR               0.520979
+PF                1.49256
+SumR            67.859379
+MaxDD_R         12.134134
+Recovery         5.592437
+Name: 109, dtype: object>",1.5,286,0.8387096774193549,0.2372705550903577,1.4925603196475594,12.13413423472786,0,,,,
+BUY,10,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP3
+tpR                   2.5
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.378299
+MFE_mean         1.461566
+MAE_mean         0.882089
+N                     129
+EV_R             0.212785
+WR               0.395349
+PF               1.366777
+SumR            27.449261
+MaxDD_R          9.294032
+Recovery         2.953429
+Name: 142, dtype: object>",2.5,129,0.3782991202346041,0.21278496666905197,1.3667767515366618,9.294031685552422,0,,,,
+BUY,11,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP3
+tpR                   1.5
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.378299
+MFE_mean         1.143328
+MAE_mean         0.788688
+N                     129
+EV_R             0.185227
+WR               0.488372
+PF               1.379779
+SumR            23.894342
+MaxDD_R          7.688452
+Recovery         3.107822
+Name: 136, dtype: object>",1.5,129,0.3782991202346041,0.18522745770602117,1.3797790520455557,7.6884521576495715,0,,,,
+BUY,12,"<bound method Series.mode of dataset        historical
+side                  BUY
+mode                RESP1
+tpR                   1.5
+cost_bps_rt           0.5
+signals               341
+fill_rate        0.266862
+MFE_mean         1.201405
+MAE_mean          0.79768
+N                      91
+EV_R             0.101235
+WR               0.461538
+PF               1.188121
+SumR              9.21243
+MaxDD_R          6.039604
+Recovery         1.525337
+Name: 127, dtype: object>",1.5,91,0.2668621700879765,0.10123549650608864,1.1881208397252028,6.039604386746843,0,,,,
+SELL,1,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                LIMIT
+tpR                   1.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.869128
+MFE_mean         1.300326
+MAE_mean         0.708162
+N                     259
+EV_R              0.33119
+WR               0.555985
+PF               1.765978
+SumR            85.778135
+MaxDD_R          7.925124
+Recovery         10.82357
+Name: 73, dtype: object>",1.5,259,0.8691275167785235,0.331189712131392,1.7659784043670983,7.925123779665654,0,,,,
+SELL,2,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                LIMIT
+tpR                   2.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.869128
+MFE_mean         1.602196
+MAE_mean         0.791979
+N                     259
+EV_R             0.306644
+WR               0.451737
+PF               1.601897
+SumR            79.420804
+MaxDD_R          15.18387
+Recovery         5.230604
+Name: 79, dtype: object>",2.5,259,0.8691275167785235,0.30664403174540394,1.601897306037065,15.183869634670899,0,,,,
+SELL,3,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode               MARKET
+tpR                   2.0
+cost_bps_rt           0.5
+signals               298
+fill_rate             1.0
+MFE_mean         1.416987
+MAE_mean         0.795999
+N                     298
+EV_R             0.297435
+WR               0.473154
+PF               1.575567
+SumR            88.635726
+MaxDD_R         17.250536
+Recovery         5.138143
+Name: 85, dtype: object>",2.0,298,1.0,0.2974353214233325,1.5755669440937832,17.250535664919553,0,,,,
+SELL,4,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                LIMIT
+tpR                   2.0
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.869128
+MFE_mean         1.479451
+MAE_mean         0.782036
+N                     259
+EV_R             0.284907
+WR               0.471042
+PF               1.565954
+SumR            73.791014
+MaxDD_R         16.225488
+Recovery         4.547846
+Name: 76, dtype: object>",2.0,259,0.8691275167785235,0.2849073917712653,1.5659544623158406,16.22548756170923,0,,,,
+SELL,5,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode               MARKET
+tpR                   1.5
+cost_bps_rt           0.5
+signals               298
+fill_rate             1.0
+MFE_mean         1.244072
+MAE_mean         0.745164
+N                     298
+EV_R             0.261502
+WR               0.526846
+PF               1.559923
+SumR            77.927517
+MaxDD_R         13.003116
+Recovery         5.992988
+Name: 82, dtype: object>",1.5,298,1.0,0.261501733466264,1.5599232750824006,13.00311598263302,0,,,,
+SELL,6,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode               MARKET
+tpR                   2.5
+cost_bps_rt           0.5
+signals               298
+fill_rate             1.0
+MFE_mean         1.558672
+MAE_mean         0.821107
+N                     298
+EV_R             0.260138
+WR               0.436242
+PF               1.480418
+SumR             77.52126
+MaxDD_R         18.431337
+Recovery         4.205949
+Name: 88, dtype: object>",2.5,298,1.0,0.2601384549701285,1.4804180614698124,18.43133725238519,0,,,,
+SELL,7,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP1
+tpR                   1.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.312081
+MFE_mean         1.084863
+MAE_mean         0.827528
+N                      93
+EV_R             0.129942
+WR               0.462366
+PF               1.240005
+SumR            12.084566
+MaxDD_R          9.010294
+Recovery         1.341196
+Name: 91, dtype: object>",1.5,93,0.31208053691275167,0.12994156830754527,1.2400048167260558,9.010293595761755,0,,,,
+SELL,8,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP3
+tpR                   1.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.355705
+MFE_mean         1.054378
+MAE_mean          0.83033
+N                     106
+EV_R             0.121446
+WR               0.462264
+PF               1.227635
+SumR            12.873227
+MaxDD_R         10.866757
+Recovery         1.184643
+Name: 100, dtype: object>",1.5,106,0.35570469798657717,0.12144553773047503,1.227635191224698,10.866756950069174,0,,,,
+SELL,9,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP1
+tpR                   2.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.312081
+MFE_mean         1.345571
+MAE_mean         0.904539
+N                      93
+EV_R             0.103742
+WR               0.354839
+PF               1.169451
+SumR             9.648036
+MaxDD_R          8.396986
+Recovery         1.148988
+Name: 97, dtype: object>",2.5,93,0.31208053691275167,0.10374231841579488,1.1694506099098143,8.396985941235373,0,,,,
+SELL,10,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP3
+tpR                   2.0
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.355705
+MFE_mean         1.190183
+MAE_mean         0.863082
+N                     106
+EV_R             0.082617
+WR               0.396226
+PF               1.142394
+SumR             8.757446
+MaxDD_R         13.076173
+Recovery         0.669726
+Name: 103, dtype: object>",2.0,106,0.35570469798657717,0.0826174191539249,1.1423936409713868,13.076172534484865,0,,,,
+SELL,11,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP1
+tpR                   2.0
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.312081
+MFE_mean          1.24329
+MAE_mean         0.887762
+N                      93
+EV_R             0.074919
+WR               0.376344
+PF               1.125144
+SumR             6.967421
+MaxDD_R         10.453663
+Recovery         0.666505
+Name: 94, dtype: object>",2.0,93,0.31208053691275167,0.07491850873563198,1.1251442173613986,10.453663223572008,0,,,,
+SELL,12,"<bound method Series.mode of dataset        historical
+side                 SELL
+mode                RESP3
+tpR                   2.5
+cost_bps_rt           0.5
+signals               298
+fill_rate        0.355705
+MFE_mean         1.281048
+MAE_mean         0.908054
+N                     106
+EV_R             0.017781
+WR               0.349057
+PF               1.028976
+SumR             1.884766
+MaxDD_R         11.690535
+Recovery         0.161222
+Name: 106, dtype: object>",2.5,106,0.35570469798657717,0.017780808426881227,1.0289757625432574,11.690534994368665,0,,,,
