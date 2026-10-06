@@ -1,53 +1,77 @@
 {
   "lab": "LAB095_CAUSAL_Z_TRAJECTORY_PEAK_TROUGH",
-  "causality": "At timestamp t, extrema are computed only from Z observations strictly before t. Entry occurs only after current Z has reversed from the prior peak/trough by the tested pullback amount.",
+  "hypothesis": "Trajectory / peak-trough reversal in Z may time crowd traps better than a fixed absolute Z gate.",
+  "causal_definition": "For trade side, transform u=crowd_dir*Z. Use only observations strictly before decision time to find trailing directional peak. Trigger when current u has pulled back from that peak by >= pullback, peak prominence >= prominence, and peak age <= max_age.",
   "grid": {
     "lookback_min": [
-      15,
       30,
-      60
+      60,
+      120
     ],
-    "prominence_min": [
-      0.5,
-      0.75,
-      1.0,
-      1.5
-    ],
-    "pullback_min": [
+    "pullback_Z": [
       0.1,
       0.2,
       0.3,
       0.5
     ],
-    "variants": [
-      "TRAJ_ONLY",
-      "TRAJ_OI",
-      "TRAJ_PRICE",
-      "TRAJ_OI_PRICE"
+    "prominence_Z": [
+      0.5,
+      0.75,
+      1.0,
+      1.5
+    ],
+    "max_peak_age_min": [
+      10,
+      20,
+      30
     ]
   },
-  "fixed_execution": "MARKET next 1m open; SL1ATR; BUY TP2.5R; SELL TP2R; hold120m; 0.5bps RT proxy; 30m side cooldown",
-  "benchmark_Z2p5_LAB093": {
-    "z_threshold": 2.5,
-    "hist_N": 1347,
-    "hist_trades_mo": 22.45,
-    "hist_EV": 0.3014722605753926,
-    "hist_PF": 1.565106279831263,
-    "hist_DD": 21.119207753318733,
-    "fwd_N": 119,
-    "fwd_trades_mo": 19.83333333333333,
-    "fwd_EV": 0.2968618599757591,
-    "fwd_PF": 1.5790089541323942,
-    "fwd_DD": 11.34758230682034,
-    "fwd_positive_months": 6,
-    "fwd_negative_months": 0,
-    "min_PF": 1.565106279831263,
-    "min_EV": 0.2968618599757591,
-    "pf15_both": true
-  },
+  "absolute_Z_gate": "NONE for trajectory variants",
+  "benchmark": "Frozen LAB093 with |Z|>=2.5",
+  "frozen_other_logic": "LAB089 base excluding Z + LAB093 BUY ANY2 / SELL PRICE_LS + existing MARKET outcomes from LAB094",
+  "benchmark_rows": [
+    {
+      "kind": "BENCH_Z2P5",
+      "dataset": "historical",
+      "lookback_min": NaN,
+      "pullback": NaN,
+      "prominence": NaN,
+      "max_age": NaN,
+      "N": 1347,
+      "EV_R": 0.3014722605753926,
+      "PF": 1.565106279831263,
+      "SumR": 406.08313499505385,
+      "MaxDD_R": 21.119207753318733,
+      "WR": 0.44766146993318484,
+      "trades_per_month": 22.45,
+      "positive_months": 50,
+      "negative_months": 10,
+      "avg_month_R": 6.768052249917565
+    },
+    {
+      "kind": "BENCH_Z2P5",
+      "dataset": "forward_2026",
+      "lookback_min": NaN,
+      "pullback": NaN,
+      "prominence": NaN,
+      "max_age": NaN,
+      "N": 119,
+      "EV_R": 0.29686185997575926,
+      "PF": 1.5790089541323942,
+      "SumR": 35.32656133711535,
+      "MaxDD_R": 11.347582306820339,
+      "WR": 0.4369747899159664,
+      "trades_per_month": 19.833333333333332,
+      "positive_months": 6,
+      "negative_months": 0,
+      "avg_month_R": 5.887760222852556
+    }
+  ],
+  "methodology_note": "Candidate selection must be based on historical rows; 2026 is reused diagnostic transfer only and is not pristine OOS.",
   "limitations": [
-    "2026 Mar-Aug reused diagnostic, not pristine OOS.",
-    "Grid is research/discovery; selected trajectory parameters require later frozen validation.",
-    "Binance 1m execution proxy, not broker-native fills."
+    "Multiple trajectory combinations are discovery and require freeze + future OOS.",
+    "2026 Mar-Aug is reused diagnostic data.",
+    "Trajectory test currently sits on the same non-Z LAB089 base universe: dLS>0, dOI>0.02%, price rejection>0.10ATR.",
+    "Execution outcomes are inherited from LAB094 Binance 1m proxy."
   ]
 }
