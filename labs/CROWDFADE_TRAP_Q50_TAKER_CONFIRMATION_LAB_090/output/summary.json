@@ -1,0 +1,105 @@
+{
+  "lab": "LAB090_TRAP_Q50_TAKER_CONFIRMATION",
+  "frozen_lab089_candidates": [
+    {
+      "side": "BUY",
+      "window_min": 15.0,
+      "dls_q50": 0.02126813839258385,
+      "doi_q50": 0.00255557325829865,
+      "reject_q50": 0.49055696545663846
+    },
+    {
+      "side": "SELL",
+      "window_min": 10.0,
+      "dls_q50": 0.0123825404840496,
+      "doi_q50": 0.0016377062940879,
+      "reject_q50": 0.3904050750016281
+    }
+  ],
+  "taker_windows_min": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "crowd_taker_definition": "crowd_dir * normalized net taker delta; positive means aggressive taker flow in crowd direction",
+  "question": "Does taker confirmation add precision to frozen LAB089 Q50 trap, or merely reduce frequency/delay signal?",
+  "thresholds_train": [
+    {
+      "side": "BUY",
+      "taker_window_min": 1,
+      "q50": -0.008919021976693389,
+      "q75": 0.18625664279803497
+    },
+    {
+      "side": "BUY",
+      "taker_window_min": 3,
+      "q50": -0.023724590852926428,
+      "q75": 0.1080338750286105
+    },
+    {
+      "side": "BUY",
+      "taker_window_min": 5,
+      "q50": -0.0575528232909306,
+      "q75": 0.05994998106185276
+    },
+    {
+      "side": "BUY",
+      "taker_window_min": 10,
+      "q50": -0.08876673341695906,
+      "q75": -0.016665077124680683
+    },
+    {
+      "side": "SELL",
+      "taker_window_min": 1,
+      "q50": -0.022196851493662302,
+      "q75": 0.14888547300274807
+    },
+    {
+      "side": "SELL",
+      "taker_window_min": 3,
+      "q50": -0.06935135926397046,
+      "q75": 0.044420156342596315
+    },
+    {
+      "side": "SELL",
+      "taker_window_min": 5,
+      "q50": -0.08098947259668138,
+      "q75": 0.015041698635093649
+    },
+    {
+      "side": "SELL",
+      "taker_window_min": 10,
+      "q50": -0.09613098014893148,
+      "q75": -0.026605751845216158
+    }
+  ],
+  "sample_counts": [
+    {
+      "dataset": "forward_2026",
+      "side": "SELL",
+      "N": 25
+    },
+    {
+      "dataset": "forward_2026",
+      "side": "BUY",
+      "N": 27
+    },
+    {
+      "dataset": "historical",
+      "side": "SELL",
+      "N": 298
+    },
+    {
+      "dataset": "historical",
+      "side": "BUY",
+      "N": 341
+    }
+  ],
+  "limitations": [
+    "LAB089 candidate and Q50 thresholds frozen before taker analysis.",
+    "2026 Mar-Aug is reused diagnostic data, not pristine OOS.",
+    "Taker confirmation is evaluated at the already-existing LAB089 decision timestamp; no later lookahead window added.",
+    "No production promotion unless uplift is directionally stable in historical and 2026 with usable N."
+  ]
+}
