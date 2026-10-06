@@ -54,5 +54,6 @@ jobs:
         run: |
           git config user.name ResearchOS
           git config user.email researchos@example.com
+          rm -f labs/CROWDFADE_LAB095_CAUSAL_Z_TRAJECTORY/output/trajectory_raw_candidates.csv
           git add labs/CROWDFADE_LAB095_CAUSAL_Z_TRAJECTORY/output/
           git diff --cached --quiet || (git commit -m "LAB095 outputs" && git push origin HEAD:lab/crowdfade-execution-5y-positive-005)
