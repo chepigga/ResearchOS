@@ -27,6 +27,7 @@ jobs:
           set -euo pipefail
           LAB="labs/CROWDFADE_LAB097_M15_M30_CONFIRMED_REVERSAL"
           mkdir -p "$LAB/data/all_1m"
+          curl -fL --retry 5 -o "$LAB/data/BTCUSDT_flow_2021-01-2026-08.csv.zip" "https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip"
           python - <<'PY'
           from pathlib import Path
           from urllib.request import urlretrieve
