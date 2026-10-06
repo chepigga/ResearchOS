@@ -118,7 +118,7 @@ def main():
       'crowd_taker_definition':'crowd_dir * normalized net taker delta; positive means aggressive taker flow in crowd direction',
       'question':'Does taker confirmation add precision to frozen LAB089 Q50 trap, or merely reduce frequency/delay signal?',
       'thresholds_train':thresholds,
-      'sample_counts':q50.groupby(['dataset','side']).size().to_dict(),
+      'sample_counts':[{'dataset':str(k[0]),'side':'BUY' if int(k[1])>0 else 'SELL','N':int(v)} for k,v in q50.groupby(['dataset','side']).size().to_dict().items()],
       'limitations':['LAB089 candidate and Q50 thresholds frozen before taker analysis.',
                      '2026 Mar-Aug is reused diagnostic data, not pristine OOS.',
                      'Taker confirmation is evaluated at the already-existing LAB089 decision timestamp; no later lookahead window added.',
