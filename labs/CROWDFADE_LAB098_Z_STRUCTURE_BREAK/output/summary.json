@@ -1,0 +1,53 @@
+{
+  "lab": "LAB098_Z_TRAJECTORY_X_PRICE_STRUCTURE_BREAK",
+  "principle": "Z turn creates setup; price must fail to extend old extreme and then close through prior micro-structure before arrow.",
+  "arrow_timing": "At confirmation close only; no backpainting.",
+  "grid": {
+    "tf": [
+      15,
+      30
+    ],
+    "z_pullback": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "z_prominence": [
+      0.3,
+      0.5,
+      0.75
+    ],
+    "swing_bars": [
+      2,
+      3,
+      4
+    ],
+    "break_buffer_ATR": [
+      0.0,
+      0.05,
+      0.1
+    ]
+  },
+  "target": "Hit +1R before -1R within 120m after structure-break confirmation.",
+  "selection": "2021-2024 train only; 2025 validation; 2026 reused diagnostic.",
+  "best_train_config": {
+    "tf": 15,
+    "z_pullback": 0.1,
+    "z_prominence": 0.5,
+    "swing_bars": 4,
+    "break_buf_atr": 0.0,
+    "period": "train_2021_24",
+    "N": 2524,
+    "signals_per_day": 1.7287671232876711,
+    "hit_rate_1R": 0.4805863708399366,
+    "BUY_N": 1501,
+    "SELL_N": 1023,
+    "in_target_1_4_day": true,
+    "score": 111.74342639428608
+  },
+  "limitations": [
+    "2026 reused diagnostic, not pristine OOS.",
+    "Structure proxy is algorithmic simplification of discretionary swing reading.",
+    "Binance 1m proxy, not broker-native."
+  ]
+}
