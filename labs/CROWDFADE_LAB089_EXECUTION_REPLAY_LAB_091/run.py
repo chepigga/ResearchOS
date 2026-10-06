@@ -138,7 +138,7 @@ def main():
 
     # Monthly P/L for the exact standalone LAB089 bot configuration:
     # BUY MARKET TP2.5R, SELL MARKET TP2.0R, 0.5 bps RT proxy.
-    live=x[(x.mode=='MARKET') & (x.filled==1) & (((x.side==1)&(x.tpR==2.5)) | ((x.side==-1)&(x.tpR==2.0)))].copy()
+    live=x[(x['mode']=='MARKET') & (x['filled']==1) & (((x['side']==1)&(x['tpR']==2.5)) | ((x['side']==-1)&(x['tpR']==2.0)))].copy()
     live['month']=pd.to_datetime(live.entry_ts,unit='s',utc=True).dt.to_period('M').astype(str)
     live['netR']=live['netR_0p5bps']
     monthly_side=(live.groupby(['dataset','month','side'])
