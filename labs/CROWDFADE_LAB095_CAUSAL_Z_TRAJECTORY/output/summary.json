@@ -1,0 +1,53 @@
+{
+  "lab": "LAB095_CAUSAL_Z_TRAJECTORY_PEAK_TROUGH",
+  "causality": "At timestamp t, extrema are computed only from Z observations strictly before t. Entry occurs only after current Z has reversed from the prior peak/trough by the tested pullback amount.",
+  "grid": {
+    "lookback_min": [
+      15,
+      30,
+      60
+    ],
+    "prominence_min": [
+      0.5,
+      0.75,
+      1.0,
+      1.5
+    ],
+    "pullback_min": [
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ],
+    "variants": [
+      "TRAJ_ONLY",
+      "TRAJ_OI",
+      "TRAJ_PRICE",
+      "TRAJ_OI_PRICE"
+    ]
+  },
+  "fixed_execution": "MARKET next 1m open; SL1ATR; BUY TP2.5R; SELL TP2R; hold120m; 0.5bps RT proxy; 30m side cooldown",
+  "benchmark_Z2p5_LAB093": {
+    "z_threshold": 2.5,
+    "hist_N": 1347,
+    "hist_trades_mo": 22.45,
+    "hist_EV": 0.3014722605753926,
+    "hist_PF": 1.565106279831263,
+    "hist_DD": 21.119207753318733,
+    "fwd_N": 119,
+    "fwd_trades_mo": 19.83333333333333,
+    "fwd_EV": 0.2968618599757591,
+    "fwd_PF": 1.5790089541323942,
+    "fwd_DD": 11.34758230682034,
+    "fwd_positive_months": 6,
+    "fwd_negative_months": 0,
+    "min_PF": 1.565106279831263,
+    "min_EV": 0.2968618599757591,
+    "pf15_both": true
+  },
+  "limitations": [
+    "2026 Mar-Aug reused diagnostic, not pristine OOS.",
+    "Grid is research/discovery; selected trajectory parameters require later frozen validation.",
+    "Binance 1m execution proxy, not broker-native fills."
+  ]
+}
