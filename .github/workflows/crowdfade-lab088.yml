@@ -54,5 +54,6 @@ jobs:
         run: |
           git config user.name ResearchOS
           git config user.email researchos@example.com
+          rm -f labs/CROWDFADE_LS_OI_PRICE_RESPONSE_TRAP_EDGE_LAB_088/output/lab088_events.csv
           git add labs/CROWDFADE_LS_OI_PRICE_RESPONSE_TRAP_EDGE_LAB_088/output/
           git diff --cached --quiet || (git commit -m "LAB088 outputs" && git push origin HEAD:lab/crowdfade-execution-5y-positive-005)
