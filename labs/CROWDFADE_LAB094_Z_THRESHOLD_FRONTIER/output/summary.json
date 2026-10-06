@@ -1,0 +1,57 @@
+{
+  "lab": "LAB094_Z_THRESHOLD_FRONTIER",
+  "only_variable": "absolute Z threshold",
+  "grid": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0,
+    1.1,
+    1.2,
+    1.3,
+    1.4,
+    1.5,
+    1.6,
+    1.7,
+    1.8,
+    1.9,
+    2.0,
+    2.1,
+    2.2,
+    2.3,
+    2.4,
+    2.5,
+    2.6,
+    2.7,
+    2.8,
+    2.9,
+    3.0
+  ],
+  "frozen_base": "directional dLS>0, dOI>+0.02%, price against crowd >0.10 ATR",
+  "frozen_admission": "BUY ANY2 of Q50 LS/OI/rejection; SELL PRICE+LS Q50",
+  "frozen_execution": "MARKET; SL1ATR; BUY TP2.5R; SELL TP2R; hold120m; 0.5bps RT proxy",
+  "frozen_q50": {
+    "BUY": {
+      "dls": 0.02126813839258385,
+      "doi": 0.00255557325829865,
+      "rejectATR": 0.49055696545663846
+    },
+    "SELL": {
+      "dls": 0.0123825404840496,
+      "doi": 0.0016377062940879,
+      "rejectATR": 0.3904050750016281
+    }
+  },
+  "limitations": [
+    "2026 Mar-Aug reused diagnostic, not pristine OOS.",
+    "Q50 thresholds were frozen at LAB089 and intentionally not retuned.",
+    "30m dedup follows LAB089 lineage and is recomputed separately for each Z threshold.",
+    "Binance 1m execution proxy, not broker-native fills."
+  ]
+}
