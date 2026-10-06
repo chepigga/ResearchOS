@@ -145,32 +145,39 @@ def month_stats(g):
 def main():
     flow,periods=load_sources()
     pre=pd.concat([build_precandidates(ds,p,flow) for ds,p in periods.items()],ignore_index=True)
+
+    # Replay each unique pre-Z candidate ONCE. Z thresholds only slice these frozen outcomes.
+    bars=load_bars(); tsa=bars.ts_open.to_numpy(np.int64)
+    rr=[]
+    for _,r in pre.iterrows():
+        e=replay(r,bars,tsa)
+        if e is None:
+            rr.append({'entry_ts':np.nan,'exit_ts':np.nan,'netR':np.nan,'grossR':np.nan,'outcome':'NO_DATA'})
+        else:
+            rr.append(e)
+    rrd=pd.DataFrame(rr)
+    for col in rrd.columns:
+        pre[col]=rrd[col].to_numpy()
+    pre=pre[np.isfinite(pre.netR)].copy().reset_index(drop=True)
     pre.to_csv(OUT/'pre_z_base_candidates.csv',index=False)
 
-    bars=load_bars(); tsa=bars.ts_open.to_numpy(np.int64)
     rows=[]; evrows=[]
     for zthr in GRID:
         for ds in ['historical','forward_2026']:
             base=dedup_for_z(pre[pre.dataset==ds],float(zthr))
-            adm=lab093_admit(base)
-            ers=[]
-            for _,r in adm.iterrows():
-                e=replay(r,bars,tsa)
-                if e is not None:
-                    ers.append({'dataset':ds,'z_threshold':float(zthr),'side':int(r.side),'signal_ts':int(r.ts),
-                                'abs_z':float(r.abs_z),'dls':float(r.dls),'doi':float(r.doi),
-                                'rejectATR':float(-r.price_crowd_R),**e})
-            eg=pd.DataFrame(ers)
-            if len(eg): evrows.extend(eg.to_dict('records'))
-            st=stats(eg.sort_values('entry_ts') if len(eg) else eg)
-            mo=month_stats(eg)
+            adm=lab093_admit(base).sort_values('entry_ts')
+            if len(adm):
+                evrows.extend(adm.assign(z_threshold=float(zthr)).to_dict('records'))
+            st=stats(adm)
+            mo=month_stats(adm)
             rows.append({'dataset':ds,'z_threshold':float(zthr),'baseN_after_dedup':len(base),'admittedN':len(adm),**st,**mo})
 
     summ=pd.DataFrame(rows)
     summ.to_csv(OUT/'z_frontier.csv',index=False)
-    pd.DataFrame(evrows).to_csv(OUT/'z_frontier_events.csv',index=False)
+    # Full threshold-expanded event dump can be large; keep it for audit only if manageable.
+    evdf=pd.DataFrame(evrows)
+    evdf.to_csv(OUT/'z_frontier_events.csv',index=False)
 
-    # Paired historical / forward table for easy diagnosis.
     h=summ[summ.dataset=='historical'].set_index('z_threshold')
     f=summ[summ.dataset=='forward_2026'].set_index('z_threshold')
     paired=[]
@@ -188,10 +195,9 @@ def main():
     pair['pf15_both']=(pair.hist_PF>=1.5)&(pair.fwd_PF>=1.5)
     pair.to_csv(OUT/'z_frontier_paired.csv',index=False)
 
-    # Local marginal effect: what happens when threshold is raised by 0.1.
     marg=pair.copy()
-    for c in ['hist_N','hist_EV','hist_PF','fwd_N','fwd_EV','fwd_PF']:
-        marg['d_'+c]=marg[c].diff()
+    for col in ['hist_N','hist_EV','hist_PF','fwd_N','fwd_EV','fwd_PF']:
+        marg['d_'+col]=marg[col].diff()
     marg.to_csv(OUT/'z_marginal_effect.csv',index=False)
 
     result={
@@ -211,7 +217,7 @@ def main():
                      'Binance 1m execution proxy, not broker-native fills.']
     }
     (OUT/'summary.json').write_text(json.dumps(result,indent=2))
-    (OUT/'REPORT.md').write_text('# LAB094 — Z THRESHOLD FRONTIER\n\n'+json.dumps(result,indent=2)+'\n\n## Paired results\n\n'+pair.to_markdown(index=False)+'\n\n## Marginal effect\n\n'+marg.to_markdown(index=False))
+    (OUT/'REPORT.md').write_text('# LAB094 — Z THRESHOLD FRONTIER\\n\\n'+json.dumps(result,indent=2)+'\\n\\n## Paired results\\n\\n'+pair.to_markdown(index=False)+'\\n\\n## Marginal effect\\n\\n'+marg.to_markdown(index=False))
     print((OUT/'REPORT.md').read_text())
 
 if __name__=='__main__': main()
