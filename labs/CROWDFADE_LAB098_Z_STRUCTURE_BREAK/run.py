@@ -43,7 +43,7 @@ def make_tf(b,tf):
     x=b.copy(); x['dt']=pd.to_datetime(x.ts,unit='s',utc=True)
     q=x.set_index('dt').resample(f'{tf}min',label='left',closed='left').agg(
         open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
-    q['open_ts']=(q.dt.view('int64')//10**9).astype(np.int64)
+    q['open_ts']=(q['dt'].astype('int64')//10**9).astype(np.int64)
     q['close_ts']=q.open_ts+tf*60
     return q
 
