@@ -1,0 +1,37 @@
+{
+  "lab": "LAB092_LAB089_FREQUENCY_FRONTIER",
+  "frozen_execution": {
+    "BUY": "MARKET TP2.5R SL1R",
+    "SELL": "MARKET TP2.0R SL1R",
+    "max_hold_min": 120,
+    "cost_bps_rt": 0.5
+  },
+  "frozen_thresholds": {
+    "BUY": {
+      "window_min": 15.0,
+      "dls_q50": 0.02126813839258385,
+      "doi_q50": 0.00255557325829865,
+      "rej_q50": 0.49055696545663846
+    },
+    "SELL": {
+      "window_min": 10.0,
+      "dls_q50": 0.0123825404840496,
+      "doi_q50": 0.0016377062940879,
+      "rej_q50": 0.3904050750016281
+    }
+  },
+  "admissions": [
+    "ALL_3_OF_3",
+    "PRICE_LS",
+    "PRICE_OI",
+    "PRICE_PLUS_1OF2",
+    "ANY_2_OF_3",
+    "BASE"
+  ],
+  "goal": "Find admission with 20-40 trades/month while preserving positive EV/PF and acceptable DD.",
+  "limitations": [
+    "2026 Mar-Aug reused diagnostic, not pristine OOS.",
+    "Binance futures 1m execution proxy, not broker-native fills.",
+    "Sequential trade DD ignores concurrency/margin interaction."
+  ]
+}
