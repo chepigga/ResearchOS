@@ -1,0 +1,49 @@
+{
+  "lab": "LAB097_M15_M30_CONFIRMED_Z_REVERSAL",
+  "universe": "LAB096 broad causal non-Z setup universe, 30m Z-trajectory features; no fixed |Z| gate.",
+  "arrow_timing": "Only at close of M15/M30 confirmation bar; never back-painted onto the Z peak/trough.",
+  "confirmation": "Directional candle body >= fixed ATR threshold and directional close location >=0.55.",
+  "grid": {
+    "tf": [
+      15,
+      30
+    ],
+    "z_pullback": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "z_prominence": [
+      0.3,
+      0.5,
+      0.75
+    ],
+    "price_confirm_ATR": [
+      0.0,
+      0.1,
+      0.2
+    ]
+  },
+  "target": "Hit +1R before -1R within 120m after confirmation.",
+  "target_frequency": "2-4 confirmed independent arrows/day.",
+  "selection": "Best config selected using 2021-2024 only; 2025 validation; 2026 reused diagnostic.",
+  "best_train_config": {
+    "tf": 30,
+    "pullback": 0.1,
+    "prominence": 0.3,
+    "price_confirm": 0.2,
+    "period": "train_2021_24",
+    "N": 2515,
+    "signals_per_day": 1.7237834132967786,
+    "hit_rate_1R": 0.4906560636182903,
+    "BUY_N": 1478,
+    "SELL_N": 1037,
+    "in_target_2_4_day": false,
+    "score": 8.536904685662584
+  },
+  "limitations": [
+    "2026 is reused diagnostic, not pristine OOS.",
+    "Binance 1m proxy, not broker-native execution.",
+    "Grid is discovery and must be frozen before future OOS."
+  ]
+}

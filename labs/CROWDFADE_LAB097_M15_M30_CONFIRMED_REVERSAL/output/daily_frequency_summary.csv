@@ -1,0 +1,4 @@
+period,days,mean_per_day,median_per_day,p90_per_day,days_2_4
+diagnostic_2026,106,1.7641509433962264,2.0,3.0,56
+train_2021_24,1143,2.2003499562554683,2.0,4.0,651
+validation_2025,248,1.8306451612903225,2.0,3.0,128
