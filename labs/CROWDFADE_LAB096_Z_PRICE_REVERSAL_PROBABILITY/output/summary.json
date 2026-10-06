@@ -1,0 +1,35 @@
+{
+  "lab": "LAB096_Z_TRAJECTORY_X_PRICE_REVERSAL_PROBABILITY",
+  "universe": "LAB089 non-Z base candidates from LAB095 30m trajectory dataset; no fixed |Z| gate.",
+  "features": [
+    "abs_z",
+    "z_signed_crowd",
+    "dls",
+    "doi",
+    "rejectATR",
+    "traj_prominence",
+    "traj_pullback",
+    "traj_peak_age_min",
+    "traj_pre_slope_per_min",
+    "price_ret_5R",
+    "price_ret_15R",
+    "price_ret_30R",
+    "price_turn_15R",
+    "price_turn_30R",
+    "price_range_15R",
+    "price_range_30R"
+  ],
+  "targets": [
+    "hit +0.5R before -1R within 120m",
+    "hit +1.0R before -1R within 120m",
+    "hit +1.5R before -1R within 120m"
+  ],
+  "model": "Separate BUY/SELL standardized logistic regression, C=0.5.",
+  "split": "Train 2021-2024; validation 2025; reused diagnostic 2026.",
+  "causal": "All Z and price features use data available at or before decision timestamp; target path begins at next 1m open.",
+  "limitations": [
+    "2026 is reused diagnostic, not pristine OOS.",
+    "LAB096 is discovery; probability values require calibration validation before production use.",
+    "Binance 1m proxy, not broker-native execution."
+  ]
+}
