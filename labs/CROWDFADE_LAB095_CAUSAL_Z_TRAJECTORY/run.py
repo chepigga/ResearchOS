@@ -190,8 +190,7 @@ def main():
     raw['entry_ts']=et; raw['exit_ts']=xt; raw['netR']=nr; raw['grossR']=gr
     raw['outcome']=np.where(oc==1,'TP',np.where(oc==-1,'SL','TIME'))
     raw=raw[np.isfinite(raw.netR)&(raw.entry_ts>=0)].copy()
-    raw.to_csv(OUT/'trajectory_raw_candidates.csv',index=False)
-
+    # Raw trajectory matrix is intentionally not committed (>100 MB). Compact grid outputs are sufficient for recovery.\n
     rows=[]
     for lb in LOOKBACKS:
       base=raw[raw.lookback_min==lb]
