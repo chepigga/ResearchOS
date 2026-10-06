@@ -136,6 +136,23 @@ def main():
                          'MAE_mean':float(g.maeR.mean()) if len(g) else np.nan,**m})
     s=pd.DataFrame(rows); s.to_csv(OUT/'execution_summary.csv',index=False)
 
+    # Monthly P/L for the exact standalone LAB089 bot configuration:
+    # BUY MARKET TP2.5R, SELL MARKET TP2.0R, 0.5 bps RT proxy.
+    live=x[(x.mode=='MARKET') & (x.filled==1) & (((x.side==1)&(x.tpR==2.5)) | ((x.side==-1)&(x.tpR==2.0)))].copy()
+    live['month']=pd.to_datetime(live.entry_ts,unit='s',utc=True).dt.to_period('M').astype(str)
+    live['netR']=live['netR_0p5bps']
+    monthly_side=(live.groupby(['dataset','month','side'])
+                    .agg(N=('netR','size'),SumR=('netR','sum'),EV_R=('netR','mean'),
+                         WR=('netR',lambda z: float((z>0).mean())))
+                    .reset_index())
+    monthly_side['side']=monthly_side.side.map({1:'BUY',-1:'SELL'})
+    monthly_total=(live.groupby(['dataset','month'])
+                     .agg(N=('netR','size'),SumR=('netR','sum'),EV_R=('netR','mean'),
+                          WR=('netR',lambda z: float((z>0).mean())))
+                     .reset_index())
+    monthly_side.to_csv(OUT/'monthly_profit_by_side.csv',index=False)
+    monthly_total.to_csv(OUT/'monthly_profit_total.csv',index=False)
+
     # pooled side-aware candidate comparison and best historical per side, then unchanged 2026 report
     rank=[]
     hist=s[(s.dataset=='historical')&(s.cost_bps_rt==0.5)]
