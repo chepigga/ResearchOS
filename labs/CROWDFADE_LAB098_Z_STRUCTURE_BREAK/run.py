@@ -98,13 +98,15 @@ def build_events(base,b,m5):
                     cur=tb.iloc[confirm_i]
                     if len(prev)<sb: continue
                     if side>0:
+                        # exhaustion over the trailing swing window, but micro-BOS is causal
+                        # break of the immediately preceding closed TF bar high
                         swing_ext=float(prev.low.min())
-                        micro_break=float(prev.high.max())
+                        micro_break=float(prev.high.iloc[-1])
                         failed_extend=float(cur.low)>=swing_ext-0.05*atr
                         structure_distance=(float(cur.close)-micro_break)/atr
                     else:
                         swing_ext=float(prev.high.max())
-                        micro_break=float(prev.low.min())
+                        micro_break=float(prev.low.iloc[-1])
                         failed_extend=float(cur.high)<=swing_ext+0.05*atr
                         structure_distance=(micro_break-float(cur.close))/atr
                     for buf in BREAK_BUF_ATR:
@@ -151,6 +153,8 @@ def main():
     b,m5=load_bars()
     ev=build_events(base,b,m5)
     ev.to_csv(OUT/'structure_break_universe.csv',index=False)
+    if len(ev)==0:
+        raise RuntimeError("LAB098 produced zero structure-break events; inspect confirmation definition before interpreting results.")
 
     rows=[]
     for tf in TFS:
