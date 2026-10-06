@@ -1,0 +1,32 @@
+name: CrowdFade LAB096 Z trajectory price reversal probability
+on:
+  workflow_dispatch:
+  push:
+    branches: [lab/crowdfade-execution-5y-positive-005]
+    paths:
+      - labs/CROWDFADE_LAB096_Z_PRICE_REVERSAL_PROBABILITY/**
+      - .github/workflows/crowdfade-lab096.yml
+permissions:
+  contents: write
+jobs:
+  lab096:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install numpy pandas scipy scikit-learn tabulate
+      - name: Run LAB096
+        run: python labs/CROWDFADE_LAB096_Z_PRICE_REVERSAL_PROBABILITY/run.py
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name ResearchOS
+          git config user.email researchos@example.com
+          git add labs/CROWDFADE_LAB096_Z_PRICE_REVERSAL_PROBABILITY/output/
+          git diff --cached --quiet || (git commit -m "LAB096 outputs" && git push origin HEAD:lab/crowdfade-execution-5y-positive-005)
