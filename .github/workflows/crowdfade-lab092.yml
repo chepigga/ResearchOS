@@ -1,0 +1,55 @@
+name: CrowdFade LAB092 frequency frontier
+on:
+  workflow_dispatch:
+  push:
+    branches: [lab/crowdfade-execution-5y-positive-005]
+    paths:
+      - labs/CROWDFADE_LAB089_FREQUENCY_FRONTIER_LAB_092/**
+      - .github/workflows/crowdfade-lab092.yml
+permissions:
+  contents: write
+jobs:
+  lab092:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-execution-5y-positive-005
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install numpy pandas scipy tabulate
+      - name: Download 1m source
+        shell: bash
+        run: |
+          set -euo pipefail
+          LAB="labs/CROWDFADE_LAB089_FREQUENCY_FRONTIER_LAB_092"
+          mkdir -p "$LAB/data/all_1m"
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import urlretrieve
+          import time
+          root=Path("labs/CROWDFADE_LAB089_FREQUENCY_FRONTIER_LAB_092/data/all_1m")
+          base="https://data.binance.vision/data/futures/um/monthly/klines/BTCUSDT/1m"
+          for y in range(2021,2027):
+              last=12 if y<=2025 else 8
+              for m in range(1,last+1):
+                  n=f"BTCUSDT-1m-{y}-{m:02d}.zip"; p=root/n
+                  for a in range(5):
+                      try: urlretrieve(f"{base}/{n}",p); break
+                      except Exception:
+                          if p.exists(): p.unlink()
+                          if a==4: raise
+                          time.sleep(2+a)
+          PY
+      - name: Run LAB092
+        run: python labs/CROWDFADE_LAB089_FREQUENCY_FRONTIER_LAB_092/run.py
+      - name: Commit outputs
+        shell: bash
+        run: |
+          git config user.name ResearchOS
+          git config user.email researchos@example.com
+          git add labs/CROWDFADE_LAB089_FREQUENCY_FRONTIER_LAB_092/output/
+          git diff --cached --quiet || (git commit -m "LAB092 outputs" && git push origin HEAD:lab/crowdfade-execution-5y-positive-005)
