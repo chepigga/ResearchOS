@@ -1,5 +1,6 @@
 from pathlib import Path
 import json, zipfile, importlib.util, numpy as np, pandas as pd
+from numba import njit
 
 ROOT=Path(__file__).resolve().parent
 OUT=ROOT/'output'; OUT.mkdir(parents=True,exist_ok=True)
@@ -45,24 +46,38 @@ def load_bars():
         rows.append(q[['ts_open','open','high','low','close']])
     return pd.concat(rows,ignore_index=True).sort_values('ts_open').drop_duplicates('ts_open').reset_index(drop=True)
 
-def replay(side,t,atr,bars,tsa):
-    tpR=2.5 if side>0 else 2.0
-    k=int(np.searchsorted(tsa,t,side='left'))
-    if k>=len(bars): return None
-    ep=float(bars.open.iloc[k]); sl=ep-side*atr; tp=ep+side*tpR*atr
-    e=int(np.searchsorted(tsa,t+HOLD_MIN*60,side='right')); qend=min(e,len(bars))
-    qi=max(k,min(qend-1,len(bars)-1)); exit_px=float(bars.close.iloc[qi]); exit_ts=int(tsa[qi]); outcome='TIME'
-    for q in range(k,qend):
-        hi=float(bars.high.iloc[q]); lo=float(bars.low.iloc[q])
-        hs=(lo<=sl) if side>0 else (hi>=sl)
-        ht=(hi>=tp) if side>0 else (lo<=tp)
-        if hs or ht:
-            if hs: exit_px=sl; outcome='SL'
-            else: exit_px=tp; outcome='TP'
-            exit_ts=int(tsa[q]); break
-    gross=side*(exit_px-ep)/atr
-    cost=(ep*(COST_BPS/10000.0))/atr
-    return {'entry_ts':int(tsa[k]),'exit_ts':exit_ts,'netR':gross-cost,'grossR':gross,'outcome':outcome}
+@njit(cache=True)
+def replay_batch(sig_t, sides, atrs, tsa, opens, highs, lows, closes):
+    n=len(sig_t)
+    entry_ts=np.empty(n,np.int64); exit_ts=np.empty(n,np.int64)
+    netR=np.empty(n,np.float64); grossR=np.empty(n,np.float64); outcome=np.empty(n,np.int8)
+    for i in range(n):
+        t=sig_t[i]; side=sides[i]; atr=atrs[i]
+        k=np.searchsorted(tsa,t)
+        if k>=len(tsa) or atr<=0:
+            entry_ts[i]=-1; exit_ts[i]=-1; netR[i]=np.nan; grossR[i]=np.nan; outcome[i]=-1
+            continue
+        ep=opens[k]; tpR=2.5 if side>0 else 2.0
+        sl=ep-side*atr; tp=ep+side*tpR*atr
+        e=np.searchsorted(tsa,t+HOLD_MIN*60,side='right')
+        qend=min(e,len(tsa))
+        qi=max(k,min(qend-1,len(tsa)-1))
+        xp=closes[qi]; xt=tsa[qi]; oc=0
+        for q in range(k,qend):
+            hi=highs[q]; lo=lows[q]
+            hs=(lo<=sl) if side>0 else (hi>=sl)
+            ht=(hi>=tp) if side>0 else (lo<=tp)
+            if hs or ht:
+                if hs:
+                    xp=sl; oc=-1
+                else:
+                    xp=tp; oc=1
+                xt=tsa[q]
+                break
+        gr=side*(xp-ep)/atr
+        cost=(ep*(COST_BPS/10000.0))/atr
+        entry_ts[i]=tsa[k]; exit_ts[i]=xt; grossR[i]=gr; netR[i]=gr-cost; outcome[i]=oc
+    return entry_ts,exit_ts,netR,grossR,outcome
 
 def causal_candidates(label,p,flow,bars,tsa,lookback):
     ts,O,H,L,C,dt5,H5,L5,C5,Z5,A5=p
@@ -120,12 +135,10 @@ def causal_candidates(label,p,flow,bars,tsa,lookback):
             doi=full_oi[fi]/full_oi[fp]-1.0
             pr=crowd*(float(C[j])-float(C[jp]))/atr
             reject=-pr
-            rr=replay(side,t,atr,bars,tsa)
-            if rr is None: continue
             rows.append({'dataset':label,'ts':t,'side':side,'lookback_min':lookback,
                          'z_current':cur,'z_extreme':extreme,'prominence':prominence,
                          'pullback':pullback,'pre_slope_per_min':slope,
-                         'doi':doi,'rejectATR':reject,'atr':atr,**rr})
+                         'doi':doi,'rejectATR':reject,'atr':atr})
     return pd.DataFrame(rows)
 
 def dedup(g):
@@ -168,6 +181,15 @@ def main():
             q=causal_candidates(ds,p,flow,bars,tsa,lb)
             if len(q): raw.append(q)
     raw=pd.concat(raw,ignore_index=True)
+
+    # One compiled batch execution replay for all trajectory observations.
+    bt=bars.ts_open.to_numpy(np.int64)
+    bo=bars.open.to_numpy(float); bh=bars.high.to_numpy(float); bl=bars.low.to_numpy(float); bc=bars.close.to_numpy(float)
+    et,xt,nr,gr,oc=replay_batch(raw.ts.to_numpy(np.int64),raw.side.to_numpy(np.int64),
+                                raw.atr.to_numpy(float),bt,bo,bh,bl,bc)
+    raw['entry_ts']=et; raw['exit_ts']=xt; raw['netR']=nr; raw['grossR']=gr
+    raw['outcome']=np.where(oc==1,'TP',np.where(oc==-1,'SL','TIME'))
+    raw=raw[np.isfinite(raw.netR)&(raw.entry_ts>=0)].copy()
     raw.to_csv(OUT/'trajectory_raw_candidates.csv',index=False)
 
     rows=[]
