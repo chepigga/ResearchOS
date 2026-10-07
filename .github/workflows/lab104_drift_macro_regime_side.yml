@@ -1,0 +1,31 @@
+name: LAB104 Drift Macro Regime Side
+on:
+  push:
+    branches: [lab/lab104-drift-macro-regime-side-20261007]
+    paths: ['.github/workflows/lab104_drift_macro_regime_side.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab104-drift-macro-regime-side-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB104
+        run: python labs/LAB104_DRIFT_MACRO_REGIME_SIDE_20261007/run_lab104.py
+      - run: cat lab104_out/LAB104_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab104-drift-macro-regime-side
+          path: lab104_out
