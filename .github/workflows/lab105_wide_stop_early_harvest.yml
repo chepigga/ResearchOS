@@ -1,0 +1,31 @@
+name: LAB105 Wide Stop Early Harvest
+on:
+  push:
+    branches: [lab/lab105-wide-stop-early-harvest-20261007]
+    paths: ['.github/workflows/lab105_wide_stop_early_harvest.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab105-wide-stop-early-harvest-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB105
+        run: python labs/LAB105_WIDE_STOP_EARLY_HARVEST_20261007/run_lab105.py
+      - run: cat lab105_out/LAB105_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab105-wide-stop-early-harvest
+          path: lab105_out
