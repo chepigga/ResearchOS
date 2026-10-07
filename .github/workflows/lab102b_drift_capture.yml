@@ -1,0 +1,31 @@
+name: LAB102B Drift Capture
+on:
+  push:
+    branches: [lab/lab102b-drift-capture-20261007]
+    paths: ['.github/workflows/lab102b_drift_capture.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab102b-drift-capture-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB102B
+        run: python labs/LAB102B_DRIFT_CAPTURE_20261007/run_lab102b.py
+      - run: cat lab102b_out/LAB102B_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab102b-drift-capture
+          path: lab102b_out
