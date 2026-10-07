@@ -106,30 +106,39 @@ d=pd.merge_asof(flow.sort_values('time'), price[['time','open','high','low','clo
                 on='time', direction='backward', tolerance=pd.Timedelta('5min'))
 d=d.dropna(subset=['z','close','atr']).reset_index(drop=True)
 
+# numpy price arrays for fast outcome scan
+P_TIME=price.time.to_numpy(dtype='datetime64[ns]')
+P_TNS=P_TIME.astype('int64')
+P_OPEN=price.open.to_numpy(float); P_HIGH=price.high.to_numpy(float); P_LOW=price.low.to_numpy(float); P_CLOSE=price.close.to_numpy(float)
+
 # precompute causal broad candidates once; grid only filters them
 def path_outcome(signal_time, side, atr):
-    k=int(price.time.searchsorted(signal_time, side='right'))
-    if k>=len(price): return None
-    entry=float(price.open.iloc[k])
-    end_t=signal_time+pd.Timedelta(minutes=MAX_H)
-    b=int(price.time.searchsorted(end_t,side='right')-1)
-    if b<k or b>=len(price): return None
-    sub=price.iloc[k:b+1]
-    fav=((sub.high-entry) if side>0 else (entry-sub.low))/atr
-    adv=((entry-sub.low) if side>0 else (sub.high-entry))/atr
-    out={'entry':entry,'mfe120':float(max(0.0,fav.max())),'mae120':float(max(0.0,adv.max()))}
+    tns=np.datetime64(signal_time.to_datetime64()).astype('datetime64[ns]').astype('int64')
+    k=int(np.searchsorted(P_TNS,tns,side='right'))
+    if k>=len(P_TNS): return None
+    entry=float(P_OPEN[k])
+    end_ns=tns+MAX_H*60*1_000_000_000
+    b=int(np.searchsorted(P_TNS,end_ns,side='right')-1)
+    if b<k or b>=len(P_TNS): return None
+    hh=P_HIGH[k:b+1]; ll=P_LOW[k:b+1]
+    fav=((hh-entry) if side>0 else (entry-ll))/atr
+    adv=((entry-ll) if side>0 else (hh-entry))/atr
+    out={'entry':entry,'mfe120':float(max(0.0,np.nanmax(fav))),'mae120':float(max(0.0,np.nanmax(adv)))}
     for mins in [5,15,30,60,120]:
-        t=signal_time+pd.Timedelta(minutes=mins)
-        j=int(price.time.searchsorted(t,side='right')-1)
-        out[f'ret{mins}']=float(side*(price.close.iloc[j]-entry)/atr) if j>=k and j<len(price) else np.nan
+        tt=tns+mins*60*1_000_000_000
+        j=int(np.searchsorted(P_TNS,tt,side='right')-1)
+        out[f'ret{mins}']=float(side*(P_CLOSE[j]-entry)/atr) if j>=k and j<len(P_TNS) else np.nan
     def fp(tp):
-        for _,q in sub.iterrows():
-            htp=(q.high>=entry+tp*atr) if side>0 else (q.low<=entry-tp*atr)
-            hsl=(q.low<=entry-STOP_ATR*atr) if side>0 else (q.high>=entry+STOP_ATR*atr)
-            if htp and hsl:return -1.0
-            if hsl:return -1.0
-            if htp:return tp/STOP_ATR
-        return 0.0
+        if side>0:
+            htp=hh>=entry+tp*atr; hsl=ll<=entry-STOP_ATR*atr
+        else:
+            htp=ll<=entry-tp*atr; hsl=hh>=entry+STOP_ATR*atr
+        anyhit=htp|hsl
+        ii=np.flatnonzero(anyhit)
+        if len(ii)==0:return 0.0
+        q=int(ii[0])
+        if hsl[q]:return -1.0
+        return tp/STOP_ATR
     out['rr15']=fp(TP15_ATR); out['rr20']=fp(TP20_ATR)
     return out
 
