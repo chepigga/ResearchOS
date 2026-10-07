@@ -1,0 +1,39 @@
+name: LAB111 Inspect OI Funding Data
+on:
+  push:
+    branches: [lab/lab111-z-oi-funding-trajectory-20261007]
+    paths: ['.github/workflows/lab111_inspect_data.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab111-z-oi-funding-trajectory-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          curl -L --fail -o flow.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_flow.csv
+          curl -L --fail -o funding.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_funding.csv
+          curl -L --fail -o flowlong.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          python - <<'PY'
+          import pandas as pd, zipfile
+          for fn in ['flow.csv','funding.csv']:
+              d=pd.read_csv(fn,nrows=5)
+              print('\nFILE',fn)
+              print('COLS',list(d.columns))
+              print(d.head().to_string())
+          print('\nZIP')
+          with zipfile.ZipFile('flowlong.zip') as z:
+              for n in z.namelist()[:10]:
+                  if n.endswith('.csv'):
+                      with z.open(n) as f:
+                          d=pd.read_csv(f,nrows=3)
+                      print('MEMBER',n,'COLS',list(d.columns))
+                      print(d.head().to_string())
+                      break
+          PY
