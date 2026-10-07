@@ -1,0 +1,31 @@
+name: LAB112 Z Adverse Reclaim Forward Path
+on:
+  push:
+    branches: [lab/lab112-z-adverse-reclaim-forward-path-20261007]
+    paths: ['.github/workflows/lab112_z_adverse_reclaim_forward_path.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab112-z-adverse-reclaim-forward-path-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB112
+        run: python labs/LAB112_Z_ADVERSE_RECLAIM_FORWARD_PATH_20261007/run_lab112.py
+      - run: cat lab112_out/LAB112_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab112-z-adverse-reclaim-forward-path
+          path: lab112_out
