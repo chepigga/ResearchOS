@@ -311,7 +311,21 @@ for cost in COSTS:
                                delta_t=tt,se=se,harvest_hit=float(z.harvest_hit.mean()) if len(z) else np.nan))
 pd.DataFrame(paired).to_csv(OUT/'LAB105_paired_vs_baseline.csv',index=False)
 
+# Diagnostic: early target hit as information, not necessarily exit.
+diag=[]
+q25=trades[(trades.cost_bps==0.0)&(trades.harvest_frac==0.25)].copy()
+for split in ['TRAIN','OOS']:
+    z=q25[q25.split==split]
+    for hit in [True,False]:
+        g=z[z.harvest_hit==hit]
+        if len(g)==0: continue
+        runner_full=(g.runner_contrib_r/(1-0.25)) if hit else g.runner_contrib_r
+        diag.append(dict(split=split,harvest_hit=hit,n=len(g),runner_full_ev=float(runner_full.mean()),
+                         target_r=float(g.harvest_target_r.mean()),partial25_ev=float(g.gross_r.mean())))
+pd.DataFrame(diag).to_csv(OUT/'LAB105_harvest_hit_diagnostic.csv',index=False)
+
 lines=['# LAB105 — WIDE STOP + EARLY PROFIT HARVEST','',
+       'LINEAGE NOTE: parity audit found LAB103 executed candidates in setup-episode order rather than strict entry-time order. LAB105 sorts by actual entry time; its 0% harvest baseline is the corrected chronological execution and matches the later LAB104 execution convention. Older LAB103 headline counts/EV should therefore be treated as superseded for exact baseline values.','',
        'Frozen: fresh |Z|>=1 inverse crowd -> M30 STRUCT4 -> next M30 open -> SL 3.5 H1 ATR -> runner TIME60.',
        'Harvest: causal M15 prior-48-bar (12h) high/low, valid only if beyond entry; target can trigger only in first 8h.',
        'Tested partial close fractions: 0%, 25%, 50%, 75%. No BE, no trailing, no re-add. Selection uses TRAIN only.','']
