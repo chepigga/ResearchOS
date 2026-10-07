@@ -94,7 +94,8 @@ for side in [1,-1]:
   for name in TRIGGERS:
     nm=nextmap[(side,name)]
     for split in ['TRAIN','OOS']:
-      ss=inds[(BT.iloc[inds].to_numpy()<TRAIN_END.to_datetime64()) if split=='TRAIN' else (BT.iloc[inds].to_numpy()>=TRAIN_END.to_datetime64())]
+      tvals=pd.to_datetime(BT.iloc[inds],utc=True).astype('int64').to_numpy(); cut=TRAIN_END.value
+      ss=inds[(tvals<cut) if split=='TRAIN' else (tvals>=cut)]
       hits=0;delays=[]
       for i in ss:
         j=int(nm[i+1]) if i+1<len(nm) else len(base)
