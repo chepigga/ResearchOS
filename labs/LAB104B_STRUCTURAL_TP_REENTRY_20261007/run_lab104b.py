@@ -102,43 +102,76 @@ m15=pd.merge_asof(m15.sort_values('close_time'),flow[['time','z']].dropna().sort
 m15=m15.dropna(subset=['atr','z']).reset_index(drop=True)
 
 # ---------------------- Real broker spread profile ----------------------
-ticks,_=load_zip_csv(TICK_ZIP)
-tt=pick(ticks.columns,['time_msc','timestamp','time','datetime'])
-tb=pick(ticks.columns,['bid']); ta=pick(ticks.columns,['ask'])
-if None in [tt,tb,ta]: raise RuntimeError(f"tick columns unresolved {list(ticks.columns)}")
-tk=ticks[[tt,tb,ta]].copy()
-tk['time']=ptime(tk[tt]); tk['bid']=pd.to_numeric(tk[tb],errors='coerce'); tk['ask']=pd.to_numeric(tk[ta],errors='coerce')
-tk=tk.dropna(subset=['time','bid','ask'])
-tk=tk[(tk.bid>0)&(tk.ask>tk.bid)]
-tk['mid']=(tk.bid+tk.ask)/2
-tk['spread_bps']=(tk.ask-tk.bid)/tk.mid*10000.0
-# robust trim only impossible/corrupt tails; p99.99 cap
-cap=float(tk.spread_bps.quantile(.9999))
-tk=tk[(tk.spread_bps>=0)&(tk.spread_bps<=cap)]
-tk['hour']=tk.time.dt.hour
-spread_prof=tk.groupby('hour').spread_bps.agg(median='median',p95=lambda x:x.quantile(.95),n='size').reset_index()
+# Stream the broker tick archive to avoid loading hundreds of MB of raw ticks into RAM.
+spread_parts=[]
+tick_min=None; tick_max=None; tick_rows=0
+with zipfile.ZipFile(TICK_ZIP) as zf:
+    names=[n for n in zf.namelist() if n.lower().endswith('.csv')]
+    if not names: raise RuntimeError("no tick CSV")
+    for name in names:
+        with zf.open(name) as fh:
+            first=True; tt=tb=ta=None
+            for ch in pd.read_csv(fh,chunksize=500000):
+                if first:
+                    tt=pick(ch.columns,['time_msc','timestamp','time','datetime'])
+                    tb=pick(ch.columns,['bid']); ta=pick(ch.columns,['ask'])
+                    if None in [tt,tb,ta]: raise RuntimeError(f"tick columns unresolved {list(ch.columns)}")
+                    first=False
+                x=ch[[tt,tb,ta]].copy()
+                x['time']=ptime(x[tt]); x['bid']=pd.to_numeric(x[tb],errors='coerce'); x['ask']=pd.to_numeric(x[ta],errors='coerce')
+                x=x.dropna(subset=['time','bid','ask']); x=x[(x.bid>0)&(x.ask>x.bid)]
+                if not len(x): continue
+                x['mid']=(x.bid+x.ask)/2
+                x['spread_bps']=(x.ask-x.bid)/x.mid*10000.0
+                x=x[(x.spread_bps>=0)&(x.spread_bps<100)]
+                x['hour']=x.time.dt.hour
+                spread_parts.append(x[['hour','spread_bps']])
+                tick_rows += len(x)
+                mn=x.time.min(); mx=x.time.max()
+                tick_min=mn if tick_min is None or mn<tick_min else tick_min
+                tick_max=mx if tick_max is None or mx>tick_max else tick_max
+sp=pd.concat(spread_parts,ignore_index=True)
+cap=float(sp.spread_bps.quantile(.9999)); sp=sp[sp.spread_bps<=cap]
+spread_prof=sp.groupby('hour').spread_bps.agg(median='median',p95=lambda x:x.quantile(.95),n='size').reset_index()
 spread_prof.to_csv(OUT/'LAB104B_spread_by_hour.csv',index=False)
 SP_MED={int(r.hour):float(r.median) for r in spread_prof.itertuples()}
 SP_P95={int(r.hour):float(r.p95) for r in spread_prof.itertuples()}
-GLOBAL_MED=float(tk.spread_bps.median()); GLOBAL_P95=float(tk.spread_bps.quantile(.95))
+GLOBAL_MED=float(sp.spread_bps.median()); GLOBAL_P95=float(sp.spread_bps.quantile(.95))
+del spread_parts, sp
 
-# ---------------------- Causal 5-bar fractals ----------------------
+# ---------------------- Causal 5-bar fractals / geometry ----------------------
+import bisect
 n=len(m15)
-confirmed_highs=[[] for _ in range(n)]
-confirmed_lows=[[] for _ in range(n)]
-# keep cumulative confirmed pivot prices available by each trigger bar i.
-high_piv=[]; low_piv=[]
-for i in range(n):
+TRIG=np.zeros(n,dtype=np.int8)
+STOP=np.full(n,np.nan); STOP_ATR=np.full(n,np.nan)
+TP_PIV=np.full(n,np.nan); TP_RNG=np.full(n,np.nan)
+piv_hi=[]; piv_lo=[]
+H=m15.high.to_numpy(float); L=m15.low.to_numpy(float); C=m15.close.to_numpy(float); O=m15.open.to_numpy(float); ATR=m15.atr.to_numpy(float)
+for i in range(n-1):
     k=i-2
-    if k>=2 and k+2<n:
-        h=m15.high
-        l=m15.low
-        if h.iloc[k]>h.iloc[k-1] and h.iloc[k]>h.iloc[k-2] and h.iloc[k]>=h.iloc[k+1] and h.iloc[k]>=h.iloc[k+2]:
-            high_piv.append(float(h.iloc[k]))
-        if l.iloc[k]<l.iloc[k-1] and l.iloc[k]<l.iloc[k-2] and l.iloc[k]<=l.iloc[k+1] and l.iloc[k]<=l.iloc[k+2]:
-            low_piv.append(float(l.iloc[k]))
-    confirmed_highs[i]=list(high_piv)
-    confirmed_lows[i]=list(low_piv)
+    if k>=2:
+        if H[k]>H[k-1] and H[k]>H[k-2] and H[k]>=H[k+1] and H[k]>=H[k+2]: bisect.insort(piv_hi,float(H[k]))
+        if L[k]<L[k-1] and L[k]<L[k-2] and L[k]<=L[k+1] and L[k]<=L[k+2]: bisect.insort(piv_lo,float(L[k]))
+    if i<max(TRIGGER_LOOKBACK,STOP_LOOKBACK-1,48) or not np.isfinite(ATR[i]): continue
+    hi=float(np.max(H[i-TRIGGER_LOOKBACK:i])); lo=float(np.min(L[i-TRIGGER_LOOKBACK:i]))
+    side=1 if C[i]>hi else (-1 if C[i]<lo else 0)
+    if side==0: continue
+    entry=O[i+1]; atr=ATR[i]
+    aa=i-STOP_LOOKBACK+1
+    stop=float(np.min(L[aa:i+1])-STOP_BUFFER_ATR*atr) if side>0 else float(np.max(H[aa:i+1])+STOP_BUFFER_ATR*atr)
+    dist=(entry-stop) if side>0 else (stop-entry)
+    if dist<=0: continue
+    sa=dist/atr
+    if sa<STOP_MIN_ATR or sa>STOP_MAX_ATR: continue
+    TRIG[i]=side; STOP[i]=stop; STOP_ATR[i]=sa
+    if side>0:
+        ix=bisect.bisect_right(piv_hi,entry)
+        if ix<len(piv_hi): TP_PIV[i]=piv_hi[ix]
+        TP_RNG[i]=float(np.max(H[i-48:i]))
+    else:
+        ix=bisect.bisect_left(piv_lo,entry)-1
+        if ix>=0: TP_PIV[i]=piv_lo[ix]
+        TP_RNG[i]=float(np.min(L[i-48:i]))
 
 # ---------------------- Setup state ----------------------
 # z-side at each bar = latest |z|>=1 event within last 12 bars, inverse sign.
@@ -162,27 +195,10 @@ for i in range(n):
 
 # ---------------------- trade engine ----------------------
 def choose_tp(i,side,entry,tp_mode):
-    if tp_mode=='TP_RANGE':
-        if i<48: return np.nan
-        if side>0:
-            return float(m15.high.iloc[i-48:i].max())
-        return float(m15.low.iloc[i-48:i].min())
-    if tp_mode=='TP_PIVOT':
-        if side>0:
-            vals=[x for x in confirmed_highs[i] if x>entry]
-            return min(vals) if vals else np.nan
-        vals=[x for x in confirmed_lows[i] if x<entry]
-        return max(vals) if vals else np.nan
-    raise KeyError(tp_mode)
+    return float(TP_PIV[i]) if tp_mode=='TP_PIVOT' else float(TP_RNG[i])
 
 def trigger_side(i):
-    if i<TRIGGER_LOOKBACK: return 0
-    c=float(m15.close.iloc[i])
-    hi=float(m15.high.iloc[i-TRIGGER_LOOKBACK:i].max())
-    lo=float(m15.low.iloc[i-TRIGGER_LOOKBACK:i].min())
-    if c>hi: return 1
-    if c<lo: return -1
-    return 0
+    return int(TRIG[i])
 
 def spread_bps_at(ts,profile):
     h=int(pd.Timestamp(ts).hour)
@@ -285,13 +301,28 @@ def metrics(q):
                 timeout_rate=float((q.reason=='TIMEOUT').mean()),avg_tp_r=float(q.tp_r.mean()),trades_per_day=len(q)/days,se=se)
 
 # ---------------------- sweep fixed requested variants ----------------------
+# Path/overlap is independent of costs, so compute 4 raw ledgers only once.
+raw={}
+for tp_mode in ['TP_PIVOT','TP_RANGE']:
+    for use_z in [True,False]:
+        raw[(tp_mode,use_z)]=simulate(use_z,tp_mode,0.0,'NONE')
+
 alltr=[]; sumrows=[]
 for tp_mode in ['TP_PIVOT','TP_RANGE']:
-    for spread_mode in ['NONE','MEDIAN','P95']:
-        for extra in [0.0,1.0,2.0,3.0]:
-            for use_z in [True,False]:
-                t=simulate(use_z,tp_mode,extra,spread_mode)
-                if len(t)==0: continue
+    for use_z in [True,False]:
+        base_raw=raw[(tp_mode,use_z)].copy()
+        if len(base_raw)==0: continue
+        for spread_mode in ['NONE','MEDIAN','P95']:
+            sb_e=np.array([spread_bps_at(t,spread_mode) for t in base_raw.entry_time])
+            sb_x=np.array([spread_bps_at(t,spread_mode) for t in base_raw.exit_time])
+            spr=0.5*(sb_e+sb_x)
+            for extra in [0.0,1.0,2.0,3.0]:
+                t=base_raw.copy()
+                t['spread_mode']=spread_mode; t['extra_bps']=extra
+                t['spread_rt_bps']=spr; t['total_cost_bps']=spr+extra
+                # reconstruct risk distance directly
+                risk=(t.entry-t.stop).abs()
+                t['net_r']=t.gross_r-(t.entry*((spr+extra)/10000.0))/risk
                 t['split']=np.where(pd.to_datetime(t.entry_time,utc=True)<pd.Timestamp('2025-01-01',tz='UTC'),'TRAIN','OOS')
                 t['year']=pd.to_datetime(t.entry_time,utc=True).dt.year
                 alltr.append(t)
@@ -379,8 +410,8 @@ pd.DataFrame(gates).to_csv(OUT/'LAB104B_gates.csv',index=False)
 meta=dict(
     flow_range=[str(flow.time.min()),str(flow.time.max())],
     price_range=[str(m15.time.min()),str(m15.time.max())],
-    tick_range=[str(tk.time.min()),str(tk.time.max())],
-    tick_rows=int(len(tk)),
+    tick_range=[str(tick_min),str(tick_max)],
+    tick_rows=int(tick_rows),
     broker_spread_global_median_bps=GLOBAL_MED,
     broker_spread_global_p95_bps=GLOBAL_P95,
     assumptions=dict(timeframe='M15',z_window='6h',setup='|z|>=1 inverse sign + 12 M15 bars memory',
@@ -392,7 +423,7 @@ meta=dict(
 
 # concise report
 lines=['# LAB104B — Structural TP + repeated inverse-crowd entries','',
-       f"Real spread source: GetLeveraged BTCUSD tick archive {tk.time.min()} -> {tk.time.max()} | ticks={len(tk):,}",
+       f"Real spread source: GetLeveraged BTCUSD tick archive {tick_min} -> {tick_max} | ticks={tick_rows:,}",
        f"Global spread: median={GLOBAL_MED:.3f} bps, p95={GLOBAL_P95:.3f} bps.",'',
        'Signal engine: |Z|>=1 inverse direction + 12 M15-bar memory; trigger=4-bar breakout; entry next open; structural 12-bar SL; timeout 8h; max 3/day.',
        'Baseline: same breakout/SL/TP engine without Z.','']
