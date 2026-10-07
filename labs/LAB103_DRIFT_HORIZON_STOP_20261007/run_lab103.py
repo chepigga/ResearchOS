@@ -172,7 +172,7 @@ def metrics(t):
     x=t.net_r.to_numpy(float); pos=x[x>0].sum(); neg=-x[x<0].sum()
     eq=np.cumsum(x); pk=np.maximum.accumulate(np.r_[0,eq]); dd=float(np.max(pk[1:]-eq))
     return dict(n=len(t),ev=float(x.mean()),pf=float(pos/neg) if neg>0 else np.inf,wr=float((x>0).mean()),sumr=float(x.sum()),dd=dd,
-                med_hold=float(t.hold_h.median()),med_mfe_atr=float(t.mfe_atr.median()),med_mae_atr=float(t.mae_atr.median()))
+                med_hold=float(t.actual_hold_h.median()),med_mfe_atr=float(t.mfe_atr.median()),med_mae_atr=float(t.mae_atr.median()))
 
 sums=[]; alltr=[]
 for sm in STOPS:
