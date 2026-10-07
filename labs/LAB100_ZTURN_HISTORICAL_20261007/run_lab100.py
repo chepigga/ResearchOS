@@ -169,10 +169,10 @@ def candidates(absz,approach_thr,reversal_thr,lb,mapping):
 grid=[]
 all_frames={}
 for mapping in ['inverse','direct']:
-  for az in [0.3,0.5,0.7,1.0,1.25,1.5,2.0]:
-    for ap in [0.05,0.10,0.18,0.25,0.35,0.50]:
-      for rv in [0.03,0.06,0.10,0.12,0.18,0.25]:
-        for lb in [2,3,4,6]:
+  for az in [0.50,0.70,1.00]:
+    for ap in [0.10,0.18,0.25]:
+      for rv in [0.06,0.12,0.18]:
+        for lb in [2,3,4]:
           q=candidates(az,ap,rv,lb,mapping)
           if len(q)<20: continue
           q['year']=q.signal_time.dt.year
