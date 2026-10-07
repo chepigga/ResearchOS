@@ -112,40 +112,65 @@ def entry_from_episode(r,mode):
         return None
     return None
 
-def simulate(mode,stop_mult,exit_mode,cost_bps):
-    rows=[]; open_until=-1
+# Fast precomputation for path outcomes, then cheap overlap/cost sweeps
+P_OPEN=base.open.to_numpy(float); P_HIGH=base.high.to_numpy(float); P_LOW=base.low.to_numpy(float); P_CLOSE=base.close.to_numpy(float)
+P_Z=base.z.to_numpy(float); P_ATR=base.atr_h1.to_numpy(float)
+
+ENTRY_CACHE={}
+for mode in ['SETUP','ARMED','STRUCT4']:
+    arr=[]
     for r in eps.itertuples():
         ei=entry_from_episode(r,mode)
-        if ei is None or ei<=open_until or ei>=len(base)-1: continue
-        entry=float(base.open.iloc[ei]); atr=float(base.atr_h1.iloc[ei]); side=int(r.side)
-        if not np.isfinite(atr) or atr<=0: continue
-        stop=entry-side*stop_mult*atr
-        if exit_mode=='Z0_24H': max_bars=288
-        elif exit_mode=='Z0_48H': max_bars=576
-        elif exit_mode=='TIME24': max_bars=288
-        elif exit_mode=='TIME48': max_bars=576
-        else: raise KeyError(exit_mode)
-        end=min(ei+max_bars,len(base)-1); exit_px=float(base.close.iloc[end]); reason='TIME'; ex=end
-        mfe=0; mae=0
-        for j in range(ei,end+1):
-            h=float(base.high.iloc[j]); l=float(base.low.iloc[j]); c=float(base.close.iloc[j]); z=float(base.z.iloc[j])
-            fav=((h-entry) if side>0 else (entry-l))/atr
-            adv=((entry-l) if side>0 else (h-entry))/atr
-            mfe=max(mfe,fav); mae=max(mae,adv)
-            hs=(l<=stop) if side>0 else (h>=stop)
-            if hs:
-                exit_px=stop; reason='SL'; ex=j; break
-            if exit_mode.startswith('Z0'):
-                crossed=(z>=0) if side>0 else (z<=0)
-                if crossed:
-                    exit_px=c; reason='Z0'; ex=j; break
-        gross=side*(exit_px-entry)/(stop_mult*atr)
-        cost=(entry*(cost_bps/10000.0))/(stop_mult*atr)
+        if ei is None or ei>=len(base)-1: continue
+        arr.append((int(ei),int(r.side),float(r.z_setup),r.setup_time))
+    ENTRY_CACHE[mode]=arr
+
+PRECOMP={}
+for mode,entries in ENTRY_CACHE.items():
+    for sm in [2.0,2.5,3.0]:
+        recs=[]
+        for ei,side,zsetup,st in entries:
+            entry=P_OPEN[ei]; atr=P_ATR[ei]
+            if not np.isfinite(atr) or atr<=0: continue
+            end48=min(ei+576,len(base)-1)
+            hh=P_HIGH[ei:end48+1]; ll=P_LOW[ei:end48+1]; zz=P_Z[ei:end48+1]
+            stop=entry-side*sm*atr
+            hs=(ll<=stop) if side>0 else (hh>=stop)
+            hit=np.flatnonzero(hs)
+            sl_rel=int(hit[0]) if len(hit) else None
+            zhit=((zz>=0) if side>0 else (zz<=0))
+            zi=np.flatnonzero(zhit)
+            z_rel=int(zi[0]) if len(zi) else None
+            rec=dict(ei=ei,side=side,z_setup=zsetup,setup_time=st,entry=entry,atr=atr)
+            for exm,cap in [('Z0_24H',288),('Z0_48H',576),('TIME24',288),('TIME48',576)]:
+                cap_rel=min(cap,end48-ei)
+                candidates=[]
+                if sl_rel is not None and sl_rel<=cap_rel: candidates.append((sl_rel,'SL'))
+                if exm.startswith('Z0') and z_rel is not None and z_rel<=cap_rel: candidates.append((z_rel,'Z0'))
+                if candidates:
+                    rel,reason=min(candidates,key=lambda x:x[0])
+                    exi=ei+rel
+                    exit_px=stop if reason=='SL' else P_CLOSE[exi]
+                else:
+                    rel=cap_rel; exi=ei+rel; reason='TIME'; exit_px=P_CLOSE[exi]
+                gross=side*(exit_px-entry)/(sm*atr)
+                rec[exm]=(exi,gross,reason,(exi-ei)*5/60)
+            recs.append(rec)
+        PRECOMP[(mode,sm)]=recs
+
+def simulate(mode,stop_mult,exit_mode,cost_bps):
+    rows=[]; open_until=-1
+    for r in PRECOMP[(mode,stop_mult)]:
+        ei=r['ei']
+        if ei<=open_until: continue
+        exi,gross,reason,hold=r[exit_mode]
+        cost=(r['entry']*(cost_bps/10000.0))/(stop_mult*r['atr'])
         net=gross-cost
         rows.append(dict(mode=mode,stop_mult=stop_mult,exit_mode=exit_mode,cost_bps=cost_bps,
-                         setup_time=r.setup_time,entry_time=base.time.iloc[ei],exit_time=base.time.iloc[ex],side=side,z_setup=r.z_setup,
-                         gross_r=gross,net_r=net,mfe_atr=mfe,mae_atr=mae,reason=reason,hold_h=(ex-ei)*5/60))
-        open_until=ex
+                         setup_time=r['setup_time'],entry_time=base.time.iloc[ei],exit_time=base.time.iloc[exi],
+                         side=r['side'],z_setup=r['z_setup'],gross_r=gross,net_r=net,
+                         mfe_atr=np.nan,mae_atr=np.nan,reason=reason,hold_h=hold))
+        open_until=exi
     return pd.DataFrame(rows)
 
 def metrics(t):
