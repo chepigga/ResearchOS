@@ -1,0 +1,31 @@
+name: LAB102A Z Filter Proxy
+on:
+  push:
+    branches: [lab/lab102a-z-filter-proxy-20261007]
+    paths: ['.github/workflows/lab102a_z_filter_proxy.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab102a-z-filter-proxy-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB102A
+        run: python labs/LAB102A_Z_FILTER_PROXY_20261007/run_lab102a.py
+      - run: cat lab102a_out/LAB102A_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab102a-z-filter-proxy
+          path: lab102a_out
