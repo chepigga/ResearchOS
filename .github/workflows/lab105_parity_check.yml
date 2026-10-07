@@ -38,4 +38,13 @@ jobs:
           q=a[['entry_time','net_r']].merge(b[['entry_time','net_r']],on='entry_time',suffixes=('_a','_b'))
           print('COMMON',len(q),'maxdiff',np.max(np.abs(q.net_r_a-q.net_r_b)) if len(q) else None)
           print(q[np.abs(q.net_r_a-q.net_r_b)>1e-9].head(20).to_string(index=False))
+          # show first sequence divergence with previous rows and exits
+          aa=a[['entry_time','exit_time','reason','net_r']].sort_values('entry_time').reset_index(drop=True)
+          bb=b[['entry_time','exit_time','reason','net_r']].sort_values('entry_time').reset_index(drop=True)
+          for i in range(min(len(aa),len(bb))):
+              if aa.entry_time.iloc[i]!=bb.entry_time.iloc[i]:
+                  print('FIRST_INDEX_DIVERGENCE',i)
+                  print('A_WINDOW'); print(aa.iloc[max(0,i-3):i+5].to_string(index=False))
+                  print('B_WINDOW'); print(bb.iloc[max(0,i-3):i+5].to_string(index=False))
+                  break
           PY
