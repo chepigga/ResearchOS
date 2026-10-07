@@ -94,8 +94,7 @@ for side in [1,-1]:
   for name in TRIGGERS:
     nm=nextmap[(side,name)]
     for split in ['TRAIN','OOS']:
-      tvals=pd.to_datetime(BT.iloc[inds],utc=True).astype('int64').to_numpy(); cut=TRAIN_END.value
-      ss=inds[(tvals<cut) if split=='TRAIN' else (tvals>=cut)]
+      ss=np.array([i for i in inds if ((BT.iloc[i] < TRAIN_END) if split=='TRAIN' else (BT.iloc[i] >= TRAIN_END))],dtype=np.int64)
       hits=0;delays=[]
       for i in ss:
         j=int(nm[i+1]) if i+1<len(nm) else len(base)
@@ -133,8 +132,12 @@ f'TRAIN-only thresholds: OI flush q10={qflush:+.4%}; OI build q90={qbuild:+.4%};
 for name in TRIGGERS:
   lines.append(f'## {name}')
   for split in ['TRAIN','OOS']:
-    c=cv[(cv.split==split)&(cv.trigger==name)].iloc[0];a=atlas[(atlas.split==split)&(atlas.trigger==name)&(atlas.horizon=='24h')].iloc[0]
-    lines.append(f"- {split}: rate={c.trigger_rate:.1%} N={int(a.n)} delay={c.median_delay_h:.2f}h | 24h close={a.mean_close:+.3f} ATR DNR={a.dnr_std:+.3f} MFE={a.mean_mfe:.2f} MAE={a.mean_mae:.2f} MFE/MAE={a.mfe_mae_ratio:.2f} P+={a.p_positive:.1%}")
+    cc=cv[(cv.split==split)&(cv.trigger==name)];aa=atlas[(atlas.split==split)&(atlas.trigger==name)&(atlas.horizon=='24h')]
+    if len(cc) and len(aa):
+      c=cc.iloc[0];a=aa.iloc[0]
+      lines.append(f"- {split}: rate={c.trigger_rate:.1%} N={int(a.n)} delay={c.median_delay_h:.2f}h | 24h close={a.mean_close:+.3f} ATR DNR={a.dnr_std:+.3f} MFE={a.mean_mfe:.2f} MAE={a.mean_mae:.2f} MFE/MAE={a.mfe_mae_ratio:.2f} P+={a.p_positive:.1%}")
+    else:
+      lines.append(f"- {split}: no eligible events")
   lines.append('')
 (OUT/'LAB113_REPORT.md').write_text('\n'.join(lines)+'\n')
 (OUT/'LAB113_meta.json').write_text(json.dumps(dict(context='fresh |Z|>=1 inverse crowd',search_h=6,thresholds=dict(oi_flush_q10=qflush,oi_build_q90=qbuild,vol_z_q90=qvol,taker_z=TZ),caveat='descriptive atlas; repeated OOS is development evidence, not pristine validation'),indent=2))
