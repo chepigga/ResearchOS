@@ -1,0 +1,32 @@
+name: LAB111 Z OI Funding Trajectory
+on:
+  push:
+    branches: [lab/lab111-z-oi-funding-trajectory-20261007]
+    paths: ['.github/workflows/lab111_z_oi_funding_trajectory.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab111-z-oi-funding-trajectory-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o binance_btc_funding.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_funding.csv
+      - name: Run LAB111
+        run: python labs/LAB111_Z_OI_FUNDING_TRAJECTORY_20261007/run_lab111.py
+      - run: cat lab111_out/LAB111_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab111-z-oi-funding-trajectory
+          path: lab111_out
