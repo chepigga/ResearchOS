@@ -29,3 +29,5 @@ jobs:
         with:
           name: lab110-z-signal-price-trajectory-atlas
           path: lab110_out
+
+# trigger run
