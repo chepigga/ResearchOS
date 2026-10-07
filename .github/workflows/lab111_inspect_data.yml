@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - run: python -m pip install -q pandas
       - run: |
           curl -L --fail -o flow.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_flow.csv
           curl -L --fail -o funding.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_funding.csv
