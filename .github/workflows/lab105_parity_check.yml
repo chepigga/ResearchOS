@@ -21,4 +21,21 @@ jobs:
           curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
           curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
       - run: python labs/LAB103_DRIFT_HORIZON_STOP_20261007/run_lab103.py
-      - run: grep -A20 "LAB103" lab103_out/LAB103_REPORT.md
+      - run: python labs/LAB105_WIDE_STOP_EARLY_HARVEST_20261007/run_lab105.py
+      - name: Compare exact baseline
+        run: |
+          python - <<'PY'
+          import pandas as pd, numpy as np
+          a=pd.read_csv('lab103_out/LAB103_trades_all.csv')
+          a=a[(a.stop_mult==3.5)&(a.hold_h_target==60)&(a.cost_bps==0.0)].copy()
+          b=pd.read_csv('lab105_out/LAB105_trades_all.csv')
+          b=b[(b.harvest_frac==0.0)&(b.cost_bps==0.0)].copy()
+          a['entry_time']=pd.to_datetime(a.entry_time,utc=True); b['entry_time']=pd.to_datetime(b.entry_time,utc=True)
+          print('A',len(a),a.net_r.mean(),'B',len(b),b.net_r.mean())
+          aa=set(a.entry_time.astype(str)); bb=set(b.entry_time.astype(str))
+          print('ONLY_A',len(aa-bb)); print(sorted(list(aa-bb))[:30])
+          print('ONLY_B',len(bb-aa)); print(sorted(list(bb-aa))[:30])
+          q=a[['entry_time','net_r']].merge(b[['entry_time','net_r']],on='entry_time',suffixes=('_a','_b'))
+          print('COMMON',len(q),'maxdiff',np.max(np.abs(q.net_r_a-q.net_r_b)) if len(q) else None)
+          print(q[np.abs(q.net_r_a-q.net_r_b)>1e-9].head(20).to_string(index=False))
+          PY
