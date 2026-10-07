@@ -211,25 +211,33 @@ def metrics(t):
                 sumr=float(x.sum()),maxdd=float(dd),med_mfe=float(t.mfe_r.median()),med_mae=float(t.mae_r.median()))
 
 rows=[]; ledgers=[]
+exit_policies=[
+ ('BASE',False,False,False),
+ ('FAIL',True,False,False),
+ ('BE',False,True,False),
+ ('Z0',False,False,True),
+ ('FAIL_BE',True,True,False),
+ ('FAIL_Z0',True,False,True),
+ ('BE_Z0',False,True,True),
+ ('ALL',True,True,True),
+]
 for tf in [15,30]:
     p=build_tf(tf)
     for armed in [False,True]:
       for sn in [1,4]:
-       for imp in [False,True]:
+        imp=True
         cands=candidate_triggers(p,tf,armed,sn,imp)
-        for fail in [False,True]:
-         for be in [False,True]:
-          for z0 in [False,True]:
-           for tout in [8,16,32]:
-            # one pass gross and cost stress
+        for pol,fail,be,z0 in exit_policies:
+            tout=16
             for cost in [0.0,COST_STRESS_BPS]:
                 t=simulate_variant(p,cands,fail,be,z0,tout,cost)
                 if len(t)==0: continue
+                t['policy']=pol
                 t['year']=pd.to_datetime(t.entry_time,utc=True).dt.year
                 train=t[pd.to_datetime(t.entry_time,utc=True)<pd.Timestamp('2025-01-01',tz='UTC')]
                 val=t[pd.to_datetime(t.entry_time,utc=True)>=pd.Timestamp('2025-01-01',tz='UTC')]
                 m1=metrics(train); m2=metrics(val)
-                row=dict(tf=tf,armed=armed,structure_n=sn,impulse_filter=imp,fail=fail,be=be,z0=z0,timeout_bars=tout,cost_bps=cost,
+                row=dict(tf=tf,armed=armed,structure_n=sn,impulse_filter=imp,policy=pol,fail=fail,be=be,z0=z0,timeout_bars=tout,cost_bps=cost,
                          **{f'tr_{k}':v for k,v in m1.items()},**{f'va_{k}':v for k,v in m2.items()})
                 rows.append(row)
 
