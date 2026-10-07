@@ -41,3 +41,5 @@ jobs:
 # rerun frozen 81-profile sweep
 
 # rerun optimized sweep
+
+# rerun vectorized outcomes
