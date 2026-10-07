@@ -70,7 +70,7 @@ if None in [pt,po,ph,pl,pc]:
     raise RuntimeError(f'Could not infer price OHLC columns. columns={list(price.columns)}')
 
 def parse_time(s):
-    if np.issubdtype(s.dtype, np.number):
+    if pd.api.types.is_numeric_dtype(s):
         x=pd.to_numeric(s,errors='coerce')
         med=float(x.dropna().median()) if x.notna().any() else 0
         unit='ms' if med>1e11 else 's'
