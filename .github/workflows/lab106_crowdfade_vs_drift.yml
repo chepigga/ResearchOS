@@ -1,0 +1,31 @@
+name: LAB106 CrowdFade vs Drift
+on:
+  push:
+    branches: [lab/lab106-crowdfade-v200-vs-drift-core-20261007]
+    paths: ['.github/workflows/lab106_crowdfade_vs_drift.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab106-crowdfade-v200-vs-drift-core-20261007
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB106
+        run: python labs/LAB106_CROWDFade_BASELINE_VS_DRIFT_20261007/run_lab106.py
+      - run: cat lab106_out/LAB106_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab106-crowdfade-vs-drift
+          path: lab106_out
