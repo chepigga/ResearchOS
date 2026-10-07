@@ -29,3 +29,5 @@ jobs:
         with:
           name: lab107a-hold-capacity
           path: lab107a_out
+
+# rerun after mode fix
