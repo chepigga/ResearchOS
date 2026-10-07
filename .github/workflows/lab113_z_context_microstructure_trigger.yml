@@ -23,9 +23,11 @@ jobs:
           curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
           curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
       - name: Run LAB113
-        run: python labs/LAB113_Z_CONTEXT_MICROSTRUCTURE_TRIGGER_20261007/run_lab113.py
+        run: python labs/LAB113_Z_CONTEXT_MICROSTRUCTURE_TRIGGER_20261007/run_lab113_v2.py
       - run: cat lab113_out/LAB113_REPORT.md
       - uses: actions/upload-artifact@v4
         with:
           name: lab113-z-context-microstructure-trigger
           path: lab113_out
+
+# rerun optimized v2
