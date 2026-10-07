@@ -1,0 +1,31 @@
+name: LAB116 Regime Horizon Router
+on:
+  push:
+    branches: [lab/lab116-regime-horizon-router-20261008]
+    paths: ['.github/workflows/lab116_regime_horizon_router.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab116-regime-horizon-router-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB116
+        run: python labs/LAB116_REGIME_HORIZON_ROUTER_20261008/run_lab116.py
+      - run: cat lab116_out/LAB116_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab116-regime-horizon-router
+          path: lab116_out
