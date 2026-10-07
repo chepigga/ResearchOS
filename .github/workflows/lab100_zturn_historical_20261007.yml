@@ -39,3 +39,5 @@ jobs:
 # retry after timestamp dtype fix
 
 # rerun frozen 81-profile sweep
+
+# rerun optimized sweep
