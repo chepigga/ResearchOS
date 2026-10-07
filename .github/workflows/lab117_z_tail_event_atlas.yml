@@ -1,0 +1,32 @@
+name: LAB117 Z Tail Event Atlas
+on:
+  push:
+    branches: [lab/lab117-z-tail-event-atlas-20261008]
+    paths: ['.github/workflows/lab117_z_tail_event_atlas.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab117-z-tail-event-atlas-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o binance_btc_funding.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_funding.csv
+      - name: Run LAB117
+        run: python labs/LAB117_Z_TAIL_EVENT_ATLAS_20261008/run_lab117.py
+      - run: cat lab117_out/LAB117_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab117-z-tail-event-atlas
+          path: lab117_out
