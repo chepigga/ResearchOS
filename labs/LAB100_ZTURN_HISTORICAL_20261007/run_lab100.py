@@ -106,11 +106,9 @@ d=pd.merge_asof(flow.sort_values('time'), price[['time','open','high','low','clo
                 on='time', direction='backward', tolerance=pd.Timedelta('5min'))
 d=d.dropna(subset=['z','close','atr']).reset_index(drop=True)
 
-# precompute future path by locating exact price index
-pidx=pd.Series(np.arange(len(price)),index=price.time)
-def bracket_and_stats(signal_time,side,entry,atr):
-    # signal is known at close of 5m observation; use next 5m open as causal entry proxy
-    k=int(price.time.searchsorted(signal_time,side='right'))
+# precompute causal broad candidates once; grid only filters them
+def path_outcome(signal_time, side, atr):
+    k=int(price.time.searchsorted(signal_time, side='right'))
     if k>=len(price): return None
     entry=float(price.open.iloc[k])
     end_t=signal_time+pd.Timedelta(minutes=MAX_H)
@@ -119,127 +117,102 @@ def bracket_and_stats(signal_time,side,entry,atr):
     sub=price.iloc[k:b+1]
     fav=((sub.high-entry) if side>0 else (entry-sub.low))/atr
     adv=((entry-sub.low) if side>0 else (sub.high-entry))/atr
-    mfe=float(max(0,fav.max())); mae=float(max(0,adv.max()))
-    out={}
+    out={'entry':entry,'mfe120':float(max(0.0,fav.max())),'mae120':float(max(0.0,adv.max()))}
     for mins in [5,15,30,60,120]:
         t=signal_time+pd.Timedelta(minutes=mins)
         j=int(price.time.searchsorted(t,side='right')-1)
         out[f'ret{mins}']=float(side*(price.close.iloc[j]-entry)/atr) if j>=k and j<len(price) else np.nan
-    def firstpass(tp):
-        sl=STOP_ATR
+    def fp(tp):
         for _,q in sub.iterrows():
-            hit_tp=(q.high>=entry+tp*atr) if side>0 else (q.low<=entry-tp*atr)
-            hit_sl=(q.low<=entry-sl*atr) if side>0 else (q.high>=entry+sl*atr)
-            if hit_tp and hit_sl: return -1.0
-            if hit_sl: return -1.0
-            if hit_tp: return tp/sl
+            htp=(q.high>=entry+tp*atr) if side>0 else (q.low<=entry-tp*atr)
+            hsl=(q.low<=entry-STOP_ATR*atr) if side>0 else (q.high>=entry+STOP_ATR*atr)
+            if htp and hsl:return -1.0
+            if hsl:return -1.0
+            if htp:return tp/STOP_ATR
         return 0.0
-    out.update(entry=entry,mfe120=mfe,mae120=mae,rr15=firstpass(TP15_ATR),rr20=firstpass(TP20_ATR))
+    out['rr15']=fp(TP15_ATR); out['rr20']=fp(TP20_ATR)
     return out
 
-def candidates(absz,approach_thr,reversal_thr,lb,mapping):
-    rows=[]
-    z=d.z.to_numpy(float)
+z=d.z.to_numpy(float)
+broad=[]
+for lb in [2,3,4]:
     for i in range(max(ZWIN,lb+1),len(d)):
         turn=i-1; base=turn-lb
         zz=z[turn]
-        if not np.isfinite(zz) or abs(zz)<absz: continue
+        if not np.isfinite(zz) or abs(zz)<0.50 or not np.isfinite(z[i]): continue
         prev=z[turn-lb:turn]
-        if len(prev)!=lb or not np.all(np.isfinite(prev)) or not np.isfinite(z[i]): continue
+        if len(prev)!=lb or not np.all(np.isfinite(prev)): continue
         ishigh=np.all(zz>prev); islow=np.all(zz<prev)
-        side=0; approach=rev=0.0
+        if not (ishigh or islow): continue
         if ishigh:
-            approach=zz-z[base]; rev=zz-z[i]
-            if approach>=approach_thr and rev>=reversal_thr:
-                side=-1 if mapping=='inverse' else +1
-        elif islow:
-            approach=z[base]-zz; rev=z[i]-zz
-            if approach>=approach_thr and rev>=reversal_thr:
-                side=+1 if mapping=='inverse' else -1
-        if side==0: continue
-        sigt=d.time.iloc[i]  # first observation proving the turn
-        atr=float(d.atr.iloc[i])
+            approach=zz-z[base]; reversal=zz-z[i]; extreme_type='HIGH'
+        else:
+            approach=z[base]-zz; reversal=z[i]-zz; extreme_type='LOW'
+        if approach<0.10 or reversal<0.06: continue
+        sigt=d.time.iloc[i]; atr=float(d.atr.iloc[i])
         if not np.isfinite(atr) or atr<=0: continue
-        st=bracket_and_stats(sigt,side,float(d.close.iloc[i]),atr)
-        if st is None: continue
-        rows.append(dict(signal_time=sigt,z_turn_time=d.time.iloc[turn],side=side,z_turn=zz,absz=abs(zz),
-                         approach=approach,reversal=rev,lb=lb,mapping=mapping,**st))
-    return pd.DataFrame(rows)
+        for mapping in ['inverse','direct']:
+            if extreme_type=='HIGH': side=-1 if mapping=='inverse' else +1
+            else: side=+1 if mapping=='inverse' else -1
+            st=path_outcome(sigt,side,atr)
+            if st is None: continue
+            broad.append(dict(signal_time=sigt,z_turn_time=d.time.iloc[turn],side=side,z_turn=zz,absz=abs(zz),
+                              approach=approach,reversal=reversal,lookback=lb,mapping=mapping,**st))
+broad=pd.DataFrame(broad)
+if len(broad)==0: raise RuntimeError('No broad candidates')
+broad.to_csv(OUT/'LAB100_broad_candidates.csv',index=False)
 
 grid=[]
-all_frames={}
 for mapping in ['inverse','direct']:
+  mm=broad[broad.mapping==mapping]
   for az in [0.50,0.70,1.00]:
     for ap in [0.10,0.18,0.25]:
       for rv in [0.06,0.12,0.18]:
         for lb in [2,3,4]:
-          q=candidates(az,ap,rv,lb,mapping)
+          q=mm[(mm.absz>=az)&(mm.approach>=ap)&(mm.reversal>=rv)&(mm.lookback==lb)]
           if len(q)<20: continue
-          q['year']=q.signal_time.dt.year
           train=q[q.signal_time < pd.Timestamp('2025-01-01',tz='UTC')]
           val=q[q.signal_time >= pd.Timestamp('2025-01-01',tz='UTC')]
           def met(x,pfx):
-            if len(x)==0:return {pfx+'n':0}
+            if len(x)==0:return {pfx+'n':0,pfx+'ev20':np.nan,pfx+'hit20':np.nan,pfx+'ret30':np.nan,pfx+'ret60':np.nan,pfx+'ret120':np.nan,pfx+'mfe120':np.nan,pfx+'mae120':np.nan}
             rr=x.rr20.to_numpy(float)
-            return {
-              pfx+'n':len(x), pfx+'ev20':float(rr.mean()), pfx+'hit20':float((rr>0).mean()),
-              pfx+'ret30':float(x.ret30.mean()), pfx+'ret60':float(x.ret60.mean()), pfx+'ret120':float(x.ret120.mean()),
-              pfx+'mfe120':float(x.mfe120.mean()), pfx+'mae120':float(x.mae120.mean())
-            }
+            return {pfx+'n':len(x),pfx+'ev20':float(rr.mean()),pfx+'hit20':float((rr>0).mean()),pfx+'ret30':float(x.ret30.mean()),pfx+'ret60':float(x.ret60.mean()),pfx+'ret120':float(x.ret120.mean()),pfx+'mfe120':float(x.mfe120.mean()),pfx+'mae120':float(x.mae120.mean())}
           row=dict(mapping=mapping,min_abs_z=az,min_approach=ap,min_reversal=rv,lookback=lb)
-          row.update(met(train,'tr_')); row.update(met(val,'va_'))
-          grid.append(row)
+          row.update(met(train,'tr_')); row.update(met(val,'va_')); grid.append(row)
 grid=pd.DataFrame(grid)
-if len(grid)==0: raise RuntimeError('No grid rows with >=20 signals')
-
-# choose on TRAIN only, require train>=80 and validation>=20
+if len(grid)==0: raise RuntimeError('No grid rows')
 eligible=grid[(grid.tr_n>=80)&(grid.va_n>=20)].copy()
 if len(eligible)==0: eligible=grid.copy()
 eligible=eligible.sort_values(['tr_ev20','tr_ret60','tr_n'],ascending=[False,False,False])
 best=eligible.iloc[0].to_dict()
-
-# diagnostics: robust top profiles by validation and stability
 grid['stability']=np.minimum(grid.tr_ev20,grid.va_ev20)
 grid['combined_ev20']=(grid.tr_ev20*grid.tr_n+grid.va_ev20*grid.va_n)/(grid.tr_n+grid.va_n)
 grid.to_csv(OUT/'LAB100_full_grid.csv',index=False)
 eligible.head(50).to_csv(OUT/'LAB100_train_rank_top50.csv',index=False)
 grid.sort_values(['stability','combined_ev20'],ascending=[False,False]).head(50).to_csv(OUT/'LAB100_stability_top50.csv',index=False)
 
-bestq=candidates(best['min_abs_z'],best['min_approach'],best['min_reversal'],int(best['lookback']),best['mapping'])
+bestq=broad[(broad.mapping==best['mapping'])&(broad.absz>=best['min_abs_z'])&(broad.approach>=best['min_approach'])&(broad.reversal>=best['min_reversal'])&(broad.lookback==int(best['lookback']))].copy()
 bestq.to_csv(OUT/'LAB100_best_profile_signals.csv',index=False)
-
-# yearly summary
 ys=[]
 for y,g in bestq.groupby(bestq.signal_time.dt.year):
     rr=g.rr20.to_numpy(float)
     ys.append(dict(year=int(y),n=len(g),ev20=float(rr.mean()),hit20=float((rr>0).mean()),ret30=float(g.ret30.mean()),ret60=float(g.ret60.mean()),ret120=float(g.ret120.mean()),mfe120=float(g.mfe120.mean()),mae120=float(g.mae120.mean())))
 pd.DataFrame(ys).to_csv(OUT/'LAB100_best_profile_yearly.csv',index=False)
 
-meta={
- 'flow_files':flow_names,'price_files':price_names,'flow_columns':list(flow.columns),'price_columns':list(price.columns),
- 'flow_time_col':ft,'flow_ratio_col':fr,'price_time_col':pt,'rows_flow_5m':len(flow),'rows_price_5m':len(price),
- 'range_flow':[str(flow.time.min()),str(flow.time.max())],'range_price':[str(price.time.min()),str(price.time.max())],
- 'best_train_selected':best
-}
-(OUT/'LAB100_meta.json').write_text(json.dumps(meta,indent=2,default=str))
-
-# concise report
 stable=grid.sort_values(['stability','combined_ev20'],ascending=[False,False]).iloc[0]
-lines=[
- '# LAB100 historical Z-turn validity sweep','',
- f"Flow range: {flow.time.min()} -> {flow.time.max()} | 5m rows={len(flow):,}",
- f"Price range: {price.time.min()} -> {price.time.max()} | 5m rows={len(price):,}",
- '',
- '## Train-selected profile (selection uses pre-2025 only)',
- f"- mapping={best['mapping']}, |Z|>={best['min_abs_z']}, approach>={best['min_approach']}, reversal>={best['min_reversal']}, lookback={int(best['lookback'])}",
- f"- TRAIN N={int(best['tr_n'])}, EV2R={best['tr_ev20']:.3f}R, hit2R={best['tr_hit20']:.1%}, ret60={best['tr_ret60']:.3f} ATR",
- f"- VALIDATION 2025+ N={int(best['va_n'])}, EV2R={best['va_ev20']:.3f}R, hit2R={best['va_hit20']:.1%}, ret60={best['va_ret60']:.3f} ATR",
- '',
- '## Most stable profile by min(train EV, validation EV) — diagnostic only',
- f"- mapping={stable.mapping}, |Z|>={stable.min_abs_z}, approach>={stable.min_approach}, reversal>={stable.min_reversal}, lookback={int(stable.lookback)}",
- f"- TRAIN N={int(stable.tr_n)}, EV2R={stable.tr_ev20:.3f}R; VALIDATION N={int(stable.va_n)}, EV2R={stable.va_ev20:.3f}R",
- '',
- 'Signal is causal at the first 5m observation after the Z extremum that proves the reversal. Entry proxy is next 5m open. Same-bar TP/SL collision resolves to SL.'
-]
+meta={'flow_files':flow_names,'price_files':price_names,'flow_time_col':ft,'flow_ratio_col':fr,'price_time_col':pt,'rows_flow_5m':len(flow),'rows_price_5m':len(price),'range_flow':[str(flow.time.min()),str(flow.time.max())],'range_price':[str(price.time.min()),str(price.time.max())],'broad_candidates':len(broad),'best_train_selected':best}
+(OUT/'LAB100_meta.json').write_text(json.dumps(meta,indent=2,default=str))
+lines=['# LAB100 historical Z-turn validity sweep','',
+f"Flow range: {flow.time.min()} -> {flow.time.max()} | 5m rows={len(flow):,}",
+f"Price range: {price.time.min()} -> {price.time.max()} | 5m rows={len(price):,}",
+f"Broad causal outcomes: {len(broad):,}",'',
+'## Train-selected profile (selection uses pre-2025 only)',
+f"- mapping={best['mapping']}, |Z|>={best['min_abs_z']}, approach>={best['min_approach']}, reversal>={best['min_reversal']}, lookback={int(best['lookback'])}",
+f"- TRAIN N={int(best['tr_n'])}, EV2R={best['tr_ev20']:.3f}R, hit2R={best['tr_hit20']:.1%}, ret60={best['tr_ret60']:.3f} ATR",
+f"- VALIDATION 2025+ N={int(best['va_n'])}, EV2R={best['va_ev20']:.3f}R, hit2R={best['va_hit20']:.1%}, ret60={best['va_ret60']:.3f} ATR",'',
+'## Most stable profile (diagnostic only)',
+f"- mapping={stable.mapping}, |Z|>={stable.min_abs_z}, approach>={stable.min_approach}, reversal>={stable.min_reversal}, lookback={int(stable.lookback)}",
+f"- TRAIN N={int(stable.tr_n)}, EV2R={stable.tr_ev20:.3f}R; VALIDATION N={int(stable.va_n)}, EV2R={stable.va_ev20:.3f}R",'',
+'Signal is causal at first 5m observation after Z extremum proving reversal; entry proxy is next 5m open; same-bar TP/SL collision resolves to SL.']
 (OUT/'LAB100_REPORT.md').write_text('\n'.join(lines)+'\n')
 print('\n'.join(lines))
