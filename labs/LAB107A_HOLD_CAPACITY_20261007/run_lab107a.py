@@ -182,7 +182,7 @@ selected=[]
 for label,row in [('QUALITY',quality),('THROUGHPUT',throughput)]:
     key=(int(row.hold_h),int(row.max_open),row['mode'])
     if any((x['hold_h'],x['max_open'],x['mode'])==key for x in selected): continue
-    o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row['mode'])].iloc[0]
+    o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ['mode']==row['mode'])].iloc[0]
     selected.append(dict(label=label,hold_h=int(row.hold_h),max_open=int(row.max_open),mode=row['mode'],
                          train_n=int(row.n),train_ev=row.ev,train_pf=row.pf,train_t=row.t,train_dd=row.dd,train_trades_month=row.trades_month,train_r_month=row.r_month,
                          oos_n=int(o.n),oos_ev=o.ev,oos_pf=o.pf,oos_t=o.t,oos_dd=o.dd,oos_trades_month=o.trades_month,oos_r_month=o.r_month))
@@ -192,7 +192,7 @@ if len(selected)<2:
     for _,row in eligible.sort_values(['r_month','ev'],ascending=[False,False]).iterrows():
         key=(int(row.hold_h),int(row.max_open),row['mode'])
         if key in used:continue
-        o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row['mode'])].iloc[0]
+        o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ['mode']==row['mode'])].iloc[0]
         selected.append(dict(label='SECOND',hold_h=key[0],max_open=key[1],mode=key[2],
                              train_n=int(row.n),train_ev=row.ev,train_pf=row.pf,train_t=row.t,train_dd=row.dd,train_trades_month=row.trades_month,train_r_month=row.r_month,
                              oos_n=int(o.n),oos_ev=o.ev,oos_pf=o.pf,oos_t=o.t,oos_dd=o.dd,oos_trades_month=o.trades_month,oos_r_month=o.r_month))
@@ -202,7 +202,7 @@ pd.DataFrame(selected).to_csv(OUT/'LAB107A_selected.csv',index=False)
 # year x selected
 yr=[]
 for s in selected:
-    q=trades[(trades.cost_bps==2.81)&(trades.hold_h==s['hold_h'])&(trades.max_open==s['max_open'])&(trades.mode==s['mode'])]
+    q=trades[(trades.cost_bps==2.81)&(trades.hold_h==s['hold_h'])&(trades.max_open==s['max_open'])&(trades['mode']==s['mode'])]
     for y,z in q.groupby('year'):yr.append(dict(label=s['label'],year=int(y),**metrics(z)))
 pd.DataFrame(yr).to_csv(OUT/'LAB107A_selected_yearly.csv',index=False)
 
