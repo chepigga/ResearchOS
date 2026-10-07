@@ -29,3 +29,5 @@ jobs:
         with:
           name: lab102b-drift-capture
           path: lab102b_out
+
+# rerun vectorized
