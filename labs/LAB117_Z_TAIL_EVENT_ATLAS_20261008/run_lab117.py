@@ -213,7 +213,7 @@ for name in ['ALL','H4_WITH','H4_AGAINST','H4_D1_WITH','TREND_SQUEEZE','TREND_SQ
         a=seg[(seg.split==split)&(seg.segment==name)]
         if len(a):
             r=a.iloc[0]
-            lines.append(f"- {split}: N={int(r.n)} MFE={r.mean_mfe:.2f} MAE={r.mean_mae:.2f} | P(MFE>=2)={r.p_mfe_2:.1%} P>=3={r.p_mfe_3:.1%} P>=5={r.p_mfe_5:.1%} | +2 before -0.5={r.p_fav2_before_adv0.5:.1%} | +3 before -1={r.p_fav3_before_adv1:.1%} | +5 before -1.5={r.p_fav5_before_adv1.5:.1%}")
+            lines.append(f"- {split}: N={int(r.n)} MFE={r.mean_mfe:.2f} MAE={r.mean_mae:.2f} | P(MFE>=2)={r['p_mfe_2']:.1%} P>=3={r['p_mfe_3']:.1%} P>=5={r['p_mfe_5']:.1%} | +2 before -0.5={r['p_fav2_before_adv0.5']:.1%} | +3 before -1={r['p_fav3_before_adv1']:.1%} | +5 before -1.5={r['p_fav5_before_adv1.5']:.1%}")
         else: lines.append(f"- {split}: insufficient N")
     lines.append('')
 (OUT/'LAB117_REPORT.md').write_text('\n'.join(lines)+'\n')
