@@ -178,9 +178,11 @@ def short_path(j,side,entry,atr,minutes):
     return mfe,mae,side*(cl-entry)/atr
 
 # 5m forward path from trigger time
-ptimes=(pd.to_datetime(p.time,utc=True).astype('int64')//10**9).to_numpy();PH=p.high.to_numpy(float);PL=p.low.to_numpy(float);PC=p.close.to_numpy(float)
+ptimes=np.array([int(pd.Timestamp(t).timestamp()) for t in pd.to_datetime(p.time,utc=True)],dtype=np.int64);PH=p.high.to_numpy(float);PL=p.low.to_numpy(float);PC=p.close.to_numpy(float)
 def long_path(t,side,entry,atr,hours):
-    a=int(np.searchsorted(ptimes,int(pd.Timestamp(t).timestamp()),side='left'));e=min(a+hours*12,len(p)-1)
+    a=int(np.searchsorted(ptimes,int(pd.Timestamp(t).timestamp()),side='left'))
+    if a>=len(p): return np.nan,np.nan,np.nan
+    e=min(a+hours*12,len(p)-1)
     hi=float(PH[a:e+1].max());lo=float(PL[a:e+1].min());cl=float(PC[e])
     return ((hi-entry)/atr if side>0 else (entry-lo)/atr),((entry-lo)/atr if side>0 else (hi-entry)/atr),side*(cl-entry)/atr
 
