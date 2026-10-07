@@ -180,19 +180,19 @@ eligible=g[(g.ev>0)&(g.pf>1.10)].copy()
 throughput=eligible.sort_values(['r_month','ev'],ascending=[False,False]).iloc[0] if len(eligible) else g.sort_values('r_month',ascending=False).iloc[0]
 selected=[]
 for label,row in [('QUALITY',quality),('THROUGHPUT',throughput)]:
-    key=(int(row.hold_h),int(row.max_open),row.mode)
+    key=(int(row.hold_h),int(row.max_open),row['mode'])
     if any((x['hold_h'],x['max_open'],x['mode'])==key for x in selected): continue
-    o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row.mode)].iloc[0]
-    selected.append(dict(label=label,hold_h=int(row.hold_h),max_open=int(row.max_open),mode=row.mode,
+    o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row['mode'])].iloc[0]
+    selected.append(dict(label=label,hold_h=int(row.hold_h),max_open=int(row.max_open),mode=row['mode'],
                          train_n=int(row.n),train_ev=row.ev,train_pf=row.pf,train_t=row.t,train_dd=row.dd,train_trades_month=row.trades_month,train_r_month=row.r_month,
                          oos_n=int(o.n),oos_ev=o.ev,oos_pf=o.pf,oos_t=o.t,oos_dd=o.dd,oos_trades_month=o.trades_month,oos_r_month=o.r_month))
 # if duplicate collapsed, add next distinct throughput/quality option
 if len(selected)<2:
     used={(x['hold_h'],x['max_open'],x['mode']) for x in selected}
     for _,row in eligible.sort_values(['r_month','ev'],ascending=[False,False]).iterrows():
-        key=(int(row.hold_h),int(row.max_open),row.mode)
+        key=(int(row.hold_h),int(row.max_open),row['mode'])
         if key in used:continue
-        o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row.mode)].iloc[0]
+        o=summ[(summ.cost_bps==2.81)&(summ.split=='OOS')&(summ.hold_h==row.hold_h)&(summ.max_open==row.max_open)&(summ.mode==row['mode'])].iloc[0]
         selected.append(dict(label='SECOND',hold_h=key[0],max_open=key[1],mode=key[2],
                              train_n=int(row.n),train_ev=row.ev,train_pf=row.pf,train_t=row.t,train_dd=row.dd,train_trades_month=row.trades_month,train_r_month=row.r_month,
                              oos_n=int(o.n),oos_ev=o.ev,oos_pf=o.pf,oos_t=o.t,oos_dd=o.dd,oos_trades_month=o.trades_month,oos_r_month=o.r_month))
