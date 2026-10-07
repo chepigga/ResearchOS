@@ -120,12 +120,12 @@ if len(sig)<100: raise RuntimeError(f'too few overlapping signals: {len(sig)} se
 cut=sig.signal_time.quantile(0.60)
 sig['split']=np.where(sig.signal_time<=cut,'DEV60','HOLDOUT40')
 
-st=sec.time.astype('int64').to_numpy()
+st=sec.bucket.to_numpy(np.int64)
 so=sec.o.to_numpy(float);sh=sec.h.to_numpy(float);sl=sec.l.to_numpy(float);sc=sec.c.to_numpy(float)
 imb=sec.imb30.to_numpy(float);cimb=sec.cntimb30.to_numpy(float);notz=sec.notz.to_numpy(float);trz=sec.tradesz.to_numpy(float)
 
 def idx_at(t):
-    return int(np.searchsorted(st,pd.Timestamp(t).value,side='left'))
+    return int(np.searchsorted(st,int(pd.Timestamp(t).timestamp()),side='left'))
 def trig_mask(side):
     d=side*imb; dc=side*cimb
     aligned=(d>=0.35)&(notz>=1.5)
@@ -178,9 +178,9 @@ def short_path(j,side,entry,atr,minutes):
     return mfe,mae,side*(cl-entry)/atr
 
 # 5m forward path from trigger time
-ptimes=p.time.astype('int64').to_numpy();PH=p.high.to_numpy(float);PL=p.low.to_numpy(float);PC=p.close.to_numpy(float)
+ptimes=(pd.to_datetime(p.time,utc=True).astype('int64')//10**9).to_numpy();PH=p.high.to_numpy(float);PL=p.low.to_numpy(float);PC=p.close.to_numpy(float)
 def long_path(t,side,entry,atr,hours):
-    a=int(np.searchsorted(ptimes,pd.Timestamp(t).value,side='left'));e=min(a+hours*12,len(p)-1)
+    a=int(np.searchsorted(ptimes,int(pd.Timestamp(t).timestamp()),side='left'));e=min(a+hours*12,len(p)-1)
     hi=float(PH[a:e+1].max());lo=float(PL[a:e+1].min());cl=float(PC[e])
     return ((hi-entry)/atr if side>0 else (entry-lo)/atr),((entry-lo)/atr if side>0 else (hi-entry)/atr),side*(cl-entry)/atr
 
@@ -201,7 +201,9 @@ for _,srow in sig.iterrows():
             mfe,mae,cl=long_path(sec.time.iloc[entry_j],side,entry,atr,h);lab=f'{h}h'
             r[f'mfe_{lab}']=mfe;r[f'mae_{lab}']=mae;r[f'close_{lab}']=cl
         rows.append(r)
-ev=pd.DataFrame(rows);ev.to_csv(OUT/'LAB114_trigger_events.csv',index=False)
+ev=pd.DataFrame(rows)
+if ev.empty: raise RuntimeError(f'no microstructure triggers found; signals={len(sig)} sec={SEC_START}..{SEC_END}')
+ev.to_csv(OUT/'LAB114_trigger_events.csv',index=False)
 
 def met(g,lab):
     x=g[f'close_{lab}'].to_numpy(float);mfe=g[f'mfe_{lab}'].to_numpy(float);mae=g[f'mae_{lab}'].to_numpy(float)
