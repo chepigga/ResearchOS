@@ -1,0 +1,36 @@
+name: LAB114 Inspect Second-Level Data
+on:
+  push:
+    branches: [lab/lab114-z-context-second-level-microstructure-20261008]
+    paths: ['.github/workflows/lab114_inspect_second_data.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab114-z-context-second-level-microstructure-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q pandas
+      - name: Inspect archive
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_sec.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
+          python - <<'PY'
+          import zipfile,pandas as pd
+          with zipfile.ZipFile('BTCUSDT_sec.csv.zip') as z:
+              print('MEMBERS', z.namelist()[:20])
+              for n in z.namelist():
+                  if n.lower().endswith('.csv'):
+                      with z.open(n) as f:
+                          d=pd.read_csv(f,nrows=10)
+                      print('FILE',n)
+                      print('COLS',list(d.columns))
+                      print(d.head(10).to_string())
+                      break
+          PY
