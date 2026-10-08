@@ -1,0 +1,31 @@
+name: LAB129 Engine A Fast Scale B4
+on:
+  push:
+    branches: [lab/lab129-engine-a-fast-scale-b4-20261008]
+    paths: ['.github/workflows/lab129_engine_a_fast_scale_b4.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab129-engine-a-fast-scale-b4-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB129
+        run: python labs/LAB129_ENGINE_A_FAST_SCALE_B4_20261008/run_lab129.py
+      - run: cat lab129_out/LAB129_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab129-engine-a-fast-scale-b4
+          path: lab129_out
