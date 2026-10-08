@@ -212,6 +212,8 @@ def gen_events(symbol,b):
         side=1 if up else -1;boundary=float(rh[i] if up else rl[i]);atr=float(BA[i])
         outs=[(BC[j]>boundary if side>0 else BC[j]<boundary) for j in range(i+1,i+7)]
         if sum(outs)<4:continue
+        # LAB136 deduplicates the raw accepted-breakout universe BEFORE LAB137 quality gates.
+        last_evt=i
         ei=i+7
         closes=BC[i+1:i+7]
         mean_margin=float(np.mean((closes-boundary)*side/atr))
@@ -219,7 +221,6 @@ def gen_events(symbol,b):
         else:retest=bool(np.any(BH[i+1:i+7]>=boundary))
         oi_ch=float(BOI[ei]/BOI[i]-1) if BOI[i]>0 else np.nan
         if retest or mean_margin<R48_MEAN_MARGIN or oi_ch<R48_OI:continue
-        last_evt=i
         events.append(dict(engine='R48_HIGH',signal_i=i,entry_i=ei,signal_time=BT.iloc[i],entry_time=BT.iloc[ei],side=side,atr=atr))
 
     ev=pd.DataFrame(events).sort_values('entry_time').reset_index(drop=True)
