@@ -1,0 +1,31 @@
+name: LAB121 Continuation Capitulation Execution Transfer
+on:
+  push:
+    branches: [lab/lab121-continuation-capitulation-execution-transfer-20261008]
+    paths: ['.github/workflows/lab121_continuation_capitulation_execution_transfer.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab121-continuation-capitulation-execution-transfer-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB121
+        run: python labs/LAB121_CONTINUATION_CAPITULATION_EXECUTION_TRANSFER_20261008/run_lab121.py
+      - run: cat lab121_out/LAB121_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab121-continuation-capitulation-execution-transfer
+          path: lab121_out
