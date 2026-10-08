@@ -142,16 +142,11 @@ for cost in COSTS:
       for sl_atr in SLS:
         for tp_r in TPS:
           for hold_h in HOLDS:
-            open_until=pd.Timestamp.min.tz_localize('UTC');rows=[];eq=[];cum=0.0
+            open_until=pd.Timestamp.min.tz_localize('UTC');rows=[]
             for _,r in s.iterrows():
                 if r.entry_time<open_until:continue
                 net,reason,xi=sim_one(int(r.entry_i),int(r.side),float(r.atr),sl_atr,tp_r,hold_h,cost)
-                start=cum;entry=float(BO[int(r.entry_i)]);dist=sl_atr*float(r.atr)
-                for j in range(int(r.entry_i),xi+1):
-                    mtm=int(r.side)*(BC[j]-entry)/dist-(cost/10000.0)*entry/dist
-                    if j==xi: mtm=net
-                    eq.append((BT.iloc[j],start+mtm))
-                cum+=net;open_until=BT.iloc[xi]
+                open_until=BT.iloc[xi]
                 rows.append(dict(cost_bps=cost,method=method,context=ctxname,sl_atr=sl_atr,tp_r=tp_r,hold_h=hold_h,
                                  split=r['split'],signal_time=r.signal_time,entry_time=r.entry_time,exit_time=BT.iloc[xi],
                                  side='BUY' if r.side>0 else 'SELL',net_r=net,reason=reason,
@@ -159,8 +154,9 @@ for cost in COSTS:
             t=pd.DataFrame(rows)
             if t.empty:continue
             alltr.append(t)
-            ep=pd.DataFrame(eq,columns=['time','equity']).sort_values('time').drop_duplicates('time',keep='last')
-            maxdd=float((ep.equity.cummax()-ep.equity).max())
+            # Fast grid pass: realized-equity DD. Exact M5 MTM DD is computed only for the final top configurations below.
+            ce=t.net_r.cumsum()
+            maxdd=float((ce.cummax()-ce).max()) if len(ce) else 0.0
             months=max((t.exit_time.max().year-t.entry_time.min().year)*12+t.exit_time.max().month-t.entry_time.min().month+1,1)
             for split in ['ALL','TRAIN','OOS']:
                 q=t if split=='ALL' else t[t.split==split]
@@ -200,6 +196,29 @@ for _,r in rank.head(15).iterrows():
         aa=a.iloc[0];d.update(all_n=int(aa.n),trades_month=aa.trades_month,r_month=aa.r_month,maxdd_r=aa.maxdd_r)
     sel.append(d)
 pd.DataFrame(sel).to_csv(OUT/'LAB126_top_train_selected.csv',index=False)
+
+# Exact M5 MTM DD only for the top TRAIN-selected configurations, to keep the full grid tractable.
+topdd=[]
+for d in sel[:15]:
+    s=en[(en.method==d['method'])]
+    if d['context']=='H4_D1': s=s[s.h4d1]
+    elif d['context']=='H4_LOWVOL': s=s[s.low_vol]
+    elif d['context']=='H4_D1_LOWVOL': s=s[s.h4d1 & s.low_vol]
+    s=s.sort_values('entry_time')
+    open_until=pd.Timestamp.min.tz_localize('UTC');cum=0.0;eq=[]
+    for _,r in s.iterrows():
+        if r.entry_time<open_until: continue
+        net,reason,xi=sim_one(int(r.entry_i),int(r.side),float(r.atr),float(d['sl_atr']),float(d['tp_r']),int(d['hold_h']),2.81)
+        entry=float(BO[int(r.entry_i)]);dist=float(d['sl_atr'])*float(r.atr);start=cum
+        for j in range(int(r.entry_i),xi+1):
+            mtm=int(r.side)*(BC[j]-entry)/dist-(2.81/10000.0)*entry/dist
+            if j==xi: mtm=net
+            eq.append((BT.iloc[j],start+mtm))
+        cum+=net;open_until=BT.iloc[xi]
+    ep=pd.DataFrame(eq,columns=['time','equity']).sort_values('time').drop_duplicates('time',keep='last')
+    dd=float((ep.equity.cummax()-ep.equity).max()) if len(ep) else np.nan
+    topdd.append(dict(**d,exact_mtm_dd_r=dd))
+pd.DataFrame(topdd).to_csv(OUT/'LAB126_top_exact_mtm_dd.csv',index=False)
 
 # Entry-method anatomy before SL/TP, descriptive 24h path.
 atlas=[]
