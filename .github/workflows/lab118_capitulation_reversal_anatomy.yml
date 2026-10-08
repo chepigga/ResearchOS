@@ -1,0 +1,32 @@
+name: LAB118 Capitulation Reversal Anatomy
+on:
+  push:
+    branches: [lab/lab118-capitulation-reversal-anatomy-20261008]
+    paths: ['.github/workflows/lab118_capitulation_reversal_anatomy.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab118-capitulation-reversal-anatomy-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o binance_btc_funding.csv https://github.com/chepigga/ResearchOS/releases/download/btc/binance_btc_funding.csv
+      - name: Run LAB118
+        run: python labs/LAB118_CAPITULATION_REVERSAL_ANATOMY_20261008/run_lab118.py
+      - run: cat lab118_out/LAB118_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab118-capitulation-reversal-anatomy
+          path: lab118_out
