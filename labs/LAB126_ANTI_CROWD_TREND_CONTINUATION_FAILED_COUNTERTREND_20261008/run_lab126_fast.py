@@ -96,7 +96,7 @@ for rid,r in en.iterrows():
                 raw.append(dict(rid=rid,sl_atr=sl,tp_r=tp,hold_h=hold,exit_i=ei+xi,gross_r=gross,reason=reason,
                                 cost_scale=entry/dist))
 out=pd.DataFrame(raw)
-out.to_parquet(OUT/'LAB126_precomputed_outcomes.parquet',index=False)
+out.to_csv(OUT/'LAB126_precomputed_outcomes.csv',index=False)
 
 CONTEXTS={
  'H4_ONLY':lambda d:np.ones(len(d),dtype=bool),
