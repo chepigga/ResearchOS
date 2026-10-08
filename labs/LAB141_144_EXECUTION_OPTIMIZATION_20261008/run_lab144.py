@@ -5,8 +5,8 @@ from common import *
 O=Path('lab144_out');O.mkdir(exist_ok=True)
 def raw():
  z=[]
- for _,r in A134.a_ev.iterrows():z.append(dict(source='A',entry_i=ix(r.entry_time),entry_time=pd.Timestamp(r.entry_time),side=int(r.side),atr=float(r.atr)))
- for _,r in A134.b_high.iterrows():z.append(dict(source='B3_HIGH',entry_i=ix(r.entry_time),entry_time=pd.Timestamp(r.entry_time),side=int(r.side),atr=float(r.atr)))
+ for _,r in A.a_ev.iterrows():z.append(dict(source='A',entry_i=ix(r.entry_time),entry_time=pd.Timestamp(r.entry_time),side=int(r.side),atr=float(r.atr)))
+ for _,r in A.b_high.iterrows():z.append(dict(source='B3_HIGH',entry_i=ix(r.entry_time),entry_time=pd.Timestamp(r.entry_time),side=int(r.side),atr=float(r.atr)))
  h=R.df[(~R.df.retest)&(R.df.mean_margin>=R.thr['mean_margin_q60'])&(R.df.oi_change>=R.thr['oi_q60'])]
  for _,r in h.iterrows():z.append(dict(source='R48_HIGH',entry_i=ix(r.entry_time),entry_time=pd.Timestamp(r.entry_time),side=int(r.side),atr=float(r.atr)))
  return pd.DataFrame(z).sort_values(['entry_time','source'])
