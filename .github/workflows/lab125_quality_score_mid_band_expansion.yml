@@ -1,0 +1,31 @@
+name: LAB125 Quality Score Mid Band Expansion
+on:
+  push:
+    branches: [lab/lab125-quality-score-mid-band-expansion-20261008]
+    paths: ['.github/workflows/lab125_quality_score_mid_band_expansion.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab125-quality-score-mid-band-expansion-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB125
+        run: python labs/LAB125_QUALITY_SCORE_MID_BAND_EXPANSION_20261008/run_lab125.py
+      - run: cat lab125_out/LAB125_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab125-quality-score-mid-band-expansion
+          path: lab125_out
