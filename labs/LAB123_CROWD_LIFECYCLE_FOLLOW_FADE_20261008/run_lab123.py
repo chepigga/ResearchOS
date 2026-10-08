@@ -163,7 +163,7 @@ for split in ['TRAIN','OOS']:
     q=ev[ev.split==split]
     for stage in [x[0] for x in STAGES]:
         for mode in ['FOLLOW','FADE']:
-            baseq=q[(q.stage==stage)&(q.mode==mode)]
+            baseq=q[(q.stage==stage)&(q['mode']==mode)]
             if len(baseq)>=30:atlas.append(dict(split=split,stage=stage,mode=mode,context='ALL',**met(baseq)))
             for cname,col in [('TREND_ALIGN','trend_align'),('TREND_PRICE_OI','trend_align'),('FULL_CONTEXT','context_all')]:
                 if cname=='TREND_PRICE_OI':
@@ -177,8 +177,8 @@ pairs=[]
 for split in ['TRAIN','OOS']:
     for stage in [x[0] for x in STAGES]:
         for ctx in ['ALL','TREND_ALIGN','TREND_PRICE_OI','FULL_CONTEXT']:
-            frow=at[(at.split==split)&(at.stage==stage)&(at.mode=='FOLLOW')&(at.context==ctx)]
-            arow=at[(at.split==split)&(at.stage==stage)&(at.mode=='FADE')&(at.context==ctx)]
+            frow=at[(at.split==split)&(at.stage==stage)&(at['mode']=='FOLLOW')&(at.context==ctx)]
+            arow=at[(at.split==split)&(at.stage==stage)&(at['mode']=='FADE')&(at.context==ctx)]
             if len(frow) and len(arow):
                 fr=frow.iloc[0];ar=arow.iloc[0]
                 pairs.append(dict(split=split,stage=stage,context=ctx,n=min(int(fr.n),int(ar.n)),
@@ -210,7 +210,7 @@ def sim(ei,side,atr,cost):
     return gross-(cost/10000.0)*entry/atr,reason,xi
 
 trad=[]
-for _,r in ev[(ev.mode=='FOLLOW')&ev.context_all].iterrows():
+for _,r in ev[(ev['mode']=='FOLLOW')&ev.context_all].iterrows():
     # only early+join+mature candidate stages, not late/extreme
     if r.stage not in ['EARLY_0_05','JOIN_05_10','MATURE_10_15']:continue
     ei=swing3_entry(int(r.signal_i),int(r.side))
@@ -258,8 +258,8 @@ for ctx in ['ALL','TREND_ALIGN','TREND_PRICE_OI','FULL_CONTEXT']:
     lines.append(f'## {ctx}')
     for stage in [x[0] for x in STAGES]:
         for split in ['TRAIN','OOS']:
-            fr=at[(at.split==split)&(at.stage==stage)&(at.mode=='FOLLOW')&(at.context==ctx)]
-            ar=at[(at.split==split)&(at.stage==stage)&(at.mode=='FADE')&(at.context==ctx)]
+            fr=at[(at.split==split)&(at.stage==stage)&(at['mode']=='FOLLOW')&(at.context==ctx)]
+            ar=at[(at.split==split)&(at.stage==stage)&(at['mode']=='FADE')&(at.context==ctx)]
             if len(fr) and len(ar):
                 f0=fr.iloc[0];a0=ar.iloc[0]
                 lines.append(f"- {split} {stage}: FOLLOW N={int(f0.n)} close={f0.mean_close:+.3f}ATR +3/-1={f0.p3_1:.1%} | FADE close={a0.mean_close:+.3f} +3/-1={a0.p3_1:.1%}")
