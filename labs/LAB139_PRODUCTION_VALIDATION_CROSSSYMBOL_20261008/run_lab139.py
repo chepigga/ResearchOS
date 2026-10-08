@@ -266,7 +266,11 @@ summ=[];yearly=[];trades=[]
 for sym,(ff,pp) in symbols.items():
     flow=load_flow(ff)
     price=load_price_zip(pp) if str(pp).endswith('.zip') else load_price_dir(pp)
-    # strict common coverage and same historical end; no threshold fitting.
+    # BTC is parity control against TRAIN-only LAB138. ETH/SOL remain fully independent transfer sets.
+    if sym=='BTC':
+        flow=flow[flow.time<TRAIN_END].copy()
+        price=price[price.time<TRAIN_END].copy()
+    # strict common coverage; no threshold fitting.
     start=max(flow.time.min(),price.time.min());end=min(flow.time.max(),price.time.max())
     flow=flow[(flow.time>=start)&(flow.time<=end)].copy();price=price[(price.time>=start)&(price.time<=end)].copy()
     b=build_context(price,flow)
@@ -294,7 +298,7 @@ if trades:pd.concat(trades,ignore_index=True).to_csv(OUT/'LAB139_trades.csv',ind
 lines=['# LAB139 — PRODUCTION VALIDATION / CROSS-SYMBOL FROZEN TRANSFER','',
        'No thresholds are re-estimated on ETH or SOL. Frozen BTC definitions are applied verbatim.',
        'Portfolio: Engine A + B3_HIGH + R48_HIGH, one-position chronology, SL1 H1ATR / TP3R / max48h.',
-       'BTC is included only as implementation-parity control against LAB138. ETH/SOL are the independent transfer markets.','',
+       'BTC is restricted to pre-2025 TRAIN and included only as implementation-parity control against LAB138. ETH/SOL use their full common coverage as independent transfer markets.','',
        'Frozen thresholds:',
        f'- Engine A: extension >= {A_EXT:.2f} H1ATR; OI4h >= {A_OI4:.3%}.',
        f'- B3_HIGH: 0.50 H1ATR attack; Z strengthening >= {B3_Z_STRENGTH:.2f}; OI rises; d04>d03 and d05>d04.',
