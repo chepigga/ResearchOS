@@ -1,0 +1,31 @@
+name: LAB123 Crowd Lifecycle Follow Fade
+on:
+  push:
+    branches: [lab/lab123-crowd-lifecycle-follow-fade-20261008]
+    paths: ['.github/workflows/lab123_crowd_lifecycle_follow_fade.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab123-crowd-lifecycle-follow-fade-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB123
+        run: python labs/LAB123_CROWD_LIFECYCLE_FOLLOW_FADE_20261008/run_lab123.py
+      - run: cat lab123_out/LAB123_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab123-crowd-lifecycle-follow-fade
+          path: lab123_out
