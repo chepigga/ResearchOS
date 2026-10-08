@@ -261,3 +261,85 @@ Engine A is currently the strongest CrowdFade baseline found in this research ch
 It is not declared a pristine, fully validated production edge yet.
 
 Do not overwrite this baseline with new experiments. Fork new LAB branches from it or compare new engines against it.
+
+
+---
+
+## 12. Portfolio add-on freeze — B3 after LAB134
+
+**Engine A logic itself remains unchanged.**
+
+Two B3 definitions were frozen before portfolio testing:
+
+### B3_BALANCED
+`0.50 H1ATR countertrend attack + positive slope of five 0.1ATR milestone durations`
+
+### B3_HIGH
+`0.50 H1ATR countertrend attack + TERMINAL_TWO_STEP`
+
+where:
+- `d04 > d03`
+- `d05 > d04`
+
+Shared B3 context:
+- established causal H4 trend, age >=4 H4 bars
+- fresh `|Z| >= 1` with crowd direction opposite H4 trend
+- attack reaches 0.50 H1 ATR within 6h
+- by depth hit, |Z| strengthens >= +0.25 and keeps attack sign
+- OI rises from signal to depth hit
+- reclaim of start of final 0.1ATR wave
+- next M5 entry in H4 trend direction
+- SL 1 H1ATR / TP 3R / max48h / stop-first
+
+### LAB134 portfolio result — BTC TRAIN only
+
+At 2.81bps and fixed 0.25% risk per accepted trade:
+
+- A only:
+  - 2.58 trades/month
+  - EV +0.348R
+  - PF 1.52
+  - +0.90R/month
+  - realized DD 2.61%
+
+- A + B3_BALANCED:
+  - 6.77 trades/month
+  - EV +0.321R
+  - PF 1.47
+  - +2.17R/month
+  - realized DD 4.66%
+
+- A + B3_HIGH:
+  - 3.35 trades/month
+  - EV +0.459R
+  - PF 1.72
+  - +1.54R/month
+  - realized DD 2.08%
+
+At 7.5bps stress:
+
+- A only PF 1.42, DD 2.80%
+- A + B3_BALANCED PF 1.35, DD 5.70%
+- A + B3_HIGH PF 1.60, DD 2.21%
+
+B3 overlap with Engine A on TRAIN:
+- B3_BALANCED: 0% within +/-12h of A
+- B3_HIGH: 0% within +/-12h of A
+
+### Baseline portfolio decision
+
+**Promote `A + B3_HIGH` as the preferred CrowdFade portfolio baseline candidate.**
+
+Reason:
+- adds genuinely unique trades;
+- increases frequency from ~2.58 to ~3.35 trades/month;
+- improves PF from 1.52 to 1.72 at normal cost;
+- improves PF from 1.42 to 1.60 at stress cost;
+- increases R/month from +0.90R to +1.54R;
+- does not worsen realized DD in the TRAIN replay.
+
+**Do not promote B3_BALANCED into the canonical baseline.**
+It remains frozen as a research/expansion candidate because it raises frequency strongly but weakens PF and materially raises DD, especially under stress costs.
+
+Scientific caveat:
+LAB134 is still BTC TRAIN composition evidence only. B3_HIGH is not yet externally validated and must not be called a production-validated edge.
