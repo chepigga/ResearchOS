@@ -1,0 +1,31 @@
+name: LAB127 Failed Countertrend Depth Trap Quality
+on:
+  push:
+    branches: [lab/lab127-failed-countertrend-depth-trap-quality-20261008]
+    paths: ['.github/workflows/lab127_failed_countertrend_depth_trap_quality.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab127-failed-countertrend-depth-trap-quality-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB127
+        run: python labs/LAB127_FAILED_COUNTERTREND_DEPTH_TRAP_QUALITY_20261008/run_lab127.py
+      - run: cat lab127_out/LAB127_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab127-failed-countertrend-depth-trap-quality
+          path: lab127_out
