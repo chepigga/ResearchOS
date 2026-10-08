@@ -193,14 +193,18 @@ if trades:pd.concat(trades,ignore_index=True).to_csv(OUT/'LAB129_B4_train_trades
 
 # Overlap with frozen Engine A TRAIN core signals from LAB124.
 abase=m.df[(m.df['split']=='TRAIN') & (m.df.phase.isin(['CONT','REACCEL']))].copy()
-a_times=pd.to_datetime(abase.signal_time,utc=True).sort_values().to_numpy()
+a_times=pd.to_datetime(abase.signal_time,utc=True).sort_values()
+a_ns=a_times.astype("int64").to_numpy()
 def nearest_hours(t):
-    if len(a_times)==0:return np.inf
-    x=np.datetime64(pd.Timestamp(t).to_datetime64())
-    k=np.searchsorted(a_times,x)
+    if len(a_ns)==0:return np.inf
+    tt=pd.Timestamp(t)
+    if tt.tzinfo is None: tt=tt.tz_localize("UTC")
+    else: tt=tt.tz_convert("UTC")
+    x=int(tt.value)
+    k=np.searchsorted(a_ns,x)
     ds=[]
-    if k<len(a_times):ds.append(abs((pd.Timestamp(a_times[k])-pd.Timestamp(t)).total_seconds())/3600)
-    if k>0:ds.append(abs((pd.Timestamp(a_times[k-1])-pd.Timestamp(t)).total_seconds())/3600)
+    if k<len(a_ns): ds.append(abs(a_ns[k]-x)/3.6e12)
+    if k>0: ds.append(abs(a_ns[k-1]-x)/3.6e12)
     return min(ds) if ds else np.inf
 core=ev[ev.phase.isin(['CONT','REACCEL'])].copy()
 if len(core):
