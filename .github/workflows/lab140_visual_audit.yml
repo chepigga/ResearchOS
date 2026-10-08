@@ -1,0 +1,31 @@
+name: LAB140 Visual Audit
+on:
+  push:
+    branches: [lab/lab140-visual-audit-20261008]
+    paths: ['.github/workflows/lab140_visual_audit.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab140-visual-audit-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas matplotlib
+      - name: Download BTC research data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB140
+        run: python labs/LAB140_VISUAL_AUDIT_20261008/run_lab140.py
+      - run: cat lab140_out/LAB140_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab140-visual-audit
+          path: lab140_out
