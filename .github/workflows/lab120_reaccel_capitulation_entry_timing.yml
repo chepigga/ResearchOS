@@ -1,0 +1,32 @@
+name: LAB120 Reaccel Capitulation Entry Timing
+on:
+  push:
+    branches: [lab/lab120-reaccel-capitulation-entry-timing-20261008]
+    paths: ['.github/workflows/lab120_reaccel_capitulation_entry_timing.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab120-reaccel-capitulation-entry-timing-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+          curl -L --fail --retry 3 -o BTCUSDT_sec.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_sec.csv.zip
+      - name: Run LAB120
+        run: python labs/LAB120_REACCEL_CAPITULATION_ENTRY_TIMING_20261008/run_lab120.py
+      - run: cat lab120_out/LAB120_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab120-reaccel-capitulation-entry-timing
+          path: lab120_out
