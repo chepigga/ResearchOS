@@ -66,10 +66,12 @@ for _,r in ev.iterrows():
         touches=int(np.sum(BL[lo:i] <= boundary+tol))
 
     # Speed: bars from first breakout close to entry; fixed 7 in base, retained for audit.
-    rows.append(dict(**r.to_dict(),boundary=boundary,breakout_depth=breakout_depth,
-                     outside_n=outside_n,min_margin=min_margin,mean_margin=mean_margin,last_margin=last_margin,
-                     retest=retest,deep_retest=deep_retest,oi_change=oi_change,vol_expand=vol_expand,
-                     prior_touches24=touches))
+    row=r.to_dict()
+    row.update(dict(boundary=boundary,breakout_depth=breakout_depth,
+                    outside_n=outside_n,min_margin=min_margin,mean_margin=mean_margin,last_margin=last_margin,
+                    retest=retest,deep_retest=deep_retest,oi_change=oi_change,vol_expand=vol_expand,
+                    prior_touches24=touches))
+    rows.append(row)
 df=pd.DataFrame(rows)
 
 # TRAIN-distribution thresholds only, not return-fitted.
