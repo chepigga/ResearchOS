@@ -1,0 +1,31 @@
+name: LAB124 Anti Crowd Quality Score
+on:
+  push:
+    branches: [lab/lab124-anti-crowd-quality-score-20261008]
+    paths: ['.github/workflows/lab124_anti_crowd_quality_score.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab124-anti-crowd-quality-score-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB124
+        run: python labs/LAB124_ANTI_CROWD_QUALITY_SCORE_20261008/run_lab124.py
+      - run: cat lab124_out/LAB124_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab124-anti-crowd-quality-score
+          path: lab124_out
