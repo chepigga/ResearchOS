@@ -1,0 +1,31 @@
+name: LAB138 A+B3HIGH+R48 Portfolio
+on:
+  push:
+    branches: [lab/lab138-a-b3high-r48-portfolio-20261008]
+    paths: ['.github/workflows/lab138_a_b3high_r48_portfolio.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab138-a-b3high-r48-portfolio-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB138
+        run: python labs/LAB138_A_B3HIGH_R48_PORTFOLIO_20261008/run_lab138.py
+      - run: cat lab138_out/LAB138_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab138-a-b3high-r48-portfolio
+          path: lab138_out
