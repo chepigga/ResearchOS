@@ -69,10 +69,16 @@ cut_time=tr.sort_values("signal_time").iloc[cut_idx].signal_time
 tr["sec_split"]=np.where(tr.signal_time<=cut_time,"DEV60","HOLDOUT40")
 
 # Helpers to slice minute data efficiently.
-mins=sec.minute.to_numpy()
+mins=sec["minute"]
 def sec_window(t0,t1):
-    i0=np.searchsorted(mins,np.datetime64(t0.to_datetime64()),side="left")
-    i1=np.searchsorted(mins,np.datetime64(t1.to_datetime64()),side="right")
+    t0=pd.Timestamp(t0)
+    t1=pd.Timestamp(t1)
+    if t0.tzinfo is None: t0=t0.tz_localize("UTC")
+    else: t0=t0.tz_convert("UTC")
+    if t1.tzinfo is None: t1=t1.tz_localize("UTC")
+    else: t1=t1.tz_convert("UTC")
+    i0=int(mins.searchsorted(t0,side="left"))
+    i1=int(mins.searchsorted(t1,side="right"))
     return sec.iloc[i0:i1]
 
 features=[]
