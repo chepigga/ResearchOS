@@ -98,6 +98,8 @@ def build(symbol):
     end=min(p.time.max(),f.time.max(),pd.Timestamp('2024-12-31 23:55',tz='UTC'))
     p=p[(p.time>=start)&(p.time<=end)].copy()
     f=f[(f.time>=start)&(f.time<=end)].copy()
+    p['time']=pd.to_datetime(p['time'],utc=True).astype('datetime64[ns, UTC]')
+    f['time']=pd.to_datetime(f['time'],utc=True).astype('datetime64[ns, UTC]')
 
     h1=p.set_index('time').resample('1h',label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
     prev=h1.close.shift(1)
