@@ -1,0 +1,31 @@
+name: LAB135 Frozen A+B3HIGH Robustness
+on:
+  push:
+    branches: [lab/lab135-frozen-a-b3high-robustness-replay-20261008]
+    paths: ['.github/workflows/lab135_frozen_a_b3high_robustness.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab135-frozen-a-b3high-robustness-replay-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB135
+        run: python labs/LAB135_FROZEN_A_B3HIGH_ROBUSTNESS_REPLAY_20261008/run_lab135.py
+      - run: cat lab135_out/LAB135_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab135-frozen-a-b3high-robustness
+          path: lab135_out
