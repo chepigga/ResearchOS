@@ -23,7 +23,7 @@ jobs:
           curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
           curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
       - name: Run LAB126
-        run: python labs/LAB126_ANTI_CROWD_TREND_CONTINUATION_FAILED_COUNTERTREND_20261008/run_lab126.py
+        run: python labs/LAB126_ANTI_CROWD_TREND_CONTINUATION_FAILED_COUNTERTREND_20261008/run_lab126_fast.py
       - run: cat lab126_out/LAB126_REPORT.md
       - uses: actions/upload-artifact@v4
         with:
