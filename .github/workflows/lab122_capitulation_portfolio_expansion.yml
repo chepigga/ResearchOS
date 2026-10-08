@@ -1,0 +1,31 @@
+name: LAB122 Capitulation Portfolio Expansion
+on:
+  push:
+    branches: [lab/lab122-capitulation-portfolio-expansion-20261008]
+    paths: ['.github/workflows/lab122_capitulation_portfolio_expansion.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab122-capitulation-portfolio-expansion-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB122
+        run: python labs/LAB122_CAPITULATION_PORTFOLIO_EXPANSION_20261008/run_lab122.py
+      - run: cat lab122_out/LAB122_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab122-capitulation-portfolio-expansion
+          path: lab122_out
