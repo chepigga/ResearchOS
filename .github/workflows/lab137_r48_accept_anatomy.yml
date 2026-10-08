@@ -1,0 +1,31 @@
+name: LAB137 R48 Accept Anatomy
+on:
+  push:
+    branches: [lab/lab137-r48-accept-anatomy-20261008]
+    paths: ['.github/workflows/lab137_r48_accept_anatomy.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab137-r48-accept-anatomy-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB137
+        run: python labs/LAB137_R48_ACCEPT_ANATOMY_20261008/run_lab137.py
+      - run: cat lab137_out/LAB137_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab137-r48-accept-anatomy
+          path: lab137_out
