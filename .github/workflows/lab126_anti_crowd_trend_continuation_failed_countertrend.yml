@@ -1,0 +1,31 @@
+name: LAB126 Anti Crowd Trend Continuation Failed Countertrend
+on:
+  push:
+    branches: [lab/lab126-anti-crowd-trend-continuation-failed-countertrend-20261008]
+    paths: ['.github/workflows/lab126_anti_crowd_trend_continuation_failed_countertrend.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab126-anti-crowd-trend-continuation-failed-countertrend-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB126
+        run: python labs/LAB126_ANTI_CROWD_TREND_CONTINUATION_FAILED_COUNTERTREND_20261008/run_lab126.py
+      - run: cat lab126_out/LAB126_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab126-anti-crowd-trend-continuation-failed-countertrend
+          path: lab126_out
