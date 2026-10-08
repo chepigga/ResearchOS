@@ -1,0 +1,31 @@
+name: LAB130 B1 False Range Break
+on:
+  push:
+    branches: [lab/lab130-b1-false-range-break-20261008]
+    paths: ['.github/workflows/lab130_b1_false_range_break.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab130-b1-false-range-break-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB130
+        run: python labs/LAB130_B1_FALSE_RANGE_BREAK_20261008/run_lab130.py
+      - run: cat lab130_out/LAB130_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab130-b1-false-range-break
+          path: lab130_out
