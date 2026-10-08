@@ -1,0 +1,31 @@
+name: LAB136 Missed Opportunity Atlas
+on:
+  push:
+    branches: [lab/lab136-missed-opportunity-atlas-20261008]
+    paths: ['.github/workflows/lab136_missed_opportunity_atlas.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab136-missed-opportunity-atlas-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB136
+        run: python labs/LAB136_MISSED_OPPORTUNITY_ATLAS_20261008/run_lab136.py
+      - run: cat lab136_out/LAB136_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab136-missed-opportunity-atlas
+          path: lab136_out
