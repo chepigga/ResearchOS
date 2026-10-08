@@ -1,0 +1,31 @@
+name: LAB133 B3 Depth050 Decay Anatomy
+on:
+  push:
+    branches: [lab/lab133-b3-depth050-decay-anatomy-20261008]
+    paths: ['.github/workflows/lab133_b3_depth050_decay_anatomy.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab133-b3-depth050-decay-anatomy-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB133
+        run: python labs/LAB133_B3_DEPTH050_DECAY_ANATOMY_20261008/run_lab133.py
+      - run: cat lab133_out/LAB133_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab133-b3-depth050-decay-anatomy
+          path: lab133_out
