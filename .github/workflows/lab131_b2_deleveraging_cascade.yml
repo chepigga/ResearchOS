@@ -1,0 +1,31 @@
+name: LAB131 B2 Deleveraging Cascade
+on:
+  push:
+    branches: [lab/lab131-b2-deleveraging-cascade-20261008]
+    paths: ['.github/workflows/lab131_b2_deleveraging_cascade.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab131-b2-deleveraging-cascade-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB131
+        run: python labs/LAB131_B2_DELEVERAGING_CASCADE_20261008/run_lab131.py
+      - run: cat lab131_out/LAB131_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab131-b2-deleveraging-cascade
+          path: lab131_out
