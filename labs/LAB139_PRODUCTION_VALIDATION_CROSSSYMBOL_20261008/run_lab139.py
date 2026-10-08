@@ -96,11 +96,14 @@ def load_price_dir(path):
 
 def build_context(price,flow):
     p=price.copy()
+    p['time']=pd.to_datetime(p['time'],utc=True).astype('datetime64[ns, UTC]')
+    flow=flow.copy()
+    flow['time']=pd.to_datetime(flow['time'],utc=True).astype('datetime64[ns, UTC]')
     h1=p.set_index('time').resample('1h',label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
     prev=h1.close.shift(1)
     tr=pd.concat([(h1.high-h1.low),(h1.high-prev).abs(),(h1.low-prev).abs()],axis=1).max(axis=1)
     h1['atr']=tr.rolling(14,min_periods=14).mean();h1['ema20']=h1.close.ewm(span=20,adjust=False).mean()
-    h1['extension']=(h1.close-h1.ema20)/h1.atr;h1['close_time']=h1.time+pd.Timedelta(hours=1)
+    h1['extension']=(h1.close-h1.ema20)/h1.atr;h1['close_time']=(h1.time+pd.Timedelta(hours=1)).astype('datetime64[ns, UTC]')
 
     h4=p.set_index('time').resample('4h',label='left',closed='left').agg(open=('open','first'),high=('high','max'),low=('low','min'),close=('close','last')).dropna().reset_index()
     h4['ema50']=h4.close.ewm(span=50,adjust=False).mean();h4['ema50_lag6']=h4.ema50.shift(6)
@@ -118,7 +121,7 @@ def build_context(price,flow):
     ia=[];cnt=999
     for x in imp.fillna(False):
         cnt=0 if x else min(cnt+1,999);ia.append(cnt)
-    h4['impulse_age']=ia;h4['close_time']=h4.time+pd.Timedelta(hours=4)
+    h4['impulse_age']=ia;h4['close_time']=(h4.time+pd.Timedelta(hours=4)).astype('datetime64[ns, UTC]')
 
     b=pd.merge_asof(p.sort_values('time'),h1[['close_time','atr','extension']].dropna().sort_values('close_time'),
                     left_on='time',right_on='close_time',direction='backward')
