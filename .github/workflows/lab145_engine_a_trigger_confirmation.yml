@@ -1,0 +1,31 @@
+name: LAB145 Engine A Trigger Confirmation
+on:
+  push:
+    branches: [lab/lab145-engine-a-trigger-confirmation-20261008]
+    paths: ['.github/workflows/lab145_engine_a_trigger_confirmation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab145-engine-a-trigger-confirmation-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download BTC data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB145
+        run: python labs/LAB145_ENGINE_A_TRIGGER_CONFIRMATION_20261008/run_lab145.py
+      - run: cat lab145_out/LAB145_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab145-engine-a-trigger-confirmation
+          path: lab145_out
