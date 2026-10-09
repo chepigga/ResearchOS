@@ -1,0 +1,31 @@
+name: LAB157 Candidate Architecture Full Replay
+on:
+  push:
+    branches: [lab/lab157-candidate-architecture-full-replay-20261009]
+    paths: ['.github/workflows/lab157_candidate_architecture_full_replay.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab157-candidate-architecture-full-replay-20261009
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download BTC data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB157
+        run: python labs/LAB157_CANDIDATE_ARCHITECTURE_FULL_REPLAY_20261009/run_lab157.py
+      - run: cat lab157_out/LAB157_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab157-candidate-architecture-full-replay
+          path: lab157_out
