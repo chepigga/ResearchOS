@@ -192,7 +192,7 @@ base=stress[stress["mode"]=="LOCK2_NO_TRANSFER"].iloc[0]
 cands=stress[stress["mode"].isin(["LOCK2_BE","LOCK2_BE_COSTS","LOCK2_LOCK025"])].copy()
 cands=cands[(cands.r_month>=0.90*base.r_month)&((cands.mtm_dd_pct<base.mtm_dd_pct)|(cands.daily_start_loss_pct<base.daily_start_loss_pct))]
 cands=cands.sort_values(["mtm_dd_pct","r_month"],ascending=[True,False])
-winner=str(cands.iloc[0].mode) if len(cands) else "LOCK2_NO_TRANSFER"
+winner=str(cands.iloc[0]["mode"]) if len(cands) else "LOCK2_NO_TRANSFER"
 
 lines=["# LAB155 — ADD-ON RISK TRANSFER","",
        "Exact causal M5 event-loop replay. Add-on decision uses current entry OPEN, never the future close of that M5 bar.",
@@ -202,7 +202,7 @@ lines=["# LAB155 — ADD-ON RISK TRANSFER","",
 for cost in COSTS:
     lines.append(f"## {cost:.2f}bps")
     for _,r in S[S.cost_bps==cost].sort_values("r_month",ascending=False).iterrows():
-        lines.append(f"- {r.mode}: N={int(r.n)} ({r.trades_month:.2f}/mo), addons={int(r.addons)}, EV={r.ev:+.3f}R, PF={r.pf:.2f}, R/mo={r.r_month:+.2f}, MTM DD={r.mtm_dd_pct:.2f}%, daily={r.daily_start_loss_pct:.2f}%, worst float={r.worst_floating_pct:.2f}%")
+        lines.append(f"- {r['mode']}: N={int(r.n)} ({r.trades_month:.2f}/mo), addons={int(r.addons)}, EV={r.ev:+.3f}R, PF={r.pf:.2f}, R/mo={r.r_month:+.2f}, MTM DD={r.mtm_dd_pct:.2f}%, daily={r.daily_start_loss_pct:.2f}%, worst float={r.worst_floating_pct:.2f}%")
 lines += ["",f"Frozen screen winner: **{winner}**.",
           "BE transfer never lowers an already tighter stop (for example, a runner already locked at +2R).",
           "This is TRAIN/development evidence. The exact-causal event loop supersedes earlier same-bar-close MTM gating when results differ."]
