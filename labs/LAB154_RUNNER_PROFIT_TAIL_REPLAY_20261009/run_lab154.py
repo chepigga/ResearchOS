@@ -91,14 +91,15 @@ def path_trade(r,cost,variant):
     return dict(exit_i=xi,exit_time=BT.iloc[xi],net_r=float(gross-cost_r),reason=reason,
                 partial_i=partial_idx,variant=variant,entry_price=entry,atr=atr,side=side,cost_r=cost_r)
 
-def mtm_total(tr,bar_i,cost):
+def mtm_total(tr,bar_i,cost,price_mode="close"):
     entry=float(tr.entry_price);atr=float(tr.atr);side=int(tr.side);cost_r=float(tr.cost_r)
+    px=float(BO[bar_i]) if price_mode=="open" else float(BC[bar_i])
     if tr.variant in ("TP3","TP4"):
-        return float(side*(BC[bar_i]-entry)/atr-cost_r)
+        return float(side*(px-entry)/atr-cost_r)
     pi=tr.partial_i
     if pi is None or pd.isna(pi) or bar_i<=int(pi):
-        return float(side*(BC[bar_i]-entry)/atr-cost_r)
-    return float(1.5+0.5*side*(BC[bar_i]-entry)/atr-cost_r)
+        return float(side*(px-entry)/atr-cost_r)
+    return float(1.5+0.5*side*(px-entry)/atr-cost_r)
 
 def replay(cost,variant):
     raw=raw_signals(cost)
@@ -119,7 +120,7 @@ def replay(cost,variant):
             allow=True
         elif len(active)==1:
             op=active[0]
-            allow=(int(op.side)==int(cand.side) and mtm_total(op,now_i,cost)>=0)
+            allow=(int(op.side)==int(cand.side) and mtm_total(op,now_i,cost,price_mode="open")>=0)
         if allow:
             accepted.append(cand.to_dict());active.append(cand)
         else:
