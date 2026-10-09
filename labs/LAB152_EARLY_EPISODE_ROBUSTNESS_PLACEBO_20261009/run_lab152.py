@@ -102,26 +102,20 @@ for k in range(NMC):
     s=stats(t);mc_uniform.append((s["ev"],s["pf"],s["total_r"],s["n"]))
 mc_uniform=np.asarray(mc_uniform,float)
 
-# Time-shift placebo: each real event shifted by a random 1-14 days, sign +/-,
-# preserving side and approximate calendar regime. Snap to closest M5 bar.
-bt_ns=pd.to_datetime(BT,utc=True).astype("int64").to_numpy()
-def nearest_index(ts):
-    x=int(pd.Timestamp(ts).value);k=np.searchsorted(bt_ns,x)
-    if k<=0:return 0
-    if k>=len(bt_ns):return len(bt_ns)-1
-    return k if abs(bt_ns[k]-x)<abs(bt_ns[k-1]-x) else k-1
-
+# Time-shift placebo: shift each real entry by a random +/-1..14 calendar days
+# in M5-bar units. This preserves side and approximate regime without timestamp lookup ambiguity.
 mc_shift=[]
-base_times=pd.to_datetime(base.entry_time,utc=True)
 for k in range(NMC):
     rows=[]
-    for (_,r),tm in zip(base.iterrows(),base_times):
+    for _,r in base.iterrows():
         days=int(rng.integers(1,15));sgn=1 if rng.random()<0.5 else -1
-        ts=tm+pd.Timedelta(days=sgn*days)
-        ei=nearest_index(ts)
-        if ei<0 or ei>=len(BT)-MAX_H*12-2 or pd.Timestamp(BT.iloc[ei])>=TRAIN_END or not np.isfinite(BA[ei]) or BA[ei]<=0:
+        ei=int(r.entry_i)+sgn*days*288
+        if ei<0 or ei>=len(BT)-MAX_H*12-2:
             continue
-        rows.append(dict(entry_i=ei,side=int(r.side),atr=float(BA[ei]),entry_time=BT.iloc[ei]))
+        ts=pd.Timestamp(BT.iloc[ei])
+        if ts>=TRAIN_END or not np.isfinite(BA[ei]) or BA[ei]<=0:
+            continue
+        rows.append(dict(entry_i=ei,side=int(r.side),atr=float(BA[ei]),entry_time=ts))
     if not rows:continue
     t=onepos(pd.DataFrame(rows),cost);s=stats(t);mc_shift.append((s["ev"],s["pf"],s["total_r"],s["n"]))
 mc_shift=np.asarray(mc_shift,float)
