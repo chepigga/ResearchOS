@@ -1,0 +1,82 @@
+{
+  "frozen_date": "2026-10-09",
+  "branch": "baseline/crowdfade-btc-20261009",
+  "status": "research_demo_baseline_not_pristine_production_validated",
+  "portfolio": {
+    "core": [
+      "ENGINE_A",
+      "B3_HIGH",
+      "R48_HIGH"
+    ],
+    "conditional_addon": [
+      "EARLY_EPISODE"
+    ],
+    "priority": [
+      "ENGINE_A",
+      "B3_HIGH",
+      "R48_HIGH",
+      "EARLY_EPISODE"
+    ],
+    "pyramiding": {
+      "max_positions": 2,
+      "second_entry_requires": [
+        "first_position_mtm_r>=0",
+        "same_side"
+      ],
+      "interpretation": "same_direction_addon_not_independent_diversification"
+    }
+  },
+  "execution": {
+    "sl": "1.0 H1ATR",
+    "tp": "3R",
+    "max_hold_h": 48,
+    "intrabar": "stop_first"
+  },
+  "risk": {
+    "per_position_pct": 0.25,
+    "max_nominal_open_risk_pct": 0.5
+  },
+  "costs_bps": {
+    "normal": 2.81,
+    "stress": 7.5
+  },
+  "reference_metrics": {
+    "normal": {
+      "trades_month": 7.17,
+      "ev_r": 0.618,
+      "pf": 2.04,
+      "r_month": 4.43,
+      "mtm_dd_pct": 3.97,
+      "daily_start_loss_proxy_pct": 1.11
+    },
+    "stress": {
+      "trades_month": 7.1,
+      "ev_r": 0.571,
+      "pf": 1.91,
+      "r_month": 4.06,
+      "mtm_dd_pct": 4.52,
+      "daily_start_loss_proxy_pct": 1.15,
+      "worst_floating_pct": -0.6
+    }
+  },
+  "evidence": {
+    "LAB145": "Stronger/later A confirmation rejected",
+    "LAB146": "Earlier/weaker A trigger rejected",
+    "LAB147": "Main A missed-trade leak is active-Z timing; OI remains useful",
+    "LAB148": "EARLY_EPISODE frozen <=5m rescue candidate",
+    "LAB149": "EARLY_EPISODE improves full one-position portfolio modestly",
+    "LAB150": "Blocked same-side signals positive; opposite-side strongly negative",
+    "LAB151": "SECOND_MTM_GE0_SAME_SIDE wins MTM prop-DD replay",
+    "LAB152": "EARLY_EPISODE passes random/time-shift placebo but is regime-sensitive",
+    "LAB153": "R48_HIGH survives random-long/bull-drift controls"
+  },
+  "backlog_priority": [
+    "Exact FTMO CET/CEST daily-loss replay at 0.25%, then research 0.30/0.35/0.40%",
+    "Feeder g_ratio parity with research count_long_short_ratio",
+    "Demo forward with exact per-leg logging",
+    "EARLY_EPISODE regime monitoring",
+    "Full raw-chronology exit replay before changing TP3",
+    "Future unseen BTC validation"
+  ],
+  "recovery_doc": "backlog/CROWDFade_BTC_BASELINE_RECOVERY_STATE_20261009.md"
+}
