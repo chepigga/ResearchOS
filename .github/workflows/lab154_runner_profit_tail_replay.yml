@@ -29,3 +29,5 @@ jobs:
         with:
           name: lab154-runner-profit-tail-replay
           path: lab154_out
+
+# rerun after NaN fix
