@@ -96,7 +96,7 @@ def mtm_total(tr,bar_i,cost):
     if tr.variant in ("TP3","TP4"):
         return float(side*(BC[bar_i]-entry)/atr-cost_r)
     pi=tr.partial_i
-    if pi is None or bar_i<=int(pi):
+    if pi is None or pd.isna(pi) or bar_i<=int(pi):
         return float(side*(BC[bar_i]-entry)/atr-cost_r)
     return float(1.5+0.5*side*(BC[bar_i]-entry)/atr-cost_r)
 
