@@ -1,0 +1,31 @@
+name: LAB155 Addon Risk Transfer
+on:
+  push:
+    branches: [lab/lab155-addon-risk-transfer-20261009]
+    paths: ['.github/workflows/lab155_addon_risk_transfer.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab155-addon-risk-transfer-20261009
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download BTC data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB155
+        run: python labs/LAB155_ADDON_RISK_TRANSFER_20261009/run_lab155.py
+      - run: cat lab155_out/LAB155_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab155-addon-risk-transfer
+          path: lab155_out
