@@ -188,8 +188,8 @@ pd.concat(alltr,ignore_index=True).to_csv(OUT/"LAB155_trades.csv",index=False)
 
 # stress screen: runner must beat TP3 R/mo; transfer candidate should reduce MTM DD or daily loss without >10% R/mo sacrifice vs LOCK2 no-transfer.
 stress=S[S.cost_bps==7.5].copy()
-base=stress[stress.mode=="LOCK2_NO_TRANSFER"].iloc[0]
-cands=stress[stress.mode.isin(["LOCK2_BE","LOCK2_BE_COSTS","LOCK2_LOCK025"])].copy()
+base=stress[stress["mode"]=="LOCK2_NO_TRANSFER"].iloc[0]
+cands=stress[stress["mode"].isin(["LOCK2_BE","LOCK2_BE_COSTS","LOCK2_LOCK025"])].copy()
 cands=cands[(cands.r_month>=0.90*base.r_month)&((cands.mtm_dd_pct<base.mtm_dd_pct)|(cands.daily_start_loss_pct<base.daily_start_loss_pct))]
 cands=cands.sort_values(["mtm_dd_pct","r_month"],ascending=[True,False])
 winner=str(cands.iloc[0].mode) if len(cands) else "LOCK2_NO_TRANSFER"
