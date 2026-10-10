@@ -1,0 +1,14 @@
+{
+  "status": "completed_exploratory_atlas",
+  "price_source_start": "2019-09-08 17:55:00+00:00",
+  "price_source_end": "2026-08-10 21:20:00+00:00",
+  "price_exact_duplicates": 13631,
+  "price_missing_grid_rows": 0,
+  "atlas_observations": 589794,
+  "valid_states": 575799,
+  "price_sha256": "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd",
+  "flow_sha256": "b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d",
+  "flow_delay_minutes": 5,
+  "profile": "M5 reconstructed uniform-range volume,24h,40 bins",
+  "atr": "closed H1 SMA14 true range, lineage parity"
+}
