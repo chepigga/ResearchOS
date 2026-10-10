@@ -1,0 +1,12 @@
+{
+  "swing_confirmation_two_right_bars": true,
+  "prefix_invariance": true,
+  "higher_timeframe_update_boundaries": true,
+  "lab162_event_outcome_parity": true,
+  "frozen_profile_before_break": true,
+  "scenario_chronology": true,
+  "scenario_cooldown": true,
+  "route_and_risk_constraints": true,
+  "sampled_future_outcome_recalculation": true,
+  "purge": true
+}
