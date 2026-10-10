@@ -1,0 +1,19 @@
+# LAB164 — Anchored balance auction (fixed before outcomes)
+Research continuation of LAB163. No M1, no production changes. Existing 2021–2026 data are reused development data, not pristine OOS.
+
+## Observable auction definition
+On a completed UTC H1 bar, seed a balance using the last six complete H1 bars: range 1–4 current H1 ATR; close path efficiency abs(last close-first close)/sum(abs(diff closes)) <=0.35; at least three midrange crossings; at least two closes in each outer third of the range. These are fixed operational hypotheses, not an exhaustive definition of discretionary balance.
+Freeze high/low at detection; anchor at first constituent M5 bar. One active balance globally. Await first M5 close beyond frozen range by 0.1 detection ATR, maximum 24h. Expired balances recorded. No future pivots used.
+At breakout freeze a 40-bin volume-at-price profile from anchor through the bar BEFORE breakout. Uniform volume across each M5 high-low; same P/b/D and separated-two-peak B definition as LAB162. Store POC, VAL/VAH, HVN2 and LVN; this is reconstructed volume, not footprint.
+Observe breakout for six hours. RETEST_HOLD: first later boundary touch within 0.1 frozen ATR, close at least 0.1 ATR outside, following close remains at least 0.1 ATR outside. FAILED_RETURN: two consecutive closes at least 0.1 ATR inside, signal opposite breakout toward anchored POC. First confirmed branch terminates observation; otherwise UNCONFIRMED. Signals occur only on confirmation close. New balances use bars strictly after prior episode ends, avoiding nested duplicate seeds.
+
+## Features and geometry
+D1/H4/H1/M15/M5 structure inherited causal LAB163. For every signal record aligned 1h OI percentage change, crowd z change (raw L/S ratio change also retained), anchored shape and 24h shape, price progress per relative volume, known H1/H4 swing obstacle, profile levels, target and invalidation. Failed-return target POC; continuation target one frozen balance width beyond break boundary. Invalidation: continuation 0.1 ATR inside boundary; failed return 0.1 ATR beyond observed breakout extreme. Geometry is diagnostic, no eligibility filter.
+
+## Evaluation
+DISCOVERY 2021–2023; VALIDATION 2024; CHECK 2025–2026-08. Purge signals less than24h before split boundaries. All signal labels use subsequent CLOSED M5 prices (no trade fills): +2 current ATR before -1 ATR in24h, unresolved separate; also max favorable/adverse, time to target and terminal. Same breakout/retest pairs evaluated to distinguish waiting cost from event selection. Retest pairing conditions on subsequent behavior and is descriptive.
+Primary incremental models at BREAKOUT only, same complete-case sample, logistic standardized fixed C=1, nested price+context -> +Crowd -> +OI -> +anchored profile. Fit DISCOVERY only; VALIDATION/CHECK reported without refit or tuning. Chronological weekly block bootstrap of paired Brier differences (500 draws). Signals from same balance are never treated as independent in stage comparisons.
+Report shape/flow/context tables descriptively without cherry-picked candidate selection. Wave coverage using inherited LEG_REV1ATR >=3ATR waves, same direction before peak and >=1ATR remaining, peak <=24h from signal. All waves denominator, including no balance. Coverage is not captured P/L. Include false outcomes and remaining movement conditional on wave match.
+Visual audit before labels: deterministic examples across years, chosen by width nearest median among broken balances, not outcome. Prefix invariance, boundary chronology, profile volume conservation, outcome recomputation checks. No parameter optimization after inspecting examples or outcomes.
+
+Geometry diagnostic additionally labels the pre-specified frozen target vs invalidation on future closes, excluding already-passed/nonpositive routes; no fills/costs and no strategy P/L. Added before reading any numerical outcome tables.

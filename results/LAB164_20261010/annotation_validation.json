@@ -1,0 +1,20 @@
+{
+  "prefix_invariance": true,
+  "volume_conservation": true,
+  "examples": [
+    18,
+    71,
+    107,
+    157,
+    191,
+    262
+  ],
+  "balances": 281,
+  "signals": 527,
+  "statuses": {
+    "RETEST_HOLD": 156,
+    "FAILED_RETURN": 97,
+    "UNCONFIRMED": 21,
+    "EXPIRED": 7
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "complete_case_breakouts": 268,
+  "all_breakouts": 274,
+  "signal_counts": {
+    "BREAKOUT": 274,
+    "RETEST_HOLD": 156,
+    "FAILED_RETURN": 97
+  },
+  "chronology": true,
+  "branch_unique": true,
+  "profile_before_break": true,
+  "sampled_label_recomputation": true
+}

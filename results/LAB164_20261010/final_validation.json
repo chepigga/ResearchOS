@@ -1,0 +1,8 @@
+{
+  "nonoverlapping_balances": true,
+  "confirmations_at_least_two_bars_after_break": true,
+  "confirmation_within_six_hours": true,
+  "unique_balance_stage": true,
+  "annotation_review": "Six deterministic charts inspected before outcome tables; oscillating ranges visible; close lines do not verify every wick-level touch. Fixed detector is narrow, not exhaustive.",
+  "readout": "No parameter tuning after outcomes"
+}
