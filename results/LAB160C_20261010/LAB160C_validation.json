@@ -1,0 +1,11 @@
+{
+  "all_40_arms_present": true,
+  "baseline_reproduced": true,
+  "old_raw_multiplicity_preserved": true,
+  "all_no_new_profile_arms_nested": true,
+  "standalone_atr_per_variant_verified": true,
+  "trade_timing_and_identity": true,
+  "portfolio_delta_reconciles": true,
+  "monthly_denominator_48": true,
+  "dd_initial_zero_parity": true
+}

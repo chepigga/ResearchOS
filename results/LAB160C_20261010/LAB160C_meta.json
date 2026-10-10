@@ -1,0 +1,32 @@
+{
+  "parent": "2fc655be226af63035457d73b82a09893c27f377",
+  "period": "2021-2024 development only",
+  "risk_pct": 0.25,
+  "raw_old": 506,
+  "r48_universe": 1015,
+  "r48_high": 134,
+  "r48_margin_q60": 0.6890911766885544,
+  "r48_oi_q60": 0.0034951625875331957,
+  "A_EXT80": 1.529405249534699,
+  "A_OI70": 0.008666963370459246,
+  "A_OI50": 0.0008323909089518189,
+  "baseline_validations": [
+    {
+      "variant": "OLD",
+      "cost": 7.5,
+      "baseline_parity": true
+    },
+    {
+      "variant": "OLD_PROFILE",
+      "cost": 7.5,
+      "baseline_parity": true
+    }
+  ],
+  "source_hashes": {
+    "btc_5m.zip": "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd",
+    "BTCUSDT_flow_2021-01-2026-08.csv.zip": "b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d"
+  },
+  "variants": 20,
+  "cost_scenarios": 2,
+  "matched_control_amendment": true
+}
