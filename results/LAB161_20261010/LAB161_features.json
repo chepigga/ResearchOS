@@ -1,0 +1,49 @@
+{
+  "PRICE": [
+    "ret_1",
+    "ret_6",
+    "ret_12",
+    "ret_72",
+    "ret_288",
+    "location_72",
+    "range_72",
+    "location_288",
+    "range_288",
+    "location_576",
+    "range_576",
+    "ema_dist_72",
+    "ema_dist_288",
+    "atr_pct",
+    "rv_6h",
+    "volume_ratio",
+    "bar_range",
+    "bar_body"
+  ],
+  "CROWD": [
+    "ratio",
+    "crowd_z",
+    "crowd_abs_z",
+    "crowd_dz_1h",
+    "ratio_change_1h",
+    "ratio_change_6h"
+  ],
+  "OI": [
+    "oi_change_6",
+    "oi_change_12",
+    "oi_change_48",
+    "oi_change_288"
+  ],
+  "PROFILE": [
+    "profile_dist_poc",
+    "profile_dist_val",
+    "profile_dist_vah",
+    "profile_shape_0",
+    "profile_shape_1",
+    "profile_shape_2",
+    "profile_shape_3",
+    "profile_density",
+    "profile_peak_share",
+    "profile_value_width",
+    "profile_migration_6h"
+  ]
+}

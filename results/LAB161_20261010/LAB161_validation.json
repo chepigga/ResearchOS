@@ -1,0 +1,12 @@
+{
+  "label_fixtures": true,
+  "pivot_endpoint_excluded": true,
+  "cooldown": true,
+  "purged_boundaries": true,
+  "common_feature_eligibility": true,
+  "coverage_nested": true,
+  "matching_within_horizon": true,
+  "wave_summary_reconciliation": true,
+  "lab160d_completed_wave_parity": 3483,
+  "causal_prefix_invariance": true
+}

@@ -1,0 +1,21 @@
+{
+  "rows": 589794,
+  "eligible": 572920,
+  "start": "2021-01-01 00:00:00+00:00",
+  "end": "2026-08-10 21:25:00+00:00",
+  "last_eligible": "2026-08-09 21:25:00+00:00",
+  "exact_price_duplicates_removed": 13631,
+  "price_missing": 0,
+  "feature_count": {
+    "PRICE": 18,
+    "CROWD": 6,
+    "OI": 4,
+    "PROFILE": 11
+  },
+  "causal_prefix_invariance": true,
+  "flow_assumed_delay_minutes": 5,
+  "sources": {
+    "btc_5m.zip": "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd",
+    "BTCUSDT_flow_2021-01-2026-08.csv.zip": "b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d"
+  }
+}
