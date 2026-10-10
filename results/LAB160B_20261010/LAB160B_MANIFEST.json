@@ -1,0 +1,154 @@
+{
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/PROTOCOL.md": {
+    "bytes": 5789,
+    "sha256": "f08e4f9b43b9aa3c39e996a21fbae68393e1c9a92c21f7061bc9efb8a285b77b"
+  },
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/build_report.py": {
+    "bytes": 19667,
+    "sha256": "bbaf0bb4f71e0c10a788ec43768302c219b2f3348624b9a5d3bfb9ccd95f77c2"
+  },
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/legacy_overlap.py": {
+    "bytes": 3879,
+    "sha256": "8f9ac495d2a49ca687bedbd36d9deccb2e45bce881ba4eb0b4f1332d9dcdd0c9"
+  },
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/recover_legacy_raw.py": {
+    "bytes": 423,
+    "sha256": "f728eaa0f36c7bc8ab7465596f0f69f280f2b3ecf58b8b52175bcf873771f05c"
+  },
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/run_lab160b.py": {
+    "bytes": 13275,
+    "sha256": "6aad6444b76b9e3cb6c33168e57fed9d7de80a82dfc9dea1e3ae314cc20e43f8"
+  },
+  "labs/LAB160B_PRICE_FIRST_TRAJECTORY_ATLAS_20261010/verify_lab160b.py": {
+    "bytes": 1337,
+    "sha256": "5e5583a19b6ac4c39c785d11edf8515274a949f902fe18a23a88fe08408da7aa"
+  },
+  "results/LAB160B_20261010/LAB160B_LAB160_numeric_parity.csv": {
+    "bytes": 370,
+    "sha256": "6439eb9f462191f7749b34a91c092b241bd8ea078b414c025751d21d127d9528"
+  },
+  "results/LAB160B_20261010/LAB160B_REPORT_UK.md": {
+    "bytes": 16004,
+    "sha256": "e9c11d7bfdaf527ba07d4ecddaf070e6358d378eea0bbd9d254271b4362db2d2"
+  },
+  "results/LAB160B_20261010/LAB160B_anatomy.csv": {
+    "bytes": 151066,
+    "sha256": "0ab8a8020ebf33042e866e01eb760ff33e89497fd4e63865ad344b8c7a887ef5"
+  },
+  "results/LAB160B_20261010/LAB160B_audit.json": {
+    "bytes": 667,
+    "sha256": "ed504f3142fade40edd7d2251af56d080dfc97dddaadcf709eaeaba85a3a0816"
+  },
+  "results/LAB160B_20261010/LAB160B_coverage.csv": {
+    "bytes": 599,
+    "sha256": "a5ed568d9d269844b660cf1e68e3e858053a0aa52d75d2bc1c0099b2499ff3f9"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_12h.csv": {
+    "bytes": 299,
+    "sha256": "ab1e85fe244e98c3fd57114db6dc27147e01359230931c291413446e889e42f6"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_1h.csv": {
+    "bytes": 292,
+    "sha256": "a2e23fde31e50d6b1d56f383f092e468f50840c32813c66737327be9a1aeac60"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_24h.csv": {
+    "bytes": 298,
+    "sha256": "bbc16a468347054717dcb0b1a25a3ecbec63d180dab5009404de525da68e637e"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_3h.csv": {
+    "bytes": 294,
+    "sha256": "8d554a430a6643a5388e6918a247ee3fd8b7c6d29d73f0eba289b05e1fbf4c32"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_48h.csv": {
+    "bytes": 296,
+    "sha256": "8aa9b0a5c63b342cfaee98e44e28e34347263dbfa7911321eb06a5ea40d13f15"
+  },
+  "results/LAB160B_20261010/LAB160B_delayed_large_6h.csv": {
+    "bytes": 292,
+    "sha256": "cfc71c88560cb60edd9878fe52be9712b1fb6034b3dc8568692ea0d8f8392edc"
+  },
+  "results/LAB160B_20261010/LAB160B_examples.csv": {
+    "bytes": 7825,
+    "sha256": "60c2da18f47a0a90a9095028a0134b6023def0a88c3aeb364ef897c7f2ffdfa5"
+  },
+  "results/LAB160B_20261010/LAB160B_horizon_atlas.png": {
+    "bytes": 122998,
+    "sha256": "e4d15af4e5d5d4c95f28fc1c540851db51bfcdc21ff86cc67d68cc4289797351"
+  },
+  "results/LAB160B_20261010/LAB160B_legacy_notes.json": {
+    "bytes": 497,
+    "sha256": "6bc6caabadf33e63e51e8138b3432e65f4b72171365c76043332a3e7536de175"
+  },
+  "results/LAB160B_20261010/LAB160B_legacy_opportunity_overlap.csv": {
+    "bytes": 16345,
+    "sha256": "a05b26047e6fa935534417bbe46bd1d947729e84d2b0b7a31018b90af2e9f86c"
+  },
+  "results/LAB160B_20261010/LAB160B_legacy_raw_signals.csv": {
+    "bytes": 63628,
+    "sha256": "f0d10bdc728b39e24633f6f4ccf2154b8a26b596622f51a2cbe1a09bcccabf76"
+  },
+  "results/LAB160B_20261010/LAB160B_magnitude.csv": {
+    "bytes": 19779,
+    "sha256": "f8c64b5f534ab7acf292624a3f043a4ba321fa0c374df6fdcdbfd101001c1fd0"
+  },
+  "results/LAB160B_20261010/LAB160B_marginals.csv": {
+    "bytes": 459390,
+    "sha256": "0e86fe80a1afd810e3cec09c9f2b2a9592bd8a7538fa0463f7fbb60fa939232e"
+  },
+  "results/LAB160B_20261010/LAB160B_median_paths.csv": {
+    "bytes": 70131,
+    "sha256": "86dbab8ebb68c88d28f6da0426447ff1f9138059d0b82f6d2e1106ff40b9c419"
+  },
+  "results/LAB160B_20261010/LAB160B_past_relation.csv": {
+    "bytes": 15890,
+    "sha256": "3bd80aa2d26ce545a367e4e7dafb0292b4d3c0daffea978268cef4bd2e62c252"
+  },
+  "results/LAB160B_20261010/LAB160B_path_examples.png": {
+    "bytes": 266846,
+    "sha256": "e6e10bccdd5bc4576bd03a8188141e1119ed32b97067c11674b4587fb7e8840c"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_12h.parquet": {
+    "bytes": 144711972,
+    "sha256": "c2277d6f4cfca1e26eb6182e25b6daf50adc286673d15d24473595c1b6492c96"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_1h.parquet": {
+    "bytes": 145611486,
+    "sha256": "5c8d072c9fac51714c7c6d0ed87708e8b0022499e85ad56949aaf3f8cb99e4a3"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_24h.parquet": {
+    "bytes": 144840320,
+    "sha256": "9b242ad6072017d696d10fdcb770c70601f99bc371fc62c5823769861c1ef910"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_3h.parquet": {
+    "bytes": 145317188,
+    "sha256": "33c402f4121b598154eeeb822d0b2f5348e8617d3cd671326173ab5b24b18b00"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_48h.parquet": {
+    "bytes": 144599524,
+    "sha256": "97d1b6c1f772450f737ff1324c81a8ec5cf8f861ed76f560f64bacf97cefbded"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_6h.parquet": {
+    "bytes": 145130398,
+    "sha256": "44fc8826d76ea00396ef207e76871d998b271c4612f480db936b23f58fc5d652"
+  },
+  "results/LAB160B_20261010/LAB160B_paths_at_legacy_signals.csv": {
+    "bytes": 25362,
+    "sha256": "d5f1cf4e951c619425a2565fca93dea448eb84dc0ee547499e64a791b460372e"
+  },
+  "results/LAB160B_20261010/LAB160B_shortlist.csv": {
+    "bytes": 80677,
+    "sha256": "0f45a142a33167ba39ef098bee83f366382415ab6330fcfdaf7a880a8aa5f146"
+  },
+  "results/LAB160B_20261010/LAB160B_state_cells.csv": {
+    "bytes": 11577351,
+    "sha256": "e8d6012e9d20cbeb181e29fbedbd84a206e7e78a896825225b9984dc32af1bbb"
+  },
+  "results/LAB160B_20261010/LAB160B_states.parquet": {
+    "bytes": 77158909,
+    "sha256": "9aac5ee277fdf5fbbe9ae279a8e4a2e4222fa34636afa8c84c798c04a92ad36f"
+  },
+  "results/LAB160B_20261010/LAB160B_uncovered_retained_windows.csv": {
+    "bytes": 556992,
+    "sha256": "5ad455344c6d63eed14a2715ff59aa862f50e2e670d24c1184a7284b8bcb56f6"
+  }
+}

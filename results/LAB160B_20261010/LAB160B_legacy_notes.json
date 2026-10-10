@@ -1,0 +1,15 @@
+{
+  "raw_n": 506,
+  "shape_pass_n": 450,
+  "by_source": {
+    "A": 181,
+    "EARLY_EPISODE": 147,
+    "R48_HIGH": 134,
+    "B3_HIGH": 44
+  },
+  "scope": "2021-2024 only; original scripts TRAIN_END 2025-01-01",
+  "not_live_EA_coverage": true,
+  "not_execution_or_profit_capture": true,
+  "method": "nonoverlap UTC-clock windows; same-direction raw entry from anchor to peak-candle OPEN; no portfolio/concurrency filtering",
+  "parity": "LAB160 terminal and up/down MFE identical all six horizons"
+}

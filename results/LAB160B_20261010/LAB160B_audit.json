@@ -1,0 +1,31 @@
+{
+  "rows": 589794,
+  "horizons": [
+    1,
+    3,
+    6,
+    12,
+    24,
+    48
+  ],
+  "source_price_sha256": "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd",
+  "source_states_sha256": "d7b3a903866a0351a906a7831f012ff9ab2d4296ef0192948d3e195d88e268d1",
+  "class_names": [
+    "QUIET",
+    "SMALL",
+    "TWO_SIDED",
+    "ROUND_TRIP_UP",
+    "ROUND_TRIP_DOWN",
+    "DIRECT_UP",
+    "DIRECT_DOWN",
+    "AFTER_PULLBACK_UP",
+    "AFTER_PULLBACK_DOWN",
+    "ORDER_UNCERTAIN_UP",
+    "ORDER_UNCERTAIN_DOWN"
+  ],
+  "no_entry_rules": true,
+  "no_barrier_race": true,
+  "flow_delay_minutes_assumed": 5,
+  "check_not_pristine": true,
+  "shortlist_size": 125
+}
