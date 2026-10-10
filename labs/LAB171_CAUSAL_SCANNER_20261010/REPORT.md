@@ -1,0 +1,9 @@
+# LAB171 — FULL HISTORY CAUSAL PRICE-ONLY ROUTE SCANNER
+
+Source user-provided BTC M5 ZIP 589793 bars, 2021-01-01 through 2026-08-10 21:20 UTC. Signal trigger: closed M5 retracement >=0.5 last closed H1 SMA14 ATR, rebound >=0.25 ATR, 12 M5 bar same-side cooldown. Next M5 open hypothetical entry. Structural stop past 12 M5 extrema +/-0.1 ATR; nearest favorable prior 6h/12h/48h/previous day/confirmed H1 swing level target. Price-only proxies, NOT order-book liquidity.
+
+Raw signals 39433; valid target / risk 39367; geometric RR >=1.5: 17984; RR>=2: 11958; RR>=3: 4779. After excluding preceding 12 M5 bars where chosen target already touched, and de-overlap per direction until TP/SL/24h: 11620 routes; BUY 5645 SELL 5975; RR>=2:8133, >=3:3455; ~170.9/month over 68 months.
+
+Wave post-hoc matching to LAB169 independent 2754 retrospective waves: 1119 selected route timestamps located within same-direction large wave, across 1035 distinct waves (37.6%); remaining 10501 outside. Canonical LAB161 wave-ID parity (2680) NOT established. These are geometric routes, NOT actual profitable trades. Price-level freshness only preceding 1h, older touched levels can be counted. Independently computed long/short state allows simultaneous opposing setups; de-overlap is per direction, not portfolio max2. Price-path future was used only for de-overlap expiry, not candidate detection. No Crowd/OI/profile, no broker costs or fills, no optimization, production unchanged.
+
+Full local deliverables: LAB171_ALL_CAUSAL_SIGNALS.csv, LAB171_NONOVERLAP_ROUTES.csv, LAB171_CAUSAL_SCANNER_REPORT.md, lab171_run.py (not committed in this text report). Next step verify canonical waves and classify non-wave signals rather than optimizing P/L.
