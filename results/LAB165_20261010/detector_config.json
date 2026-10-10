@@ -1,0 +1,38 @@
+{
+  "policy": "PRICE_CROWD_OI_PROFILE_R4",
+  "evaluation_only": true,
+  "score": "max(P_UP,P_DOWN)",
+  "direction": "argmax(P_UP,P_DOWN)",
+  "cooldown_minutes": 60,
+  "requires": "Causal LAB161 feature construction at closed M5, eligible input rows; persist last signal timestamp across calls/restarts",
+  "calibrations": [
+    {
+      "year": 2024,
+      "policy": "PRICE_CROWD_OI_PROFILE_R4",
+      "threshold": 0.4589063011990143,
+      "calibration_per_day": 3.912087912087912,
+      "test_per_day": 3.3013698630136985,
+      "requested_per_day": 4,
+      "cooldown_minutes": 60
+    },
+    {
+      "year": 2025,
+      "policy": "PRICE_CROWD_OI_PROFILE_R4",
+      "threshold": 0.4023586297015581,
+      "calibration_per_day": 3.9616438356164383,
+      "test_per_day": 6.865384615384615,
+      "requested_per_day": 4,
+      "cooldown_minutes": 60
+    },
+    {
+      "year": 2026,
+      "policy": "PRICE_CROWD_OI_PROFILE_R4",
+      "threshold": 0.4395656673497734,
+      "calibration_per_day": 4.032967032967033,
+      "test_per_day": 2.5170234839196453,
+      "requested_per_day": 4,
+      "cooldown_minutes": 60
+    }
+  ],
+  "current_live_deployment": false
+}

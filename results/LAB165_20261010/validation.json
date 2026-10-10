@@ -1,0 +1,52 @@
+{
+  "old_LAB161_coverage_exact_parity": true,
+  "live_batch_prefix_parity": true,
+  "cooldown_verified": true,
+  "train_calibration_purge_verified": true,
+  "models_frozen": true,
+  "production_changed": false,
+  "default_policy": "PRICE_CROWD_OI_PROFILE_R4",
+  "default_status": "research_alerts_not_trade_entries",
+  "default_in_sample_calibration": "2026 uses2025 scores; no2027/live threshold calibrated",
+  "folds": [
+    {
+      "year": 2024,
+      "train_n": 65276,
+      "cal_n": 104288,
+      "test_n": 103658,
+      "train_last": "2022-12-30 23:45:00+00:00",
+      "cal_start": "2023-01-01 00:00:00+00:00",
+      "cal_last": "2023-12-30 23:55:00+00:00",
+      "test_start": "2024-01-01 00:00:00+00:00",
+      "test_end": "2024-12-31 00:00:00+00:00",
+      "test_last": "2024-12-30 23:55:00+00:00",
+      "test_days": 365.0
+    },
+    {
+      "year": 2025,
+      "train_n": 100135,
+      "cal_n": 103658,
+      "test_n": 104395,
+      "train_last": "2023-12-30 23:45:00+00:00",
+      "cal_start": "2024-01-01 00:00:00+00:00",
+      "cal_last": "2024-12-30 23:55:00+00:00",
+      "test_start": "2025-01-01 00:00:00+00:00",
+      "test_end": "2025-12-31 00:00:00+00:00",
+      "test_last": "2025-12-30 23:55:00+00:00",
+      "test_days": 364.0
+    },
+    {
+      "year": 2026,
+      "train_n": 134776,
+      "cal_n": 104395,
+      "test_n": 63618,
+      "train_last": "2024-12-30 23:45:00+00:00",
+      "cal_start": "2025-01-01 00:00:00+00:00",
+      "cal_last": "2025-12-30 23:55:00+00:00",
+      "test_start": "2026-01-01 00:00:00+00:00",
+      "test_end": "2026-08-09 21:30:00+00:00",
+      "test_last": "2026-08-09 21:25:00+00:00",
+      "test_days": 220.89583333333334
+    }
+  ]
+}
