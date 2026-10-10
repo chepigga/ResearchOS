@@ -1,0 +1,29 @@
+{
+  "primary": "OBSTACLES_50",
+  "threshold": 0.2422373927232053,
+  "fit_years": [
+    2021,
+    2022
+  ],
+  "threshold_calibration_year": 2023,
+  "score_target": "closed-price +3ATR before -1.5ATR in24h",
+  "context": [
+    "D1",
+    "H4",
+    "H1",
+    "M15",
+    "M5"
+  ],
+  "entry_options": [
+    "MARKET",
+    "DELAY30",
+    "LIMIT025"
+  ],
+  "SL_signal_ATR": 1.5,
+  "TP_signal_ATR": 3,
+  "horizon_hours": 24,
+  "max_positions_including_pending": 2,
+  "risk_pct_initial_equity": 0.25,
+  "deployed": false,
+  "conclusion": "small gross edge; net fails7.5bps in combined2025-2026; no live promotion"
+}

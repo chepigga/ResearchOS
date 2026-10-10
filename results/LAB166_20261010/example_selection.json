@@ -1,0 +1,14 @@
+[
+  {
+    "time": "2026-01-01 06:00:00+00:00",
+    "side": 1,
+    "label": "SUCCESS",
+    "rule": "Success nearest median1h progress, failure closest1h progress to selectedsuccess. Labels used only for illustration; not candidate selection."
+  },
+  {
+    "time": "2025-12-06 12:00:00+00:00",
+    "side": 1,
+    "label": "FAILED",
+    "rule": "Success nearest median1h progress, failure closest1h progress to selectedsuccess. Labels used only for illustration; not candidate selection."
+  }
+]

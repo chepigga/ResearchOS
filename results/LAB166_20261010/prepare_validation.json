@@ -1,0 +1,21 @@
+{
+  "rows": 7969,
+  "split_counts": {
+    "FIT": 2728,
+    "CHECK": 2335,
+    "CAL": 1449,
+    "VALIDATION": 1441,
+    "PURGED": 16
+  },
+  "clock_signal_exact_LAB165_parity": true,
+  "label_sample_recomputed": true,
+  "features_prefix_invariance": true,
+  "source_tape_rebuilt_due_to_truncated_LAB162_cache": true,
+  "oi_nonpositive_source_rows": 473,
+  "profile_shape_counts": {
+    "D": 3488,
+    "B": 2290,
+    "P": 1123,
+    "b": 1068
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "gap_and_double_touch_fixtures": true,
+  "limit_samebar_no_optimistic_target": true,
+  "next_open_fill_verified": true,
+  "max_positions_including_pending_verified": true,
+  "horizon_verified": true,
+  "gross_returns_recomputed": true,
+  "fixed_initial_risk_pct": 0.25,
+  "cost_bps": [
+    5.0,
+    7.5,
+    10.0
+  ],
+  "entry_events": 11328,
+  "filled_events": 10034,
+  "ambiguous_stop_first_events": 1
+}
