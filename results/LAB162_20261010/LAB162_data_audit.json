@@ -1,0 +1,28 @@
+{
+  "rows": 589794,
+  "start": "2021-01-01 00:00:00+00:00",
+  "end": "2026-08-10 21:25:00+00:00",
+  "profile_node_prefix_invariance": true,
+  "poc_val_vah_lab161_parity": true,
+  "B_definition": "separated smoothed peaks>=6bins,second>=0.7primary,valley<=0.7smallerpeak",
+  "structural_shape_counts": {
+    "D": 262824,
+    "B": 167023,
+    "P": 82898,
+    "b": 76762
+  },
+  "legacy_shape_counts": {
+    "D": 334129,
+    "P": 110149,
+    "b": 100732,
+    "DOUBLE": 44784
+  },
+  "hvn2_rows": 428596,
+  "lvn_rows": 254986,
+  "source_lineage": {
+    "btc_5m.zip": "13188498f1f9eadc98550237590734bf65ec865ebe927458301d038e533858bd",
+    "BTCUSDT_flow_2021-01-2026-08.csv.zip": "b6c80084751305f394270c4b133abbf89a0264634924891251b13b33afbe5e0d"
+  },
+  "nonpositive_oi_rows_masked": 473,
+  "nonfinite_derived_features_masked": true
+}

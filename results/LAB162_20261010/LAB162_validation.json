@@ -1,0 +1,13 @@
+{
+  "profile_B_two_peak_fixture": true,
+  "contact_not_future_fixture": true,
+  "level_known_before_contact": true,
+  "cooldown": true,
+  "outcome_exclusive": true,
+  "sampled_outcome_recalculation": true,
+  "purged_boundaries": true,
+  "wave_rows_reconciled": true,
+  "no_infinite_trajectory_values": true,
+  "profile_prefix_invariance": true,
+  "profile_price_level_parity": true
+}

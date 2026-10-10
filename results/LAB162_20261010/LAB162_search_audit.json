@@ -1,0 +1,20 @@
+{
+  "sufficient_support_cells": 78,
+  "discovery_lift_pass_cells": 1,
+  "discovery_lift_reject_cells": 0,
+  "condition_cells": 3857,
+  "outcome_tests": 7714,
+  "qualified_train_validation": 0,
+  "selected": 0,
+  "provisional_replicated": 0,
+  "events": 19662,
+  "unique_event_times": 18781,
+  "years": {
+    "2021": 3502,
+    "2022": 3341,
+    "2023": 3397,
+    "2024": 3567,
+    "2025": 3599,
+    "2026": 2256
+  }
+}
