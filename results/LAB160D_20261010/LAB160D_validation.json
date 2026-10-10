@@ -1,0 +1,20 @@
+{
+  "portfolio_trades": 251,
+  "portfolio_net_r_parity": true,
+  "gate_pass_counts": {
+    "A": 181,
+    "B3_HIGH": 44,
+    "R48_HIGH": 134,
+    "EARLY_EPISODE": 147
+  },
+  "old_clock_coverage_parity": true,
+  "period": "2021-2024",
+  "baseline": "OLD_PROFILE",
+  "cost_bps": 7.5,
+  "unconfirmed_final_leg_excluded": true,
+  "synthetic_partial_and_carried_mtm": true,
+  "synthetic_pivot_symmetry": true,
+  "pivot_nonoverlap": true,
+  "category_totals": true,
+  "trade_links_reconcile": true
+}
