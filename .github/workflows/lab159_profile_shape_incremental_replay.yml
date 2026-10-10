@@ -1,0 +1,31 @@
+name: LAB159 Profile Shape Incremental Replay
+on:
+  push:
+    branches: [lab/lab159-profile-shape-incremental-replay-20261010]
+    paths: ['.github/workflows/lab159_profile_shape_incremental_replay.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/lab159-profile-shape-incremental-replay-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas
+      - name: Download BTC data
+        run: |
+          curl -L --fail --retry 3 -o BTCUSDT_flow_2021-01-2026-08.csv.zip https://github.com/chepigga/ResearchOS/releases/download/btc/BTCUSDT_flow_2021-01-2026-08.csv.zip
+          curl -L --fail --retry 3 -o btc_5m.zip https://github.com/chepigga/ResearchOS/releases/download/btc/btc_5m.zip
+      - name: Run LAB159
+        run: python labs/LAB159_PROFILE_SHAPE_INCREMENTAL_REPLAY_20261010/run_lab159.py
+      - run: cat lab159_out/LAB159_REPORT.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LAB159_PROFILE_SHAPE_INCREMENTAL_REPLAY
+          path: lab159_out
