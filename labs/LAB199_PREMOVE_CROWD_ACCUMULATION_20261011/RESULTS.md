@@ -1,0 +1,9 @@
+# LAB199 — Pre-move Crowd Accumulation Atlas
+
+Completed exploratory independent 15min grid across 2021–Aug2026, no breakout gate. 194077 complete-case observations, 3441 potential crowd states, 968 episodes after 6h cooldown.
+
+TRAIN 2021–23 618 episodes, +2ATR before -1ATR within24h 34.79% versus scheduled6h control 32.80%; VALID2024 148 episodes 36.49% vs 33.56%; CHECK2025–Aug26 202 episodes 31.34% vs 31.88%. Matched 535 of 2754 retrospective LAB169 big waves with direction-matching warnings in preceding24h, not executable trades. Side selected anti-sign of 6h log L/S direction. Global L/S 6h magnitude train80th percentile 0.11919, OI 4h log-return train70th percentile 0.009006, abs crowd-direction price 4h progress <=.5 ATR(H1). Thresholds and risk labels indicative, not broker-fitted.
+
+Nearest H1/H4 2L2R confirmed wick pivot within14d (confirmed after 2 right TF bars) measured BEFORE event: both side nearest level available 949/968; median anti-crowd nearest target distance 0.13 ATR(H1). Only 29/968 offer >=1.5R with ILLUSTRATIVE 1ATR stop. **This is a failed nearest-pivot proxy**, not genuine liquidity ceiling. No full liquidity target ladder or actual orderbook; alternate market regimes and matched baselines pending.
+
+Assume Flow publication delay +5min, yet unverified; no realized fills, spread, commission, slippage or actual execution. 2025–26 previously researched, not pristine OOS. Never claim positive trade EV. No EA changes. See local files LAB199_REPORT.md, LAB199_PREMOVE_EPISODES.csv, LAB199_SUMMARY.csv, LAB199_WAVE_WARNING.csv, LAB199_PREMOVE_WITH_ROUTES.csv, LAB199_ROUTE_SUMMARY.csv, lab199_run.py, lab199_routes.py.
