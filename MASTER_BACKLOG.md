@@ -35,3 +35,15 @@
 - **Risks:** missing source artifacts; post-hoc reconstruction; data drift
 - **Required files:** raw-data SHA256, selected trades, logs and dependency lock
 - **Next action:** complete remaining evidence, then create LAB_002 spec
+
+## ROS-004 — CrowdFade BTC aggressive flow ignition vs exhaustion
+
+- **Project:** CrowdFade BTCUSDT Futures
+- **Priority:** P0
+- **Status:** BLOCKED — acquire >=3 months native Binance aggTrades (target 6 months)
+- **Dependencies:** auditable Binance archive manifests, warmup, LAB204 detector parity, causal features
+- **Goal:** distinguish genuine flow ignition continuation from exhaustion/stall at event close, then test realizable net EV and residual R:R >=1.5
+- **Done when:** clean chronological train/holdout, independent event-level labels, detailed trade replay with costs, coverage and risk metrics; L/S/OI ablation separate
+- **Risks:** seven-day overfitting, overlapping events, lookahead, 15m-close TP/SL misinterpretation, simulated liquidity and mismatched broker costs
+- **Recovery & full plan:** [CrowdFade LAB205 backlog](Projects/CrowdFade/BACKLOG_LAB205_IGNITION_EXHAUSTION_20261011.md)
+- **Next action:** download/verify 2026-05-01..08-07 with 7d warmup, then Feb–Aug, reproduce 79 LAB204 events before labeling
