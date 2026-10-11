@@ -1,0 +1,9 @@
+# LAB206 — Probe × Participation A/B/C | Recovery
+
+**Status: replay runner built, event-level economic outcomes NOT computed in this environment.** The exact archived `results/LAB166_20261010/scored_signals.csv.gz` is in this GitHub branch but cannot be mounted as binary through the connected GitHub actions into the local Python runtime. Do not substitute LAB167 or LAB194 candidates.
+
+Frozen comparison of 0.10% probe and a single 0.25% add-on within 12h on initial 0.5R profit: A MTM only; B MTM + OI 4h build (TRAIN p70) + side-opposed 6h L/S change (TRAIN p80 of signed anti alignment); C MTM + OI build + aligned taker flow (TRAIN p70). Source from original LAB166 OBSTACLES_50; market M5 next open, probe SL1.5ATR TP3ATR; own-stop add-on SL1.5ATR TP3ATR; 7.5bps hypothetical. 2021-23 TRAIN; 2024 VALIDATION; 2025-26 CHECK. Outcome record includes paired same-probe and add-only incremental contributions; no baseline combined or final portfolio MTM drawdown yet.
+
+**Known limitations before promotion**: output A/B/C is an exploratory per-probe paired diagnostic, NOT full portfolio. Portfolio position cap, route saturation, fee model verified against broker, bootstrap, hard risk caps, OOS untouched and genuine tick fills remain outstanding. The existing LAB193 protocol filename collision should be assigned LAB206. OI and taker ratio do not prove institutional identities. On TRAIN L/S threshold may differ from LAB187A because the sampling universe differs.
+
+Run on local Mac with recovered original LAB166 scored signal export and BTC/Flow archives via `python3 lab206_probe_ab.py --signals scored_signals.csv.gz --price-zip btc_5m.zip --flow-zip BTCUSDT_flow.zip --out LAB206_OUT`. Outputs EVENTS.csv, SUMMARY.csv, THRESHOLDS.json, LIMITATIONS.md. Compare A/B/C incremental contribution **after costs**, by year.
