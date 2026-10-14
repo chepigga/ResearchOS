@@ -16,7 +16,7 @@
 //|     +2R, 48 год; окремий magic, свій ліміт 2 позиції; ризик 0.10%.|
 //|   - Тіньовий лог сигналів D(2.0/1.0/H4) і D'(2.0/1.0/без H4).    |
 //|   - Лог затримки Binance L/S (CrowdFade_v003_LATENCY.csv).       |
-//| v002: модуль трендових ліній у ТІНЬОВОМУ режимі (без змін).      |
+//| v005: модуль трендових ліній прибрано (LAB251/259: не допомагає).|
 //| Forward/demo EA for frozen LAB157 candidate architecture.        |
 //| Uses existing BinanceLAB093 feeder for M5 + OI FILE_COMMON data.  |
 //| Ratio/Z stays direct from Binance, as in previous CrowdFade EA.   |
@@ -27,10 +27,7 @@
 #property description "CrowdFade core v005: A+B3 (72h) + D2 (+ exit when crowd compass turns against at >=+1R) + S Supertrend H2 (+ exit on EMA9/20 H1 cross against). EARLY off, R48 shadow."
 
 #include <Trade/Trade.mqh>
-#include "CF_TrendLines.mqh"
 CTrade trade;
-CTLEngine g_tl;
-datetime  g_tlLastBar=0;
 
 //---------------- Inputs ---------------------------------------------
 input group "=== SYMBOLS / DATA ==="
@@ -127,13 +124,6 @@ input bool   InpVerbose            = true;
 input string InpLogFile            = "CrowdFade_LAB157_FORWARD_v005.csv";
 input string InpLatencyLogFile     = "CrowdFade_v003_LATENCY.csv";
 
-input group "=== TRENDLINES (shadow, без впливу на торгівлю) ==="
-input bool            InpTLEnable       = true;
-input ENUM_TIMEFRAMES InpTLMainTF       = PERIOD_H4;   // структура (напрям)
-input ENUM_TIMEFRAMES InpTLCorrTF       = PERIOD_H1;   // лінія корекції
-input int             InpTLCorrBarsBack = 3000;        // старт автомата: барів CorrTF назад
-input int             InpTLMainWarmBars = 600;         // розігрів структури H4
-input string          InpTLLogFile      = "CrowdFade_LAB157_TL.csv";
 
 //---------------- Binance API ----------------------------------------
 #define API        "https://fapi.binance.com"
@@ -743,23 +733,11 @@ void AppendLog(const string event,const int engine,const int side,const string d
 {
    int h=FileOpen(InpLogFile,FILE_READ|FILE_WRITE|FILE_CSV|FILE_COMMON|FILE_SHARE_READ|FILE_SHARE_WRITE,';');
    if(h==INVALID_HANDLE) return;
-   if(FileSize(h)==0) FileWrite(h,"time","event","engine","side","z","atr","oi4h","phase","detail","tl_line_dist_atr",CTLEngine::StateCSVHeader());
+   if(FileSize(h)==0) FileWrite(h,"time","event","engine","side","z","atr","oi4h","phase","detail");
    FileSeek(h,0,SEEK_END);
-   string tlCsv="",tlDist="";
-   if(InpTLEnable)
-   {
-      TLState st;
-      if(g_tl.StateAt(TimeCurrent(),st))
-      {
-         tlCsv=g_tl.StateCSV(st);
-         MqlTick q;
-         if(st.valid==1 && st.atr>0 && SymbolInfoTick(InpBrokerSymbol,q))
-            tlDist=DoubleToString((q.bid-g_tl.LineAt(st,TimeCurrent()))/st.atr,3);   // + = ціна над лінією
-      }
-   }
    FileWrite(h,TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),event,EngineName(engine),
              side>0?"BUY":(side<0?"SELL":"-"),DoubleToString(g_panelZ,4),DoubleToString(g_panelATR,2),
-             DoubleToString(g_panelOI4h*100.0,3),g_panelPhase,detail,tlDist,tlCsv);
+             DoubleToString(g_panelOI4h*100.0,3),g_panelPhase,detail);
    FileClose(h);
 }
 
@@ -1607,16 +1585,6 @@ int SPosCount()
 }
 
 //---------------- UI / lifecycle ------------------------------------
-string TLPanel()
-{
-   if(!InpTLEnable) return "off";
-   TLState st;
-   if(!g_tl.StateAt(TimeCurrent(),st)) return "no data";
-   string s="H4 "+(st.mainTrend>0?"UP":(st.mainTrend<0?"DOWN":"-"));
-   if(st.valid==1) s+=StringFormat(" | corr line %d/3%s",st.fan,st.broken==1?" BROKEN":"");
-   else s+=" | no corr line";
-   return s;
-}
 void UpdatePanel()
 {
    int n=MyPositionCount();
@@ -1633,7 +1601,6 @@ void UpdatePanel()
       "OI4h: ",DoubleToString(g_panelOI4h*100.0,3),"%",
       " | Last signal: ",g_lastSignal,"\n",
       "Exit: 50% @3R, runner SL +2R | add-on first SL +0.25R\n",
-      "TL (shadow): ",TLPanel(),"\n",
       "State: ",g_state
    );
 }
@@ -1668,7 +1635,6 @@ int OnInit()
       if(g_hEf==INVALID_HANDLE || g_hEs==INVALID_HANDLE){Print("CF157 S: EMA fast/slow H1 init failed");return INIT_FAILED;}
    }
    trade.SetDeviationInPoints(InpSlippagePts);
-   if(InpTLEnable) g_tl.Init(InpBrokerSymbol,InpTLMainTF,InpTLCorrTF,InpTLCorrBarsBack,InpTLMainWarmBars);
 
    long mode=AccountInfoInteger(ACCOUNT_MARGIN_MODE);
    if(mode!=ACCOUNT_MARGIN_MODE_RETAIL_HEDGING)
@@ -1702,29 +1668,10 @@ void OnDeinit(const int reason)
 }
 void OnTick(){ManagePositions();ManageD();}
 
-//--- трендові лінії: оновлення і лог стану на кожній новій закритій свічці CorrTF
-void UpdateTrendLines()
-{
-   if(!InpTLEnable) return;
-   if(!g_tl.Update()) return;
-   TLState st;
-   if(!g_tl.StateAt(TimeCurrent(),st) || st.barTime==g_tlLastBar) return;
-   g_tlLastBar=st.barTime;
-   int h=FileOpen(InpTLLogFile,FILE_READ|FILE_WRITE|FILE_TXT|FILE_ANSI|FILE_COMMON|FILE_SHARE_READ|FILE_SHARE_WRITE);
-   if(h==INVALID_HANDLE) return;
-   if(FileSize(h)==0) FileWriteString(h,CTLEngine::StateCSVHeader()+",atr,corr_extreme,line_at_close\r\n");
-   FileSeek(h,0,SEEK_END);
-   string lc="";
-   if(st.valid==1) lc=DoubleToString(g_tl.LineAt(st,st.barTime+PeriodSeconds(InpTLCorrTF)),_Digits);
-   FileWriteString(h,g_tl.StateCSV(st)+","+DoubleToString(st.atr,_Digits)+","+DoubleToString(st.corrExt,_Digits)+","+lc+"\r\n");
-   FileClose(h);
-}
-
 void OnTimer()
 {
    ManagePositions();
    ManageD();
-   UpdateTrendLines();
 
    if(!LoadM5() || !LoadOI())
    {
