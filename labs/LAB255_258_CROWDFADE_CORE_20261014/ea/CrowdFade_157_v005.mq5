@@ -1,5 +1,7 @@
 //+------------------------------------------------------------------+
 //| CrowdFade_LAB157_CORE_v005.mq5                                   |
+//| v005.1: повтори HTTP (InpHttpRetries), лог затримки — кожна нова  |
+//|   точка + batch/http_fails/skipped_polls; ratio до перевірки фідера.|
 //| v005 (LAB268): виходи на початку контртренду (перемикачі 0/1/2): |
 //|   D: компас (-sign z24, |z24|>=1) розвернувся проти і MTM>=+1R.  |
 //|   S: EMA9 перетнула EMA20 на H1 (брокер) проти позиції.          |
@@ -23,7 +25,7 @@
 //| RESEARCH / DEMO ONLY.                                             |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "1.005"
+#property version   "1.051"
 #property description "CrowdFade core v005: A+B3 (72h) + D2 (+ exit when crowd compass turns against at >=+1R) + S Supertrend H2 (+ exit on EMA9/20 H1 cross against). EARLY off, R48 shadow."
 
 #include <Trade/Trade.mqh>
@@ -37,6 +39,7 @@ input string InpBinanceApiKey      = "";            // Kept for parity with prev
 input string InpFeederFolder       = "BinanceLAB093";// FILE_COMMON folder used by existing feeder
 input int    InpRefreshSec         = 15;
 input int    InpWebTimeoutMs       = 4000;
+input int    InpHttpRetries        = 2;              // повтори запиту до Binance при збої (пауза 0.5 с)
 input int    InpMaxDataAgeMinutes  = 15;             // Reject stale M5/OI snapshots
 input int    InpRequiredHistoryHrs = 220;            // H4 EMA50 needs ~200h. Set feeder InpHistoryHours >= 240.
 
@@ -122,7 +125,7 @@ input group "=== IDS / LOGGING ==="
 input long   InpMagicBase          = 157000;         // D magic = base + 10
 input bool   InpVerbose            = true;
 input string InpLogFile            = "CrowdFade_LAB157_FORWARD_v005.csv";
-input string InpLatencyLogFile     = "CrowdFade_v003_LATENCY.csv";
+input string InpLatencyLogFile     = "CrowdFade_v005_LATENCY.csv";
 
 
 //---------------- Binance API ----------------------------------------
@@ -290,18 +293,24 @@ double JsonNum(const string s,const int p,const string key,int &endp)
    return StringToDouble(StringSubstr(s,i,j-i));
 }
 
+int g_httpFails=0;      // failed WebRequest attempts since last latency row
+int g_skipPolls=0;      // timer cycles without a successful ratio fetch since last latency row
 bool HttpGet(const string url,string &body)
 {
    char data[],res[]; string hdr="";
    string reqhdr="";
    if(StringLen(InpBinanceApiKey)>0) reqhdr="X-MBX-APIKEY: "+InpBinanceApiKey+"\r\n";
-   ResetLastError();
-   int code=WebRequest("GET",url,reqhdr,InpWebTimeoutMs,data,res,hdr);
-   if(code!=200)
+   int code=-1;
+   for(int attempt=0;attempt<=InpHttpRetries;attempt++)
    {
-      PrintFormat("CF157 HTTP FAIL code=%d err=%d url=%s",code,GetLastError(),url);
-      return false;
+      if(attempt>0) Sleep(500);
+      ResetLastError();
+      code=WebRequest("GET",url,reqhdr,InpWebTimeoutMs,data,res,hdr);
+      if(code==200) break;
+      g_httpFails++;
+      PrintFormat("CF157 HTTP FAIL code=%d err=%d attempt=%d/%d url=%s",code,GetLastError(),attempt+1,InpHttpRetries+1,url);
    }
+   if(code!=200) return false;
    body=CharArrayToString(res,0,WHOLE_ARRAY,CP_UTF8);
    return StringLen(body)>10;
 }
@@ -1390,19 +1399,28 @@ long g_lastSeenRatioTs=0;
 void LogLatency()
 {
    int n=ArraySize(g_ratioTs); if(n==0) return;
-   long ts=g_ratioTs[n-1];
-   if(ts<=g_lastSeenRatioTs) return;
-   bool first=(g_lastSeenRatioTs==0);
-   g_lastSeenRatioTs=ts;
-   if(first) return;                                  // attach moment is not a measurement
+   if(g_lastSeenRatioTs==0){g_lastSeenRatioTs=g_ratioTs[n-1];g_httpFails=0;g_skipPolls=0;return;}   // attach: not a measurement
+   int k0=n;
+   for(int k=n-1;k>=0 && g_ratioTs[k]>g_lastSeenRatioTs;k--) k0=k;
+   if(k0>=n) return;
+   int batch=n-k0;                                    // >1 = several new points arrived at once
    long now=(long)TimeGMT()*1000;
    int h=FileOpen(InpLatencyLogFile,FILE_READ|FILE_WRITE|FILE_CSV|FILE_COMMON|FILE_SHARE_READ|FILE_SHARE_WRITE,';');
-   if(h==INVALID_HANDLE) return;
-   if(FileSize(h)==0) FileWrite(h,"seen_gmt","ratio_ts_gmt","sec_after_ratio_ts","sec_after_ts_plus_5m","poll_sec");
-   FileSeek(h,0,SEEK_END);
-   FileWrite(h,TimeToString((datetime)(now/1000),TIME_DATE|TIME_SECONDS),TimeToString((datetime)(ts/1000),TIME_DATE|TIME_SECONDS),
-             DoubleToString((now-ts)/1000.0,1),DoubleToString((now-ts-300000)/1000.0,1),IntegerToString(InpRefreshSec));
-   FileClose(h);
+   if(h!=INVALID_HANDLE)
+   {
+      if(FileSize(h)==0) FileWrite(h,"seen_gmt","ratio_ts_gmt","sec_after_ratio_ts","sec_after_ts_plus_5m","poll_sec","batch","http_fails","skipped_polls");
+      FileSeek(h,0,SEEK_END);
+      for(int k=k0;k<n;k++)
+      {
+         long ts=g_ratioTs[k];
+         FileWrite(h,TimeToString((datetime)(now/1000),TIME_DATE|TIME_SECONDS),TimeToString((datetime)(ts/1000),TIME_DATE|TIME_SECONDS),
+                   DoubleToString((now-ts)/1000.0,1),DoubleToString((now-ts-300000)/1000.0,1),IntegerToString(InpRefreshSec),
+                   IntegerToString(batch),IntegerToString(g_httpFails),IntegerToString(g_skipPolls));
+      }
+      FileClose(h);
+   }
+   g_lastSeenRatioTs=g_ratioTs[n-1];
+   g_httpFails=0; g_skipPolls=0;
 }
 
 //---------------- Engine S: Supertrend H2 + crowd compass -------------
@@ -1673,20 +1691,22 @@ void OnTimer()
    ManagePositions();
    ManageD();
 
+   // Ratio first: latency is measured independently of the feeder state.
+   double z=0.0;long zts=0;
+   bool zok=FetchLatestZ(z,zts);
+   if(zok) LogLatency(); else g_skipPolls++;
+
    if(!LoadM5() || !LoadOI())
    {
       g_state="FEEDER READ FAIL";UpdatePanel();return;
    }
    int idx=LatestCompletedM5Index();
    if(idx<0 || !DataFresh(idx)){UpdatePanel();return;}
-
-   double z=0.0;long zts=0;
-   if(!FetchLatestZ(z,zts))
+   if(!zok)
    {
       g_state="RATIO/Z FETCH FAIL";UpdatePanel();return;
    }
    g_lastZ=z;
-   LogLatency();
 
    // Engine D works on every new ratio point, independently of the core bar gate below.
    static bool dWarm=false;
