@@ -1,0 +1,41 @@
+name: LIQCAP LAB001 Data (Binance liquidations + metrics + 5m klines)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/liqcap_lab001_data.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Fetch public Binance archives (data only, no outcomes)
+        env:
+          LIQCAP_SYMBOL: BTCUSDT
+          LIQCAP_OUT: liqcap_data
+        run: python labs/LIQCAP_LAB_001/fetch_data.py
+      - name: Publish to release liqcap-data-v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd liqcap_data
+          sha256sum * > SHA256SUMS
+          if gh release view liqcap-data-v1 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload liqcap-data-v1 * --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create liqcap-data-v1 * --repo "$GITHUB_REPOSITORY" \
+              --title "LIQCAP LAB001 data v1" \
+              --notes "Binance USDT-M BTCUSDT liquidationSnapshot + metrics 5m + klines 5m. Data only. See manifest.json."
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: liqcap-lab001-data
+          path: liqcap_data
