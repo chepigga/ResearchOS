@@ -205,3 +205,8 @@
 - Діра 18:10–18:45 GMT у лозі + `CF157 HTTP FAIL code=1001 err=5203` (02:22) → ймовірно мережеві збої WebRequest.
 - **v005.1** (той самий файл `CrowdFade_157_v005.mq5`, `#property version 1.051`): повтори HTTP (`InpHttpRetries=2`, пауза 0.5 с); ratio запитується до перевірки фідера; лог затримки `CrowdFade_v005_LATENCY.csv` пише кожну нову точку + `batch` (скільки прийшло разом), `http_fails`, `skipped_polls`. Торгова логіка без змін.
 - Фідер на VPS: `InpRefreshSec=60` → рекомендовано 15.
+
+### 11.8 Фідер v1.08 (2026-10-15)
+- Причина `INIT_FAILED` у v1.07: блокування дублікату (`AcquireLock`, GV `LAB093_FEED_LOCK_BTCUSDT`, heartbeat < 180 с) — v1.06 ще тримав lock.
+- Нічні діри в журналі v005 (обробка D-точок із запізненням 30 хв – 2 год 15 хв) — фідер не оновлював файли → v005 у `STALE`.
+- **v1.08** (`ea/BinanceLAB093_DataFeeder_VPS_EA_v1.08.mq5`), логіка даних без змін: атомарний запис (`.tmp` → `FileMove`, фолбек `FileCopy`); lock-конфлікт більше не валить init — чекає й перехоплює, коли heartbeat старший за max(90 с, 4×refresh); heartbeat у циклах backfill; за замовч. refresh 15 с, timeout 4000 мс; панель: час останнього успішного запису OI/M1/M5/LS і кількість HTTP-збоїв.
