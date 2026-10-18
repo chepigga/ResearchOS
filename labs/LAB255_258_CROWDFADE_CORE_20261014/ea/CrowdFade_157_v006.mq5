@@ -126,7 +126,7 @@ input int    InpS_EMAFast          = 9;              // EMA9 vs EMA20 на H1 (�
 input int    InpS_EMASlow          = 20;
 
 input group "=== ENGINE L: каскад ліквідацій (LAB271/272) ==="
-input int    InpL_Mode             = 1;              // 0 вимк., 1 лише журнал (віртуальна угода), 2 торгувати
+input int    InpL_Mode             = 2;              // 0 вимк., 1 лише журнал (віртуальна угода), 2 торгувати
 input int    InpL_OIBars           = 3;              // вікно OI/ціни: 3 x M5 = 15 хв
 input double InpL_OIDropPct        = 1.0;            // OI (монети) впав >= 1% за вікно
 input double InpL_PriceATR         = 0.3;            // ціна пройшла >= 0.3 H1ATR проти натовпу за вікно
