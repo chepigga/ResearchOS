@@ -1791,7 +1791,7 @@ void UpdatePanel()
 {
    int n=MyPositionCount();
    Comment(
-      "CrowdFade CORE v005 [DEMO]  A+B3 + D + S | exits D-crowd ",IntegerToString(InpD_CrowdExitMode)," S-EMA ",IntegerToString(InpS_EMAExitMode)," | EARLY ",(InpEarlyEnable?"on":"off")," | R48 ",(InpR48Mode==2?"trade":(InpR48Mode==1?"shadow":"off")),"\n",
+      "CrowdFade CORE v006.1 [DEMO]  A+B3 + D2 + S + L | exits D-crowd ",IntegerToString(InpD_CrowdExitMode)," S-EMA ",IntegerToString(InpS_EMAExitMode)," | EARLY ",(InpEarlyEnable?"on":"off")," | R48 ",(InpR48Mode==2?"trade":(InpR48Mode==1?"shadow":"off")),"\n",
       "Broker: ",InpBrokerSymbol," | Binance: ",InpBinanceSymbol,"\n",
       "A/B3 positions: ",IntegerToString(n),"/",IntegerToString(InpMaxPositions),
       " | Risk: ",DoubleToString(InpRiskPct,2),"% | hold ",IntegerToString(InpMaxHoldHours),"h\n",
