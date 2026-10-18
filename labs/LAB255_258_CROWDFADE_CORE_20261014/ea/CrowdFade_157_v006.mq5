@@ -29,7 +29,7 @@
 //| RESEARCH / DEMO ONLY.                                             |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "1.060"
+#property version   "1.061"
 #property description "CrowdFade core v006: + engine L (liquidation cascade, shadow by default). A+B3 (72h) + D2 (+ exit when crowd compass turns against at >=+1R) + S Supertrend H2 (+ exit on EMA9/20 H1 cross against). EARLY off, R48 shadow."
 
 #include <Trade/Trade.mqh>
@@ -142,6 +142,13 @@ input long   InpMagicBase          = 157000;         // D magic = base + 10
 input bool   InpVerbose            = true;
 input string InpLogFile            = "CrowdFade_LAB157_FORWARD_v006.csv";
 input string InpLatencyLogFile     = "CrowdFade_v005_LATENCY.csv";
+
+input group "=== ЛОГ ДЛЯ MQL5 VPS (файли на VPS недоступні) ==="
+input bool   InpLogToJournal       = true;           // кожен рядок журналу також у вкладку «Журнал» (Print) з префіксом CF157LOG;
+input bool   InpLatencyToJournal   = false;          // рядки затримки теж у журнал (багато рядків)
+input string InpTgToken            = "";             // Telegram bot token (порожньо = вимк.); api.telegram.org у WebRequest
+input string InpTgChatId           = "";             // Telegram chat id
+input bool   InpPushNotify         = false;          // push на MetaQuotes ID (Інструменти → Налаштування → Сповіщення)
 
 
 //---------------- Binance API ----------------------------------------
@@ -765,6 +772,36 @@ void AppendLog(const string event,const int engine,const int side,const string d
              side>0?"BUY":(side<0?"SELL":"-"),DoubleToString(g_panelZ,4),DoubleToString(g_panelATR,2),
              DoubleToString(g_panelOI4h*100.0,3),g_panelPhase,detail);
    FileClose(h);
+   string line=StringFormat("%s;%s;%s;%s;%.4f;%.2f;%.3f;%s;%s",TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS),event,EngineName(engine),
+                            side>0?"BUY":(side<0?"SELL":"-"),g_panelZ,g_panelATR,g_panelOI4h*100.0,g_panelPhase,detail);
+   if(InpLogToJournal) Print("CF157LOG;",line);
+   bool important=(StringFind(event,"ENTRY")>=0 || StringFind(event,"EXIT")>=0 || StringFind(event,"PARTIAL")>=0 ||
+                   StringFind(event,"FAIL")>=0 || StringFind(event,"DEAL_CLOSE")>=0);
+   if(important) Notify("CF157 "+event+" "+EngineName(engine)+" "+(side>0?"BUY":(side<0?"SELL":""))+"\n"+detail);
+}
+
+// Telegram / push for important events (entries, exits, failures, closed deals).
+string UrlEncode(const string s)
+{
+   uchar b[]; int n=StringToCharArray(s,b,0,WHOLE_ARRAY,CP_UTF8)-1; string o="";
+   for(int i=0;i<n;i++)
+   {
+      uchar c=b[i];
+      if((c>='A'&&c<='Z')||(c>='a'&&c<='z')||(c>='0'&&c<='9')||c=='-'||c=='_'||c=='.'||c=='~') o+=CharToString(c);
+      else o+=StringFormat("%%%02X",c);
+   }
+   return o;
+}
+void Notify(const string msg)
+{
+   if(InpPushNotify) SendNotification(StringSubstr(msg,0,255));
+   if(StringLen(InpTgToken)==0 || StringLen(InpTgChatId)==0) return;
+   string url="https://api.telegram.org/bot"+InpTgToken+"/sendMessage";
+   string body="chat_id="+UrlEncode(InpTgChatId)+"&text="+UrlEncode(StringSubstr(msg,0,3500));
+   char data[],res[]; string hdr;
+   StringToCharArray(body,data,0,StringLen(body),CP_UTF8);
+   int code=WebRequest("POST",url,"Content-Type: application/x-www-form-urlencoded\r\n",3000,data,res,hdr);
+   if(code!=200) PrintFormat("CF157 TELEGRAM FAIL code=%d err=%d",code,GetLastError());
 }
 
 //---------------- Position execution / management -------------------
@@ -1560,6 +1597,9 @@ void LogLatency()
          FileWrite(h,TimeToString((datetime)(now/1000),TIME_DATE|TIME_SECONDS),TimeToString((datetime)(ts/1000),TIME_DATE|TIME_SECONDS),
                    DoubleToString((now-ts)/1000.0,1),DoubleToString((now-ts-300000)/1000.0,1),IntegerToString(InpRefreshSec),
                    IntegerToString(batch),IntegerToString(g_httpFails),IntegerToString(g_skipPolls));
+         if(InpLatencyToJournal)
+            PrintFormat("CF157LAT;%s;%s;%.1f;%.1f;%d;%d;%d",TimeToString((datetime)(now/1000),TIME_DATE|TIME_SECONDS),TimeToString((datetime)(ts/1000),TIME_DATE|TIME_SECONDS),
+                        (now-ts)/1000.0,(now-ts-300000)/1000.0,batch,g_httpFails,g_skipPolls);
       }
       FileClose(h);
    }
@@ -1822,6 +1862,24 @@ int OnInit()
    EventSetTimer(MathMax(1,InpRefreshSec));
    UpdatePanel();
    return INIT_SUCCEEDED;
+}
+
+void OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+{
+   if(trans.type!=TRADE_TRANSACTION_DEAL_ADD || trans.deal==0) return;
+   if(!HistoryDealSelect(trans.deal)) return;
+   if(HistoryDealGetString(trans.deal,DEAL_SYMBOL)!=InpBrokerSymbol) return;
+   long mg=HistoryDealGetInteger(trans.deal,DEAL_MAGIC);
+   long eng=mg-InpMagicBase;
+   if(!(eng==ENG_A || eng==ENG_B3 || eng==ENG_R48 || eng==ENG_EARLY || eng==ENG_D || eng==ENG_S || eng==ENG_L)) return;
+   long entry=HistoryDealGetInteger(trans.deal,DEAL_ENTRY);
+   if(entry!=DEAL_ENTRY_OUT && entry!=DEAL_ENTRY_OUT_BY) return;
+   double pl=HistoryDealGetDouble(trans.deal,DEAL_PROFIT)+HistoryDealGetDouble(trans.deal,DEAL_SWAP)+HistoryDealGetDouble(trans.deal,DEAL_COMMISSION);
+   long reason=HistoryDealGetInteger(trans.deal,DEAL_REASON);
+   string rs=(reason==DEAL_REASON_SL?"SL":(reason==DEAL_REASON_TP?"TP":(reason==DEAL_REASON_EXPERT?"EA":"other")));
+   int side=(HistoryDealGetInteger(trans.deal,DEAL_TYPE)==DEAL_TYPE_SELL?1:-1);   // closing sell = long position
+   AppendLog("DEAL_CLOSE",(int)eng,side,StringFormat("reason=%s vol=%.4f price=%.2f P/L=%.2f %s",rs,
+             HistoryDealGetDouble(trans.deal,DEAL_VOLUME),HistoryDealGetDouble(trans.deal,DEAL_PRICE),pl,AccountInfoString(ACCOUNT_CURRENCY)));
 }
 
 void OnDeinit(const int reason)
