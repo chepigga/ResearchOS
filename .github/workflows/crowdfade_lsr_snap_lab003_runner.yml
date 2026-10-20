@@ -1,0 +1,42 @@
+name: CrowdFade LSR Snap LAB003 Runner
+on:
+  push:
+    branches: [lab/crowdfade-lsr-snap-001]
+    paths:
+      - '.github/workflows/crowdfade_lsr_snap_lab003_runner.yml'
+      - 'labs/CROWDFADE_LSR_SNAP_LAB_003/run_lab.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab003:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lab/crowdfade-lsr-snap-001
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q numpy pandas requests
+      - name: Synthetic plumbing self-test
+        run: python labs/CROWDFADE_LSR_SNAP_LAB_003/run_lab.py --synthetic --out /tmp/synth > /dev/null
+      - name: Run LAB003 on Binance archive (2022-01-01 .. 2026-10-19)
+        run: |
+          python labs/CROWDFADE_LSR_SNAP_LAB_003/run_lab.py \
+            --start 2022-01-01 --end 2026-10-19 \
+            --cache /tmp/binance_cache \
+            --out labs/CROWDFADE_LSR_SNAP_LAB_003/output 2>&1 | tee labs/CROWDFADE_LSR_SNAP_LAB_003/output/run.log
+      - name: Persist outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add labs/CROWDFADE_LSR_SNAP_LAB_003/output
+          git commit -m 'Persist CrowdFade LSR Snap LAB003 outputs' || true
+          git push origin HEAD:lab/crowdfade-lsr-snap-001
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: crowdfade-lsr-snap-lab003
+          path: labs/CROWDFADE_LSR_SNAP_LAB_003/output
