@@ -1,0 +1,338 @@
+Downloading / loading from cache ...
+  futures 2022-01: files so far 1
+  futures 2022-02: files so far 2
+  futures 2022-03: files so far 3
+  futures 2022-04: files so far 4
+  futures 2022-05: files so far 5
+  futures 2022-06: files so far 6
+  futures 2022-07: files so far 7
+  futures 2022-08: files so far 8
+  futures 2022-09: files so far 9
+  futures 2022-10: files so far 10
+  futures 2022-11: files so far 11
+  futures 2022-12: files so far 12
+  futures 2023-01: files so far 13
+  futures 2023-02: files so far 14
+  futures 2023-03: files so far 15
+  futures 2023-04: files so far 16
+  futures 2023-05: files so far 17
+  futures 2023-06: files so far 18
+  futures 2023-07: files so far 19
+  futures 2023-08: files so far 20
+  futures 2023-09: files so far 21
+  futures 2023-10: files so far 22
+  futures 2023-11: files so far 23
+  futures 2023-12: files so far 24
+  futures 2024-01: files so far 25
+  futures 2024-02: files so far 26
+  futures 2024-03: files so far 27
+  futures 2024-04: files so far 28
+  futures 2024-05: files so far 29
+  futures 2024-06: files so far 30
+  futures 2024-07: files so far 31
+  futures 2024-08: files so far 32
+  futures 2024-09: files so far 33
+  futures 2024-10: files so far 34
+  futures 2024-11: files so far 35
+  futures 2024-12: files so far 36
+  futures 2025-01: files so far 37
+  futures 2025-02: files so far 38
+  futures 2025-03: files so far 39
+  futures 2025-04: files so far 40
+  futures 2025-05: files so far 41
+  futures 2025-06: files so far 42
+  futures 2025-07: files so far 43
+  futures 2025-08: files so far 44
+  futures 2025-09: files so far 45
+  futures 2025-10: files so far 46
+  futures 2025-11: files so far 47
+  futures 2025-12: files so far 48
+  futures 2026-01: files so far 49
+  futures 2026-02: files so far 50
+  futures 2026-03: files so far 51
+  futures 2026-04: files so far 52
+  futures 2026-05: files so far 53
+  futures 2026-06: files so far 54
+  futures 2026-07: files so far 55
+  futures 2026-08: files so far 56
+  futures 2026-09: files so far 57
+  futures 2026-10: files so far 75
+  spot 2022-01: files so far 1
+  spot 2022-02: files so far 2
+  spot 2022-03: files so far 3
+  spot 2022-04: files so far 4
+  spot 2022-05: files so far 5
+  spot 2022-06: files so far 6
+  spot 2022-07: files so far 7
+  spot 2022-08: files so far 8
+  spot 2022-09: files so far 9
+  spot 2022-10: files so far 10
+  spot 2022-11: files so far 11
+  spot 2022-12: files so far 12
+  spot 2023-01: files so far 13
+  spot 2023-02: files so far 14
+  spot 2023-03: files so far 15
+  spot 2023-04: files so far 16
+  spot 2023-05: files so far 17
+  spot 2023-06: files so far 18
+  spot 2023-07: files so far 19
+  spot 2023-08: files so far 20
+  spot 2023-09: files so far 21
+  spot 2023-10: files so far 22
+  spot 2023-11: files so far 23
+  spot 2023-12: files so far 24
+  spot 2024-01: files so far 25
+  spot 2024-02: files so far 26
+  spot 2024-03: files so far 27
+  spot 2024-04: files so far 28
+  spot 2024-05: files so far 29
+  spot 2024-06: files so far 30
+  spot 2024-07: files so far 31
+  spot 2024-08: files so far 32
+  spot 2024-09: files so far 33
+  spot 2024-10: files so far 34
+  spot 2024-11: files so far 35
+  spot 2024-12: files so far 36
+  spot 2025-01: files so far 37
+  spot 2025-02: files so far 38
+  spot 2025-03: files so far 39
+  spot 2025-04: files so far 40
+  spot 2025-05: files so far 41
+  spot 2025-06: files so far 42
+  spot 2025-07: files so far 43
+  spot 2025-08: files so far 44
+  spot 2025-09: files so far 45
+  spot 2025-10: files so far 46
+  spot 2025-11: files so far 47
+  spot 2025-12: files so far 48
+  spot 2026-01: files so far 49
+  spot 2026-02: files so far 50
+  spot 2026-03: files so far 51
+  spot 2026-04: files so far 52
+  spot 2026-05: files so far 53
+  spot 2026-06: files so far 54
+  spot 2026-07: files so far 55
+  spot 2026-08: files so far 56
+  spot 2026-09: files so far 57
+  spot 2026-10: files so far 75
+  premium 2022-01: files so far 1
+  premium 2022-02: files so far 2
+  premium 2022-03: files so far 3
+  premium 2022-04: files so far 4
+  premium 2022-05: files so far 5
+  premium 2022-06: files so far 6
+  premium 2022-07: files so far 7
+  premium 2022-08: files so far 8
+  premium 2022-09: files so far 9
+  premium 2022-10: files so far 10
+  premium 2022-11: files so far 11
+  premium 2022-12: files so far 12
+  premium 2023-01: files so far 13
+  premium 2023-02: files so far 14
+  premium 2023-03: files so far 15
+  premium 2023-04: files so far 16
+  premium 2023-05: files so far 17
+  premium 2023-06: files so far 18
+  premium 2023-07: files so far 19
+  premium 2023-08: files so far 20
+  premium 2023-09: files so far 21
+  premium 2023-10: files so far 22
+  premium 2023-11: files so far 23
+  premium 2023-12: files so far 24
+  premium 2024-01: files so far 25
+  premium 2024-02: files so far 26
+  premium 2024-03: files so far 27
+  premium 2024-04: files so far 28
+  premium 2024-05: files so far 29
+  premium 2024-06: files so far 30
+  premium 2024-07: files so far 31
+  premium 2024-08: files so far 32
+  premium 2024-09: files so far 33
+  premium 2024-10: files so far 34
+  premium 2024-11: files so far 35
+  premium 2024-12: files so far 36
+  premium 2025-01: files so far 37
+  premium 2025-02: files so far 38
+  premium 2025-03: files so far 39
+  premium 2025-04: files so far 40
+  premium 2025-05: files so far 41
+  premium 2025-06: files so far 42
+  premium 2025-07: files so far 43
+  premium 2025-08: files so far 44
+  premium 2025-09: files so far 45
+  premium 2025-10: files so far 46
+  premium 2025-11: files so far 47
+  premium 2025-12: files so far 48
+  premium 2026-01: files so far 49
+  premium 2026-02: files so far 50
+  premium 2026-03: files so far 51
+  premium 2026-04: files so far 52
+  premium 2026-05: files so far 53
+  premium 2026-06: files so far 54
+  premium 2026-07: files so far 55
+  premium 2026-08: files so far 56
+  premium 2026-09: files so far 57
+  premium 2026-10: files so far 75
+  metrics 2022-01: days so far 1
+  metrics 2022-02: days so far 32
+  metrics 2022-03: days so far 60
+  metrics 2022-04: days so far 91
+  metrics 2022-05: days so far 121
+  metrics 2022-06: days so far 152
+  metrics 2022-07: days so far 182
+  metrics 2022-08: days so far 213
+  metrics 2022-09: days so far 244
+  metrics 2022-10: days so far 274
+  metrics 2022-11: days so far 305
+  metrics 2022-12: days so far 335
+  metrics 2023-01: days so far 366
+  metrics 2023-02: days so far 397
+  metrics 2023-03: days so far 425
+  metrics 2023-04: days so far 456
+  metrics 2023-05: days so far 486
+  metrics 2023-06: days so far 517
+  metrics 2023-07: days so far 547
+  metrics 2023-08: days so far 578
+  metrics 2023-09: days so far 609
+  metrics 2023-10: days so far 639
+  metrics 2023-11: days so far 670
+  metrics 2023-12: days so far 700
+  metrics 2024-01: days so far 731
+  metrics 2024-02: days so far 762
+  metrics 2024-03: days so far 791
+  metrics 2024-04: days so far 822
+  metrics 2024-05: days so far 852
+  metrics 2024-06: days so far 883
+  metrics 2024-07: days so far 913
+  metrics 2024-08: days so far 944
+  metrics 2024-09: days so far 975
+  metrics 2024-10: days so far 1005
+  metrics 2024-11: days so far 1036
+  metrics 2024-12: days so far 1066
+  metrics 2025-01: days so far 1097
+  metrics 2025-02: days so far 1128
+  metrics 2025-03: days so far 1156
+  metrics 2025-04: days so far 1187
+  metrics 2025-05: days so far 1217
+  metrics 2025-06: days so far 1248
+  metrics 2025-07: days so far 1278
+  metrics 2025-08: days so far 1309
+  metrics 2025-09: days so far 1340
+  metrics 2025-10: days so far 1370
+  metrics 2025-11: days so far 1401
+  metrics 2025-12: days so far 1431
+  metrics 2026-01: days so far 1462
+  metrics 2026-02: days so far 1493
+  metrics 2026-03: days so far 1521
+  metrics 2026-04: days so far 1552
+  metrics 2026-05: days so far 1582
+  metrics 2026-06: days so far 1613
+  metrics 2026-07: days so far 1643
+  metrics 2026-08: days so far 1674
+  metrics 2026-09: days so far 1705
+  metrics 2026-10: days so far 1735
+# CROWDFADE_LSR_SNAP_LAB_002 — L/S snap as confirmation
+
+Data 2022-01-19 → 2026-10-19; snap events 1673; OOS from 2025-01-01; cost 4.0 bps; R = multiples of the stop distance.
+
+## A — Snap-follow grid (direction = price move during snap)
+
+Sorted by IS mean R. 72 combos → expect ~3–4 false positives at 95%: a combo counts only if BOTH IS and OOS CI are above 0.
+
+| entry | SL ATR | hold | exit | subset | fill% | IS n | IS R [CI] | OOS n | OOS R [CI] | OOS win% |
+|---|---|---|---|---|---|---|---|---|---|---|
+| PB0.5 | 1.5 | 48 | T2R | level | 92 | 320 | -0.090 [-0.242…+0.072] | 167 | -0.230 [-0.443…-0.010] | 32.9 |
+| IMM | 2.0 | 144 | TRAIL | level | 100 | 346 | -0.099 [-0.263…+0.082] | 184 | -0.199 [-0.381…-0.014] | 32.1 |
+| IMM | 2.0 | 48 | TRAIL | level | 100 | 346 | -0.099 [-0.263…+0.080] | 184 | -0.195 [-0.381…-0.009] | 32.1 |
+| PB1.0 | 2.0 | 48 | T2R | level | 82 | 281 | -0.103 [-0.257…+0.055] | 154 | -0.131 [-0.361…+0.091] | 35.1 |
+| PB1.0 | 1.5 | 48 | T2R | level | 82 | 281 | -0.106 [-0.273…+0.056] | 154 | -0.267 [-0.492…-0.032] | 31.8 |
+| PB1.0 | 2.0 | 144 | T2R | level | 82 | 281 | -0.112 [-0.277…+0.048] | 154 | -0.143 [-0.376…+0.092] | 34.4 |
+| PB0.5 | 2.0 | 48 | T2R | level | 92 | 320 | -0.112 [-0.263…+0.039] | 167 | -0.154 [-0.367…+0.059] | 33.5 |
+| PB0.5 | 1.5 | 144 | T2R | level | 92 | 320 | -0.114 [-0.266…+0.049] | 167 | -0.230 [-0.443…-0.010] | 32.9 |
+| PB1.0 | 1.5 | 144 | T2R | level | 82 | 281 | -0.115 [-0.285…+0.046] | 154 | -0.267 [-0.492…-0.032] | 31.8 |
+| PB0.5 | 2.0 | 144 | T2R | level | 92 | 320 | -0.117 [-0.270…+0.035] | 167 | -0.157 [-0.372…+0.055] | 33.5 |
+| IMM | 2.0 | 48 | T2R | level | 100 | 346 | -0.119 [-0.260…+0.027] | 184 | -0.098 [-0.309…+0.107] | 35.9 |
+| PB1.0 | 2.0 | 48 | TRAIL | level | 82 | 281 | -0.131 [-0.274…+0.022] | 154 | -0.075 [-0.321…+0.208] | 32.5 |
+| PB1.0 | 2.0 | 144 | T2R | all | 78 | 909 | -0.137 [-0.226…-0.046] | 393 | -0.171 [-0.299…-0.029] | 33.3 |
+| PB1.0 | 2.0 | 144 | TRAIL | level | 82 | 281 | -0.138 [-0.284…+0.014] | 154 | -0.075 [-0.321…+0.208] | 32.5 |
+| PB1.0 | 2.0 | 48 | T2R | all | 78 | 909 | -0.142 [-0.229…-0.057] | 393 | -0.178 [-0.302…-0.042] | 34.4 |
+| PB0.5 | 2.0 | 144 | TRAIL | level | 92 | 320 | -0.149 [-0.280…-0.016] | 167 | -0.186 [-0.408…+0.060] | 30.5 |
+| PB0.5 | 2.0 | 48 | TRAIL | level | 92 | 320 | -0.152 [-0.280…-0.020] | 167 | -0.186 [-0.408…+0.060] | 30.5 |
+| IMM | 1.5 | 48 | TRAIL | level | 100 | 346 | -0.153 [-0.340…+0.073] | 184 | -0.241 [-0.454…-0.026] | 28.3 |
+| IMM | 2.0 | 144 | T2R | level | 100 | 346 | -0.154 [-0.306…-0.007] | 184 | -0.117 [-0.330…+0.087] | 34.8 |
+| IMM | 1.5 | 144 | TRAIL | level | 100 | 346 | -0.155 [-0.342…+0.073] | 184 | -0.241 [-0.454…-0.026] | 28.3 |
+| PB1.0 | 1.0 | 48 | T2R | level | 82 | 281 | -0.162 [-0.332…+0.011] | 154 | -0.436 [-0.655…-0.205] | 29.9 |
+| PB0.5 | 2.0 | 144 | T2R | all | 89 | 1036 | -0.164 [-0.245…-0.082] | 454 | -0.132 [-0.256…-0.000] | 34.1 |
+| PB0.5 | 2.0 | 48 | T2R | all | 89 | 1036 | -0.167 [-0.244…-0.089] | 454 | -0.134 [-0.255…-0.008] | 35.2 |
+| PB1.0 | 1.0 | 144 | T2R | level | 82 | 281 | -0.168 [-0.340…+0.002] | 154 | -0.436 [-0.655…-0.205] | 29.9 |
+| IMM | 2.0 | 144 | TRAIL | all | 100 | 1151 | -0.172 [-0.249…-0.088] | 522 | -0.079 [-0.196…+0.049] | 33.9 |
+| IMM | 2.0 | 48 | TRAIL | all | 100 | 1151 | -0.174 [-0.248…-0.092] | 522 | -0.081 [-0.199…+0.041] | 34.5 |
+| IMM | 2.0 | 144 | T2R | all | 100 | 1151 | -0.182 [-0.264…-0.097] | 522 | -0.040 [-0.163…+0.085] | 37.2 |
+| IMM | 1.5 | 144 | T2R | level | 100 | 346 | -0.184 [-0.334…-0.032] | 184 | -0.252 [-0.455…-0.055] | 32.1 |
+| IMM | 2.0 | 48 | T2R | all | 100 | 1151 | -0.192 [-0.268…-0.112] | 522 | -0.038 [-0.158…+0.085] | 38.5 |
+| PB1.0 | 2.0 | 48 | TRAIL | all | 78 | 909 | -0.192 [-0.269…-0.117] | 393 | -0.148 [-0.274…-0.003] | 32.1 |
+| IMM | 1.5 | 48 | T2R | level | 100 | 346 | -0.192 [-0.339…-0.042] | 184 | -0.255 [-0.456…-0.060] | 32.1 |
+| IMM | 1.5 | 144 | TRAIL | all | 100 | 1151 | -0.197 [-0.287…-0.100] | 522 | -0.161 [-0.281…-0.037] | 31.4 |
+| PB1.0 | 2.0 | 144 | TRAIL | all | 78 | 909 | -0.197 [-0.277…-0.120] | 393 | -0.163 [-0.287…-0.021] | 31.6 |
+| IMM | 1.5 | 48 | TRAIL | all | 100 | 1151 | -0.199 [-0.287…-0.102] | 522 | -0.158 [-0.278…-0.033] | 31.6 |
+| PB1.0 | 1.5 | 48 | T2R | all | 78 | 909 | -0.201 [-0.292…-0.110] | 393 | -0.217 [-0.348…-0.080] | 33.6 |
+| PB0.5 | 2.0 | 48 | TRAIL | all | 89 | 1036 | -0.206 [-0.278…-0.134] | 454 | -0.135 [-0.253…+0.001] | 30.8 |
+| PB1.0 | 1.5 | 144 | T2R | all | 78 | 909 | -0.207 [-0.297…-0.114] | 393 | -0.213 [-0.350…-0.075] | 33.1 |
+| IMM | 1.5 | 144 | T2R | all | 100 | 1151 | -0.210 [-0.289…-0.129] | 522 | -0.101 [-0.225…+0.022] | 36.6 |
+| PB0.5 | 2.0 | 144 | TRAIL | all | 89 | 1036 | -0.212 [-0.286…-0.140] | 454 | -0.135 [-0.255…+0.001] | 30.4 |
+| PB0.5 | 1.0 | 48 | T2R | level | 92 | 320 | -0.213 [-0.362…-0.056] | 167 | -0.482 [-0.693…-0.273] | 28.1 |
+| IMM | 1.0 | 144 | TRAIL | level | 100 | 346 | -0.213 [-0.435…+0.055] | 184 | -0.486 [-0.691…-0.273] | 22.8 |
+| IMM | 1.0 | 48 | TRAIL | level | 100 | 346 | -0.213 [-0.435…+0.055] | 184 | -0.486 [-0.691…-0.273] | 22.8 |
+| PB0.5 | 1.5 | 144 | TRAIL | level | 92 | 320 | -0.216 [-0.350…-0.071] | 167 | -0.332 [-0.526…-0.138] | 27.5 |
+| PB0.5 | 1.0 | 144 | T2R | level | 92 | 320 | -0.217 [-0.370…-0.062] | 167 | -0.482 [-0.693…-0.273] | 28.1 |
+| IMM | 1.5 | 48 | T2R | all | 100 | 1151 | -0.217 [-0.297…-0.137] | 522 | -0.107 [-0.229…+0.017] | 37.2 |
+| PB0.5 | 1.0 | 144 | TRAIL | level | 92 | 320 | -0.221 [-0.395…-0.049] | 167 | -0.491 [-0.723…-0.255] | 24.6 |
+| PB0.5 | 1.0 | 48 | TRAIL | level | 92 | 320 | -0.221 [-0.395…-0.049] | 167 | -0.491 [-0.723…-0.255] | 24.6 |
+| PB0.5 | 1.5 | 48 | TRAIL | level | 92 | 320 | -0.228 [-0.361…-0.087] | 167 | -0.332 [-0.526…-0.138] | 27.5 |
+| IMM | 1.0 | 48 | TRAIL | all | 100 | 1151 | -0.233 [-0.329…-0.119] | 522 | -0.340 [-0.472…-0.208] | 28.5 |
+| IMM | 1.0 | 144 | TRAIL | all | 100 | 1151 | -0.233 [-0.329…-0.119] | 522 | -0.340 [-0.472…-0.208] | 28.5 |
+| PB1.0 | 1.5 | 48 | TRAIL | all | 78 | 909 | -0.235 [-0.316…-0.157] | 393 | -0.176 [-0.320…-0.004] | 31.0 |
+| PB0.5 | 1.5 | 48 | T2R | all | 89 | 1036 | -0.237 [-0.319…-0.157] | 454 | -0.186 [-0.313…-0.055] | 34.4 |
+| PB1.0 | 1.5 | 144 | TRAIL | all | 78 | 909 | -0.237 [-0.318…-0.159] | 393 | -0.179 [-0.324…-0.006] | 31.0 |
+| PB0.5 | 1.0 | 144 | TRAIL | all | 89 | 1036 | -0.246 [-0.343…-0.147] | 454 | -0.315 [-0.449…-0.170] | 28.9 |
+| PB0.5 | 1.0 | 48 | TRAIL | all | 89 | 1036 | -0.246 [-0.343…-0.147] | 454 | -0.315 [-0.449…-0.170] | 28.9 |
+| PB0.5 | 1.5 | 144 | T2R | all | 89 | 1036 | -0.250 [-0.334…-0.169] | 454 | -0.194 [-0.321…-0.059] | 33.5 |
+| PB1.0 | 1.5 | 144 | TRAIL | level | 82 | 281 | -0.252 [-0.384…-0.109] | 154 | -0.099 [-0.403…+0.254] | 29.2 |
+| PB1.0 | 1.5 | 48 | TRAIL | level | 82 | 281 | -0.256 [-0.385…-0.121] | 154 | -0.099 [-0.403…+0.254] | 29.2 |
+| IMM | 1.0 | 48 | T2R | level | 100 | 346 | -0.268 [-0.407…-0.114] | 184 | -0.489 [-0.688…-0.295] | 27.7 |
+| IMM | 1.0 | 144 | T2R | level | 100 | 346 | -0.268 [-0.407…-0.114] | 184 | -0.489 [-0.688…-0.295] | 27.7 |
+| PB0.5 | 1.5 | 144 | TRAIL | all | 89 | 1036 | -0.270 [-0.343…-0.194] | 454 | -0.225 [-0.344…-0.102] | 29.7 |
+| PB0.5 | 1.5 | 48 | TRAIL | all | 89 | 1036 | -0.271 [-0.345…-0.196] | 454 | -0.220 [-0.340…-0.096] | 30.0 |
+| PB1.0 | 1.0 | 48 | TRAIL | level | 82 | 281 | -0.271 [-0.439…-0.080] | 154 | -0.390 [-0.645…-0.107] | 23.4 |
+| PB1.0 | 1.0 | 144 | TRAIL | level | 82 | 281 | -0.271 [-0.439…-0.080] | 154 | -0.390 [-0.645…-0.107] | 23.4 |
+| IMM | 1.0 | 144 | T2R | all | 100 | 1151 | -0.275 [-0.352…-0.195] | 522 | -0.267 [-0.398…-0.139] | 34.3 |
+| IMM | 1.0 | 48 | T2R | all | 100 | 1151 | -0.275 [-0.353…-0.195] | 522 | -0.267 [-0.397…-0.140] | 34.5 |
+| PB1.0 | 1.0 | 48 | TRAIL | all | 78 | 909 | -0.298 [-0.390…-0.208] | 393 | -0.270 [-0.418…-0.112] | 29.0 |
+| PB1.0 | 1.0 | 144 | TRAIL | all | 78 | 909 | -0.298 [-0.390…-0.208] | 393 | -0.270 [-0.418…-0.112] | 29.0 |
+| PB1.0 | 1.0 | 48 | T2R | all | 78 | 909 | -0.302 [-0.397…-0.213] | 393 | -0.288 [-0.423…-0.142] | 34.1 |
+| PB1.0 | 1.0 | 144 | T2R | all | 78 | 909 | -0.306 [-0.400…-0.217] | 393 | -0.294 [-0.433…-0.150] | 33.8 |
+| PB0.5 | 1.0 | 48 | T2R | all | 89 | 1036 | -0.310 [-0.394…-0.227] | 454 | -0.301 [-0.428…-0.165] | 33.5 |
+| PB0.5 | 1.0 | 144 | T2R | all | 89 | 1036 | -0.314 [-0.399…-0.232] | 454 | -0.307 [-0.435…-0.169] | 33.0 |
+
+**Combos with IS and OOS CI > 0: 0**
+
+## B — Breakout (24h high/low) with L/S snap as hold filter
+
+Breakouts: 2509; confirming snap within 12 bars: 2.6%; opposite snap: 11.0%
+
+| rule | IS n | IS R [CI] | OOS n | OOS R [CI] |
+|---|---|---|---|---|
+| ALWAYS | 1467 | -0.197 [-0.265…-0.126] | 1042 | -0.289 [-0.372…-0.205] |
+| KEEP_IF_CONFIRM | 1467 | -0.194 [-0.260…-0.128] | 1042 | -0.282 [-0.359…-0.203] |
+| EXIT_IF_OPPOSITE | 1467 | -0.197 [-0.265…-0.127] | 1042 | -0.287 [-0.368…-0.202] |
+
+Conditional (ALWAYS rule) by snap seen in first 12 bars:
+
+| group | IS n | IS R [CI] | OOS n | OOS R [CI] |
+|---|---|---|---|---|
+| confirm | 41 | +0.102 [-0.330…+0.546] | 25 | -0.438 [-0.919…+0.052] |
+| no confirm | 1426 | -0.205 [-0.275…-0.134] | 1017 | -0.286 [-0.370…-0.199] |
+| opposite | 195 | -0.128 [-0.325…+0.070] | 81 | -0.102 [-0.410…+0.224] |
+| no opposite | 1272 | -0.207 [-0.287…-0.133] | 961 | -0.305 [-0.393…-0.218] |
+
+Note: the conditional table uses information from the first 12 bars of the trade; it describes the filter's value, the rules above are the tradable versions.
