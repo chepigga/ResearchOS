@@ -441,7 +441,7 @@ def analyze(d, outdir):
     w(f"Data: {d.index[0]:%Y-%m-%d} → {d.index[-1]:%Y-%m-%d}, bars={len(d):,}. "
       f"OOS from {P['OOS_FROM']}.\n")
     w("Params: " + ", ".join(f"{k}={v}" for k, v in P.items()) + "\n")
-    w(f"Events: {len(tr)} (long-skew {int((tr["skw"]==1).sum())}, short-skew {int((tr["skw"]==-1).sum())}); "
+    w(f"Events: {len(tr)} (long-skew {int((tr.skw==1).sum())}, short-skew {int((tr.skw==-1).sum())}); "
       f"with level break: {int(tr.level.sum())}\n")
     w(f"Base rate (random bar, long, ±1 ATR first touch): {base_up*100:.1f}% n={len(base)}\n")
 
