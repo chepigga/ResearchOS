@@ -11,6 +11,8 @@
 //|     Якщо маржі не вистачає — угода ПРОПУСКАЄТЬСЯ (раніше мінлот).  |
 //|  3. Спред-фільтр 500 пт ($5) -> 60 пт ($0.60).                     |
 //|  4. Трейлінг за замовчуванням ВИМК. (заморожена геометрія).        |
+//|  v2.05b: маржа через OrderCalcMargin (OrderCheck BUY_STOP@Ask = 10015).|
+//|  СТАВИТИ НА ГРАФІК H1 (бот бере бари поточного ТФ).               |
 //|  SL/TP у «піпсах» = центах золота: 3700 = $37, 9700 = $97 (без змін).|
 //| H1 no-trailing breakout (frozen H1_ALL candidate) + RS-001        |
 //| PER-DIRECTION shadow-EV gate + D1-bias filter for BUY.            |
@@ -857,20 +859,20 @@ double CalculateLot(double sldist, double riskpercent)
    }
    if(lots > max) lots = max;
 
-   // v2.03 п.9: margin-перевірка через OrderCheck перед фактичним входом
-   MqlTradeRequest chk; MqlTradeCheckResult chkRes;
-   ZeroMemory(chk); ZeroMemory(chkRes);
-   chk.action = TRADE_ACTION_PENDING;
-   chk.symbol = Symbol();
-   chk.volume = lots;
-   chk.type   = ORDER_TYPE_BUY_STOP;
-   chk.price  = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
-   chk.type_filling = GetFillingMode();
-   chk.type_time = ORDER_TIME_GTC;
-   if(!OrderCheck(chk, chkRes) || chkRes.retcode == TRADE_RETCODE_NO_MONEY)
+   // v2.05b: перевірка маржі через OrderCalcMargin. Раніше OrderCheck перевіряв BUY_STOP за ціною Ask —
+   // брокер завжди відповідав 10015 Invalid price, і v2.04 мовчки ставив мінімальний лот 0.01.
+   double margin = 0.0;
+   double ask = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
+   if(!OrderCalcMargin(ORDER_TYPE_BUY, Symbol(), lots, ask, margin))
    {
-      Print("MARGIN_CHECK_FAILED: retcode=", chkRes.retcode, " comment=", chkRes.comment,
-            " -- угоду ПРОПУЩЕНО (v2.05)");
+      Print("MARGIN_CALC_FAILED: err=", GetLastError(), " -- угоду ПРОПУЩЕНО");
+      return 0.0;
+   }
+   double freeMargin = AccountInfoDouble(ACCOUNT_MARGIN_FREE);
+   if(margin > freeMargin * 0.9)
+   {
+      Print("MARGIN_INSUFFICIENT: потрібно ", DoubleToString(margin,2), " вільно ", DoubleToString(freeMargin,2),
+            " (lots=", lots, ") -- угоду ПРОПУЩЕНО");
       return 0.0;
    }
    return lots;
